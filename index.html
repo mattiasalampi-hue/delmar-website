@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DelMar — Beyond the Horizon</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night: '#0a192f',
+            'night-light': '#112240',
+            gold: '#c9a84c',
+            'gold-light': '#e8c97a',
+            muted: '#8892b0',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Cormorant Garamond', 'Georgia', 'serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-night text-white overflow-x-hidden">
+
+  <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+  <section id="hero" class="relative flex flex-col items-center justify-center min-h-screen text-center px-6">
+    <div class="hero-noise"></div>
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 nav-blur">
+      <span class="font-display text-2xl tracking-[0.3em] text-gold">DEL<span class="text-white">MAR</span></span>
+      <ul class="hidden md:flex gap-10 text-sm font-light tracking-widest text-muted uppercase">
+        <li><a href="#reel" class="hover:text-gold transition-colors duration-300">Reel</a></li>
+        <li><a href="#servizi" class="hover:text-gold transition-colors duration-300">Servizi</a></li>
+        <li><a href="#about" class="hover:text-gold transition-colors duration-300">About</a></li>
+        <li><a href="#contatti" class="hover:text-gold transition-colors duration-300">Contatti</a></li>
+      </ul>
+      <a href="#contatti" class="hidden md:block text-xs tracking-widest uppercase border border-gold text-gold px-5 py-2 hover:bg-gold hover:text-night transition-all duration-300">
+        Inizia
+      </a>
+    </nav>
+
+    <!-- Hero content -->
+    <div class="hero-content relative z-10 mt-16">
+      <p class="hero-eyebrow text-xs tracking-[0.5em] uppercase text-gold mb-8 opacity-0">Agenzia Creativa</p>
+      <h1 class="hero-title font-display font-light leading-none opacity-0">
+        <span class="block text-[clamp(5rem,16vw,14rem)] tracking-[0.05em]">DEL</span>
+        <span class="block text-[clamp(5rem,16vw,14rem)] tracking-[0.05em] italic text-gold -mt-6 md:-mt-10">MAR</span>
+      </h1>
+      <p class="hero-sub font-light text-muted text-lg md:text-xl tracking-widest mt-8 opacity-0 max-w-md mx-auto">
+        Oltre l'orizzonte del possibile
+      </p>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="scroll-cue absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-0">
+      <span class="text-xs tracking-[0.4em] text-muted uppercase">Scroll</span>
+      <div class="scroll-line w-px h-12 bg-gold origin-top"></div>
+    </div>
+
+    <!-- Ambient glow -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-gold/5 blur-[120px]"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ REEL / SCROLLYTELLING ═══════════════════════════ -->
+  <section id="reel" class="relative">
+    <!-- Pin container -->
+    <div id="lottie-pin" class="relative">
+      <div id="lottie-sticky" class="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden bg-night">
+        <!-- Lottie canvas -->
+        <div id="lottie-container" class="lottie-wrap"></div>
+
+        <!-- Overlay testo che appare durante lo scroll -->
+        <div id="reel-text" class="absolute inset-0 flex items-end justify-start p-12 md:p-20 pointer-events-none">
+          <div class="reel-caption opacity-0">
+            <p class="text-xs tracking-[0.4em] text-gold uppercase mb-3">La nostra visione</p>
+            <h2 class="font-display font-light text-4xl md:text-6xl leading-tight max-w-lg">
+              Ogni frame<br /><em>racconta una storia</em>
+            </h2>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="absolute bottom-0 left-0 right-0 h-px bg-white/10">
+          <div id="reel-progress" class="h-full bg-gold origin-left scale-x-0"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ SERVIZI ═══════════════════════════ -->
+  <section id="servizi" class="relative py-40 px-6 md:px-16 bg-night">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-20">
+        <p class="text-xs tracking-[0.5em] text-gold uppercase mb-4 section-label">Cosa facciamo</p>
+        <h2 class="font-display font-light text-5xl md:text-7xl leading-tight section-title">
+          Servizi<br /><em class="text-gold">Premium</em>
+        </h2>
+      </div>
+
+      <div class="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5">
+
+        <div class="service-card group bg-night p-10 hover:bg-night-light transition-colors duration-500 cursor-pointer">
+          <div class="text-5xl font-display font-light text-gold/30 group-hover:text-gold transition-colors duration-500 mb-6">01</div>
+          <h3 class="font-display text-2xl mb-4 group-hover:text-gold transition-colors duration-500">Brand Identity</h3>
+          <p class="text-muted font-light leading-relaxed text-sm">Costruiamo identità visive che resistono al tempo. Loghi, palette, tipografia e sistemi di design completi.</p>
+          <div class="mt-8 w-8 h-px bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+        </div>
+
+        <div class="service-card group bg-night p-10 hover:bg-night-light transition-colors duration-500 cursor-pointer">
+          <div class="text-5xl font-display font-light text-gold/30 group-hover:text-gold transition-colors duration-500 mb-6">02</div>
+          <h3 class="font-display text-2xl mb-4 group-hover:text-gold transition-colors duration-500">Motion & Video</h3>
+          <p class="text-muted font-light leading-relaxed text-sm">Produzione video cinematografica, animazioni 3D e motion graphics che catturano l'essenza del tuo brand.</p>
+          <div class="mt-8 w-8 h-px bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+        </div>
+
+        <div class="service-card group bg-night p-10 hover:bg-night-light transition-colors duration-500 cursor-pointer">
+          <div class="text-5xl font-display font-light text-gold/30 group-hover:text-gold transition-colors duration-500 mb-6">03</div>
+          <h3 class="font-display text-2xl mb-4 group-hover:text-gold transition-colors duration-500">Web Experience</h3>
+          <p class="text-muted font-light leading-relaxed text-sm">Siti web immersivi con animazioni avanzate, performance ottimali e design che converte.</p>
+          <div class="mt-8 w-8 h-px bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+        </div>
+
+        <div class="service-card group bg-night p-10 hover:bg-night-light transition-colors duration-500 cursor-pointer">
+          <div class="text-5xl font-display font-light text-gold/30 group-hover:text-gold transition-colors duration-500 mb-6">04</div>
+          <h3 class="font-display text-2xl mb-4 group-hover:text-gold transition-colors duration-500">Fotografia</h3>
+          <p class="text-muted font-light leading-relaxed text-sm">Shooting editoriali e commerciali con occhio cinematografico. Ogni scatto racconta il tuo universo.</p>
+          <div class="mt-8 w-8 h-px bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+        </div>
+
+        <div class="service-card group bg-night p-10 hover:bg-night-light transition-colors duration-500 cursor-pointer">
+          <div class="text-5xl font-display font-light text-gold/30 group-hover:text-gold transition-colors duration-500 mb-6">05</div>
+          <h3 class="font-display text-2xl mb-4 group-hover:text-gold transition-colors duration-500">Strategia Creativa</h3>
+          <p class="text-muted font-light leading-relaxed text-sm">Consulenza strategica per posizionare il brand in modo unico, autentico e memorabile sul mercato.</p>
+          <div class="mt-8 w-8 h-px bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+        </div>
+
+        <div class="service-card group bg-night p-10 hover:bg-night-light transition-colors duration-500 cursor-pointer">
+          <div class="text-5xl font-display font-light text-gold/30 group-hover:text-gold transition-colors duration-500 mb-6">06</div>
+          <h3 class="font-display text-2xl mb-4 group-hover:text-gold transition-colors duration-500">Campagne Social</h3>
+          <p class="text-muted font-light leading-relaxed text-sm">Content strategy e campagne visive per social media che generano engagement autentico e crescita.</p>
+          <div class="mt-8 w-8 h-px bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ CHI SIAMO ═══════════════════════════ -->
+  <section id="about" class="relative py-40 px-6 md:px-16 overflow-hidden">
+    <!-- Background accent -->
+    <div class="absolute right-0 top-1/4 w-[500px] h-[500px] rounded-full bg-gold/5 blur-[100px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+
+        <div>
+          <p class="text-xs tracking-[0.5em] text-gold uppercase mb-6 section-label">Chi Siamo</p>
+          <h2 class="font-display font-light text-5xl md:text-7xl leading-[1.05] mb-10 about-title">
+            Creiamo<br />
+            <em class="text-gold">esperienze</em><br />
+            che rimangono.
+          </h2>
+          <p class="text-muted font-light leading-relaxed text-lg about-text">
+            DelMar nasce dalla fusione tra creatività senza confini e precisione artigianale. Siamo un team di designer, registi e strateghi uniti da un'unica ossessione: trasformare idee in esperienze memorabili.
+          </p>
+          <p class="text-muted font-light leading-relaxed text-lg mt-6 about-text">
+            Ogni progetto è un viaggio. Partiamo dall'essenza del tuo brand e costruiamo narrative visive capaci di emozionare, distinguere e durare nel tempo.
+          </p>
+          <a href="#contatti" class="about-cta inline-block mt-12 text-sm tracking-widest uppercase border-b border-gold text-gold pb-1 hover:pb-2 transition-all duration-300">
+            Lavora con noi →
+          </a>
+        </div>
+
+        <div class="about-stats grid grid-cols-2 gap-8">
+          <div class="stat-item border-t border-white/10 pt-8">
+            <div class="font-display text-6xl font-light text-gold">8+</div>
+            <div class="text-muted text-sm tracking-widest uppercase mt-2 font-light">Anni di esperienza</div>
+          </div>
+          <div class="stat-item border-t border-white/10 pt-8">
+            <div class="font-display text-6xl font-light text-gold">140</div>
+            <div class="text-muted text-sm tracking-widest uppercase mt-2 font-light">Progetti completati</div>
+          </div>
+          <div class="stat-item border-t border-white/10 pt-8">
+            <div class="font-display text-6xl font-light text-gold">32</div>
+            <div class="text-muted text-sm tracking-widest uppercase mt-2 font-light">Clienti attivi</div>
+          </div>
+          <div class="stat-item border-t border-white/10 pt-8">
+            <div class="font-display text-6xl font-light text-gold">12</div>
+            <div class="text-muted text-sm tracking-widest uppercase mt-2 font-light">Award vinti</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ CONTATTI ═══════════════════════════ -->
+  <section id="contatti" class="relative py-40 px-6 md:px-16 bg-night-light">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-20">
+        <p class="text-xs tracking-[0.5em] text-gold uppercase mb-4 section-label">Parliamo</p>
+        <h2 class="font-display font-light text-5xl md:text-7xl leading-tight section-title">
+          Inizia il<br /><em class="text-gold">tuo progetto</em>
+        </h2>
+        <p class="text-muted font-light mt-6 text-lg">Raccontaci la tua visione. Risponderemo entro 24 ore.</p>
+      </div>
+
+      <form id="contact-form" class="space-y-6" novalidate>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-group">
+            <label class="block text-xs tracking-widest text-muted uppercase mb-2">Nome</label>
+            <input type="text" name="nome" placeholder="Il tuo nome" class="form-input w-full bg-transparent border border-white/10 text-white placeholder-white/20 px-5 py-4 text-sm focus:border-gold focus:outline-none transition-colors duration-300" />
+          </div>
+          <div class="form-group">
+            <label class="block text-xs tracking-widest text-muted uppercase mb-2">Email</label>
+            <input type="email" name="email" placeholder="email@esempio.com" class="form-input w-full bg-transparent border border-white/10 text-white placeholder-white/20 px-5 py-4 text-sm focus:border-gold focus:outline-none transition-colors duration-300" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="block text-xs tracking-widest text-muted uppercase mb-2">Servizio</label>
+          <select name="servizio" class="form-input w-full bg-night border border-white/10 text-white/60 px-5 py-4 text-sm focus:border-gold focus:outline-none transition-colors duration-300 appearance-none">
+            <option value="" disabled selected>Seleziona un servizio</option>
+            <option value="brand">Brand Identity</option>
+            <option value="motion">Motion & Video</option>
+            <option value="web">Web Experience</option>
+            <option value="foto">Fotografia</option>
+            <option value="strategia">Strategia Creativa</option>
+            <option value="social">Campagne Social</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="block text-xs tracking-widest text-muted uppercase mb-2">Messaggio</label>
+          <textarea name="messaggio" rows="5" placeholder="Descrivici il tuo progetto..." class="form-input w-full bg-transparent border border-white/10 text-white placeholder-white/20 px-5 py-4 text-sm focus:border-gold focus:outline-none transition-colors duration-300 resize-none"></textarea>
+        </div>
+        <div class="pt-4">
+          <button type="submit" class="submit-btn group w-full md:w-auto px-16 py-5 bg-gold text-night text-sm tracking-widest uppercase font-medium hover:bg-gold-light transition-colors duration-300 relative overflow-hidden">
+            <span class="relative z-10">Invia messaggio</span>
+            <div class="btn-shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </button>
+        </div>
+        <p id="form-success" class="hidden text-gold text-sm tracking-wider text-center pt-4">Messaggio inviato. Ti contatteremo presto.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+  <footer class="py-12 px-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+    <span class="font-display text-xl tracking-[0.3em] text-gold">DEL<span class="text-white">MAR</span></span>
+    <p class="text-muted text-xs tracking-widest">© 2026 DelMar. Tutti i diritti riservati.</p>
+    <div class="flex gap-6 text-xs tracking-widest text-muted">
+      <a href="#" class="hover:text-gold transition-colors duration-300">Instagram</a>
+      <a href="#" class="hover:text-gold transition-colors duration-300">Behance</a>
+      <a href="#" class="hover:text-gold transition-colors duration-300">LinkedIn</a>
+    </div>
+  </footer>
+
+  <!-- CDN Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
