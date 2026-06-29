@@ -62,7 +62,7 @@
   </head>
   <body>
     <!-- SVG sprite -->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
       <symbol id="ico-wa" viewBox="0 0 24 24">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </symbol>
@@ -89,7 +89,7 @@
     <div id="v-scroller">
       <div id="v-sticky">
         <div class="ch" id="c1">
-          <h1 class="ch-title" style="font-size: clamp(2.8rem, 6vw, 6.5rem)">L'eccellenza<br />del mare.</h1>
+          <h1 class="ch-title">L'eccellenza<br />del mare.</h1>
           <p class="ch-sub">
             Forniture ittiche premium per l'alta ristorazione.<br />Dal mare aperto, direttamente alla tua cucina.
           </p>
@@ -123,7 +123,7 @@
             target="_blank" rel="noopener noreferrer"
             class="ch-cta wa"
           >
-            <svg width="16" height="16" fill="currentColor" aria-hidden="true" style="flex-shrink:0"><use href="#ico-wa"/></svg>
+            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
             Scrivici su WhatsApp
           </a>
         </div>
@@ -159,9 +159,9 @@
     <hr class="div section" />
     <!-- ════════════════════ §2 PRODOTTI ══════════ -->
     <section class="section" id="prodotti">
-      <div class="prod-intro sec-pad" style="padding-bottom: 6vh">
+      <div class="prod-intro">
         <p class="label reveal-label">I Nostri Prodotti</p>
-        <h2 class="big-title" style="max-width: 700px">
+        <h2 class="big-title">
           <span class="clip-wrap"
             ><span class="clip-inner">Tutto il meglio<br />del Mediterraneo.</span></span
           >
@@ -171,8 +171,8 @@
         <div class="prod-img par-img"><img src="img/alici.jpg" alt="Alici fresche" loading="lazy" /></div>
         <div class="prod-text">
           <p class="label">Pesce Fresco</p>
-          <h3 class="big-title" style="font-size: clamp(1.8rem, 3vw, 3.2rem)">Selezionato ogni mattina.</h3>
-          <p class="body-text" style="margin: 1rem 0 1.8rem">
+          <h3 class="big-title">Selezionato ogni mattina.</h3>
+          <p class="body-text">
             Branzino, orata, tonno, spada, alici e molto altro. Selezioniamo personalmente il pescato dai migliori
             mercati ittici italiani e lo consegniamo fresco entro 24 ore.
           </p>
@@ -183,8 +183,8 @@
         <div class="prod-img par-img"><img src="img/fish-tanks.jpg" alt="Vasche pesce vivo" loading="lazy" /></div>
         <div class="prod-text">
           <p class="label">Crostacei e Molluschi</p>
-          <h3 class="big-title" style="font-size: clamp(1.8rem, 3vw, 3.2rem)">Vivi e freschi<br />su ordinazione.</h3>
-          <p class="body-text" style="margin: 1rem 0 1.8rem">
+          <h3 class="big-title">Vivi e freschi<br />su ordinazione.</h3>
+          <p class="body-text">
             Astici, aragoste, gamberi rossi, scampi, vongole veraci e cozze. Disponibili vivi, freschi o porzionati
             secondo le esigenze della cucina.
           </p>
@@ -195,10 +195,10 @@
         <div class="prod-img par-img"><img src="img/shelves.jpg" alt="Scaffali" loading="lazy" /></div>
         <div class="prod-text">
           <p class="label">Linea Surgelati</p>
-          <h3 class="big-title" style="font-size: clamp(1.8rem, 3vw, 3.2rem)">
+          <h3 class="big-title">
             Abbattimento rapido.<br />Qualità intatta.
           </h3>
-          <p class="body-text" style="margin: 1rem 0 1.8rem">
+          <p class="body-text">
             Abbattimento immediato post-pesca per preservare freschezza, colore e proprietà organolettiche. La stessa
             qualità del fresco, con maggiore flessibilità operativa.
           </p>
@@ -279,9 +279,7 @@
       <div id="mb-pin">
         <div id="mb-sticky">
           <div id="mb-intro">
-            <p class="label" style="justify-content: center; display: flex; margin-bottom: 1.2rem">
-              Tecnologia & Innovazione
-            </p>
+            <p class="label">Tecnologia & Innovazione</p>
             <h2 id="mb-title">Un'azienda che evolve<br />con il mercato.</h2>
             <p id="mb-desc">
               Da 30 anni anticipiamo le esigenze del settore. Oggi l'intelligenza artificiale incontra la tradizione:
@@ -401,8 +399,8 @@
     <section class="section" id="filiera">
       <div id="fil3-wrap">
         <div id="fil3-header">
-          <p class="label" style="justify-content: center; display: flex; margin-bottom: 1.5rem">La Filiera · DelMar</p>
-          <h2 class="big-title" style="text-align: center">
+          <p class="label">La Filiera · DelMar</p>
+          <h2 class="big-title">
             <span class="clip-wrap"
               ><span class="clip-inner">Dalla barca<br />alla tua cucina.</span></span
             >
@@ -429,9 +427,9 @@
           </div>
           <div id="fil3-progbar">
             <div id="fil3-progfill"></div>
-            <div class="fil3-mark" style="left: 25%"></div>
-            <div class="fil3-mark" style="left: 50%"></div>
-            <div class="fil3-mark" style="left: 75%"></div>
+            <div class="fil3-mark"></div>
+            <div class="fil3-mark"></div>
+            <div class="fil3-mark"></div>
           </div>
         </div>
       </div>
@@ -443,22 +441,20 @@
       <div class="azienda-facade par-img">
         <img src="img/facade-day.jpg" alt="Sede DelMar" loading="eager" />
         <div class="azienda-facade-caption">
-          <p class="label" style="margin-bottom: 0; color: rgba(255, 255, 255, 0.5)">
-            Sede · Via Dorsale 13, Massa (MS)
-          </p>
+          <p class="label">Sede · Via Dorsale 13, Massa (MS)</p>
         </div>
       </div>
       <!-- Testo + foto -->
       <div class="azienda-body">
         <div class="azienda-inner">
-          <div>
+          <div class="azienda-col-text">
             <p class="label reveal-label">Chi Siamo</p>
-            <h2 class="big-title" style="margin-bottom: 1.5rem">
+            <h2 class="big-title">
               <span class="clip-wrap"
                 ><span class="clip-inner">Trent'anni<br />di mare.</span></span
               >
             </h2>
-            <p class="body-text reveal-text" style="margin-bottom: 1.5rem">
+            <p class="body-text reveal-text">
               LE DELIZIE DEL MARE S.R.L. nasce nel 2004 con un obiettivo preciso: portare il meglio del mare
               direttamente nelle cucine dei professionisti. Da oltre 30 anni serviamo ristoranti, hotel, mense e
               strutture della GDO con la stessa ossessione per la qualità del primo giorno.
@@ -468,23 +464,11 @@
               all'avanguardia, una flotta refrigerata moderna e circa 50 collaboratori che ogni giorno rendono possibile
               la promessa DelMar: fresco, preciso, puntuale.
             </p>
-            <a href="#contatti" class="prod-link" style="margin-top: 2rem; display: inline-block"
-              >Scopri la nostra storia →</a
-            >
+            <a href="#contatti" class="prod-link">Scopri la nostra storia →</a>
           </div>
           <div class="azienda-side-imgs reveal-img">
-            <img
-              src="img/meeting-1.jpg"
-              alt="Team in riunione"
-              loading="lazy"
-              style="aspect-ratio: 4/3; object-fit: cover; object-position: center top"
-            />
-            <img
-              src="img/facade-night.jpg"
-              alt="Sede notturna"
-              loading="lazy"
-              style="aspect-ratio: 21/9; object-fit: cover"
-            />
+            <img src="img/meeting-1.jpg" alt="Team in riunione" loading="lazy" />
+            <img src="img/facade-night.jpg" alt="Sede notturna" loading="lazy" />
           </div>
         </div>
       </div>
@@ -492,7 +476,7 @@
     <hr class="div section" />
     <!-- ════════════════════ §5 GALLERY ══════════ -->
     <section class="section" id="gallery">
-      <div class="gallery-intro sec-pad" style="padding-bottom: 5vh">
+      <div class="gallery-intro">
         <p class="label reveal-label">Gallery</p>
         <h2 class="big-title">
           <span class="clip-wrap"><span class="clip-inner">La nostra realtà.</span></span>
@@ -553,7 +537,7 @@
               ><span class="clip-inner">Persone<br />appassionate.</span></span
             >
           </h2>
-          <p class="body-text reveal-text" style="margin-top: 1.5rem">
+          <p class="body-text reveal-text">
             Siamo un team di professionisti con anni di esperienza nel settore ittico. Dalla selezione alla consegna,
             ogni persona in DelMar condivide la stessa ossessione per la qualità.
           </p>
@@ -585,8 +569,8 @@
       </div>
       <div id="cta-full-overlay"></div>
       <div id="cta-full-content">
-        <p class="label" style="justify-content: center; display: flex">Inizia oggi</p>
-        <h2 class="big-title" style="font-size: clamp(2.4rem, 5vw, 5.5rem); margin-bottom: 2rem">
+        <p class="label">Inizia oggi</p>
+        <h2 class="big-title">
           <span class="clip-wrap"
             ><span class="clip-inner">Portare il mare<br />nella tua cucina.</span></span
           >
@@ -595,7 +579,6 @@
           href="https://wa.me/393936762018?text=Ciao%20DelMar%2C%20vorrei%20un%20primo%20ordine"
           target="_blank" rel="noopener noreferrer"
           class="wa-big"
-          style="margin: 0 auto"
         >
           <svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
           Contattaci su WhatsApp
@@ -608,7 +591,7 @@
       <div class="contatti-grid">
         <div>
           <p class="label reveal-label">Contatti</p>
-          <h2 class="big-title" style="margin-bottom: 3rem">
+          <h2 class="big-title">
             <span class="clip-wrap"><span class="clip-inner">Parliamo.</span></span>
           </h2>
           <form class="contatti-form" id="contact-form">
@@ -643,12 +626,7 @@
               <label>Messaggio</label><textarea name="messaggio" placeholder="Raccontaci le tue esigenze..."></textarea>
             </div>
             <button type="submit" class="btn-submit">Invia richiesta</button>
-            <p
-              id="form-ok"
-              style="display: none; font-size: 0.8rem; color: rgba(255, 255, 255, 0.5); margin-top: 0.5rem"
-            >
-              Messaggio inviato. Ti contatteremo presto.
-            </p>
+            <p id="form-ok">Messaggio inviato. Ti contatteremo presto.</p>
           </form>
         </div>
         <div class="contatti-info">
@@ -684,21 +662,10 @@
         <a href="#prodotti">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
         <a href="#gallery">Gallery</a>
       </div>
-      <img src="img/logo.png" alt="DelMar" style="max-width: 6rem; opacity: 0.3" />
+      <img src="img/logo.png" alt="DelMar" />
       <div class="footer-social"><a href="#">Instagram</a> <a href="#">LinkedIn</a> <a href="#">WhatsApp</a></div>
     </footer>
-    <p
-      class="footer-copy section"
-      style="
-        padding: 1.2rem;
-        text-align: center;
-        font-size: 0.55rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.1);
-        background: var(--bg);
-      "
-    >
+    <p class="footer-copy section">
       &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
     </p>
     <!-- Lightbox -->
