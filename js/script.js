@@ -3,6 +3,10 @@
    ════════════════════════════════════════ */
 gsap.registerPlugin(ScrollTrigger);
 
+function debounce(fn, ms) {
+  let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+
 /* ── Header scroll state ──────────────────────── */
 const hdr = document.getElementById('hdr');
 ScrollTrigger.create({
@@ -306,7 +310,7 @@ if (document.getElementById('marina-pin')) {
 
   function resize() { cvs.width = cvs.offsetWidth; cvs.height = cvs.offsetHeight; }
   resize();
-  window.addEventListener('resize', resize);
+  window.addEventListener('resize', debounce(resize, 100));
 
   function cl(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -383,49 +387,58 @@ if (document.getElementById('marina-pin')) {
   const mc = document.getElementById('marina-canvas');
   if (!mc) return;
   const ctx2 = mc.getContext('2d');
-  let cW, cH, parts = [];
-  function resizeMC(){ cW = mc.width = mc.offsetWidth; cH = mc.height = mc.offsetHeight; }
-  function NP(x,y,a,d){
-    this.x=x; this.y=y; this.a=a; this.d=d;
-    this.spd=0.7-d*0.12; this.life=0; this.max=160+Math.random()*140;
-    this.w=1.1-d*0.18; this.px=x; this.py=y;
-    this.branchAt=35+Math.random()*55; this.branched=false;
-  }
-  NP.prototype.update=function(){
-    this.px=this.x; this.py=this.y;
-    this.a+=(Math.random()-0.5)*0.07;
-    this.x+=Math.cos(this.a)*this.spd;
-    this.y+=Math.sin(this.a)*this.spd;
-    this.life++;
-    if(!this.branched&&this.life>=this.branchAt&&this.d<4){
-      this.branched=true;
-      if(Math.random()>0.35) parts.push(new NP(this.x,this.y,this.a+0.45,this.d+1));
-      if(Math.random()>0.55) parts.push(new NP(this.x,this.y,this.a-0.45,this.d+1));
+  let cW, cH, parts = [], mcRaf = null;
+
+  function resizeMC() { cW = mc.width = mc.offsetWidth; cH = mc.height = mc.offsetHeight; }
+
+  class NP {
+    constructor(x, y, a, d) {
+      this.x = x; this.y = y; this.a = a; this.d = d;
+      this.spd = 0.7 - d * 0.12; this.life = 0; this.max = 160 + Math.random() * 140;
+      this.w = 1.1 - d * 0.18; this.px = x; this.py = y;
+      this.branchAt = 35 + Math.random() * 55; this.branched = false;
     }
-  };
-  NP.prototype.draw=function(){
-    var alpha=(1-this.life/this.max)*(0.15-this.d*0.025);
-    ctx2.strokeStyle='rgba(255,255,255,'+Math.max(0,alpha)+')';
-    ctx2.lineWidth=Math.max(0.2,this.w*(1-this.life/this.max));
-    ctx2.beginPath(); ctx2.moveTo(this.px,this.py); ctx2.lineTo(this.x,this.y); ctx2.stroke();
-  };
-  NP.prototype.dead=function(){
-    return this.life>=this.max||this.x<-60||this.x>cW+60||this.y<-60||this.y>cH+60;
-  };
-  function burst(){
-    var n=8;
-    for(var i=0;i<n;i++) parts.push(new NP(cW/2,cH/2,(i/n)*Math.PI*2,0));
+    update() {
+      this.px = this.x; this.py = this.y;
+      this.a += (Math.random() - 0.5) * 0.07;
+      this.x += Math.cos(this.a) * this.spd;
+      this.y += Math.sin(this.a) * this.spd;
+      this.life++;
+      if (!this.branched && this.life >= this.branchAt && this.d < 4) {
+        this.branched = true;
+        if (Math.random() > 0.35) parts.push(new NP(this.x, this.y, this.a + 0.45, this.d + 1));
+        if (Math.random() > 0.55) parts.push(new NP(this.x, this.y, this.a - 0.45, this.d + 1));
+      }
+    }
+    draw() {
+      const alpha = (1 - this.life / this.max) * (0.15 - this.d * 0.025);
+      ctx2.strokeStyle = `rgba(255,255,255,${Math.max(0, alpha)})`;
+      ctx2.lineWidth = Math.max(0.2, this.w * (1 - this.life / this.max));
+      ctx2.beginPath(); ctx2.moveTo(this.px, this.py); ctx2.lineTo(this.x, this.y); ctx2.stroke();
+    }
+    dead() {
+      return this.life >= this.max || this.x < -60 || this.x > cW + 60 || this.y < -60 || this.y > cH + 60;
+    }
   }
-  function loopMC(){
-    requestAnimationFrame(loopMC);
-    ctx2.clearRect(0,0,cW,cH);
-    if(Math.random()<0.012) burst();
-    parts=parts.filter(function(p){return!p.dead();});
-    parts.forEach(function(p){p.update();p.draw();});
+
+  function burst() {
+    for (let i = 0; i < 8; i++) parts.push(new NP(cW / 2, cH / 2, (i / 8) * Math.PI * 2, 0));
   }
+  function loopMC() {
+    ctx2.clearRect(0, 0, cW, cH);
+    if (Math.random() < 0.012) burst();
+    parts = parts.filter(p => !p.dead());
+    parts.forEach(p => { p.update(); p.draw(); });
+    mcRaf = requestAnimationFrame(loopMC);
+  }
+
   resizeMC();
-  window.addEventListener('resize',resizeMC);
-  burst(); loopMC();
+  window.addEventListener('resize', debounce(resizeMC, 100));
+
+  new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) { if (!mcRaf) { burst(); mcRaf = requestAnimationFrame(loopMC); } }
+    else { cancelAnimationFrame(mcRaf); mcRaf = null; parts = []; }
+  }, { threshold: 0.1 }).observe(mc);
 })();
 
 
@@ -439,7 +452,7 @@ if (document.getElementById('marina-pin')) {
 
   function resize() { cvs.width = cvs.offsetWidth; cvs.height = cvs.offsetHeight; }
   resize();
-  window.addEventListener('resize', () => { resize(); draw(lastP); });
+  window.addEventListener('resize', debounce(() => { resize(); draw(lastP); }, 100));
 
   function cl(v,lo,hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -688,13 +701,39 @@ window.addEventListener('load', () => {
   });
 })();
 
-/* ── Form submit ─────────────────────────────── */
-document.getElementById('contact-form').addEventListener('submit', e => {
+/* ── Form submit → Web3Forms ─────────────────── */
+document.getElementById('contact-form').addEventListener('submit', async e => {
   e.preventDefault();
-  const ok = document.getElementById('form-ok');
-  ok.style.display = 'block';
-  e.target.reset();
-  setTimeout(() => ok.style.display = 'none', 5000);
+  const form   = e.target;
+  const btn    = form.querySelector('.btn-submit');
+  const ok     = document.getElementById('form-ok');
+  const origTxt = btn.textContent;
+
+  btn.textContent = 'Invio in corso…';
+  btn.disabled = true;
+
+  try {
+    const res  = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: new FormData(form)
+    });
+    const json = await res.json();
+    if (json.success) {
+      ok.textContent = '✓ Messaggio inviato. Ti contatteremo presto.';
+      ok.style.display = 'block';
+      form.reset();
+      setTimeout(() => { ok.style.display = 'none'; }, 6000);
+    } else {
+      ok.textContent = 'Errore nell\'invio. Riprova o scrivici su WhatsApp.';
+      ok.style.display = 'block';
+    }
+  } catch (_) {
+    ok.textContent = 'Errore di rete. Riprova o scrivici su WhatsApp.';
+    ok.style.display = 'block';
+  } finally {
+    btn.textContent = origTxt;
+    btn.disabled = false;
+  }
 });
 
 /* ── Contatti particles — nuvola di bolle marine ── */
@@ -808,7 +847,7 @@ document.getElementById('contact-form').addEventListener('submit', e => {
     mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
   });
   (section || cvs).addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
-  window.addEventListener('resize', resize);
+  window.addEventListener('resize', debounce(resize, 100));
 
   init();
 })();
