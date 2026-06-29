@@ -1,1303 +1,672 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="it">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>DelMar — Fornitore Ittico Premium</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { background: #080808; color: #fff; font-family: 'Outfit', sans-serif; font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-img { display: block; max-width: 100%; }
-a { color: inherit; text-decoration: none; }
-
-/* ─ Loading ─────────────────────────────────── */
-#loading { position:fixed; inset:0; z-index:9999; background:#080808; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4rem; transition:opacity .7s ease; }
-#loading.out { opacity:0; pointer-events:none; }
-#loading p { font-size:.58rem; letter-spacing:.55em; text-transform:uppercase; color:rgba(255,255,255,.2); }
-#bar-wrap { width:120px; height:1px; background:rgba(255,255,255,.07); }
-#bar { height:100%; background:#fff; width:0%; transition:width .3s; }
-
-/* ─ Header ──────────────────────────────────── */
-#hdr { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:1.7rem 3rem; opacity:0; transition:background .4s; }
-#hdr.scrolled { background:rgba(8,8,8,.92); backdrop-filter:blur(12px); }
-.logo { max-width:8rem; height:auto; }
-nav { display:flex; gap:2.2rem; align-items:center; }
-nav a { font-size:.65rem; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.58); transition:color .3s; }
-nav a:hover { color:#fff; }
-.nav-wa { border:1px solid rgba(255,255,255,.25); padding:.55rem 1.3rem; border-radius:2px; color:rgba(255,255,255,.8) !important; transition:background .3s, border-color .3s !important; }
-.nav-wa:hover { background:#25D366; border-color:#25D366; color:#fff !important; }
-
-/* ─ Lottie bg ───────────────────────────────── */
-#lottie-bg { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:1; overflow:hidden; background:#080808; }
-#lottie-bg svg { display:block; width:100%!important; height:100%!important; }
-#vig { position:fixed; top:0; left:0; width:100vw; height:160px; z-index:2; pointer-events:none; background:linear-gradient(to bottom,rgba(8,8,8,.75) 0%,transparent 100%); }
-
-/* ─ Video scroller ──────────────────────────── */
-#v-scroller { position:relative; z-index:3; height:500vh; }
-#v-sticky { position:sticky; top:0; height:100vh; display:flex; align-items:center; justify-content:center; pointer-events:none; }
-
-.ch { position:absolute; opacity:0; isolation:isolate; }
-.ch::before { content:''; position:absolute; inset:-5rem -6rem; background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,transparent 68%); z-index:-1; pointer-events:none; border-radius:50%; }
-#c1 { top:50%; left:50%; width:88%; max-width:860px; text-align:center; }
-#c2,#c3,#c4,#c5 { top:50%; left:50%; width:88%; max-width:820px; text-align:center; pointer-events:auto; }
-
-.ch-label { font-size:.58rem; font-weight:500; letter-spacing:.4em; text-transform:uppercase; color:rgba(255,255,255,.58); margin-bottom:1rem; text-shadow:0 1px 10px rgba(0,0,0,.95); }
-.ch-title { font-weight:700; letter-spacing:-.02em; line-height:1.05; font-size:clamp(2.4rem,5vw,5.5rem); margin-bottom:1rem; text-shadow:0 2px 24px rgba(0,0,0,.85),0 0 80px rgba(0,0,0,.55); }
-.ch-sub { font-size:clamp(.83rem,1.3vw,.98rem); font-weight:300; line-height:1.7; color:rgba(255,255,255,.82); margin-bottom:1.8rem; text-shadow:0 1px 14px rgba(0,0,0,.95),0 2px 6px rgba(0,0,0,.8); }
-.ch-cta { display:inline-flex; align-items:center; gap:.5rem; font-size:.7rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,.35); padding-bottom:4px; transition:border-color .3s, gap .3s; pointer-events:auto; }
-.ch-cta:hover { border-color:#fff; gap:.8rem; }
-.ch-cta.wa { background:#25D366; border:none; padding:.9rem 2.2rem; border-radius:2px; font-size:.7rem; transition:background .3s; }
-.ch-cta.wa:hover { background:#1ebe5a; }
-
-.cue { display:flex; flex-direction:column; align-items:center; gap:.5rem; margin-top:2rem; }
-.cue span { font-size:.5rem; letter-spacing:.45em; text-transform:uppercase; color:rgba(255,255,255,.22); }
-.cue-line { width:1px; height:32px; background:linear-gradient(to bottom,rgba(255,255,255,.32),transparent); animation:cln 2.4s ease-in-out infinite 1.8s; }
-@keyframes cln { 0%{transform:scaleY(0);transform-origin:top;opacity:0} 50%{transform:scaleY(1);opacity:1} 100%{transform:scaleY(0);transform-origin:bottom;opacity:0} }
-
-/* ─ Utility ─────────────────────────────────── */
-.section { position:relative; z-index:4; background:#080808; max-width:100%; }
-.sec-pad { padding:14vh 6%; }
-.label { font-size:.58rem; font-weight:500; letter-spacing:.42em; text-transform:uppercase; color:rgba(255,255,255,.28); margin-bottom:2.5rem; }
-.big-title { font-weight:700; font-size:clamp(2rem,4.5vw,4.8rem); letter-spacing:-.025em; line-height:1.05; }
-.body-text { font-size:clamp(.88rem,1.4vw,1.05rem); font-weight:300; line-height:1.85; color:rgba(255,255,255,.42); }
-
-/* clip-reveal: il parent ha overflow:hidden, il child viene tradotto su */
-.clip-wrap { overflow:hidden; }
-.clip-inner { transform:translateY(105%); }
-
-/* parallax image wrapper */
-.par-img { overflow:hidden; }
-.par-img img { transform:scale(1.15); will-change:transform; }
-
-/* divider */
-hr.div { border:none; border-top:1px solid rgba(255,255,255,.06); margin:0; }
-
-/* ─ §1 NUMERI ───────────────────────────────── */
-#stats { padding:12vh 6%; }
-.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; border:1px solid rgba(255,255,255,.06); }
-.stat-box { padding:3.5rem 2.5rem; border-right:1px solid rgba(255,255,255,.06); }
-.stat-box:last-child { border-right:none; }
-.stat-n { font-weight:800; font-size:clamp(3rem,6vw,6rem); letter-spacing:-.04em; line-height:1; }
-.stat-l { font-size:.72rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-top:.7rem; line-height:1.5; }
-
-/* ─ §2 PRODOTTI ─────────────────────────────── */
-#prodotti { padding:14vh 0; }
-.prod-intro { padding:0 6% 8vh; }
-.prod-strip { display:grid; grid-template-columns:1fr 1fr; }
-.prod-img { aspect-ratio:4/3; overflow:hidden; }
-.prod-img img { width:100%; height:100%; object-fit:cover; transform:scale(1.08); will-change:transform; }
-.prod-text { display:flex; flex-direction:column; justify-content:center; padding:5rem; background:#0d0d0d; }
-.prod-text .label { margin-bottom:1.5rem; }
-.prod-text .big-title { font-size:clamp(1.8rem,3.2vw,3.5rem); margin-bottom:1.2rem; }
-.prod-text .body-text { margin-bottom:2rem; }
-.prod-link { font-size:.68rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,.3); padding-bottom:3px; display:inline-block; transition:border-color .3s; }
-.prod-link:hover { border-color:#fff; }
-/* alternanza */
-.prod-strip.rev { direction:rtl; }
-.prod-strip.rev > * { direction:ltr; }
-
-/* ─ §3 COME LAVORIAMO (sticky steps) ────────── */
-#processo { position:relative; z-index:4; }
-#proc-pin { height:400vh; }
-#proc-sticky { position:sticky; top:0; height:100vh; display:grid; grid-template-columns:1fr 1fr; overflow:hidden; background:#080808; }
-.proc-left { display:flex; flex-direction:column; justify-content:center; padding:clamp(2rem,5vh,5rem) 5%; overflow:hidden; }
-.proc-steps { list-style:none; }
-.proc-step { padding:clamp(.9rem,1.6vh,2rem) 0; border-top:1px solid rgba(255,255,255,.07); opacity:.22; transition:opacity .6s; }
-.proc-step.active { opacity:1; }
-.proc-step-num { font-size:.58rem; font-weight:600; letter-spacing:.4em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:.6rem; }
-.proc-step-title { font-weight:700; font-size:clamp(1.4rem,2.5vw,2.4rem); letter-spacing:-.02em; }
-.proc-step-desc { font-size:.88rem; color:rgba(255,255,255,.4); line-height:1.7; margin-top:.5rem; max-width:380px; }
-.proc-right { position:relative; overflow:hidden; }
-.proc-img { position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; transition:opacity .8s; background:#080808; }
-.proc-img img { width:100%; height:100%; object-fit:contain; object-position:center top; display:block; }
-.proc-img.active { opacity:1; }
-
-
-/* ─ §LA FILIERA (video scrub) ───────────────── */
-#filiera { padding:0; }
-#filiera-pin { height:500vh; }
-#filiera-sticky { position:sticky; top:0; height:100vh; overflow:hidden; background:#000; }
-#filiera-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; opacity:.82; }
-#filiera-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(8,8,8,.93) 0%,rgba(8,8,8,.18) 50%,rgba(8,8,8,.45) 100%); }
-#filiera-ghost { position:absolute; right:-1vw; top:50%; transform:translateY(-50%); font-size:clamp(12rem,22vw,28rem); font-weight:800; letter-spacing:-.06em; color:rgba(255,255,255,.045); line-height:1; pointer-events:none; user-select:none; }
-#filiera-label { position:absolute; top:0; left:0; right:0; padding:3.5vh 6%; display:flex; justify-content:space-between; align-items:center; }
-.fil-label-l,.fil-label-r { font-size:.55rem; letter-spacing:.42em; text-transform:uppercase; color:rgba(255,255,255,.3); font-weight:500; }
-#filiera-content { position:absolute; left:0; right:0; bottom:0; padding:0 6% 7vh; }
-#fil-chapters { position:relative; height:clamp(160px,24vh,240px); margin-bottom:4vh; }
-.fil-ch { position:absolute; bottom:0; left:0; right:0; opacity:0; transform:translateY(18px); pointer-events:none; }
-.fil-num { font-size:.55rem; font-weight:600; letter-spacing:.45em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:1rem; display:flex; align-items:center; gap:.8rem; }
-.fil-num::after { content:''; flex:0 0 32px; height:1px; background:rgba(255,255,255,.18); }
-.fil-title { font-size:clamp(2.4rem,5.5vw,6rem); font-weight:800; line-height:.93; letter-spacing:-.04em; margin-bottom:1.2rem; }
-.fil-desc { font-size:clamp(.82rem,1.2vw,.95rem); color:rgba(255,255,255,.42); line-height:1.75; max-width:440px; font-weight:300; }
-#filiera-bar { display:flex; gap:3px; }
-.fil-bar-seg { flex:1; height:1.5px; background:rgba(255,255,255,.1); position:relative; overflow:hidden; }
-.fil-bar-fill { position:absolute; top:0; left:0; height:100%; width:0%; background:#fff; transition:width .05s linear; }
-
-/* ─ §4 AZIENDA / CHI SIAMO ─────────────────── */
-#azienda { padding:0; }
-.azienda-facade { position:relative; overflow:hidden; }
-.azienda-facade img { width:100%; height:auto; display:block; transform:scale(1.04); will-change:transform; }
-.azienda-facade-caption { position:absolute; bottom:0; left:0; right:0; padding:2.5rem 6%; background:linear-gradient(to top,rgba(8,8,8,.7) 0%,transparent 100%); display:flex; align-items:flex-end; justify-content:space-between; }
-.azienda-body { padding:10vh 6% 14vh; }
-.azienda-inner { display:grid; grid-template-columns:1fr 1fr; gap:8vw; align-items:start; }
-.azienda-side-imgs { display:flex; flex-direction:column; gap:1.5rem; }
-.azienda-side-imgs img { width:100%; display:block; object-fit:cover; }
-
-/* ─ §5 GALLERY (horizontal scroll) ─────────── */
-#gallery { padding:14vh 0 0; overflow:hidden; height:100vh; }
-.gallery-intro { padding:0 6% 6vh; }
-#gallery-track { display:flex; gap:1.5rem; padding:0 6% 8vh; will-change:transform; align-items:flex-end; }
-.gallery-item { flex:0 0 auto; overflow:hidden; cursor:pointer; height:clamp(280px,46vh,520px); }
-.gallery-item img { height:100%; width:auto; display:block; object-fit:cover; transition:transform .6s ease; }
-.gallery-item:hover img { transform:scale(1.04); }
-.gallery-cap { font-size:.65rem; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.28); margin-top:.9rem; }
-
-/* ─ §6 TEAM ─────────────────────────────────── */
-#team { padding:14vh 6%; }
-.team-grid { display:grid; grid-template-columns:1fr 1fr; gap:6vw; align-items:start; margin-top:7vh; }
-.team-photo-wrap { overflow:hidden; }
-.team-photo-wrap img { width:100%; aspect-ratio:3/4; object-fit:cover; transform:scale(1.06); will-change:transform; }
-.team-copy { display:flex; flex-direction:column; justify-content:center; padding:2rem 0; }
-.team-copy .big-title { margin-bottom:1.5rem; }
-.team-copy .body-text { margin-bottom:2.5rem; }
-.team-stats { display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:3rem; }
-.team-stat-n { font-weight:800; font-size:2.8rem; letter-spacing:-.03em; }
-.team-stat-l { font-size:.7rem; font-weight:400; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-top:.3rem; }
-
-/* ─ §7 FULLBLEED CTA ────────────────────────── */
-#cta-full { position:relative; z-index:4; height:80vh; overflow:hidden; display:flex; align-items:center; justify-content:center; text-align:center; }
-#cta-full-bg { position:absolute; inset:0; }
-#cta-full-bg img { width:100%; height:100%; object-fit:cover; object-position:center center; transform:scale(1.1); will-change:transform; }
-#cta-full-overlay { position:absolute; inset:0; background:rgba(8,8,8,.65); }
-#cta-full-content { position:relative; z-index:1; max-width:700px; padding:2rem; }
-
-/* ─ §8 CONTATTI ─────────────────────────────── */
-#contatti { padding:14vh 6%; }
-.contatti-grid { display:grid; grid-template-columns:1fr 1fr; gap:8vw; }
-.contatti-form { display:flex; flex-direction:column; gap:1.2rem; }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-.form-field { display:flex; flex-direction:column; gap:.5rem; }
-.form-field label { font-size:.6rem; font-weight:500; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.3); }
-.form-field input, .form-field textarea, .form-field select {
-  background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,.15);
-  color:#fff; font-family:'Outfit',sans-serif; font-size:.92rem; font-weight:300;
-  padding:.7rem 0; outline:none; transition:border-color .3s; width:100%;
-}
-.form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color:rgba(255,255,255,.6); }
-.form-field textarea { resize:none; height:100px; }
-.form-field select { appearance:none; cursor:pointer; }
-.form-field select option { background:#111; }
-.btn-submit { align-self:flex-start; background:#fff; color:#080808; border:none; font-family:'Outfit',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; padding:1.1rem 2.8rem; cursor:pointer; transition:background .3s; margin-top:.5rem; }
-.btn-submit:hover { background:rgba(255,255,255,.85); }
-.contatti-info { display:flex; flex-direction:column; gap:3rem; padding-top:1rem; }
-.info-block .info-label { font-size:.58rem; font-weight:500; letter-spacing:.4em; text-transform:uppercase; color:rgba(255,255,255,.28); margin-bottom:.7rem; }
-.info-block .info-val { font-size:1rem; font-weight:400; line-height:1.6; color:rgba(255,255,255,.75); }
-.wa-big { display:inline-flex; align-items:center; gap:.8rem; background:#25D366; color:#fff; font-size:.78rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:1.1rem 2.4rem; border-radius:2px; transition:background .3s; margin-top:1.5rem; }
-.wa-big:hover { background:#1ebe5a; }
-.wa-big svg { flex-shrink:0; }
-
-/* ─ Footer ──────────────────────────────────── */
-#footer { position:relative; z-index:4; background:#080808; border-top:1px solid rgba(255,255,255,.06); padding:3rem 3rem 2rem; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:2rem; }
-.footer-links { display:flex; gap:2rem; }
-.footer-links a { font-size:.6rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.25); transition:color .3s; }
-.footer-links a:hover { color:rgba(255,255,255,.7); }
-.footer-copy { font-size:.58rem; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.15); text-align:center; }
-.footer-social { display:flex; justify-content:flex-end; gap:1.5rem; }
-.footer-social a { font-size:.6rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.25); transition:color .3s; }
-.footer-social a:hover { color:rgba(255,255,255,.7); }
-
-/* ─ §Marina AI (redesign) ───────────────────── */
-#marina { padding:0; }
-#marina-pin { height:500vh; }
-#marina-sticky {
-  position:sticky; top:0; height:100vh; overflow:hidden;
-  background:#030305; display:flex; align-items:center;
-}
-#marina-canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; opacity:.55; }
-.marina-intro-wrap { padding:12vh 6% 6vh; text-align:center; }
-.marina-intro-wrap .big-title { max-width:720px; margin:1.5rem auto; }
-.marina-intro-wrap .body-text { max-width:580px; margin:0 auto; }
-.marina-container {
-  display:grid; grid-template-columns:1fr 1fr; width:100%; height:100%;
-  align-items:center; padding:0 6%; gap:5vw; position:relative; z-index:1;
-}
-.marina-name-row { display:flex; align-items:center; gap:1.2rem; }
-.marina-avatar-sm { width:68px; height:68px; border-radius:50%; object-fit:cover; flex-shrink:0; border:1.5px solid rgba(37,211,102,.35); box-shadow:0 0 0 4px rgba(37,211,102,.07), 0 0 20px rgba(37,211,102,.12); }
-/* ── left info ── */
-.marina-info { display:flex; flex-direction:column; gap:1.6rem; }
-.marina-badge {
-  display:inline-flex; align-items:center; gap:.5rem; align-self:flex-start;
-  font-size:.52rem; font-weight:600; letter-spacing:.32em; text-transform:uppercase;
-  color:#25D366; border:1px solid rgba(37,211,102,.28); border-radius:2px; padding:.32rem .8rem;
-}
-.marina-badge-dot {
-  width:5px; height:5px; background:#25D366; border-radius:50%;
-  box-shadow:0 0 7px #25D366; animation:mblink 1.8s step-end infinite;
-}
-@keyframes mblink { 0%,100%{opacity:1} 50%{opacity:.15} }
-.marina-title { font-weight:800; font-size:clamp(3rem,5vw,5.5rem); letter-spacing:-.04em; line-height:.95; }
-.marina-sub { font-size:.6rem; font-weight:500; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.25); margin-top:.5rem; }
-.marina-desc { font-size:clamp(.85rem,1.15vw,.98rem); font-weight:300; line-height:1.85; color:rgba(255,255,255,.42); max-width:420px; }
-.marina-chips { display:flex; flex-direction:column; gap:.5rem; }
-.marina-chip {
-  display:flex; align-items:center; gap:.8rem;
-  padding:.6rem .9rem; border:1px solid rgba(255,255,255,.06); border-radius:3px;
-  background:rgba(255,255,255,.015);
-}
-.chip-dot { width:5px; height:5px; background:#25D366; border-radius:50%; flex-shrink:0; box-shadow:0 0 8px rgba(37,211,102,.7); }
-.chip-label { font-size:.78rem; font-weight:400; color:rgba(255,255,255,.55); line-height:1.3; }
-.chip-label strong { color:rgba(255,255,255,.82); font-weight:500; }
-.marina-cta-btn { display:inline-flex; align-items:center; gap:.7rem; background:#25D366; color:#fff; font-size:.68rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:1rem 2rem; border-radius:2px; transition:background .3s; align-self:flex-start; }
-.marina-cta-btn:hover { background:#1ebe5a; }
-.marina-poweredby { font-size:.52rem; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.13); }
-/* ── phone mockup ── */
-.marina-phone-col { display:flex; align-items:center; justify-content:center; height:100%; }
-#marina-phone {
-  width:285px; border-radius:38px; overflow:hidden;
-  background:#0b0b0b; border:1.5px solid rgba(255,255,255,.1);
-  box-shadow:0 50px 120px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.04), 0 0 50px rgba(37,211,102,.08);
-  display:flex; flex-direction:column; height:570px;
-}
-.phone-status-bar {
-  background:#128c7e; padding:.28rem .9rem;
-  display:flex; justify-content:space-between; align-items:center;
-}
-.phone-st-time { font-size:.55rem; font-weight:700; color:#fff; }
-.phone-st-icons { font-size:.5rem; color:#fff; letter-spacing:.08em; }
-.phone-wa-hdr {
-  background:#075E54; padding:.55rem .75rem;
-  display:flex; align-items:center; gap:.6rem; border-bottom:1px solid rgba(0,0,0,.3);
-}
-.phone-wa-ava { width:32px; height:32px; border-radius:50%; object-fit:cover; }
-.phone-wa-name { font-size:.72rem; font-weight:600; color:#fff; line-height:1.2; }
-.phone-wa-online { font-size:.56rem; color:rgba(255,255,255,.65); }
-.phone-chat-body {
-  flex:1; padding:.55rem .7rem; overflow:hidden;
-  background:#0d1117; display:flex; flex-direction:column; gap:.45rem;
-}
-.phone-date-badge {
-  align-self:center; font-size:.52rem; color:rgba(255,255,255,.3);
-  background:rgba(255,255,255,.06); border-radius:5px; padding:.18rem .5rem;
-  margin:.2rem 0;
-}
-.phone-bubble {
-  max-width:82%; padding:.48rem .7rem; font-size:.7rem;
-  font-weight:300; line-height:1.55; color:rgba(255,255,255,.88);
-  border-radius:10px; will-change:transform,opacity;
-}
-.phone-bubble.user { align-self:flex-end; background:#005C4B; border-radius:10px 10px 3px 10px; }
-.phone-bubble.ai   { align-self:flex-start; background:#1f2c34; border-radius:10px 10px 10px 3px; }
-.pb-time { font-size:.5rem; color:rgba(255,255,255,.28); margin-top:.2rem; text-align:right; display:flex; align-items:center; justify-content:flex-end; gap:.18rem; }
-.pb-ticks.read { color:#53bdeb; }
-.phone-typing {
-  align-self:flex-start; background:#1f2c34; border-radius:10px 10px 10px 3px;
-  padding:.5rem .7rem; display:flex; gap:3px; align-items:center;
-  will-change:opacity; opacity:0;
-}
-.phone-typing span {
-  width:5px; height:5px; background:rgba(255,255,255,.38); border-radius:50%;
-  animation:tdot 1.1s ease-in-out infinite;
-}
-.phone-typing span:nth-child(2){animation-delay:.18s}
-.phone-typing span:nth-child(3){animation-delay:.36s}
-@keyframes tdot { 0%,80%,100%{transform:translateY(0);opacity:.3} 40%{transform:translateY(-5px);opacity:1} }
-
-/* ─ Lightbox gallery ────────────────────────── */
-#lightbox { position:fixed; inset:0; z-index:9998; background:rgba(0,0,0,.95); display:none; align-items:center; justify-content:center; }
-#lightbox.open { display:flex; }
-#lightbox img { max-width:90vw; max-height:90vh; object-fit:contain; }
-#lightbox-close { position:absolute; top:2rem; right:2rem; font-size:1.5rem; color:rgba(255,255,255,.5); cursor:pointer; background:none; border:none; line-height:1; }
-
-/* ─ Hamburger (solo mobile) ─────────────────── */
-.hamburger { display:none; }
-
-/* ─ Responsive Mobile ───────────────────────── */
-@media (max-width: 768px) {
-
-  /* ─── Fix overflow orizzontale iOS ───────────── */
-  /* clip-path:inset(0) clippa il Lottie SVG landscape dentro il container fixed —
-     overflow:hidden da solo non funziona su Safari mobile per elementi position:fixed */
-  #lottie-bg { clip-path:inset(0 0 0 0); max-width:100vw; }
-  /* Blocca rubber-band orizzontale; la gallery lo ri-abilita su se stessa */
-  body { touch-action:pan-y; }
-  #gallery-track { touch-action:pan-x pan-y; }
-
-  /* ─── Navigation ─────────────────────────── */
-  #hdr { padding:1.1rem 1.4rem; }
-
-  .hamburger {
-    display:flex; flex-direction:column; justify-content:center;
-    gap:5.5px; background:none; border:none; cursor:pointer;
-    z-index:101; position:relative; width:30px; height:30px; padding:0; flex-shrink:0;
-  }
-  .hamburger span {
-    display:block; width:22px; height:1.5px; background:#fff;
-    transition:transform .3s ease, opacity .25s ease; transform-origin:center;
-  }
-  .hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
-  .hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-
-  nav {
-    position:fixed; inset:0; z-index:99;
-    background:rgba(8,8,8,.97); backdrop-filter:blur(24px);
-    flex-direction:column; align-items:center; justify-content:center;
-    gap:2.8rem; opacity:0; pointer-events:none; transition:opacity .3s ease;
-  }
-  nav.open { opacity:1; pointer-events:auto; }
-  nav a { font-size:1.15rem; letter-spacing:.08em; font-weight:400; color:rgba(255,255,255,.65); }
-  .nav-wa {
-    display:inline-flex !important; border-radius:2px !important;
-    background:rgba(37,211,102,.1) !important; border:1px solid rgba(37,211,102,.4) !important;
-    color:#25D366 !important; padding:.8rem 2.4rem !important;
-  }
-
-  /* ─── Utility ────────────────────────────── */
-  .sec-pad { padding:10vh 5%; }
-  .big-title { font-size:clamp(1.9rem,7.5vw,3rem); }
-  .body-text { font-size:.88rem; }
-  .label { font-size:.54rem; margin-bottom:1.5rem; }
-
-  /* ─── Hero chapters ──────────────────────── */
-  #c1,#c2,#c3,#c4,#c5 { width:92%; }
-  .ch-title { font-size:clamp(2rem,8vw,2.8rem) !important; }
-  .ch-sub { font-size:.87rem; }
-  .ch::before { inset:-3rem 0; }
-  .cue { margin-top:1.5rem; }
-
-  /* ─── §1 Stats ───────────────────────────── */
-  #stats { padding:8vh 0; }
-  .stats-grid { grid-template-columns:1fr 1fr; }
-  .stat-box { padding:2rem 1.4rem; }
-  .stat-box:nth-child(2) { border-right:none; }
-  .stat-box:nth-child(3) { border-top:1px solid rgba(255,255,255,.06); }
-  .stat-box:nth-child(4) { border-top:1px solid rgba(255,255,255,.06); border-right:none; }
-  .stat-n { font-size:clamp(2rem,9vw,3rem); }
-  .stat-l { font-size:.62rem; }
-
-  /* ─── §2 Prodotti ────────────────────────── */
-  #prodotti { padding:10vh 0; }
-  .prod-strip { grid-template-columns:1fr; }
-  .prod-strip.rev { direction:ltr; }
-  .prod-strip .prod-img { order:0; }
-  .prod-strip.rev .prod-img { order:-1; }
-  .prod-img { aspect-ratio:4/3; }
-  .prod-text { padding:2.5rem 5%; }
-  .prod-text .big-title { font-size:clamp(1.6rem,6.5vw,2.4rem); }
-  .prod-text .body-text { font-size:.84rem; }
-
-  /* ─── §3 Processo ────────────────────────── */
-  #proc-pin { height:300vh; }
-  #proc-sticky { grid-template-columns:1fr; }
-  .proc-right {
-    position:absolute; inset:0; display:block !important; z-index:0;
-  }
-  .proc-right::after {
-    content:''; position:absolute; inset:0; z-index:1;
-    background:linear-gradient(to right, rgba(8,8,8,.97) 0%, rgba(8,8,8,.88) 50%, rgba(8,8,8,.72) 100%);
-  }
-  .proc-img img { object-fit:cover !important; object-position:center !important; }
-  .proc-left {
-    position:relative; z-index:2; background:transparent !important;
-    padding:6vh 5% 7vh; justify-content:flex-end; height:100vh;
-  }
-  .proc-step-title { font-size:1.2rem; }
-  .proc-step-desc { font-size:.82rem; max-width:none; }
-  .proc-step-num { font-size:.5rem; }
-
-  /* ─── Marina AI ──────────────────────────── */
-  #marina-pin { height:280vh; }
-  .marina-intro-wrap { padding:8vh 5% 4vh; text-align:left; }
-  .marina-intro-wrap .big-title { margin:1rem 0; }
-  .marina-intro-wrap .body-text { max-width:none; }
-  #marina-sticky { overflow:hidden; }
-  .marina-container {
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:2vh 5% 2vh; gap:1.5vh; height:100%; overflow:hidden;
-  }
-  /* Telefono prima, info dopo */
-  .marina-phone-col { display:flex !important; order:-1; justify-content:center; flex-shrink:0; }
-  #marina-phone {
-    width:min(300px,80vw);
-    height:min(500px,64vh);
-    border-radius:min(38px,9.5vw);
-  }
-  /* Bolle chat più compatte per stare nel telefono */
-  .phone-bubble { font-size:.63rem; padding:.4rem .62rem; border-radius:8px; }
-  .phone-bubble.user { border-radius:8px 8px 2px 8px; }
-  .phone-bubble.ai   { border-radius:8px 8px 8px 2px; }
-  .phone-chat-body { gap:.3rem; padding:.45rem .55rem; }
-  .pb-time { font-size:.46rem; }
-  .phone-date-badge { font-size:.46rem; }
-  /* Info compatta centrata */
-  .marina-info {
-    display:flex; flex-direction:column; align-items:center;
-    text-align:center; gap:.55rem; width:100%;
-  }
-  .marina-name-row { justify-content:center; gap:.8rem; }
-  .marina-title { font-size:1.6rem; line-height:1; letter-spacing:-.03em; }
-  .marina-desc { display:none; }
-  .marina-chips { display:none; }
-  .marina-poweredby { display:none; }
-  .marina-avatar-sm { width:38px; height:38px; }
-  .marina-badge { font-size:.44rem; padding:.26rem .65rem; }
-  .marina-sub { font-size:.42rem; letter-spacing:.16em; }
-  .marina-cta-btn { align-self:center; justify-content:center; font-size:.63rem; padding:.85rem 1.8rem; }
-
-  /* ─── La Filiera (nascosta su mobile) ───────── */
-  #filiera { display:none; }
-
-  /* ─── §4 Azienda ─────────────────────────── */
-  .azienda-inner { grid-template-columns:1fr; gap:4vh; }
-  .azienda-body { padding:8vh 5% 10vh; }
-  .azienda-facade-caption { padding:1.5rem 5%; }
-
-  /* ─── §5 Gallery (touch scroll nativo) ───── */
-  #gallery { height:auto !important; padding:10vh 0 6vh; overflow:visible; }
-  .gallery-intro { padding:0 5% 4vh; }
-  #gallery-track {
-    overflow-x:auto; -webkit-overflow-scrolling:touch;
-    scroll-snap-type:x proximity;
-    padding:0 5% 2rem; gap:.9rem;
-    scrollbar-width:none; cursor:default;
-  }
-  #gallery-track::-webkit-scrollbar { display:none; }
-  .gallery-item { height:clamp(180px,50vw,260px); scroll-snap-align:start; }
-
-  /* ─── §6 Team ────────────────────────────── */
-  #team { padding:10vh 5%; }
-  .team-grid { grid-template-columns:1fr; gap:4vh; margin-top:4vh; }
-  .team-photo-wrap img { aspect-ratio:4/3; }
-  .team-copy { padding:0; }
-  .team-stats { grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:2rem; }
-  .team-stat-n { font-size:2rem; }
-  .team-stat-l { font-size:.6rem; }
-
-  /* ─── CTA Fullbleed ──────────────────────── */
-  #cta-full { height:65vh; }
-  #cta-full-content .big-title { font-size:clamp(1.9rem,7vw,3rem) !important; margin-bottom:1.5rem; }
-  .wa-big { font-size:.7rem; padding:1rem 1.6rem; width:100%; justify-content:center; max-width:320px; }
-
-  /* ─── §8 Contatti ────────────────────────── */
-  #contatti { padding:10vh 5%; }
-  .contatti-grid { grid-template-columns:1fr; gap:5vh; }
-  .form-row { grid-template-columns:1fr; }
-  .btn-submit { width:100%; text-align:center; }
-  .contatti-info { padding-top:0; gap:2rem; }
-
-  /* ─── Footer ─────────────────────────────── */
-  #footer { grid-template-columns:1fr; text-align:center; padding:3rem 5% 2rem; gap:1.8rem; }
-  .footer-links { justify-content:center; flex-wrap:wrap; gap:.8rem 1.5rem; }
-  .footer-social { justify-content:center; }
-}
-</style>
-</head>
-<body>
-<!-- Loading -->
-<div id="loading"><p>DelMar</p><div id="bar-wrap"><div id="bar"></div></div></div>
-
-<!-- Lottie bg fisso -->
-<div id="lottie-bg"></div>
-<div id="vig"></div>
-
-<!-- Header -->
-<header id="hdr">
-  <a href="#"><img src="del mar trasparent.png" alt="DelMar" class="logo"></a>
-  <nav>
-    <a href="#prodotti">Prodotti</a>
-    <a href="#processo">Come Lavoriamo</a>
-    <a href="#azienda">Azienda</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#marina">Marina AI</a>
-    <a href="#contatti">Contatti</a>
-    <a href="https://wa.me/393936762018?text=Ciao%20Marina!" target="_blank" class="nav-wa">Ordina ora</a>
-  </nav>
-  <button class="hamburger" id="hamburger" aria-label="Apri menu"><span></span><span></span><span></span></button>
-</header>
-
-<!-- ════════════════════ HERO VIDEO ════════════ -->
-<div id="v-scroller">
-  <div id="v-sticky">
-
-    <div class="ch" id="c1">
-      <h1 class="ch-title" style="font-size:clamp(2.8rem,6vw,6.5rem)">L'eccellenza<br>del mare.</h1>
-      <p class="ch-sub">Forniture ittiche premium per l'alta ristorazione.<br>Dal mare aperto, direttamente alla tua cucina.</p>
-      <div class="cue"><span>Scroll</span><div class="cue-line"></div></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>DelMar — Fornitore Ittico Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Loading -->
+    <div id="loading">
+      <p>DelMar</p>
+      <div id="bar-wrap"><div id="bar"></div></div>
     </div>
-
-    <div class="ch" id="c2">
-      <p class="ch-label">Cosa offriamo</p>
-      <h2 class="ch-title">Fresco, surgelato<br>e lavorato.</h2>
-      <p class="ch-sub">Pesce fresco selezionato ogni mattina, surgelati premium e specialità lavorate. Tutto in un unico fornitore.</p>
-      <a href="#prodotti" class="ch-cta">Scopri i prodotti →</a>
-    </div>
-
-    <div class="ch" id="c3">
-      <p class="ch-label">Perché sceglierci</p>
-      <h2 class="ch-title">Tracciabilità<br>certificata.</h2>
-      <p class="ch-sub">Ogni lotto documentato dall'origine alla consegna. Certificazioni HACCP e BRC aggiornate.</p>
-      <a href="#processo" class="ch-cta">Come lavoriamo →</a>
-    </div>
-
-    <div class="ch" id="c4">
-      <p class="ch-label">Primo ordine — senza complicazioni</p>
-      <h2 class="ch-title">Inizia con<br>un messaggio.</h2>
-      <p class="ch-sub">Scrivici su WhatsApp. Ti rispondiamo entro un'ora con disponibilità e prezzi del giorno.</p>
-      <a href="https://wa.me/393936762018?text=Ciao%20DelMar%2C%20vorrei%20informazioni%20per%20un%20primo%20ordine" target="_blank" class="ch-cta wa">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Scrivici su WhatsApp
-      </a>
-    </div>
-
-    <div class="ch" id="c5">
-      <p class="ch-label">Lavora con noi</p>
-      <h2 class="ch-title">Il tuo fornitore<br>di fiducia.</h2>
-      <p class="ch-sub">Oltre 200 ristoranti stellati si affidano a DelMar ogni settimana. Diventa il prossimo.</p>
-      <a href="#contatti" class="ch-cta">Richiedi un preventivo →</a>
-    </div>
-
-  </div>
-</div>
-
-<!-- ════════════════════ §1 NUMERI ════════════ -->
-<section class="section" id="stats">
-  <div class="stats-grid">
-    <div class="stat-box"><div class="stat-n" data-count="2000">0</div><div class="stat-l">Ristoranti e attività<br>serviti in tutta Italia</div></div>
-    <div class="stat-box"><div class="stat-n" data-count="30">0</div><div class="stat-l">Anni di esperienza<br>nel settore ittico</div></div>
-    <div class="stat-box"><div class="stat-n" data-count="24">0</div><div class="stat-l">Ore dalla pesca<br>alla tua cucina</div></div>
-    <div class="stat-box"><div class="stat-n" data-count="100">0</div><div class="stat-l">Referenze di prodotto<br>disponibili ogni giorno</div></div>
-  </div>
-</section>
-
-<hr class="div section">
-
-<!-- ════════════════════ §2 PRODOTTI ══════════ -->
-<section class="section" id="prodotti">
-  <div class="prod-intro sec-pad" style="padding-bottom:6vh">
-    <p class="label reveal-label">I Nostri Prodotti</p>
-    <h2 class="big-title" style="max-width:700px"><span class="clip-wrap"><span class="clip-inner">Tutto il meglio<br>del Mediterraneo.</span></span></h2>
-  </div>
-
-  <div class="prod-strip">
-    <div class="prod-img par-img"><img src="img/alici.jpg" alt="Alici fresche" loading="lazy"></div>
-    <div class="prod-text">
-      <p class="label">Pesce Fresco</p>
-      <h3 class="big-title" style="font-size:clamp(1.8rem,3vw,3.2rem)">Selezionato ogni mattina.</h3>
-      <p class="body-text" style="margin:1rem 0 1.8rem">Branzino, orata, tonno, spada, alici e molto altro. Selezioniamo personalmente il pescato dai migliori mercati ittici italiani e lo consegniamo fresco entro 24 ore.</p>
-      <a href="#contatti" class="prod-link">Richiedi il listino prezzi →</a>
-    </div>
-  </div>
-
-  <div class="prod-strip rev">
-    <div class="prod-img par-img"><img src="img/fish-tanks.jpg" alt="Vasche pesce vivo" loading="lazy"></div>
-    <div class="prod-text">
-      <p class="label">Crostacei e Molluschi</p>
-      <h3 class="big-title" style="font-size:clamp(1.8rem,3vw,3.2rem)">Vivi e freschi<br>su ordinazione.</h3>
-      <p class="body-text" style="margin:1rem 0 1.8rem">Astici, aragoste, gamberi rossi, scampi, vongole veraci e cozze. Disponibili vivi, freschi o porzionati secondo le esigenze della cucina.</p>
-      <a href="#contatti" class="prod-link">Richiedi disponibilità →</a>
-    </div>
-  </div>
-
-  <div class="prod-strip">
-    <div class="prod-img par-img"><img src="img/shelves.jpg" alt="Scaffali" loading="lazy"></div>
-    <div class="prod-text">
-      <p class="label">Linea Surgelati</p>
-      <h3 class="big-title" style="font-size:clamp(1.8rem,3vw,3.2rem)">Abbattimento rapido.<br>Qualità intatta.</h3>
-      <p class="body-text" style="margin:1rem 0 1.8rem">Abbattimento immediato post-pesca per preservare freschezza, colore e proprietà organolettiche. La stessa qualità del fresco, con maggiore flessibilità operativa.</p>
-      <a href="#contatti" class="prod-link">Scopri il catalogo →</a>
-    </div>
-  </div>
-</section>
-
-<hr class="div section">
-
-<!-- ════════════════════ §3 PROCESSO (sticky) ═ -->
-<section class="section" id="processo">
-  <div id="proc-pin">
-    <div id="proc-sticky">
-      <div class="proc-left">
-        <p class="label">Come Lavoriamo</p>
-        <ul class="proc-steps" id="proc-steps">
-          <li class="proc-step active" data-img="0">
-            <div class="proc-step-num">01</div>
-            <div class="proc-step-title">Selezione diretta dai pescatori</div>
-            <div class="proc-step-desc">Ogni mattina i nostri buyer scelgono il pescato direttamente dai pescatori di fiducia: nessun intermediario, freschezza assoluta e tracciabilità certa dalla barca.</div>
-          </li>
-          <li class="proc-step" data-img="1">
-            <div class="proc-step-num">02</div>
-            <div class="proc-step-title">Lavorazione e confezionamento</div>
-            <div class="proc-step-desc">Il prodotto arriva nei nostri laboratori certificati dove viene pulito, porzionato e confezionato nel rispetto delle norme HACCP.</div>
-          </li>
-          <li class="proc-step" data-img="2">
-            <div class="proc-step-num">03</div>
-            <div class="proc-step-title">Catena del freddo certificata</div>
-            <div class="proc-step-desc">Ogni lotto viene tracciato con temperatura e orario registrati. La catena del freddo non si interrompe mai, dal laboratorio al vostro ristorante.</div>
-          </li>
-          <li class="proc-step" data-img="3">
-            <div class="proc-step-num">04</div>
-            <div class="proc-step-title">Consegna entro 24 ore</div>
-            <div class="proc-step-desc">La nostra flotta refrigerata consegna in tutta Italia entro 24 ore dall'ordine. Flessibili sugli orari, puntuali sulla qualità.</div>
-          </li>
-        </ul>
-      </div>
-      <div class="proc-right">
-        <div class="proc-img active" id="proc-img-0"><img src="img/barca-fronte.jpg" alt="Selezione del pescato" loading="eager"></div>
-        <div class="proc-img" id="proc-img-1"><img src="img/lavorazione-salmone-quadrato.jpg" alt="Lavorazione salmone" loading="eager"></div>
-        <div class="proc-img" id="proc-img-2"><img src="img/iscatolamento.jpg" alt="Iscatolamento" loading="eager"></div>
-        <div class="proc-img" id="proc-img-3"><img src="img/truck-day.jpg" alt="Consegna" loading="eager"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════ MARINA AI ════════════ -->
-<hr class="div section">
-<section class="section" id="marina">
-  <div class="marina-intro-wrap">
-    <p class="label reveal-label">Tecnologia & Innovazione</p>
-    <h2 class="big-title"><span class="clip-wrap"><span class="clip-inner">Un'azienda che evolve<br>con il mercato.</span></span></h2>
-    <p class="body-text" style="margin-top:1.2rem">Da 30 anni anticipiamo le esigenze del settore. Oggi l'intelligenza artificiale incontra la tradizione: ordina in pochi secondi, ricevi il meglio del mare.</p>
-  </div>
-  <div id="marina-pin">
-    <div id="marina-sticky">
-      <canvas id="marina-canvas"></canvas>
-      <div class="marina-container">
-
-        <!-- Left: info -->
-        <div class="marina-info" id="marina-info">
-          <div class="marina-badge"><div class="marina-badge-dot"></div>AI · Live</div>
-          <div class="marina-name-row">
-            <img src="img/marina.jpg" alt="Marina" class="marina-avatar-sm">
-            <div>
-              <h2 class="marina-title">Marina</h2>
-              <p class="marina-sub">Assistente AI · DelMar × Gastro Supply</p>
-            </div>
+    <!-- Lottie bg fisso -->
+    <div id="lottie-bg"></div>
+    <div id="vig"></div>
+    <!-- Header -->
+    <header id="hdr">
+      <a href="#"><img src="img/logo.png" alt="DelMar" class="logo" /></a>
+      <nav>
+        <a href="#prodotti">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
+        <a href="#gallery">Gallery</a> <a href="#marina">Marina AI</a> <a href="#contatti">Contatti</a>
+        <a href="https://wa.me/393936762018?text=Ciao%20Marina!" target="_blank" class="nav-wa">Ordina ora</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Apri menu"><span></span><span></span><span></span></button>
+    </header>
+    <!-- ════════════════════ HERO VIDEO ════════════ -->
+    <div id="v-scroller">
+      <div id="v-sticky">
+        <div class="ch" id="c1">
+          <h1 class="ch-title" style="font-size: clamp(2.8rem, 6vw, 6.5rem)">L'eccellenza<br />del mare.</h1>
+          <p class="ch-sub">
+            Forniture ittiche premium per l'alta ristorazione.<br />Dal mare aperto, direttamente alla tua cucina.
+          </p>
+          <div class="cue">
+            <span>Scroll</span>
+            <div class="cue-line"></div>
           </div>
-          <p class="marina-desc">Marina è la tua assistente AI su WhatsApp per ordinare i prodotti DelMar. Chatta con lei, registra la tua attività in pochi minuti e fai il primo ordine: lo portiamo al tuo locale in meno di 24 ore. E fa molto di più — conosce il catalogo completo, ti aggiorna su disponibilità e prezzi in tempo reale, e suggerisce i prodotti giusti per il tuo menù.</p>
-          <div class="marina-chips" id="marina-chips">
-            <div class="marina-chip"><div class="chip-dot"></div><div class="chip-label"><strong>Ordina su WhatsApp, 24 ore su 24.</strong> Scrivi a Marina dal tuo telefono — niente app, niente portali. Un messaggio e l'ordine è fatto.</div></div>
-            <div class="marina-chip"><div class="chip-dot"></div><div class="chip-label"><strong>Catalogo e prezzi sempre aggiornati.</strong> Disponibilità in tempo reale, nuovi arrivi e le migliori referenze del momento — tutto in un messaggio.</div></div>
-            <div class="marina-chip"><div class="chip-dot"></div><div class="chip-label"><strong>Registrati in un messaggio. Primo ordine in meno di 24h.</strong> Scrivi a Marina: attiva il tuo account in pochi minuti e ricevi subito la prima consegna.</div></div>
-          </div>
-          <a href="https://wa.me/393936762018?text=Ciao%20Marina%2C%20vorrei%20ordinare" target="_blank" class="marina-cta-btn" id="marina-cta">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Ordina con Marina · +39 393 676 2018
+        </div>
+        <div class="ch" id="c2">
+          <p class="ch-label">Cosa offriamo</p>
+          <h2 class="ch-title">Fresco, surgelato<br />e lavorato.</h2>
+          <p class="ch-sub">
+            Pesce fresco selezionato ogni mattina, surgelati premium e specialità lavorate. Tutto in un unico fornitore.
+          </p>
+          <a href="#prodotti" class="ch-cta">Scopri i prodotti →</a>
+        </div>
+        <div class="ch" id="c3">
+          <p class="ch-label">Perché sceglierci</p>
+          <h2 class="ch-title">Tracciabilità<br />certificata.</h2>
+          <p class="ch-sub">
+            Ogni lotto documentato dall'origine alla consegna. Certificazioni HACCP e BRC aggiornate.
+          </p>
+          <a href="#processo" class="ch-cta">Come lavoriamo →</a>
+        </div>
+        <div class="ch" id="c4">
+          <p class="ch-label">Primo ordine — senza complicazioni</p>
+          <h2 class="ch-title">Inizia con<br />un messaggio.</h2>
+          <p class="ch-sub">Scrivici su WhatsApp. Ti rispondiamo entro un'ora con disponibilità e prezzi del giorno.</p>
+          <a
+            href="https://wa.me/393936762018?text=Ciao%20DelMar%2C%20vorrei%20informazioni%20per%20un%20primo%20ordine"
+            target="_blank"
+            class="ch-cta wa"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink: 0">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+              />
+            </svg>
+            Scrivici su WhatsApp
           </a>
-          <p class="marina-poweredby">Powered by Gastro Supply</p>
         </div>
-
-        <!-- Right: phone mockup -->
-        <div class="marina-phone-col">
-          <div id="marina-phone">
-            <div class="phone-status-bar">
-              <span class="phone-st-time">18:42</span>
-              <span class="phone-st-icons">▲ ▼ ● ■</span>
+        <div class="ch" id="c5">
+          <p class="ch-label">Lavora con noi</p>
+          <h2 class="ch-title">Il tuo fornitore<br />di fiducia.</h2>
+          <p class="ch-sub">Oltre 200 ristoranti stellati si affidano a DelMar ogni settimana. Diventa il prossimo.</p>
+          <a href="#contatti" class="ch-cta">Richiedi un preventivo →</a>
+        </div>
+      </div>
+    </div>
+    <!-- ════════════════════ §1 NUMERI ════════════ -->
+    <section class="section" id="stats">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-n" data-count="2000">0</div>
+          <div class="stat-l">Ristoranti e attività<br />serviti in tutta Italia</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" data-count="30">0</div>
+          <div class="stat-l">Anni di esperienza<br />nel settore ittico</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" data-count="24">0</div>
+          <div class="stat-l">Ore dalla pesca<br />alla tua cucina</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" data-count="100">0</div>
+          <div class="stat-l">Referenze di prodotto<br />disponibili ogni giorno</div>
+        </div>
+      </div>
+    </section>
+    <hr class="div section" />
+    <!-- ════════════════════ §2 PRODOTTI ══════════ -->
+    <section class="section" id="prodotti">
+      <div class="prod-intro sec-pad" style="padding-bottom: 6vh">
+        <p class="label reveal-label">I Nostri Prodotti</p>
+        <h2 class="big-title" style="max-width: 700px">
+          <span class="clip-wrap"
+            ><span class="clip-inner">Tutto il meglio<br />del Mediterraneo.</span></span
+          >
+        </h2>
+      </div>
+      <div class="prod-strip">
+        <div class="prod-img par-img"><img src="img/alici.jpg" alt="Alici fresche" loading="lazy" /></div>
+        <div class="prod-text">
+          <p class="label">Pesce Fresco</p>
+          <h3 class="big-title" style="font-size: clamp(1.8rem, 3vw, 3.2rem)">Selezionato ogni mattina.</h3>
+          <p class="body-text" style="margin: 1rem 0 1.8rem">
+            Branzino, orata, tonno, spada, alici e molto altro. Selezioniamo personalmente il pescato dai migliori
+            mercati ittici italiani e lo consegniamo fresco entro 24 ore.
+          </p>
+          <a href="#contatti" class="prod-link">Richiedi il listino prezzi →</a>
+        </div>
+      </div>
+      <div class="prod-strip rev">
+        <div class="prod-img par-img"><img src="img/fish-tanks.jpg" alt="Vasche pesce vivo" loading="lazy" /></div>
+        <div class="prod-text">
+          <p class="label">Crostacei e Molluschi</p>
+          <h3 class="big-title" style="font-size: clamp(1.8rem, 3vw, 3.2rem)">Vivi e freschi<br />su ordinazione.</h3>
+          <p class="body-text" style="margin: 1rem 0 1.8rem">
+            Astici, aragoste, gamberi rossi, scampi, vongole veraci e cozze. Disponibili vivi, freschi o porzionati
+            secondo le esigenze della cucina.
+          </p>
+          <a href="#contatti" class="prod-link">Richiedi disponibilità →</a>
+        </div>
+      </div>
+      <div class="prod-strip">
+        <div class="prod-img par-img"><img src="img/shelves.jpg" alt="Scaffali" loading="lazy" /></div>
+        <div class="prod-text">
+          <p class="label">Linea Surgelati</p>
+          <h3 class="big-title" style="font-size: clamp(1.8rem, 3vw, 3.2rem)">
+            Abbattimento rapido.<br />Qualità intatta.
+          </h3>
+          <p class="body-text" style="margin: 1rem 0 1.8rem">
+            Abbattimento immediato post-pesca per preservare freschezza, colore e proprietà organolettiche. La stessa
+            qualità del fresco, con maggiore flessibilità operativa.
+          </p>
+          <a href="#contatti" class="prod-link">Scopri il catalogo →</a>
+        </div>
+      </div>
+    </section>
+    <hr class="div section" />
+    <!-- ════════════════════ §3 PROCESSO (timeline) ═ -->
+    <section class="section" id="processo">
+      <div id="proc-wrap">
+        <!-- Left: label + timeline + text slot -->
+        <div id="proc-left-col">
+          <p class="label proc-tl-label">Come Lavoriamo</p>
+          <div id="proc-stage">
+            <!-- Linea + pallini -->
+            <div id="proc-tl">
+              <div id="proc-tl-fill"></div>
+              <div id="proc-spark"></div>
+              <div class="ptl-dot" id="ptl-dot-0"></div>
+              <div class="ptl-dot" id="ptl-dot-1"></div>
+              <div class="ptl-dot" id="ptl-dot-2"></div>
+              <div class="ptl-dot" id="ptl-dot-3"></div>
             </div>
-            <div class="phone-wa-hdr">
-              <img src="img/marina.jpg" alt="Marina" class="phone-wa-ava">
-              <div>
-                <div class="phone-wa-name">Marina · DelMar</div>
-                <div class="phone-wa-online">online</div>
+            <!-- Step: ciascuno al livello verticale del proprio pallino -->
+            <div class="ptl-step" id="ptl-0">
+              <div class="ptl-num">01</div>
+              <div class="ptl-title">Selezione diretta<br />dai pescatori</div>
+              <div class="ptl-desc">
+                Ogni mattina i nostri buyer scelgono il pescato direttamente dai pescatori di fiducia: nessun
+                intermediario, freschezza assoluta e tracciabilità certa dalla barca.
               </div>
             </div>
-            <div class="phone-chat-body">
-              <div class="phone-date-badge">Oggi</div>
-
-              <div class="phone-bubble user" id="pb1">
-                Ciao Marina! Ho bisogno di branzino, salmone e gamberi rossi per domani mattina. Siamo 60 coperti.
-                <div class="pb-time">07:52 <span class="pb-ticks read">✓✓</span></div>
+            <div class="ptl-step" id="ptl-1">
+              <div class="ptl-num">02</div>
+              <div class="ptl-title">Lavorazione e<br />confezionamento</div>
+              <div class="ptl-desc">
+                Il prodotto arriva nei nostri laboratori certificati dove viene pulito, porzionato e confezionato nel
+                rispetto delle norme HACCP.
               </div>
-
-              <div class="phone-typing" id="pt1"><span></span><span></span><span></span></div>
-
-              <div class="phone-bubble ai" id="pb2">
-                Ciao! Ecco disponibilità e prezzi:<br>
-                🐟 Branzino selvaggio · 16 kg · €18,50/kg<br>
-                🍣 Salmone atlantico · 8 kg · €12,90/kg<br>
-                🦐 Gamberi rossi Mazara · 5 kg · €38/kg<br>
-                Totale stimato: <strong>€723</strong>. Confermo l'ordine?
-                <div class="pb-time">07:52 <span class="pb-ticks read">✓✓</span></div>
+            </div>
+            <div class="ptl-step" id="ptl-2">
+              <div class="ptl-num">03</div>
+              <div class="ptl-title">Catena del freddo<br />certificata</div>
+              <div class="ptl-desc">
+                Ogni lotto viene tracciato con temperatura e orario registrati. La catena del freddo non si interrompe
+                mai, dal laboratorio al vostro ristorante.
               </div>
-
-              <div class="phone-bubble user" id="pb3">
-                Sì, confermato! 🙌 A che ora consegnate?
-                <div class="pb-time">07:53 <span class="pb-ticks read">✓✓</span></div>
-              </div>
-
-              <div class="phone-typing" id="pt2"><span></span><span></span><span></span></div>
-
-              <div class="phone-bubble ai" id="pb4">
-                ✅ Ordine confermato! Consegna domani tra le 05:30 e le 07:00. Riceverai un SMS con il tracker del furgone. Buon servizio! 🐟
-                <div class="pb-time">07:53 <span class="pb-ticks read">✓✓</span></div>
+            </div>
+            <div class="ptl-step" id="ptl-3">
+              <div class="ptl-num">04</div>
+              <div class="ptl-title">Consegna entro<br />24 ore</div>
+              <div class="ptl-desc">
+                La nostra flotta refrigerata consegna in tutta Italia entro 24 ore dall'ordine. Flessibili sugli orari,
+                puntuali sulla qualità.
               </div>
             </div>
           </div>
         </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="div section">
-<!-- ════════════════════ LA FILIERA ════════════ -->
-<section class="section" id="filiera">
-  <div id="filiera-pin">
-    <div id="filiera-sticky">
-
-      <video id="filiera-video" muted playsinline preload="auto">
-        <source src="VIdeo/video%20filiera%20produttiva%20del%20mar.mp4" type="video/mp4">
-      </video>
-
-      <div id="filiera-overlay"></div>
-      <div id="filiera-ghost">01</div>
-
-      <div id="filiera-label">
-        <span class="fil-label-l">La Filiera · DelMar</span>
-        <span class="fil-label-r" id="fil-counter">01 / 04</span>
-      </div>
-
-      <div id="filiera-content">
-        <div id="fil-chapters">
-          <div class="fil-ch" data-idx="0">
-            <div class="fil-num">01 — Selezione</div>
-            <div class="fil-title">Dal pescato<br>alla scelta.</div>
-            <div class="fil-desc">Ogni mattina i nostri buyer scelgono direttamente dai pescatori di fiducia. Nessun intermediario, freschezza assoluta, filiera tracciata.</div>
+        <!-- Right: photo -->
+        <div id="proc-photo-col">
+          <div class="ptl-photo" id="pp-0">
+            <img src="img/barca-fronte.jpg" alt="Selezione del pescato" loading="eager" />
           </div>
-          <div class="fil-ch" data-idx="1">
-            <div class="fil-num">02 — Lavorazione</div>
-            <div class="fil-title">Laboratorio<br>di precisione.</div>
-            <div class="fil-desc">Nei nostri impianti certificati HACCP ogni prodotto viene pulito, porzionato e lavorato con tecnologia di ultima generazione.</div>
+          <div class="ptl-photo" id="pp-1">
+            <img src="img/lavorazione-salmone-quadrato.jpg" alt="Lavorazione" loading="eager" />
           </div>
-          <div class="fil-ch" data-idx="2">
-            <div class="fil-num">03 — Confezionamento</div>
-            <div class="fil-title">Qualità<br>sigillata.</div>
-            <div class="fil-desc">Packaging sottovuoto e atmosfera controllata. La catena del freddo non si interrompe mai: dal laboratorio alla cucina del vostro locale.</div>
+          <div class="ptl-photo" id="pp-2">
+            <img src="img/iscatolamento.jpg" alt="Confezionamento" loading="eager" />
           </div>
-          <div class="fil-ch" data-idx="3">
-            <div class="fil-num">04 — Consegna</div>
-            <div class="fil-title">In 24 ore,<br>ovunque.</div>
-            <div class="fil-desc">La nostra flotta refrigerata consegna in tutta Italia entro 24 ore dall'ordine. Puntuali sulla qualità, flessibili sugli orari.</div>
+          <div class="ptl-photo" id="pp-3"><img src="img/truck-day.jpg" alt="Consegna" loading="eager" /></div>
+          <div id="proc-photo-counter">01 / 04</div>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ BEAM TRANSITION ══════ -->
+    <section id="marina-beam">
+      <div id="mb-pin">
+        <div id="mb-sticky">
+          <div id="mb-intro">
+            <p class="label" style="justify-content: center; display: flex; margin-bottom: 1.2rem">
+              Tecnologia & Innovazione
+            </p>
+            <h2 id="mb-title">Un'azienda che evolve<br />con il mercato.</h2>
+            <p id="mb-desc">
+              Da 30 anni anticipiamo le esigenze del settore. Oggi l'intelligenza artificiale incontra la tradizione:
+              ordina in pochi secondi, ricevi il meglio del mare.
+            </p>
+          </div>
+          <canvas id="mb-canvas"></canvas>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ MARINA AI ════════════ -->
+    <section class="section" id="marina">
+      <div id="marina-pin">
+        <div id="marina-sticky">
+          <canvas id="marina-canvas"></canvas> <canvas id="marina-line-cvs"></canvas>
+          <div class="marina-container">
+            <!-- Left: info -->
+            <div class="marina-info" id="marina-info">
+              <div class="marina-badge">
+                <div class="marina-badge-dot"></div>
+                AI · Live
+              </div>
+              <div class="marina-name-row">
+                <img src="img/marina.jpg" alt="Marina" class="marina-avatar-sm" />
+                <div>
+                  <h2 class="marina-title">Marina</h2>
+                  <p class="marina-sub">Assistente AI · DelMar × Gastro Supply</p>
+                </div>
+              </div>
+              <p class="marina-desc">
+                Marina è la tua assistente AI su WhatsApp per ordinare i prodotti DelMar. Chatta con lei, registra la
+                tua attività in pochi minuti e fai il primo ordine: lo portiamo al tuo locale in meno di 24 ore. E fa
+                molto di più — conosce il catalogo completo, ti aggiorna su disponibilità e prezzi in tempo reale, e
+                suggerisce i prodotti giusti per il tuo menù.
+              </p>
+              <div class="marina-chips" id="marina-chips">
+                <div class="marina-chip">
+                  <div class="chip-dot"></div>
+                  <div class="chip-label">
+                    <strong>Ordina su WhatsApp, 24 ore su 24.</strong> Scrivi a Marina dal tuo telefono — niente app,
+                    niente portali. Un messaggio e l'ordine è fatto.
+                  </div>
+                </div>
+                <div class="marina-chip">
+                  <div class="chip-dot"></div>
+                  <div class="chip-label">
+                    <strong>Catalogo e prezzi sempre aggiornati.</strong> Disponibilità in tempo reale, nuovi arrivi e
+                    le migliori referenze del momento — tutto in un messaggio.
+                  </div>
+                </div>
+                <div class="marina-chip">
+                  <div class="chip-dot"></div>
+                  <div class="chip-label">
+                    <strong>Registrati in un messaggio. Primo ordine in meno di 24h.</strong> Scrivi a Marina: attiva il
+                    tuo account in pochi minuti e ricevi subito la prima consegna.
+                  </div>
+                </div>
+              </div>
+              <a
+                href="https://wa.me/393936762018?text=Ciao%20Marina%2C%20vorrei%20ordinare"
+                target="_blank"
+                class="marina-cta-btn"
+                id="marina-cta"
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+                  />
+                </svg>
+                Ordina con Marina · +39 393 676 2018
+              </a>
+              <p class="marina-poweredby">Powered by Gastro Supply</p>
+            </div>
+            <!-- Right: phone mockup -->
+            <div class="marina-phone-col">
+              <div id="marina-phone">
+                <div class="phone-status-bar">
+                  <span class="phone-st-time">18:42</span> <span class="phone-st-icons">▲ ▼ ● ■</span>
+                </div>
+                <div class="phone-wa-hdr">
+                  <img src="img/marina.jpg" alt="Marina" class="phone-wa-ava" />
+                  <div>
+                    <div class="phone-wa-name">Marina · DelMar</div>
+                    <div class="phone-wa-online">online</div>
+                  </div>
+                </div>
+                <div class="phone-chat-body">
+                  <div class="phone-date-badge">Oggi</div>
+                  <div class="phone-bubble user" id="pb1">
+                    Ciao Marina! Ho bisogno di branzino, salmone e gamberi rossi per domani mattina. Siamo 60 coperti.
+                    <div class="pb-time">07:52 <span class="pb-ticks read">✓✓</span></div>
+                  </div>
+                  <div class="phone-typing" id="pt1"><span></span><span></span><span></span></div>
+                  <div class="phone-bubble ai" id="pb2">
+                    Ciao! Ecco disponibilità e prezzi:<br />
+                    🐟 Branzino selvaggio · 16 kg · €18,50/kg<br />
+                    🍣 Salmone atlantico · 8 kg · €12,90/kg<br />
+                    🦐 Gamberi rossi Mazara · 5 kg · €38/kg<br />
+                    Totale stimato: <strong>€723</strong>. Confermo l'ordine?
+                    <div class="pb-time">07:52 <span class="pb-ticks read">✓✓</span></div>
+                  </div>
+                  <div class="phone-bubble user" id="pb3">
+                    Sì, confermato! 🙌 A che ora consegnate?
+                    <div class="pb-time">07:53 <span class="pb-ticks read">✓✓</span></div>
+                  </div>
+                  <div class="phone-typing" id="pt2"><span></span><span></span><span></span></div>
+                  <div class="phone-bubble ai" id="pb4">
+                    ✅ Ordine confermato! Consegna domani tra le 05:30 e le 07:00. Riceverai un SMS con il tracker del
+                    furgone. Buon servizio! 🐟
+                    <div class="pb-time">07:53 <span class="pb-ticks read">✓✓</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div id="filiera-bar">
-          <div class="fil-bar-seg"><div class="fil-bar-fill"></div></div>
-          <div class="fil-bar-seg"><div class="fil-bar-fill"></div></div>
-          <div class="fil-bar-seg"><div class="fil-bar-fill"></div></div>
-          <div class="fil-bar-seg"><div class="fil-bar-fill"></div></div>
+      </div>
+    </section>
+    <hr class="div section" />
+    <!-- ════════════════════ LA FILIERA (cinema) ═══ -->
+    <section class="section" id="filiera">
+      <div id="fil3-wrap">
+        <div id="fil3-header">
+          <p class="label" style="justify-content: center; display: flex; margin-bottom: 1.5rem">La Filiera · DelMar</p>
+          <h2 class="big-title" style="text-align: center">
+            <span class="clip-wrap"
+              ><span class="clip-inner">Dalla barca<br />alla tua cucina.</span></span
+            >
+          </h2>
+        </div>
+        <div id="fil3-cinema">
+          <video id="fil3-video" muted playsinline preload="auto">
+            <source src="video/filiera.mp4" type="video/mp4" />
+          </video>
+          <div id="fil3-gradient"></div>
+          <div id="fil3-topbar">
+            <span class="fil3-brand">La Filiera · DelMar</span>
+            <div id="fil3-segs">
+              <div class="fil3-seg"><div class="fil3-seg-fill"></div></div>
+              <div class="fil3-seg"><div class="fil3-seg-fill"></div></div>
+              <div class="fil3-seg"><div class="fil3-seg-fill"></div></div>
+              <div class="fil3-seg"><div class="fil3-seg-fill"></div></div>
+            </div>
+          </div>
+          <div id="fil3-text">
+            <div id="fil3-num"></div>
+            <div id="fil3-title"></div>
+            <div id="fil3-desc"></div>
+          </div>
+          <div id="fil3-progbar">
+            <div id="fil3-progfill"></div>
+            <div class="fil3-mark" style="left: 25%"></div>
+            <div class="fil3-mark" style="left: 50%"></div>
+            <div class="fil3-mark" style="left: 75%"></div>
+          </div>
         </div>
       </div>
-
-    </div>
-  </div>
-</section>
-
-<hr class="div section">
-
-<!-- ════════════════════ §4 AZIENDA ══════════ -->
-<section class="section" id="azienda">
-  <!-- Facciata — panoramica full width, proporzione naturale -->
-  <div class="azienda-facade par-img">
-    <img src="img/facade-day.jpg" alt="Sede DelMar" loading="eager">
-    <div class="azienda-facade-caption">
-      <p class="label" style="margin-bottom:0;color:rgba(255,255,255,.5)">Sede · Via Dorsale 13, Massa (MS)</p>
-    </div>
-  </div>
-  <!-- Testo + foto -->
-  <div class="azienda-body">
-    <div class="azienda-inner">
-      <div>
-        <p class="label reveal-label">Chi Siamo</p>
-        <h2 class="big-title" style="margin-bottom:1.5rem"><span class="clip-wrap"><span class="clip-inner">Trent'anni<br>di mare.</span></span></h2>
-        <p class="body-text reveal-text" style="margin-bottom:1.5rem">LE DELIZIE DEL MARE S.R.L. nasce nel 2004 con un obiettivo preciso: portare il meglio del mare direttamente nelle cucine dei professionisti. Da oltre 30 anni serviamo ristoranti, hotel, mense e strutture della GDO con la stessa ossessione per la qualità del primo giorno.</p>
-        <p class="body-text reveal-text">Con sede a Massa Carrara, in una posizione strategica per la logistica nazionale, contiamo su un magazzino all'avanguardia, una flotta refrigerata moderna e circa 50 collaboratori che ogni giorno rendono possibile la promessa DelMar: fresco, preciso, puntuale.</p>
-        <a href="#contatti" class="prod-link" style="margin-top:2rem;display:inline-block">Scopri la nostra storia →</a>
-      </div>
-      <div class="azienda-side-imgs reveal-img">
-        <img src="img/meeting-1.jpg" alt="Team in riunione" loading="lazy" style="aspect-ratio:4/3;object-fit:cover;object-position:center top;">
-        <img src="img/facade-night.jpg" alt="Sede notturna" loading="lazy" style="aspect-ratio:21/9;object-fit:cover;">
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="div section">
-
-<!-- ════════════════════ §5 GALLERY ══════════ -->
-<section class="section" id="gallery">
-  <div class="gallery-intro sec-pad" style="padding-bottom:5vh">
-    <p class="label reveal-label">Gallery</p>
-    <h2 class="big-title"><span class="clip-wrap"><span class="clip-inner">La nostra realtà.</span></span></h2>
-  </div>
-  <div id="gallery-track">
-    <div class="gallery-item"><img src="img/processing-1.jpg" alt="Laboratorio" loading="eager"><div class="gallery-cap">Lavorazioni · Laboratorio</div></div>
-    <div class="gallery-item"><img src="img/processing-2.jpg" alt="Lavorazioni 2" loading="eager"><div class="gallery-cap">Lavorazioni · Linea produzione</div></div>
-    <div class="gallery-item"><img src="img/alici-1.jpg" alt="Alici" loading="eager"><div class="gallery-cap">Prodotto · Alici selezionate</div></div>
-    <div class="gallery-item"><img src="img/processing-3.jpg" alt="Lavorazioni 3" loading="eager"><div class="gallery-cap">Lavorazioni · Filettatura</div></div>
-    <div class="gallery-item"><img src="img/shop-1.jpg" alt="Negozio 1" loading="eager"><div class="gallery-cap">Punto vendita · Banco pesce</div></div>
-    <div class="gallery-item"><img src="img/truck-night-lights.jpg" alt="Baie di carico" loading="eager"><div class="gallery-cap">Logistica · Baie di carico</div></div>
-    <div class="gallery-item"><img src="img/shop-2.jpg" alt="Negozio 2" loading="eager"><div class="gallery-cap">Punto vendita · Negozio</div></div>
-    <div class="gallery-item"><img src="img/truck-night2.jpg" alt="Flotta notturna" loading="eager"><div class="gallery-cap">Logistica · Flotta refrigerata</div></div>
-    <div class="gallery-item"><img src="img/portrait.jpg" alt="Ritratto" loading="eager"><div class="gallery-cap">Team · Responsabile acquisti</div></div>
-    <div class="gallery-item"><img src="img/meeting-2.jpg" alt="Riunione" loading="eager"><div class="gallery-cap">Team · Briefing quotidiano</div></div>
-  </div>
-</section>
-
-<hr class="div section">
-
-<!-- ════════════════════ §6 TEAM ══════════════ -->
-<section class="section sec-pad" id="team">
-  <p class="label reveal-label">Il Nostro Team</p>
-  <div class="team-grid">
-    <div class="team-photo-wrap reveal-img">
-      <img src="img/team-stairs.jpg" alt="Team DelMar" loading="lazy">
-    </div>
-    <div class="team-copy">
-      <h2 class="big-title"><span class="clip-wrap"><span class="clip-inner">Persone<br>appassionate.</span></span></h2>
-      <p class="body-text reveal-text" style="margin-top:1.5rem">Siamo un team di professionisti con anni di esperienza nel settore ittico. Dalla selezione alla consegna, ogni persona in DelMar condivide la stessa ossessione per la qualità.</p>
-      <div class="team-stats">
-        <div><div class="team-stat-n" data-count="50">0</div><div class="team-stat-l">Collaboratori<br>nel 2026</div></div>
-        <div><div class="team-stat-n" data-count="20">0</div><div class="team-stat-l">Anni di storia<br>dal 2004</div></div>
-        <div><div class="team-stat-n" data-count="13" data-suffix="M">0</div><div class="team-stat-l">Milioni di fatturato<br>anno 2024</div></div>
-        <div><div class="team-stat-n" data-count="24">0</div><div class="team-stat-l">Ore dalla selezione<br>alla consegna</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════ FULLBLEED CTA ════════ -->
-<div class="section" id="cta-full">
-  <div id="cta-full-bg" class="par-img"><img src="img/truck-night.jpg" alt="Consegna notturna" loading="lazy"></div>
-  <div id="cta-full-overlay"></div>
-  <div id="cta-full-content">
-    <p class="label" style="justify-content:center;display:flex">Inizia oggi</p>
-    <h2 class="big-title" style="font-size:clamp(2.4rem,5vw,5.5rem);margin-bottom:2rem"><span class="clip-wrap"><span class="clip-inner">Portare il mare<br>nella tua cucina.</span></span></h2>
-    <a href="https://wa.me/393936762018?text=Ciao%20DelMar%2C%20vorrei%20un%20primo%20ordine" target="_blank" class="wa-big" style="margin:0 auto">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Contattaci su WhatsApp
-    </a>
-  </div>
-</div>
-
-<!-- ════════════════════ §8 CONTATTI ══════════ -->
-<section class="section sec-pad" id="contatti">
-  <div class="contatti-grid">
-    <div>
-      <p class="label reveal-label">Contatti</p>
-      <h2 class="big-title" style="margin-bottom:3rem"><span class="clip-wrap"><span class="clip-inner">Parliamo.</span></span></h2>
-      <form class="contatti-form" id="contact-form">
-        <div class="form-row">
-          <div class="form-field"><label>Nome</label><input type="text" placeholder="Mario Rossi" required></div>
-          <div class="form-field"><label>Ristorante / Azienda</label><input type="text" placeholder="Ristorante Da Mario" required></div>
+    </section>
+    <hr class="div section" />
+    <!-- ════════════════════ §4 AZIENDA ══════════ -->
+    <section class="section" id="azienda">
+      <!-- Facciata — panoramica full width, proporzione naturale -->
+      <div class="azienda-facade par-img">
+        <img src="img/facade-day.jpg" alt="Sede DelMar" loading="eager" />
+        <div class="azienda-facade-caption">
+          <p class="label" style="margin-bottom: 0; color: rgba(255, 255, 255, 0.5)">
+            Sede · Via Dorsale 13, Massa (MS)
+          </p>
         </div>
-        <div class="form-row">
-          <div class="form-field"><label>Email</label><input type="email" placeholder="mario@ristorante.it" required></div>
-          <div class="form-field"><label>Telefono</label><input type="tel" placeholder="+39 333 1234567"></div>
+      </div>
+      <!-- Testo + foto -->
+      <div class="azienda-body">
+        <div class="azienda-inner">
+          <div>
+            <p class="label reveal-label">Chi Siamo</p>
+            <h2 class="big-title" style="margin-bottom: 1.5rem">
+              <span class="clip-wrap"
+                ><span class="clip-inner">Trent'anni<br />di mare.</span></span
+              >
+            </h2>
+            <p class="body-text reveal-text" style="margin-bottom: 1.5rem">
+              LE DELIZIE DEL MARE S.R.L. nasce nel 2004 con un obiettivo preciso: portare il meglio del mare
+              direttamente nelle cucine dei professionisti. Da oltre 30 anni serviamo ristoranti, hotel, mense e
+              strutture della GDO con la stessa ossessione per la qualità del primo giorno.
+            </p>
+            <p class="body-text reveal-text">
+              Con sede a Massa Carrara, in una posizione strategica per la logistica nazionale, contiamo su un magazzino
+              all'avanguardia, una flotta refrigerata moderna e circa 50 collaboratori che ogni giorno rendono possibile
+              la promessa DelMar: fresco, preciso, puntuale.
+            </p>
+            <a href="#contatti" class="prod-link" style="margin-top: 2rem; display: inline-block"
+              >Scopri la nostra storia →</a
+            >
+          </div>
+          <div class="azienda-side-imgs reveal-img">
+            <img
+              src="img/meeting-1.jpg"
+              alt="Team in riunione"
+              loading="lazy"
+              style="aspect-ratio: 4/3; object-fit: cover; object-position: center top"
+            />
+            <img
+              src="img/facade-night.jpg"
+              alt="Sede notturna"
+              loading="lazy"
+              style="aspect-ratio: 21/9; object-fit: cover"
+            />
+          </div>
         </div>
-        <div class="form-field">
-          <label>Cosa ti interessa</label>
-          <select>
-            <option value="">Seleziona...</option>
-            <option>Pesce Fresco</option>
-            <option>Crostacei e Molluschi</option>
-            <option>Linea Surgelati</option>
-            <option>Tutto il catalogo</option>
-            <option>Consulenza personalizzata</option>
-          </select>
+      </div>
+    </section>
+    <hr class="div section" />
+    <!-- ════════════════════ §5 GALLERY ══════════ -->
+    <section class="section" id="gallery">
+      <div class="gallery-intro sec-pad" style="padding-bottom: 5vh">
+        <p class="label reveal-label">Gallery</p>
+        <h2 class="big-title">
+          <span class="clip-wrap"><span class="clip-inner">La nostra realtà.</span></span>
+        </h2>
+      </div>
+      <div id="gallery-track">
+        <div class="gallery-item">
+          <img src="img/processing-1.jpg" alt="Laboratorio" loading="eager" />
+          <div class="gallery-cap">Lavorazioni · Laboratorio</div>
         </div>
-        <div class="form-field"><label>Messaggio</label><textarea placeholder="Raccontaci le tue esigenze..."></textarea></div>
-        <button type="submit" class="btn-submit">Invia richiesta</button>
-        <p id="form-ok" style="display:none;font-size:.8rem;color:rgba(255,255,255,.5);margin-top:.5rem">Messaggio inviato. Ti contatteremo presto.</p>
-      </form>
-    </div>
-    <div class="contatti-info">
-      <div>
-        <p class="label">Risposta rapida</p>
-        <a href="https://wa.me/393936762018?text=Ciao%20DelMar!" target="_blank" class="wa-big">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Ordina con Marina su WhatsApp
+        <div class="gallery-item">
+          <img src="img/processing-2.jpg" alt="Lavorazioni 2" loading="eager" />
+          <div class="gallery-cap">Lavorazioni · Linea produzione</div>
+        </div>
+        <div class="gallery-item">
+          <img src="img/alici-1.jpg" alt="Alici" loading="eager" />
+          <div class="gallery-cap">Prodotto · Alici selezionate</div>
+        </div>
+        <div class="gallery-item">
+          <img src="img/processing-3.jpg" alt="Lavorazioni 3" loading="eager" />
+          <div class="gallery-cap">Lavorazioni · Filettatura</div>
+        </div>
+        <div class="gallery-item">
+          <img src="img/shop-1.jpg" alt="Negozio 1" loading="eager" />
+          <div class="gallery-cap">Punto vendita · Banco pesce</div>
+        </div>
+        <div class="gallery-item">
+          <img src="img/truck-night-lights.jpg" alt="Baie di carico" loading="eager" />
+          <div class="gallery-cap">Logistica · Baie di carico</div>
+        </div>
+        <div class="gallery-item">
+          <img src="img/shop-2.jpg" alt="Negozio 2" loading="eager" />
+          <div class="gallery-cap">Punto vendita · Negozio</div>
+        </div>
+        <div class="gallery-item">
+          <img src="img/truck-night2.jpg" alt="Flotta notturna" loading="eager" />
+          <div class="gallery-cap">Logistica · Flotta refrigerata</div>
+        </div>
+        <div class="gallery-item">
+          <img src="img/portrait.jpg" alt="Ritratto" loading="eager" />
+          <div class="gallery-cap">Team · Responsabile acquisti</div>
+        </div>
+        <div class="gallery-item">
+          <img src="img/meeting-2.jpg" alt="Riunione" loading="eager" />
+          <div class="gallery-cap">Team · Briefing quotidiano</div>
+        </div>
+      </div>
+    </section>
+    <hr class="div section" />
+    <!-- ════════════════════ §6 TEAM ══════════════ -->
+    <section class="section sec-pad" id="team">
+      <p class="label reveal-label">Il Nostro Team</p>
+      <div class="team-grid">
+        <div class="team-photo-wrap reveal-img"><img src="img/team-stairs.jpg" alt="Team DelMar" loading="lazy" /></div>
+        <div class="team-copy">
+          <h2 class="big-title">
+            <span class="clip-wrap"
+              ><span class="clip-inner">Persone<br />appassionate.</span></span
+            >
+          </h2>
+          <p class="body-text reveal-text" style="margin-top: 1.5rem">
+            Siamo un team di professionisti con anni di esperienza nel settore ittico. Dalla selezione alla consegna,
+            ogni persona in DelMar condivide la stessa ossessione per la qualità.
+          </p>
+          <div class="team-stats">
+            <div>
+              <div class="team-stat-n" data-count="50">0</div>
+              <div class="team-stat-l">Collaboratori<br />nel 2026</div>
+            </div>
+            <div>
+              <div class="team-stat-n" data-count="20">0</div>
+              <div class="team-stat-l">Anni di storia<br />dal 2004</div>
+            </div>
+            <div>
+              <div class="team-stat-n" data-count="13" data-suffix="M">0</div>
+              <div class="team-stat-l">Milioni di fatturato<br />anno 2024</div>
+            </div>
+            <div>
+              <div class="team-stat-n" data-count="24">0</div>
+              <div class="team-stat-l">Ore dalla selezione<br />alla consegna</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ FULLBLEED CTA ════════ -->
+    <div class="section" id="cta-full">
+      <div id="cta-full-bg" class="par-img">
+        <img src="img/truck-night.jpg" alt="Consegna notturna" loading="lazy" />
+      </div>
+      <div id="cta-full-overlay"></div>
+      <div id="cta-full-content">
+        <p class="label" style="justify-content: center; display: flex">Inizia oggi</p>
+        <h2 class="big-title" style="font-size: clamp(2.4rem, 5vw, 5.5rem); margin-bottom: 2rem">
+          <span class="clip-wrap"
+            ><span class="clip-inner">Portare il mare<br />nella tua cucina.</span></span
+          >
+        </h2>
+        <a
+          href="https://wa.me/393936762018?text=Ciao%20DelMar%2C%20vorrei%20un%20primo%20ordine"
+          target="_blank"
+          class="wa-big"
+          style="margin: 0 auto"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+            />
+          </svg>
+          Contattaci su WhatsApp
         </a>
       </div>
-      <div class="info-block"><div class="info-label">Telefono</div><div class="info-val">+39 0585 834572</div></div>
-      <div class="info-block"><div class="info-label">Email</div><div class="info-val">info@del-mar.it</div></div>
-      <div class="info-block"><div class="info-label">Indirizzo</div><div class="info-val">Via Dorsale 13<br>54100 Massa (MS)</div></div>
-      <div class="info-block"><div class="info-label">Consegne</div><div class="info-val">Tutta Italia entro 24h<br>Ordini entro le 18:00</div></div>
     </div>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer id="footer" class="section">
-  <div class="footer-links">
-    <a href="#prodotti">Prodotti</a>
-    <a href="#processo">Come Lavoriamo</a>
-    <a href="#azienda">Azienda</a>
-    <a href="#gallery">Gallery</a>
-  </div>
-  <img src="del mar trasparent.png" alt="DelMar" style="max-width:6rem;opacity:.3">
-  <div class="footer-social">
-    <a href="#">Instagram</a>
-    <a href="#">LinkedIn</a>
-    <a href="#">WhatsApp</a>
-  </div>
-</footer>
-<p class="footer-copy section" style="padding:1.2rem;text-align:center;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.1);background:#080808">&copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati</p>
-
-<!-- Lightbox -->
-<div id="lightbox"><button id="lightbox-close">&times;</button><img id="lb-img" src="" alt=""></div>
-
-<!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-<script>
-gsap.registerPlugin(ScrollTrigger);
-
-/* ── Header scroll state ──────────────────────── */
-const hdr = document.getElementById('hdr');
-ScrollTrigger.create({
-  trigger: '#v-scroller', start: 'bottom 70%',
-  onEnter: ()     => hdr.classList.add('scrolled'),
-  onLeaveBack: () => hdr.classList.remove('scrolled')
-});
-
-/* ── Lottie hero ──────────────────────────────── */
-const bar    = document.getElementById('bar');
-const loader = document.getElementById('loading');
-
-const anim = lottie.loadAnimation({
-  container: document.getElementById('lottie-bg'),
-  renderer: 'svg', loop: false, autoplay: false,
-  path: 'nuovo video del mar.json',
-  rendererSettings: { preserveAspectRatio: 'xMidYMid slice', progressiveLoad: true }
-});
-
-anim.addEventListener('data_ready',    () => bar.style.width = '60%');
-anim.addEventListener('loaded_images', () => bar.style.width = '90%');
-anim.addEventListener('data_failed',   () => loader.querySelector('p').textContent = 'Errore');
-
-anim.addEventListener('DOMLoaded', () => {
-  bar.style.width = '100%';
-  anim.goToAndStop(0, true);
-  setTimeout(() => { loader.classList.add('out'); setTimeout(() => loader.remove(), 800); }, 300);
-  gsap.to('#hdr', { opacity: 1, duration: 1.2, ease: 'power2.out', delay: 0.3 });
-
-  gsap.set('#c1', { xPercent:-50, yPercent:-50, opacity:1 });
-  gsap.set('#c2', { xPercent:-50, yPercent:-50 });
-  gsap.set('#c3', { xPercent:-50, yPercent:-50 });
-  gsap.set('#c4', { xPercent:-50, yPercent:-50 });
-  gsap.set('#c5', { xPercent:-50, yPercent:-50 });
-
-  const CHS = [
-    {el:'#c1',s:0.00,fi:0.00,fo:0.14,e:0.20},
-    {el:'#c2',s:0.22,fi:0.28,fo:0.38,e:0.44},
-    {el:'#c3',s:0.46,fi:0.52,fo:0.60,e:0.65},
-    {el:'#c4',s:0.67,fi:0.73,fo:0.80,e:0.86},
-    {el:'#c5',s:0.88,fi:0.93,fo:0.98,e:1.01},
-  ];
-  const els   = CHS.map(c => document.querySelector(c.el));
-  const total = anim.totalFrames;
-  const proxy = { frame: 0 };
-
-  function op(p,s,fi,fo,e){ if(p>=e)return 0; if(p<=s)return s===0?1:0; if(p<fi)return(p-s)/(fi-s||.001); if(p>fo)return 1-(p-fo)/(e-fo||.001); return 1; }
-  function sc(p,s,fi,fo,e){ if(p<=s)return .82; if(p<fi)return .82+.18*((p-s)/(fi-s||.001)); if(p>fo)return 1+.15*((p-fo)/(e-fo||.001)); return 1; }
-  function bl(p,s,fi,fo,e){ if(p<=s)return 7; if(p<fi)return 7*(1-(p-s)/(fi-s||.001)); if(p>fo)return 6*((p-fo)/(e-fo||.001)); return 0; }
-
-  ScrollTrigger.create({
-    trigger:'#v-scroller', start:'top top', end:'bottom bottom', scrub:1,
-    onUpdate(self){
-      const p = self.progress;
-      gsap.to(proxy,{ frame:p*(total-1), duration:.4, ease:'none', overwrite:'auto',
-        onUpdate(){ anim.goToAndStop(Math.round(proxy.frame),true); }
-      });
-      CHS.forEach((c,i) => gsap.set(els[i],{
-        opacity: op(p,c.s,c.fi,c.fo,c.e),
-        scale:   sc(p,c.s,c.fi,c.fo,c.e),
-        filter: `blur(${bl(p,c.s,c.fi,c.fo,c.e).toFixed(1)}px)`
-      }));
-    }
-  });
-});
-
-/* ── Counters ─────────────────────────────────── */
-document.querySelectorAll('[data-count]').forEach(el => {
-  const target = +el.dataset.count;
-  const suffix = el.dataset.suffix || (target >= 100 ? '+' : target === 24 ? 'h' : '+');
-  ScrollTrigger.create({
-    trigger: el, start: 'top 85%', once: true, invalidateOnRefresh: true,
-    onEnter() {
-      gsap.to({ n: 0 }, { n: target, duration: 1.8, ease: 'power2.out',
-        onUpdate() { el.textContent = Math.round(this.targets()[0].n) + suffix; }
-      });
-    }
-  });
-});
-
-/* ── Clip reveals (testi grandi) ──────────────── */
-document.querySelectorAll('.clip-inner').forEach(el => {
-  gsap.to(el, { y: '0%', duration: 1.1, ease: 'power3.out',
-    scrollTrigger: { trigger: el.closest('.clip-wrap'), start: 'top 88%', toggleActions:'play none none reverse', invalidateOnRefresh:true }
-  });
-});
-
-/* ── Label fade ───────────────────────────────── */
-document.querySelectorAll('.reveal-label').forEach(el => {
-  gsap.from(el, { opacity:0, y:15, duration:.8, ease:'power2.out',
-    scrollTrigger: { trigger:el, start:'top 88%', toggleActions:'play none none reverse', invalidateOnRefresh:true }
-  });
-});
-
-/* ── Body text reveal ────────────────────────── */
-document.querySelectorAll('.reveal-text').forEach((el,i) => {
-  gsap.from(el, { opacity:0, y:25, duration:1, ease:'power3.out', delay:i*0.1,
-    scrollTrigger: { trigger:el, start:'top 88%', toggleActions:'play none none reverse', invalidateOnRefresh:true }
-  });
-});
-
-/* ── Image reveal + parallax ─────────────────── */
-document.querySelectorAll('.reveal-img').forEach(el => {
-  gsap.from(el, { opacity:0, scale:.96, duration:1.2, ease:'power3.out',
-    scrollTrigger: { trigger:el, start:'top 85%', toggleActions:'play none none reverse', invalidateOnRefresh:true }
-  });
-});
-
-document.querySelectorAll('.par-img img').forEach(img => {
-  gsap.to(img, { scale: 1, ease:'none',
-    scrollTrigger: { trigger: img.closest('.par-img'), start:'top bottom', end:'bottom top', scrub:1.5 }
-  });
-});
-
-/* ── Prod strip fade-in ──────────────────────── */
-document.querySelectorAll('.prod-strip').forEach(strip => {
-  gsap.from(strip, { opacity:0, y:40, duration:1, ease:'power3.out',
-    scrollTrigger: { trigger:strip, start:'top 85%', toggleActions:'play none none reverse' }
-  });
-});
-
-/* ── Processo sticky ─────────────────────────── */
-const procSteps  = document.querySelectorAll('.proc-step');
-const procImages = document.querySelectorAll('.proc-img');
-
-ScrollTrigger.create({
-  trigger: '#proc-pin', start: 'top top', end: 'bottom bottom', scrub: 1,
-  onUpdate(self) {
-    const idx = Math.min(Math.floor(self.progress * 4), 3);
-    procSteps.forEach((s,i)  => s.classList.toggle('active', i===idx));
-    procImages.forEach((img,i) => img.classList.toggle('active', i===idx));
-  }
-});
-
-/* ── Gallery parallax orizzontale (desktop) ──── */
-const track = document.getElementById('gallery-track');
-const trackW = () => track.scrollWidth - track.parentElement.offsetWidth;
-
-if (window.innerWidth > 768) {
-  gsap.to(track, {
-    x: () => -trackW(), ease: 'none',
-    scrollTrigger: {
-      trigger: '#gallery', start: 'top top', end: () => '+=' + trackW() * 1.2,
-      pin: true, scrub: 1, invalidateOnRefresh: true
-    }
-  });
-}
-
-/* Lightbox gallery */
-document.querySelectorAll('.gallery-item img').forEach(img => {
-  img.style.cursor = 'zoom-in';
-  img.addEventListener('click', () => {
-    document.getElementById('lb-img').src = img.src;
-    document.getElementById('lightbox').classList.add('open');
-  });
-});
-document.getElementById('lightbox-close').addEventListener('click', () => {
-  document.getElementById('lightbox').classList.remove('open');
-});
-document.getElementById('lightbox').addEventListener('click', e => {
-  if (e.target === document.getElementById('lightbox')) document.getElementById('lightbox').classList.remove('open');
-});
-
-/* ── Team photo parallax ─────────────────────── */
-document.querySelectorAll('.team-photo-wrap img').forEach(img => {
-  gsap.to(img, { scale:1, ease:'none',
-    scrollTrigger: { trigger: img.closest('.team-photo-wrap'), start:'top bottom', end:'bottom top', scrub:1.5 }
-  });
-});
-
-/* ── Marina AI — pinned scrub timeline ───────── */
-if (document.getElementById('marina-pin')) {
-  /* initial states */
-  gsap.set('#marina-info > *', { opacity:0, y:22 });
-  gsap.set('.marina-chip', { opacity:0, x:-18 });
-  gsap.set('#marina-cta', { opacity:0, y:12 });
-  gsap.set('.marina-poweredby', { opacity:0 });
-  gsap.set('#marina-phone', { opacity:0, y:60, rotateX:8 });
-  gsap.set('#pb1,#pb2,#pb3,#pb4', { opacity:0, y:14, scale:.97 });
-  gsap.set('#pt1,#pt2', { opacity:0 });
-
-  const mt = gsap.timeline({ paused:true });
-
-  /* left panel stagger */
-  mt.to('#marina-info > *', { opacity:1, y:0, duration:.3, stagger:.07, ease:'power3.out' }, 0)
-    .to('.marina-chip', { opacity:1, x:0, duration:.25, stagger:.07, ease:'power2.out' }, 0.18)
-    .to('#marina-cta', { opacity:1, y:0, duration:.2, ease:'power3.out' }, 0.40)
-    .to('.marina-poweredby', { opacity:1, duration:.15 }, 0.50)
-
-  /* phone appears */
-    .to('#marina-phone', { opacity:1, y:0, rotateX:0, duration:.3, ease:'power3.out' }, 0.12)
-
-  /* message 1 (user) */
-    .to('#pb1', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.30)
-
-  /* typing 1 */
-    .to('#pt1', { opacity:1, duration:.1 }, 0.44)
-    .to('#pt1', { opacity:0, duration:.08 }, 0.56)
-
-  /* message 2 (marina) */
-    .to('#pb2', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.58)
-
-  /* message 3 (user) */
-    .to('#pb3', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.72)
-
-  /* typing 2 */
-    .to('#pt2', { opacity:1, duration:.08 }, 0.82)
-    .to('#pt2', { opacity:0, duration:.07 }, 0.90)
-
-  /* message 4 (marina) */
-    .to('#pb4', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.92);
-
-  ScrollTrigger.create({
-    trigger:'#marina-pin', start:'top top', end:'bottom bottom', scrub:.8,
-    onUpdate(self){ mt.progress(self.progress); }
-  });
-}
-
-/* ── Marina canvas neural network ─────────────── */
-(function(){
-  const mc = document.getElementById('marina-canvas');
-  if (!mc) return;
-  const ctx2 = mc.getContext('2d');
-  let cW, cH, parts = [];
-  function resizeMC(){ cW = mc.width = mc.offsetWidth; cH = mc.height = mc.offsetHeight; }
-  function NP(x,y,a,d){
-    this.x=x; this.y=y; this.a=a; this.d=d;
-    this.spd=0.7-d*0.12; this.life=0; this.max=160+Math.random()*140;
-    this.w=1.1-d*0.18; this.px=x; this.py=y;
-    this.branchAt=35+Math.random()*55; this.branched=false;
-  }
-  NP.prototype.update=function(){
-    this.px=this.x; this.py=this.y;
-    this.a+=(Math.random()-0.5)*0.07;
-    this.x+=Math.cos(this.a)*this.spd;
-    this.y+=Math.sin(this.a)*this.spd;
-    this.life++;
-    if(!this.branched&&this.life>=this.branchAt&&this.d<4){
-      this.branched=true;
-      if(Math.random()>0.35) parts.push(new NP(this.x,this.y,this.a+0.45,this.d+1));
-      if(Math.random()>0.55) parts.push(new NP(this.x,this.y,this.a-0.45,this.d+1));
-    }
-  };
-  NP.prototype.draw=function(){
-    var alpha=(1-this.life/this.max)*(0.15-this.d*0.025);
-    ctx2.strokeStyle='rgba(255,255,255,'+Math.max(0,alpha)+')';
-    ctx2.lineWidth=Math.max(0.2,this.w*(1-this.life/this.max));
-    ctx2.beginPath(); ctx2.moveTo(this.px,this.py); ctx2.lineTo(this.x,this.y); ctx2.stroke();
-  };
-  NP.prototype.dead=function(){
-    return this.life>=this.max||this.x<-60||this.x>cW+60||this.y<-60||this.y>cH+60;
-  };
-  function burst(){
-    var n=8;
-    for(var i=0;i<n;i++) parts.push(new NP(cW/2,cH/2,(i/n)*Math.PI*2,0));
-  }
-  function loopMC(){
-    requestAnimationFrame(loopMC);
-    ctx2.clearRect(0,0,cW,cH);
-    if(Math.random()<0.012) burst();
-    parts=parts.filter(function(p){return!p.dead();});
-    parts.forEach(function(p){p.update();p.draw();});
-  }
-  resizeMC();
-  window.addEventListener('resize',resizeMC);
-  burst(); loopMC();
-})();
-
-
-/* ── La Filiera — video scrub su scroll ────── */
-(function(){
-  const vid     = document.getElementById('filiera-video');
-  if (!vid) return;
-  const ghost   = document.getElementById('filiera-ghost');
-  const counter = document.getElementById('fil-counter');
-  const chs     = document.querySelectorAll('.fil-ch');
-  const fills   = document.querySelectorAll('.fil-bar-fill');
-  let curIdx    = -1;
-
-  gsap.set(chs[0], { opacity:1, y:0 });
-
-  function setChapter(idx) {
-    if (idx === curIdx) return;
-    if (curIdx >= 0) gsap.to(chs[curIdx], { opacity:0, y:18, duration:.35, ease:'power2.in', overwrite:true });
-    gsap.to(chs[idx],  { opacity:1, y:0,  duration:.45, ease:'power2.out', overwrite:true });
-    ghost.textContent   = String(idx+1).padStart(2,'0');
-    counter.textContent = `0${idx+1} / 04`;
-    curIdx = idx;
-  }
-
-  ScrollTrigger.create({
-    trigger:'#filiera-pin', start:'top top', end:'bottom bottom', scrub:1,
-    invalidateOnRefresh:true,
-    onUpdate(self) {
-      const p = self.progress;
-      if (vid.readyState >= 2 && vid.duration)
-        vid.currentTime = p * vid.duration;
-      setChapter(Math.min(Math.floor(p * 4), 3));
-      fills.forEach((f, i) => {
-        f.style.width = (Math.max(0, Math.min(1, (p - i*.25) / .25)) * 100) + '%';
-      });
-    }
-  });
-})();
-
-/* ── Refresh ScrollTrigger dopo il caricamento delle immagini ── */
-window.addEventListener('load', () => {
-  ScrollTrigger.refresh();
-  setTimeout(() => ScrollTrigger.refresh(), 500);
-});
-
-/* ── Mobile hamburger ────────────────────────── */
-(function(){
-  const btn = document.getElementById('hamburger');
-  const nav = document.querySelector('nav');
-  if (!btn || !nav) return;
-  btn.addEventListener('click', () => {
-    const isOpen = btn.classList.toggle('open');
-    nav.classList.toggle('open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  });
-  nav.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      btn.classList.remove('open');
-      nav.classList.remove('open');
-      document.body.style.overflow = '';
-    });
-  });
-})();
-
-/* ── Form submit ─────────────────────────────── */
-document.getElementById('contact-form').addEventListener('submit', e => {
-  e.preventDefault();
-  const ok = document.getElementById('form-ok');
-  ok.style.display = 'block';
-  e.target.reset();
-  setTimeout(() => ok.style.display = 'none', 5000);
-});
-</script>
-</body>
+    <!-- ════════════════════ §8 CONTATTI ══════════ -->
+    <section class="section sec-pad" id="contatti">
+      <canvas id="contatti-particles"></canvas>
+      <div class="contatti-grid">
+        <div>
+          <p class="label reveal-label">Contatti</p>
+          <h2 class="big-title" style="margin-bottom: 3rem">
+            <span class="clip-wrap"><span class="clip-inner">Parliamo.</span></span>
+          </h2>
+          <form class="contatti-form" id="contact-form">
+            <div class="form-row">
+              <div class="form-field"><label>Nome</label><input type="text" placeholder="Mario Rossi" required /></div>
+              <div class="form-field">
+                <label>Ristorante / Azienda</label><input type="text" placeholder="Ristorante Da Mario" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Email</label><input type="email" placeholder="mario@ristorante.it" required />
+              </div>
+              <div class="form-field"><label>Telefono</label><input type="tel" placeholder="+39 333 1234567" /></div>
+            </div>
+            <div class="form-field">
+              <label>Cosa ti interessa</label>
+              <select>
+                <option value="">Seleziona...</option>
+                <option>Pesce Fresco</option>
+                <option>Crostacei e Molluschi</option>
+                <option>Linea Surgelati</option>
+                <option>Tutto il catalogo</option>
+                <option>Consulenza personalizzata</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Messaggio</label><textarea placeholder="Raccontaci le tue esigenze..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Invia richiesta</button>
+            <p
+              id="form-ok"
+              style="display: none; font-size: 0.8rem; color: rgba(255, 255, 255, 0.5); margin-top: 0.5rem"
+            >
+              Messaggio inviato. Ti contatteremo presto.
+            </p>
+          </form>
+        </div>
+        <div class="contatti-info">
+          <div>
+            <p class="label">Risposta rapida</p>
+            <a href="https://wa.me/393936762018?text=Ciao%20DelMar!" target="_blank" class="wa-big">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+                />
+              </svg>
+              Ordina con Marina su WhatsApp
+            </a>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Telefono</div>
+            <div class="info-val">+39 0585 834572</div>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Email</div>
+            <div class="info-val">info@del-mar.it</div>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Indirizzo</div>
+            <div class="info-val">Via Dorsale 13<br />54100 Massa (MS)</div>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Consegne</div>
+            <div class="info-val">Tutta Italia entro 24h<br />Ordini entro le 18:00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer id="footer" class="section">
+      <div class="footer-links">
+        <a href="#prodotti">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
+        <a href="#gallery">Gallery</a>
+      </div>
+      <img src="img/logo.png" alt="DelMar" style="max-width: 6rem; opacity: 0.3" />
+      <div class="footer-social"><a href="#">Instagram</a> <a href="#">LinkedIn</a> <a href="#">WhatsApp</a></div>
+    </footer>
+    <p
+      class="footer-copy section"
+      style="
+        padding: 1.2rem;
+        text-align: center;
+        font-size: 0.55rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.1);
+        background: #080808;
+      "
+    >
+      &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
+    </p>
+    <!-- Lightbox -->
+    <div id="lightbox"><button id="lightbox-close">&times;</button><img id="lb-img" src="" alt="" /></div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>

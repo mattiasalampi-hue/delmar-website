@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Source files — originals, references, dev scripts (not web assets)
+_source/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
