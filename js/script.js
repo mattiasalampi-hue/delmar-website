@@ -43,7 +43,7 @@ const loader = document.getElementById('loading');
 const anim = lottie.loadAnimation({
   container: document.getElementById('lottie-bg'),
   renderer: 'svg', loop: false, autoplay: false,
-  path: 'assets/lottie-hero.json',
+  path: isMobile() ? 'assets/lottie-hero-mobile.json' : 'assets/lottie-hero.json',
   rendererSettings: { preserveAspectRatio: 'xMidYMid slice', progressiveLoad: true }
 });
 
