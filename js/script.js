@@ -21,14 +21,19 @@ ScrollTrigger.create({
 });
 
 /* ── Lottie bg: solo nell'hero ────────────────── */
-/* Il Lottie è un layer fixed dietro tutto il sito: oltre l'hero va
-   nascosto, altrimenti spunta negli spiragli tra le sezioni (pin
-   spacer, reveal con transform) — e il paint costa anche quando è
-   coperto */
-ScrollTrigger.create({
-  trigger: '#v-scroller', start: 'bottom top',
-  onEnter:     () => gsap.set('#lottie-bg, #vig', { autoAlpha: 0 }),
-  onLeaveBack: () => gsap.set('#lottie-bg, #vig', { autoAlpha: 1 })
+/* Il Lottie è un layer fixed dietro tutto il sito: mentre l'hero
+   scorre via si dissolve nel nero (scrub) e resta nascosto — così
+   non spunta mai negli spiragli tra le sezioni (pin spacer, reveal
+   con transform) e il paint si azzera oltre l'hero */
+gsap.to('#lottie-bg, #vig', {
+  autoAlpha: 0,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#v-scroller',
+    start: 'bottom 98%',
+    end: 'bottom 45%',
+    scrub: true
+  }
 });
 
 /* ── Lottie hero ──────────────────────────────── */
