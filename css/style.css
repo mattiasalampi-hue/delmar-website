@@ -2007,6 +2007,8 @@ hr.div {
   nav.open {
     opacity: 1;
     pointer-events: auto;
+    touch-action: none;
+    overscroll-behavior: contain;
   }
 
   nav a {
@@ -2610,6 +2612,12 @@ hr.div {
     text-align: center;
     padding: 3rem 5% 2rem;
     gap: 1.8rem;
+  }
+
+  /* In colonna il logo va in cima, non in mezzo ai link */
+  #footer img {
+    order: -1;
+    margin: 0 auto;
   }
 
   .footer-links {

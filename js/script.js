@@ -943,11 +943,13 @@ window.addEventListener('load', () => {
   if (!btn || !nav) return;
   const links = Array.from(nav.querySelectorAll('a'));
 
+  /* Nessun lock via body.overflow: su mobile cambia il layout e fa
+     "saltare" la pagina — l'overlay è opaco e a schermo intero, i
+     gesti sopra di lui sono neutralizzati da touch-action in CSS */
   function open() {
     btn.classList.add('open');
     nav.classList.add('open');
     btn.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
     gsap.killTweensOf(links);
     gsap.fromTo(links,
       { y: 28, opacity: 0 },
@@ -961,7 +963,6 @@ window.addEventListener('load', () => {
     btn.classList.remove('open');
     nav.classList.remove('open');
     btn.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
     gsap.killTweensOf(links);
     gsap.set(links, { clearProps: 'opacity,transform' });
     if (returnFocus) btn.focus({ preventScroll: true });
