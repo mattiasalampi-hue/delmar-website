@@ -90,10 +90,12 @@ anim.addEventListener('DOMLoaded', () => {
 
   /* Il primo capitolo (s=0) parte già in scena: a p=0 deve essere
      nitido e a scala piena, non nello stato "pre-ingresso" — senza
-     il ramo s===0, tornando in cima restava sfocato e rimpicciolito */
+     il ramo s===0, tornando in cima restava sfocato e rimpicciolito.
+     E per lo stesso capitolo NIENTE blur nemmeno in uscita/rientro:
+     risalendo deve ricomparire subito nitido, solo in dissolvenza */
   function op(p,s,fi,fo,e){ if(p>=e)return 0; if(p<=s)return s===0?1:0; if(p<fi)return(p-s)/(fi-s||.001); if(p>fo)return 1-(p-fo)/(e-fo||.001); return 1; }
   function sc(p,s,fi,fo,e){ if(p<=s)return s===0?1:.82; if(p<fi)return .82+.18*((p-s)/(fi-s||.001)); if(p>fo)return 1+.15*((p-fo)/(e-fo||.001)); return 1; }
-  function bl(p,s,fi,fo,e){ if(p<=s)return s===0?0:7; if(p<fi)return 7*(1-(p-s)/(fi-s||.001)); if(p>fo)return 6*((p-fo)/(e-fo||.001)); return 0; }
+  function bl(p,s,fi,fo,e){ if(s===0)return 0; if(p<=s)return 7; if(p<fi)return 7*(1-(p-s)/(fi-s||.001)); if(p>fo)return 6*((p-fo)/(e-fo||.001)); return 0; }
 
   ScrollTrigger.create({
     trigger:'#v-scroller', start:'top top', end:'bottom bottom', scrub:1,
