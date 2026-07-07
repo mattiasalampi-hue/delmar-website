@@ -88,9 +88,12 @@ anim.addEventListener('DOMLoaded', () => {
   const total = anim.totalFrames;
   const proxy = { frame: 0 };
 
+  /* Il primo capitolo (s=0) parte già in scena: a p=0 deve essere
+     nitido e a scala piena, non nello stato "pre-ingresso" — senza
+     il ramo s===0, tornando in cima restava sfocato e rimpicciolito */
   function op(p,s,fi,fo,e){ if(p>=e)return 0; if(p<=s)return s===0?1:0; if(p<fi)return(p-s)/(fi-s||.001); if(p>fo)return 1-(p-fo)/(e-fo||.001); return 1; }
-  function sc(p,s,fi,fo,e){ if(p<=s)return .82; if(p<fi)return .82+.18*((p-s)/(fi-s||.001)); if(p>fo)return 1+.15*((p-fo)/(e-fo||.001)); return 1; }
-  function bl(p,s,fi,fo,e){ if(p<=s)return 7; if(p<fi)return 7*(1-(p-s)/(fi-s||.001)); if(p>fo)return 6*((p-fo)/(e-fo||.001)); return 0; }
+  function sc(p,s,fi,fo,e){ if(p<=s)return s===0?1:.82; if(p<fi)return .82+.18*((p-s)/(fi-s||.001)); if(p>fo)return 1+.15*((p-fo)/(e-fo||.001)); return 1; }
+  function bl(p,s,fi,fo,e){ if(p<=s)return s===0?0:7; if(p<fi)return 7*(1-(p-s)/(fi-s||.001)); if(p>fo)return 6*((p-fo)/(e-fo||.001)); return 0; }
 
   ScrollTrigger.create({
     trigger:'#v-scroller', start:'top top', end:'bottom bottom', scrub:1,
@@ -1038,7 +1041,11 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
   let W, H;
   const mouse = { x:-9999, y:-9999 };
   const N     = isMobile() ? 220 : 700;
-  const REPEL = 120;
+  /* Su mobile meno bolle ma più grandi e luminose: con le dimensioni
+     desktop erano quasi invisibili e l'interazione touch si perdeva */
+  const SCALE = isMobile() ? 1.7 : 1;
+  const GLOW  = isMobile() ? 1.9 : 1;
+  const REPEL = isMobile() ? 150 : 120;
   const FORCE = 0.85;
 
   function resize() {
@@ -1047,14 +1054,14 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
   }
 
   function mkBubble(fromBottom) {
-    const r = 0.4 + Math.random() * 1.8;
+    const r = (0.4 + Math.random() * 1.8) * SCALE;
     return {
       x:      Math.random() * W,
       y:      fromBottom ? H + r + Math.random() * H * .4 : Math.random() * H,
       vx:     (Math.random() - .5) * .25,
       vy:     -(0.12 + Math.random() * 0.32),   // sale verso l'alto
       r,
-      a:      0.12 + Math.random() * 0.42,       // opacità bordo
+      a:      Math.min(.78, (0.12 + Math.random() * 0.42) * GLOW),   // opacità bordo
       wobble: Math.random() * Math.PI * 2,
       wFreq:  0.3 + Math.random() * 0.5
     };
@@ -1110,7 +1117,7 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI*2);
       ctx.strokeStyle = `rgba(120,210,255,${a})`;
-      ctx.lineWidth = 0.6;
+      ctx.lineWidth = SCALE > 1 ? 1 : 0.6;
       ctx.stroke();
 
       // Riflesso (solo per bolle abbastanza grandi)

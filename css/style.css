@@ -306,42 +306,68 @@ nav a {
   flex-shrink: 0;
 }
 
+/* Scroll cue "cometa": un punto luminoso scende lungo la guida
+   mentre la label respira — invito allo scroll ben visibile */
 .cue {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .5rem;
+  gap: .7rem;
   margin-top: 2rem;
 }
 
 .cue span {
-  font-size: .5rem;
-  letter-spacing: .45em;
+  font-size: .56rem;
+  letter-spacing: .5em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.42);
+  color: rgba(255,255,255,.85);
+  text-shadow: 0 1px 10px rgba(0,0,0,.9);
+  animation: cuepulse 2.2s ease-in-out infinite;
 }
 
 .cue-line {
-  width: 1px;
-  height: 32px;
-  background: linear-gradient(to bottom, rgba(255,255,255,.32), transparent);
-  animation: cln 2.4s ease-in-out infinite 1.8s;
+  position: relative;
+  width: 1.5px;
+  height: 46px;
+  background: linear-gradient(to bottom, rgba(255,255,255,.45), rgba(255,255,255,0));
 }
 
-@keyframes cln {
+.cue-line::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255,255,255,.95), 0 0 24px rgba(170,215,255,.75);
+  animation: cuedot 2.2s cubic-bezier(.45, 0, .55, 1) infinite;
+}
+
+@keyframes cuedot {
   0% {
-    transform: scaleY(0);
-    transform-origin: top;
+    transform: translate(-50%, -4px) scale(.5);
     opacity: 0;
   }
-  50% {
-    transform: scaleY(1);
+  18% {
+    opacity: 1;
+  }
+  78% {
     opacity: 1;
   }
   100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
+    transform: translate(-50%, 42px) scale(.9);
     opacity: 0;
+  }
+}
+
+@keyframes cuepulse {
+  0%, 100% {
+    opacity: .5;
+  }
+  50% {
+    opacity: 1;
   }
 }
 
@@ -2154,6 +2180,21 @@ hr.div {
     font-size: 1rem;
     line-height: 1.6;
     color: rgba(255,255,255,.92);
+  }
+
+  /* Tagline di apertura ben leggibile sopra il video */
+  #c1 .ch-sub {
+    font-size: 1.06rem;
+    font-weight: 400;
+    line-height: 1.65;
+    color: #fff;
+    text-shadow: 0 2px 16px rgba(0,0,0,.95), 0 1px 5px rgba(0,0,0,.9);
+  }
+
+  /* Scrim più deciso dietro il primo capitolo: il testo stacca
+     dal video anche nei frame più chiari */
+  #c1::before {
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.68) 0%, transparent 72%);
   }
 
   /* Meno roba scritta: nei capitoli con CTA la sub sparisce —
