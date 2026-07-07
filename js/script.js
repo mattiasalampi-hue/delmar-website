@@ -20,6 +20,17 @@ ScrollTrigger.create({
   onLeaveBack: () => hdr.classList.remove('scrolled')
 });
 
+/* ── Lottie bg: solo nell'hero ────────────────── */
+/* Il Lottie è un layer fixed dietro tutto il sito: oltre l'hero va
+   nascosto, altrimenti spunta negli spiragli tra le sezioni (pin
+   spacer, reveal con transform) — e il paint costa anche quando è
+   coperto */
+ScrollTrigger.create({
+  trigger: '#v-scroller', start: 'bottom top',
+  onEnter:     () => gsap.set('#lottie-bg, #vig', { autoAlpha: 0 }),
+  onLeaveBack: () => gsap.set('#lottie-bg, #vig', { autoAlpha: 1 })
+});
+
 /* ── Lottie hero ──────────────────────────────── */
 const bar    = document.getElementById('bar');
 const loader = document.getElementById('loading');
@@ -47,16 +58,19 @@ function hideLoader() {
 }
 setTimeout(hideLoader, 7000);
 
+/* Centraggio capitoli subito, NON dentro DOMLoaded: se il Lottie
+   tarda (rete lenta / timeout loader) i capitoli devono comunque
+   essere centrati, altrimenti sfondano il viewport a destra */
+gsap.set('#c1', { xPercent:-50, yPercent:-50, opacity:1 });
+gsap.set('#c2', { xPercent:-50, yPercent:-50 });
+gsap.set('#c3', { xPercent:-50, yPercent:-50 });
+gsap.set('#c4', { xPercent:-50, yPercent:-50 });
+gsap.set('#c5', { xPercent:-50, yPercent:-50 });
+
 anim.addEventListener('DOMLoaded', () => {
   bar.style.width = '100%';
   anim.goToAndStop(0, true);
   setTimeout(hideLoader, 300);
-
-  gsap.set('#c1', { xPercent:-50, yPercent:-50, opacity:1 });
-  gsap.set('#c2', { xPercent:-50, yPercent:-50 });
-  gsap.set('#c3', { xPercent:-50, yPercent:-50 });
-  gsap.set('#c4', { xPercent:-50, yPercent:-50 });
-  gsap.set('#c5', { xPercent:-50, yPercent:-50 });
 
   const CHS = [
     {el:'#c1',s:0.00,fi:0.00,fo:0.14,e:0.20},
@@ -319,52 +333,91 @@ document.querySelectorAll('.team-photo-wrap img').forEach(img => {
 
 /* ── Marina AI — pinned scrub timeline ───────── */
 if (document.getElementById('marina-pin')) {
-  /* initial states */
-  gsap.set('#marina-info > *', { opacity:0, y:22 });
-  gsap.set('.marina-chip', { opacity:0, x:-18 });
-  gsap.set('#marina-cta', { opacity:0, y:12 });
-  gsap.set('.marina-poweredby', { opacity:0 });
-  gsap.set('#marina-phone', { opacity:0, y:60, rotateX:8 });
-  gsap.set('#pb1,#pb2,#pb3,#pb4', { opacity:0, y:14, scale:.97 });
-  gsap.set('#pt1,#pt2', { opacity:0 });
-
-  const mt = gsap.timeline({ paused:true });
-
-  /* left panel stagger */
-  mt.to('#marina-info > *', { opacity:1, y:0, duration:.3, stagger:.07, ease:'power3.out' }, 0)
-    .to('.marina-chip', { opacity:1, x:0, duration:.25, stagger:.07, ease:'power2.out' }, 0.18)
-    .to('#marina-cta', { opacity:1, y:0, duration:.2, ease:'power3.out' }, 0.40)
-    .to('.marina-poweredby', { opacity:1, duration:.15 }, 0.50)
-
-  /* phone appears */
-    .to('#marina-phone', { opacity:1, y:0, rotateX:0, duration:.3, ease:'power3.out' }, 0.12)
-
-  /* message 1 (user) */
-    .to('#pb1', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.30)
-
-  /* typing 1 */
-    .to('#pt1', { opacity:1, duration:.1 }, 0.44)
-    .to('#pt1', { opacity:0, duration:.08 }, 0.56)
-
-  /* message 2 (marina) */
-    .to('#pb2', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.58)
-
-  /* message 3 (user) */
-    .to('#pb3', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.72)
-
-  /* typing 2 */
-    .to('#pt2', { opacity:1, duration:.08 }, 0.82)
-    .to('#pt2', { opacity:0, duration:.07 }, 0.90)
-
-  /* message 4 (marina) */
-    .to('#pb4', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.92);
-
   const MT_OFFSET = 0.03;
-  ScrollTrigger.create({
-    trigger:'#marina-pin', start:'top top', end:'bottom bottom', scrub:.8,
-    onUpdate(self){
-      mt.progress(Math.max(0, (self.progress - MT_OFFSET) / (1 - MT_OFFSET)));
-    }
+
+  function driveMarina(mt) {
+    ScrollTrigger.create({
+      trigger:'#marina-pin', start:'top top', end:'bottom bottom', scrub:.8,
+      onUpdate(self){
+        mt.progress(Math.max(0, (self.progress - MT_OFFSET) / (1 - MT_OFFSET)));
+      }
+    });
+  }
+
+  /* Desktop: info e telefono affiancati, rivelati in parallelo */
+  mm.add(DESKTOP_MQ, () => {
+    gsap.set('#marina-info > *', { opacity:0, y:22 });
+    gsap.set('.marina-chip', { opacity:0, x:-18 });
+    gsap.set('#marina-cta', { opacity:0, y:12 });
+    gsap.set('.marina-poweredby', { opacity:0 });
+    gsap.set('#marina-phone', { opacity:0, y:60, rotateX:8 });
+    gsap.set('#pb1,#pb2,#pb3,#pb4', { opacity:0, y:14, scale:.97 });
+    gsap.set('#pt1,#pt2', { opacity:0 });
+
+    const mt = gsap.timeline({ paused:true });
+
+    /* left panel stagger */
+    mt.to('#marina-info > *', { opacity:1, y:0, duration:.3, stagger:.07, ease:'power3.out' }, 0)
+      .to('.marina-chip', { opacity:1, x:0, duration:.25, stagger:.07, ease:'power2.out' }, 0.18)
+      .to('#marina-cta', { opacity:1, y:0, duration:.2, ease:'power3.out' }, 0.40)
+      .to('.marina-poweredby', { opacity:1, duration:.15 }, 0.50)
+
+    /* phone appears */
+      .to('#marina-phone', { opacity:1, y:0, rotateX:0, duration:.3, ease:'power3.out' }, 0.12)
+
+    /* message 1 (user) */
+      .to('#pb1', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.30)
+
+    /* typing 1 */
+      .to('#pt1', { opacity:1, duration:.1 }, 0.44)
+      .to('#pt1', { opacity:0, duration:.08 }, 0.56)
+
+    /* message 2 (marina) */
+      .to('#pb2', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.58)
+
+    /* message 3 (user) */
+      .to('#pb3', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.72)
+
+    /* typing 2 */
+      .to('#pt2', { opacity:1, duration:.08 }, 0.82)
+      .to('#pt2', { opacity:0, duration:.07 }, 0.90)
+
+    /* message 4 (marina) */
+      .to('#pb4', { opacity:1, y:0, scale:1, duration:.18, ease:'back.out(1.2)' }, 0.92);
+
+    driveMarina(mt);
+  });
+
+  /* Mobile: racconto in due atti — prima il servizio (info a tutto
+     schermo), poi la chat completa sul telefono grande */
+  mm.add(MOBILE_MQ, () => {
+    gsap.set('#marina-info > *', { opacity:0, y:22 });
+    gsap.set('.marina-chip', { opacity:0, y:14 });
+    gsap.set('#marina-phone', { opacity:0, y:90 });
+    gsap.set('#pb1,#pb2,#pb3,#pb4', { opacity:0, y:14, scale:.97 });
+    gsap.set('#pt1,#pt2', { opacity:0 });
+
+    const mt = gsap.timeline({ paused:true });
+
+    /* atto 1 — il servizio */
+    mt.to('#marina-info > *', { opacity:1, y:0, duration:.26, stagger:.05, ease:'power3.out' }, 0)
+      .to('.marina-chip', { opacity:1, y:0, duration:.2, stagger:.06, ease:'power2.out' }, 0.14)
+
+    /* atto 2 — l'info esce, entra la chat */
+      .to('#marina-info', { opacity:0, y:-46, duration:.14, ease:'power2.in' }, 0.46)
+      .to('#marina-phone', { opacity:1, y:0, duration:.18, ease:'power3.out' }, 0.54)
+
+    /* messaggi uno dopo l'altro, chat integrale */
+      .to('#pb1', { opacity:1, y:0, scale:1, duration:.1, ease:'back.out(1.2)' }, 0.64)
+      .to('#pt1', { opacity:1, duration:.05 }, 0.71)
+      .to('#pt1', { opacity:0, duration:.04 }, 0.76)
+      .to('#pb2', { opacity:1, y:0, scale:1, duration:.1, ease:'back.out(1.2)' }, 0.78)
+      .to('#pb3', { opacity:1, y:0, scale:1, duration:.1, ease:'back.out(1.2)' }, 0.86)
+      .to('#pt2', { opacity:1, duration:.04 }, 0.91)
+      .to('#pt2', { opacity:0, duration:.03 }, 0.95)
+      .to('#pb4', { opacity:1, y:0, scale:1, duration:.1, ease:'back.out(1.2)' }, 0.96);
+
+    driveMarina(mt);
   });
 }
 

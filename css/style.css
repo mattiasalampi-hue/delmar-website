@@ -2205,19 +2205,23 @@ hr.div {
     overflow: hidden;
   }
 
-  /* Telefono prima, info dopo */
+  /* Racconto in due atti: prima l'info a tutto schermo, poi la chat.
+     Il telefono è un overlay assoluto centrato — mai tagliato dallo
+     sticky — e appare via timeline quando l'info esce di scena */
   .marina-phone-col {
+    position: absolute;
+    inset: 0;
     display: flex !important;
-    order: -1;
+    align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    pointer-events: none;
     height: auto;
   }
 
   #marina-phone {
-    width: min(270px, 74vw);
-    height: min(400px, 44vh);
-    border-radius: min(34px, 9vw);
+    width: min(300px, 82vw);
+    height: min(580px, 76svh);
+    border-radius: min(38px, 9.5vw);
   }
 
   /* Bolle chat più compatte per stare nel telefono */
@@ -2248,13 +2252,13 @@ hr.div {
     font-size: .46rem;
   }
 
-  /* Info compatta centrata */
+  /* Info centrata — primo atto a tutto schermo */
   .marina-info {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: .55rem;
+    gap: .9rem;
     width: 100%;
   }
 
@@ -2264,17 +2268,17 @@ hr.div {
   }
 
   .marina-title {
-    font-size: 1.6rem;
+    font-size: clamp(2rem, 8.5vw, 2.6rem);
     line-height: 1;
     letter-spacing: -.03em;
   }
 
   .marina-desc {
-    font-size: .78rem;
-    line-height: 1.6;
-    max-width: 36ch;
+    font-size: .8rem;
+    line-height: 1.65;
+    max-width: 38ch;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -2304,18 +2308,18 @@ hr.div {
   }
 
   .marina-avatar-sm {
-    width: 38px;
-    height: 38px;
+    width: 52px;
+    height: 52px;
   }
 
   .marina-badge {
-    font-size: .44rem;
-    padding: .26rem .65rem;
+    font-size: .48rem;
+    padding: .3rem .7rem;
   }
 
   .marina-sub {
-    font-size: .42rem;
-    letter-spacing: .16em;
+    font-size: .48rem;
+    letter-spacing: .18em;
   }
 
   .marina-cta-btn {
