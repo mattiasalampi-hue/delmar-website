@@ -232,7 +232,8 @@ mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
     activeIdx = i;
   }
 
-  function init() {
+  /* Desktop: timeline pinnata con scrub */
+  mm.add(DESKTOP_MQ, () => {
     const dotTops  = dots.map(d => d ? d.offsetTop : 0);
     const DIST     = dotTops[3] - dotTops[0];
     // Soglie di progresso (0→1) a cui si attiva ogni step
@@ -249,7 +250,7 @@ mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
     ScrollTrigger.create({
       trigger:          '#processo',
       start:            'top top',
-      end:              () => isMobile() ? '+=200%' : '+=280%',
+      end:              '+=280%',
       pin:              true,
       anticipatePin:    1,
       scrub:            1.1,
@@ -265,10 +266,32 @@ mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
         setStep(idx);
       }
     });
-  }
+  });
 
-  // Init sincrono — il pin spacer deve essere creato insieme agli altri ScrollTrigger
-  init();
+  /* Mobile: niente pin — step in flusso normale, la foto sticky
+     cambia quando lo step entra nella fascia centrale del viewport */
+  mm.add(MOBILE_MQ, () => {
+    activeIdx = -1;
+    gsap.set(steps.filter(Boolean), { clearProps: 'opacity,transform' });
+
+    function lightStep(i) {
+      steps.forEach((s, k) => s && s.classList.toggle('lit', k === i));
+      photos.forEach((p, k) => p && p.classList.toggle('lit', k === i));
+      if (counter) counter.textContent = '0' + (i+1) + ' / 04';
+    }
+
+    lightStep(0);
+
+    steps.forEach((s, i) => {
+      if (!s) return;
+      ScrollTrigger.create({
+        trigger: s,
+        start: 'top 62%',
+        end: 'bottom 38%',
+        onToggle(self) { if (self.isActive) lightStep(i); }
+      });
+    });
+  });
 })();
 
 /* ── Gallery: marquee (desktop) / snap carousel (mobile) + lightbox ── */
