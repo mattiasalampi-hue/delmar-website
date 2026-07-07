@@ -2004,11 +2004,11 @@ hr.div {
     transition: opacity .3s ease;
   }
 
+  /* Niente touch-action:none qui: su alcuni WebKit sopprime i tap
+     sui link. La pagina dietro può scrollare ma l'overlay è opaco */
   nav.open {
     opacity: 1;
     pointer-events: auto;
-    touch-action: none;
-    overscroll-behavior: contain;
   }
 
   nav a {
