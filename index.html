@@ -78,12 +78,12 @@
     <!-- Header -->
     <header id="hdr">
       <a href="#"><img src="assets/logo.png" alt="DelMar" class="logo" /></a>
-      <nav>
+      <nav id="main-nav">
         <a href="#prodotti">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
         <a href="#gallery">Gallery</a> <a href="#marina">Marina AI</a> <a href="#contatti">Contatti</a>
         <a href="https://wa.me/393936762018?text=Ciao%20Marina!" target="_blank" rel="noopener noreferrer" class="nav-wa">Ordina ora</a>
       </nav>
-      <button class="hamburger" id="hamburger" aria-label="Apri menu"><span></span><span></span><span></span></button>
+      <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
     </header>
     <!-- ════════════════════ HERO VIDEO ════════════ -->
     <div id="v-scroller">
@@ -407,7 +407,7 @@
           </h2>
         </div>
         <div id="fil3-cinema">
-          <video id="fil3-video" muted playsinline preload="auto">
+          <video id="fil3-video" muted playsinline preload="metadata" poster="assets/barca-fronte.jpg">
             <source src="assets/filiera.mp4" type="video/mp4" />
           </video>
           <div id="fil3-gradient"></div>

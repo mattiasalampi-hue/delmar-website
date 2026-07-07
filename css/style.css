@@ -128,8 +128,10 @@ nav a {
   transition: color .3s;
 }
 
-nav a:hover {
-  color: #fff;
+@media (hover: hover) and (pointer: fine) {
+  nav a:hover {
+    color: #fff;
+  }
 }
 
 .nav-wa {
@@ -140,10 +142,12 @@ nav a:hover {
   transition: background .3s, border-color .3s !important;
 }
 
-.nav-wa:hover {
-  background: var(--wa);
-  border-color: var(--wa);
-  color: #fff !important;
+@media (hover: hover) and (pointer: fine) {
+  .nav-wa:hover {
+    background: var(--wa);
+    border-color: var(--wa);
+    color: #fff !important;
+  }
 }
 
 /* ─ Lottie bg ───────────────────────────────── */
@@ -271,9 +275,11 @@ nav a:hover {
   pointer-events: auto;
 }
 
-.ch-cta:hover {
-  border-color: #fff;
-  gap: .8rem;
+@media (hover: hover) and (pointer: fine) {
+  .ch-cta:hover {
+    border-color: #fff;
+    gap: .8rem;
+  }
 }
 
 .ch-cta.wa {
@@ -285,8 +291,10 @@ nav a:hover {
   transition: background .3s;
 }
 
-.ch-cta.wa:hover {
-  background: var(--wa-hover);
+@media (hover: hover) and (pointer: fine) {
+  .ch-cta.wa:hover {
+    background: var(--wa-hover);
+  }
 }
 
 .ch-cta.wa svg {
@@ -494,8 +502,10 @@ hr.div {
   transition: border-color .3s;
 }
 
-.prod-link:hover {
-  border-color: #fff;
+@media (hover: hover) and (pointer: fine) {
+  .prod-link:hover {
+    border-color: #fff;
+  }
 }
 
 /* alternanza */
@@ -786,8 +796,15 @@ hr.div {
   height: 1.5px;
   background: rgba(255,255,255,.16);
   border-radius: 1px;
-  overflow: hidden;
   position: relative;
+  cursor: pointer;
+}
+
+/* Hit-area estesa: i segmenti sono tappabili per saltare ai capitoli */
+.fil3-seg::after {
+  content: '';
+  position: absolute;
+  inset: -14px -2px;
 }
 
 .fil3-seg-fill {
@@ -795,6 +812,7 @@ hr.div {
   inset: 0;
   width: 0;
   background: #fff;
+  border-radius: 1px;
 }
 
 #fil3-text {
@@ -975,8 +993,10 @@ hr.div {
   animation: gallery-marquee 36s linear infinite;
 }
 
-#gallery-track:hover {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  #gallery-track:hover {
+    animation-play-state: paused;
+  }
 }
 
 .gallery-item {
@@ -989,9 +1009,11 @@ hr.div {
   transition: transform .45s cubic-bezier(0.25, 0, 0, 1);
 }
 
-.gallery-item:hover {
-  transform: scale(1.06);
-  z-index: 10;
+@media (hover: hover) and (pointer: fine) {
+  .gallery-item:hover {
+    transform: scale(1.06);
+    z-index: 10;
+  }
 }
 
 .gallery-item img {
@@ -1241,8 +1263,10 @@ hr.div {
   margin-top: .5rem;
 }
 
-.btn-submit:hover {
-  background: rgba(255,255,255,.85);
+@media (hover: hover) and (pointer: fine) {
+  .btn-submit:hover {
+    background: rgba(255,255,255,.85);
+  }
 }
 
 #form-ok {
@@ -1291,8 +1315,10 @@ hr.div {
   margin-top: 1.5rem;
 }
 
-.wa-big:hover {
-  background: var(--wa-hover);
+@media (hover: hover) and (pointer: fine) {
+  .wa-big:hover {
+    background: var(--wa-hover);
+  }
 }
 
 .wa-big svg {
@@ -1331,8 +1357,10 @@ hr.div {
   transition: color .3s;
 }
 
-.footer-links a:hover {
-  color: rgba(255,255,255,.7);
+@media (hover: hover) and (pointer: fine) {
+  .footer-links a:hover {
+    color: rgba(255,255,255,.7);
+  }
 }
 
 .footer-copy {
@@ -1360,8 +1388,10 @@ hr.div {
   transition: color .3s;
 }
 
-.footer-social a:hover {
-  color: rgba(255,255,255,.7);
+@media (hover: hover) and (pointer: fine) {
+  .footer-social a:hover {
+    color: rgba(255,255,255,.7);
+  }
 }
 
 /* ─ BEAM TRANSITION ─────────────────────────── */
@@ -1619,8 +1649,10 @@ hr.div {
   align-self: flex-start;
 }
 
-.marina-cta-btn:hover {
-  background: var(--wa-hover);
+@media (hover: hover) and (pointer: fine) {
+  .marina-cta-btn:hover {
+    background: var(--wa-hover);
+  }
 }
 
 .marina-poweredby {
@@ -1879,6 +1911,13 @@ hr.div {
     touch-action: pan-y;
   }
 
+  /* svh: altezza viewport stabile — evita i salti dei pin
+     quando la URL bar del browser mobile si ritrae */
+  #v-sticky,
+  #marina-sticky {
+    height: 100svh;
+  }
+
   /* ─── Navigation ─────────────────────────── */
   #hdr {
     padding: 1.1rem 1.4rem;
@@ -1958,23 +1997,17 @@ hr.div {
     padding: .8rem 2.4rem !important;
   }
 
-  /* ─── Beam Transition (mobile) ─────────────── */
+  /* ─── Beam Transition (mobile: beam verticale) ── */
   #mb-pin {
-    height: auto;
+    height: 180vh;
   }
 
   #mb-sticky {
-    position: static;
-    height: auto;
-  }
-
-  #mb-sticky::after {
-    display: none;
+    height: 100svh;
   }
 
   #mb-intro {
-    position: static;
-    padding: 10vh 5% 8vh;
+    padding: 12vh 6% 0;
   }
 
   #mb-title {
@@ -1983,10 +2016,6 @@ hr.div {
 
   #mb-desc {
     font-size: .88rem;
-  }
-
-  #mb-canvas {
-    display: none;
   }
 
   /* ─── Utility ────────────────────────────── */
@@ -2062,13 +2091,27 @@ hr.div {
     font-size: .62rem;
   }
 
-  /* ─── §2 Prodotti ────────────────────────── */
+  /* ─── §2 Prodotti (stacking cards) ─────────── */
   #prodotti {
     padding: 10vh 0;
   }
 
+  /* Le strip diventano card sticky che si impilano scrollando:
+     la card sotto resta ferma mentre la successiva la copre */
   .prod-strip {
     grid-template-columns: 1fr;
+    position: sticky;
+    top: 8vh;
+    margin: 0 4% 10vh;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--bg-alt);
+    box-shadow: 0 -18px 50px rgba(0,0,0,.55);
+    will-change: transform;
+  }
+
+  .prod-strip:last-of-type {
+    margin-bottom: 0;
   }
 
   .prod-strip.rev {
@@ -2084,11 +2127,11 @@ hr.div {
   }
 
   .prod-img {
-    aspect-ratio: 4/3;
+    aspect-ratio: 16/10;
   }
 
   .prod-text {
-    padding: 2.5rem 5%;
+    padding: 1.8rem 1.4rem 2.1rem;
   }
 
   .prod-text .big-title {
@@ -2144,7 +2187,7 @@ hr.div {
 
   /* ─── Marina AI ──────────────────────────── */
   #marina-pin {
-    height: 280vh;
+    height: 320vh;
   }
 
   #marina-sticky {
@@ -2168,12 +2211,13 @@ hr.div {
     order: -1;
     justify-content: center;
     flex-shrink: 0;
+    height: auto;
   }
 
   #marina-phone {
-    width: min(300px, 80vw);
-    height: min(500px, 64vh);
-    border-radius: min(38px, 9.5vw);
+    width: min(270px, 74vw);
+    height: min(400px, 44vh);
+    border-radius: min(34px, 9vw);
   }
 
   /* Bolle chat più compatte per stare nel telefono */
@@ -2226,15 +2270,37 @@ hr.div {
   }
 
   .marina-desc {
+    font-size: .78rem;
+    line-height: 1.6;
+    max-width: 36ch;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Chips → riga swipeabile orizzontale con snap */
+  .marina-chips {
+    flex-direction: row;
+    width: 100%;
+    gap: .6rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: .2rem .2rem .5rem;
+    scrollbar-width: none;
+  }
+
+  .marina-chips::-webkit-scrollbar {
     display: none;
   }
 
-  .marina-chips {
-    display: none;
+  .marina-chip {
+    flex: 0 0 78%;
+    scroll-snap-align: center;
   }
 
   .marina-poweredby {
-    display: none;
+    font-size: .46rem;
   }
 
   .marina-avatar-sm {
@@ -2273,7 +2339,7 @@ hr.div {
   }
 
   #fil3-segs {
-    width: 100px;
+    width: 150px;
   }
 
   /* Su mobile il pannello resta sempre a sinistra, JS non deve spostarlo */
@@ -2288,7 +2354,9 @@ hr.div {
   }
 
   #fil3-desc {
-    display: none;
+    font-size: .76rem;
+    line-height: 1.65;
+    max-width: 46ch;
   }
 
   /* ─── §4 Azienda ─────────────────────────── */
@@ -2305,7 +2373,7 @@ hr.div {
     padding: 1.5rem 5%;
   }
 
-  /* ─── §5 Gallery (marquee mobile) ──────────── */
+  /* ─── §5 Gallery (snap carousel touch) ─────── */
   #gallery {
     padding: 10vh 0 6vh;
   }
@@ -2314,13 +2382,36 @@ hr.div {
     padding: 0 5% 4vh;
   }
 
+  /* Il marquee diventa carousel nativo: momentum touch + snap,
+     l'item al centro viene evidenziato via JS (.is-center) */
   #gallery-track {
+    animation: none;
+    width: auto;
     gap: .9rem;
-    animation-duration: 28s;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 8vw;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+  }
+
+  #gallery-track::-webkit-scrollbar {
+    display: none;
   }
 
   .gallery-item {
-    height: clamp(180px, 50vw, 280px);
+    height: clamp(200px, 56vw, 320px);
+    scroll-snap-align: center;
+    transform: scale(.92);
+    opacity: .55;
+    transition: transform .45s cubic-bezier(0.25, 0, 0, 1), opacity .45s ease;
+  }
+
+  .gallery-item.is-center {
+    transform: scale(1);
+    opacity: 1;
   }
 
   /* ─── §6 Team ────────────────────────────── */
@@ -2414,5 +2505,25 @@ hr.div {
 
   .footer-social {
     justify-content: center;
+  }
+}
+
+/* ─ Responsive Tablet ───────────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .marina-container {
+    gap: 3vw;
+  }
+
+  #marina-phone {
+    width: 250px;
+    height: 500px;
+  }
+
+  #proc-wrap {
+    gap: 4vw;
+  }
+
+  .prod-text {
+    padding: 3rem 2.5rem;
   }
 }

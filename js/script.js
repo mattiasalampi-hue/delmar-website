@@ -3,6 +3,11 @@
    ════════════════════════════════════════ */
 gsap.registerPlugin(ScrollTrigger);
 
+const mm = gsap.matchMedia();
+const MOBILE_MQ  = '(max-width: 768px)';
+const DESKTOP_MQ = '(min-width: 769px)';
+const isMobile   = () => window.matchMedia(MOBILE_MQ).matches;
+
 function debounce(fn, ms) {
   let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
@@ -30,11 +35,22 @@ anim.addEventListener('data_ready',    () => bar.style.width = '60%');
 anim.addEventListener('loaded_images', () => bar.style.width = '90%');
 anim.addEventListener('data_failed',   () => loader.querySelector('p').textContent = 'Errore');
 
+/* Uscita loader unica (DOMLoaded o timeout di sicurezza): su rete lenta
+   il sito deve partire comunque, il Lottie arriva quando arriva */
+let loaderDone = false;
+function hideLoader() {
+  if (loaderDone) return;
+  loaderDone = true;
+  loader.classList.add('out');
+  setTimeout(() => loader.remove(), 800);
+  gsap.to('#hdr', { opacity: 1, duration: 1.2, ease: 'power2.out', delay: 0.3 });
+}
+setTimeout(hideLoader, 7000);
+
 anim.addEventListener('DOMLoaded', () => {
   bar.style.width = '100%';
   anim.goToAndStop(0, true);
-  setTimeout(() => { loader.classList.add('out'); setTimeout(() => loader.remove(), 800); }, 300);
-  gsap.to('#hdr', { opacity: 1, duration: 1.2, ease: 'power2.out', delay: 0.3 });
+  setTimeout(hideLoader, 300);
 
   gsap.set('#c1', { xPercent:-50, yPercent:-50, opacity:1 });
   gsap.set('#c2', { xPercent:-50, yPercent:-50 });
@@ -121,10 +137,36 @@ document.querySelectorAll('.par-img img').forEach(img => {
   });
 });
 
-/* ── Prod strip fade-in ──────────────────────── */
-document.querySelectorAll('.prod-strip').forEach(strip => {
-  gsap.from(strip, { opacity:0, y:40, duration:1, ease:'power3.out',
-    scrollTrigger: { trigger:strip, start:'top 85%', toggleActions:'play none none reverse' }
+/* ── Prod strip fade-in (solo desktop: su mobile le strip
+      diventano stacking cards sticky, il transform confligge) ── */
+mm.add(DESKTOP_MQ, () => {
+  document.querySelectorAll('.prod-strip').forEach(strip => {
+    gsap.from(strip, { opacity:0, y:40, duration:1, ease:'power3.out',
+      scrollTrigger: { trigger:strip, start:'top 85%', toggleActions:'play none none reverse' }
+    });
+  });
+});
+
+/* ── Prodotti stacking cards (mobile): la card coperta
+      si rimpicciolisce e si scurisce — effetto "deck" ── */
+mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+  const strips = gsap.utils.toArray('.prod-strip');
+  strips.forEach((strip, i) => {
+    const next = strips[i + 1];
+    if (!next) return;
+    gsap.to(strip, {
+      scale: .93,
+      filter: 'brightness(.55)',
+      transformOrigin: 'center top',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: next,
+        start: 'top bottom',
+        end: 'top 8%',
+        scrub: true,
+        invalidateOnRefresh: true
+      }
+    });
   });
 });
 
@@ -193,7 +235,7 @@ document.querySelectorAll('.prod-strip').forEach(strip => {
     ScrollTrigger.create({
       trigger:          '#processo',
       start:            'top top',
-      end:              '+=280%',
+      end:              () => isMobile() ? '+=200%' : '+=280%',
       pin:              true,
       anticipatePin:    1,
       scrub:            1.1,
@@ -215,7 +257,7 @@ document.querySelectorAll('.prod-strip').forEach(strip => {
   init();
 })();
 
-/* ── Gallery: marquee infinito + lightbox ── */
+/* ── Gallery: marquee (desktop) / snap carousel (mobile) + lightbox ── */
 (function(){
   const track   = document.getElementById('gallery-track');
   const lb      = document.getElementById('lightbox');
@@ -223,12 +265,36 @@ document.querySelectorAll('.prod-strip').forEach(strip => {
   const lbClose = document.getElementById('lightbox-close');
   if (!track || !lb) return;
 
-  // Clona per loop seamless (translateX -50% copre esattamente il set originale)
-  Array.from(track.children).forEach(item => {
-    const clone = item.cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    track.appendChild(clone);
-  });
+  if (!isMobile()) {
+    // Clona per loop seamless (translateX -50% copre esattamente il set originale)
+    Array.from(track.children).forEach(item => {
+      const clone = item.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    });
+  } else {
+    // Carousel: evidenzia l'item il cui centro è più vicino al centro viewport
+    const items = Array.from(track.children);
+    let raf = null;
+
+    function highlight() {
+      raf = null;
+      const mid = window.innerWidth / 2;
+      let best = null, bestD = Infinity;
+      items.forEach(it => {
+        const r = it.getBoundingClientRect();
+        const d = Math.abs(r.left + r.width / 2 - mid);
+        if (d < bestD) { bestD = d; best = it; }
+      });
+      items.forEach(it => it.classList.toggle('is-center', it === best));
+    }
+
+    track.addEventListener('scroll', () => {
+      if (!raf) raf = requestAnimationFrame(highlight);
+    }, { passive: true });
+    window.addEventListener('load', highlight);
+    highlight();
+  }
 
   // Click → lightbox (delegato al track, funziona su originali e cloni)
   track.addEventListener('click', e => {
@@ -452,7 +518,7 @@ if (document.getElementById('marina-pin')) {
 
   function resize() { cvs.width = cvs.offsetWidth; cvs.height = cvs.offsetHeight; }
   resize();
-  window.addEventListener('resize', debounce(() => { resize(); draw(lastP); }, 100));
+  window.addEventListener('resize', debounce(() => { resize(); render(lastP); }, 100));
 
   function cl(v,lo,hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -487,6 +553,94 @@ if (document.getElementById('marina-pin')) {
     ctx.strokeStyle=g; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
     ctx.restore();
+  }
+
+  function drawVLine(x, y1, y2, dir, a) {
+    const g = ctx.createLinearGradient(x, y1, x, y2);
+    if (dir==='T') {
+      g.addColorStop(0, 'rgba(255,255,255,0)');
+      g.addColorStop(.65, `rgba(255,255,255,${a*.28})`);
+      g.addColorStop(1,  `rgba(255,255,255,${a*.82})`);
+    } else {
+      g.addColorStop(0,  `rgba(255,255,255,${a*.82})`);
+      g.addColorStop(.35,`rgba(255,255,255,${a*.28})`);
+      g.addColorStop(1,  'rgba(255,255,255,0)');
+    }
+    ctx.save();
+    ctx.shadowColor='rgba(180,210,255,.6)'; ctx.shadowBlur=20;
+    ctx.strokeStyle=g; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,y2); ctx.stroke();
+    ctx.restore();
+  }
+
+  /* Variante portrait: le due sfere convergono verticalmente
+     lungo l'asse centrale, sotto il testo intro */
+  function drawV(p) {
+    lastP = p;
+    const W = cvs.width, H = cvs.height;
+    ctx.clearRect(0, 0, W, H);
+    const cx    = W / 2;
+    const topY  = H * 0.40;
+    const beamY = H * 0.72;
+
+    const ballP   = cl((p - .04) / .50, 0, 1);
+    const impactP = cl((p - .50) / .14, 0, 1);
+    const curveP  = cl((p - .56) / .44, 0, 1);
+
+    /* Sfere che si avvicinano lungo la verticale */
+    if (ballP > 0 && impactP < 1) {
+      const ty = topY + ballP * (beamY - topY);
+      const by = H - ballP * (H - beamY);
+      const ba = 1 - impactP;
+      drawVLine(cx, topY, ty, 'T', ba);
+      drawVLine(cx, by, H, 'B', ba);
+      drawBall(cx, ty, ba);
+      drawBall(cx, by, ba);
+    }
+
+    /* Impatto: glow + linee complete */
+    if (impactP > 0) {
+      const gi = cl(impactP * 1.85, 0, 1);
+      drawVLine(cx, topY, beamY, 'T', gi * .88);
+      drawVLine(cx, beamY, H, 'B', gi * .88);
+      const r  = 90 * gi;
+      const gg = ctx.createRadialGradient(cx, beamY, 0, cx, beamY, r);
+      gg.addColorStop(0,    `rgba(255,255,255,${gi})`);
+      gg.addColorStop(.12,  `rgba(220,235,255,${gi*.72})`);
+      gg.addColorStop(.42,  `rgba(155,195,255,${gi*.22})`);
+      gg.addColorStop(1,    'rgba(80,140,255,0)');
+      ctx.fillStyle = gg;
+      ctx.beginPath(); ctx.arc(cx, beamY, r, 0, Math.PI*2); ctx.fill();
+      ctx.save();
+      ctx.shadowColor='white'; ctx.shadowBlur=22;
+      ctx.fillStyle = `rgba(255,255,255,${cl(gi,0,1)})`;
+      ctx.beginPath(); ctx.arc(cx, beamY, 5*gi, 0, Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+
+    /* Linea che prosegue decisa verso Marina */
+    if (curveP > 0) {
+      const y2 = beamY + curveP * (H - beamY + 5);
+      const vg = ctx.createLinearGradient(cx, beamY, cx, y2);
+      vg.addColorStop(0,  'rgba(255,255,255,.92)');
+      vg.addColorStop(.6, 'rgba(255,255,255,.65)');
+      vg.addColorStop(1,  'rgba(255,255,255,.42)');
+      ctx.save();
+      ctx.shadowColor = 'rgba(200,225,255,.55)'; ctx.shadowBlur = 10;
+      ctx.strokeStyle = vg; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(cx, beamY); ctx.lineTo(cx, y2); ctx.stroke();
+      ctx.restore();
+      if (curveP < 0.98) {
+        ctx.save();
+        ctx.shadowColor = 'white'; ctx.shadowBlur = 20;
+        ctx.fillStyle = 'rgba(255,255,255,.95)';
+        ctx.beginPath(); ctx.arc(cx, y2, 4, 0, Math.PI*2); ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    /* Testo: si dissolve all'impatto */
+    if (intro) intro.style.opacity = cl(1 - (impactP - .25) / .35, 0, 1);
   }
 
   function draw(p) {
@@ -556,10 +710,12 @@ if (document.getElementById('marina-pin')) {
     if (intro) intro.style.opacity = cl(1 - (impactP - .25) / .35, 0, 1);
   }
 
+  function render(p) { isMobile() ? drawV(p) : draw(p); }
+
   ScrollTrigger.create({
     trigger: '#mb-pin', start:'top top', end:'bottom bottom',
     scrub: 1.2,
-    onUpdate(self) { draw(self.progress); }
+    onUpdate(self) { render(self.progress); }
   });
 })();
 
@@ -567,6 +723,10 @@ if (document.getElementById('marina-pin')) {
 (function(){
   const vid = document.getElementById('fil3-video');
   if (!vid) return;
+
+  /* Su desktop ripristina il buffering aggressivo (l'HTML dichiara
+     preload="metadata" per non scaricare 4.7MB su rete mobile) */
+  if (!isMobile()) vid.preload = 'auto';
 
   const CHAPTERS = [
     { num:'01 — Selezione',       title:'Dal pescato<br>alla scelta',   desc:'I nostri buyer scelgono ogni mattina dai pescatori di fiducia. Nessun intermediario, filiera tracciata dalla barca.' },
@@ -615,7 +775,7 @@ if (document.getElementById('marina-pin')) {
     if (curIdx !== -1) return;
     curIdx = 0;
     applyContent(0);
-    gsap.set(textEl,  { left:CH_LEFT[0], width:CH_W[0] });
+    if (!isMobile()) gsap.set(textEl, { left:CH_LEFT[0], width:CH_W[0] });
     gsap.set([numEl, titleEl, descEl], { opacity:0, y:68 });
     gsap.to(numEl,   { opacity:1, y:0, duration:.65, ease:'power3.out' });
     gsap.to(titleEl, { opacity:1, y:0, duration:.88, ease:'power3.out', delay:.1 });
@@ -630,9 +790,12 @@ if (document.getElementById('marina-pin')) {
     const tl = gsap.timeline({ onComplete:() => { isAnim = false; } });
 
     /* Il pannello scivola orizzontalmente verso il nuovo punto
-       mentre il testo vecchio cade giù e svanisce */
-    tl.to(textEl,  { left:CH_LEFT[nextIdx], width:CH_W[nextIdx], duration:.55, ease:'power2.inOut' }, 0)
-      .to(numEl,   { opacity:0, y:28,  scale:.94, duration:.32, ease:'power3.in' }, 0)
+       mentre il testo vecchio cade giù e svanisce.
+       Su mobile il pannello resta fisso a sinistra (CSS), niente slide */
+    if (!isMobile()) {
+      tl.to(textEl, { left:CH_LEFT[nextIdx], width:CH_W[nextIdx], duration:.55, ease:'power2.inOut' }, 0);
+    }
+    tl.to(numEl,   { opacity:0, y:28,  scale:.94, duration:.32, ease:'power3.in' }, 0)
       .to(titleEl, { opacity:0, y:42,  scale:.92, duration:.38, ease:'power3.in' }, 0)
       .to(descEl,  { opacity:0, y:22,  scale:.95, duration:.28, ease:'power3.in' }, 0)
       /* Nuovo contenuto parte dal basso */
@@ -666,6 +829,16 @@ if (document.getElementById('marina-pin')) {
     onEnter: enterFirst
   });
 
+  /* Tap sui segmenti in alto (stile stories) → salta al capitolo */
+  document.querySelectorAll('.fil3-seg').forEach((seg, i) => {
+    seg.addEventListener('click', () => {
+      if (!vid.duration) return;
+      vid.currentTime = vid.duration * i * .25 + .05;
+      if (curIdx !== -1 && i !== curIdx && !isAnim) changeChapter(i);
+      if ('vibrate' in navigator) navigator.vibrate(10);
+    });
+  });
+
   /* timeupdate usato solo per rilevare cambio capitolo (leggero) */
   vid.addEventListener('timeupdate', () => {
     if (!vid.duration) return;
@@ -687,17 +860,56 @@ window.addEventListener('load', () => {
   const btn = document.getElementById('hamburger');
   const nav = document.querySelector('nav');
   if (!btn || !nav) return;
+  const links = Array.from(nav.querySelectorAll('a'));
+
+  function open() {
+    btn.classList.add('open');
+    nav.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    gsap.killTweensOf(links);
+    gsap.fromTo(links,
+      { y: 28, opacity: 0 },
+      { y: 0, opacity: 1, duration: .5, stagger: .06, ease: 'power3.out', delay: .08, overwrite: 'auto' }
+    );
+    if ('vibrate' in navigator) navigator.vibrate(8);
+    links[0].focus({ preventScroll: true });
+  }
+
+  function close(returnFocus) {
+    btn.classList.remove('open');
+    nav.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    gsap.killTweensOf(links);
+    gsap.set(links, { clearProps: 'opacity,transform' });
+    if (returnFocus) btn.focus({ preventScroll: true });
+  }
+
   btn.addEventListener('click', () => {
-    const isOpen = btn.classList.toggle('open');
-    nav.classList.toggle('open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    btn.classList.contains('open') ? close(true) : open();
   });
-  nav.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      btn.classList.remove('open');
-      nav.classList.remove('open');
-      document.body.style.overflow = '';
-    });
+
+  links.forEach(a => a.addEventListener('click', () => close(false)));
+
+  document.addEventListener('keydown', e => {
+    if (!nav.classList.contains('open')) return;
+    if (e.key === 'Escape') { close(true); return; }
+    if (e.key === 'Tab') {
+      /* Focus trap: nel DOM i link precedono il bottone, il ciclo è links[0] … btn */
+      const first = links[0];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        btn.focus();
+      } else if (!e.shiftKey && document.activeElement === btn) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  window.matchMedia(DESKTOP_MQ).addEventListener('change', e => {
+    if (e.matches && nav.classList.contains('open')) close(false);
   });
 })();
 
@@ -743,7 +955,7 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
   const ctx = cvs.getContext('2d');
   let W, H;
   const mouse = { x:-9999, y:-9999 };
-  const N     = 700;
+  const N     = isMobile() ? 220 : 700;
   const REPEL = 120;
   const FORCE = 0.85;
 
@@ -847,6 +1059,16 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
     mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
   });
   (section || cvs).addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+
+  /* Touch: le bolle si spostano sotto il dito — passive per non bloccare lo scroll */
+  (section || cvs).addEventListener('touchmove', e => {
+    const t = e.touches[0];
+    const r = cvs.getBoundingClientRect();
+    mouse.x = t.clientX - r.left;
+    mouse.y = t.clientY - r.top;
+  }, { passive: true });
+  (section || cvs).addEventListener('touchend', () => { mouse.x = -9999; mouse.y = -9999; });
+
   window.addEventListener('resize', debounce(resize, 100));
 
   init();
