@@ -105,9 +105,12 @@ a {
   transition: background .4s;
 }
 
+/* NIENTE backdrop-filter qui: crea un containing block per i
+   discendenti position:fixed e confinerebbe l'overlay del menu
+   mobile dentro la barra dell'header (menu rotto dopo lo scroll) */
 #hdr.scrolled {
-  background: rgba(255,255,255,.96);
-  backdrop-filter: blur(12px);
+  background: #fff;
+  box-shadow: 0 1px 14px rgba(0,0,0,.08);
 }
 
 .logo {
