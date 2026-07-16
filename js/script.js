@@ -3,6 +3,28 @@
    ════════════════════════════════════════ */
 gsap.registerPlugin(ScrollTrigger);
 
+/* ── Lenis smooth scroll ──────────────────────── */
+/* Tutta la pagina scorre con inerzia: la rotella non sposta la
+   posizione di scatto, la fa planare verso il target con una lunga
+   decelerazione — lo scrub dell'hero (e di ogni sezione) eredita
+   questa curva, quindi il movimento prosegue morbido anche dopo
+   che si smette di scrollare */
+const lenis = new Lenis({ duration: 1.2 });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
+
+/* Ancore interne via Lenis (scroll-behavior:smooth è disattivato) */
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const href   = a.getAttribute('href');
+  const target = href === '#' ? 0 : document.querySelector(href);
+  if (target === null) return;
+  e.preventDefault();
+  lenis.scrollTo(target);
+});
+
 const mm = gsap.matchMedia();
 const MOBILE_MQ  = '(max-width: 768px)';
 const DESKTOP_MQ = '(min-width: 769px)';
@@ -36,23 +58,12 @@ gsap.to('#lottie-bg, #vig', {
   }
 });
 
-/* ── Lottie hero ──────────────────────────────── */
+/* ── Hero bg ──────────────────────────────────── */
 const bar    = document.getElementById('bar');
 const loader = document.getElementById('loading');
 
-const anim = lottie.loadAnimation({
-  container: document.getElementById('lottie-bg'),
-  renderer: 'svg', loop: false, autoplay: false,
-  path: isMobile() ? 'assets/lottie-hero-mobile.json' : 'assets/lottie-hero.json',
-  rendererSettings: { preserveAspectRatio: 'xMidYMid slice', progressiveLoad: true }
-});
-
-anim.addEventListener('data_ready',    () => bar.style.width = '60%');
-anim.addEventListener('loaded_images', () => bar.style.width = '90%');
-anim.addEventListener('data_failed',   () => loader.querySelector('p').textContent = 'Errore');
-
-/* Uscita loader unica (DOMLoaded o timeout di sicurezza): su rete lenta
-   il sito deve partire comunque, il Lottie arriva quando arriva */
+/* Uscita loader unica (ready o timeout di sicurezza): su rete lenta
+   il sito deve partire comunque, l'animazione arriva quando arriva */
 let loaderDone = false;
 function hideLoader() {
   if (loaderDone) return;
@@ -63,30 +74,41 @@ function hideLoader() {
 }
 setTimeout(hideLoader, 7000);
 
-/* Centraggio capitoli subito, NON dentro DOMLoaded: se il Lottie
+/* Centraggio capitoli subito, NON dopo il load: se l'animazione
    tarda (rete lenta / timeout loader) i capitoli devono comunque
    essere centrati, altrimenti sfondano il viewport a destra */
 gsap.set('#c1', { xPercent:-50, yPercent:-50, opacity:1 });
 gsap.set('#c2', { xPercent:-50, yPercent:-50 });
 gsap.set('#c3', { xPercent:-50, yPercent:-50 });
 gsap.set('#c4', { xPercent:-50, yPercent:-50 });
-gsap.set('#c5', { xPercent:-50, yPercent:-50 });
 
-anim.addEventListener('DOMLoaded', () => {
-  bar.style.width = '100%';
-  anim.goToAndStop(0, true);
-  setTimeout(hideLoader, 300);
-
+/* Scrub dell'hero: lo scroll (già ammorbidito da Lenis) pilota i frame
+   dell'animazione — renderFrame riceve un frame FRAZIONARIO, che su
+   canvas diventa crossfade tra due frame — i capitoli testuali e il
+   velo nero d'apertura. Stessa ricetta del riferimento
+   squaremarketing.it: Lenis + scrub, nessun hijack dello scroll */
+function initHeroScroll(renderFrame, total) {
   const CHS = [
     {el:'#c1',s:0.00,fi:0.00,fo:0.14,e:0.20},
     {el:'#c2',s:0.22,fi:0.28,fo:0.38,e:0.44},
     {el:'#c3',s:0.46,fi:0.52,fo:0.60,e:0.65},
     {el:'#c4',s:0.67,fi:0.73,fo:0.80,e:0.86},
-    {el:'#c5',s:0.88,fi:0.93,fo:0.98,e:1.01},
   ];
-  const els   = CHS.map(c => document.querySelector(c.el));
-  const total = anim.totalFrames;
-  const proxy = { frame: 0 };
+  const els = CHS.map(c => document.querySelector(c.el));
+
+  /* Velo nero iniziale: pieno a p=0, dissolto entro il 10% di scroll */
+  const fadeEl   = document.getElementById('hero-fade');
+  const FADE_END = 0.10;
+
+  /* Transizione finale video-su-video: il mp4 (sotto maschera
+     circolare sfumata) si apre dal centro mentre il tunnel scorre
+     ancora intorno; sulla giuntura viaggia solo un anello di luce
+     sottile (#hero-white mascherato a ciambella). Preload pigro */
+  const whiteEl  = document.getElementById('hero-white');
+  const blackEl  = document.getElementById('hero-black');
+  const videoEl  = document.getElementById('hero-video');
+  const V_START  = 0.80;
+  let vLoaded = false;
 
   /* Il primo capitolo (s=0) parte già in scena: a p=0 deve essere
      nitido e a scala piena, non nello stato "pre-ingresso" — senza
@@ -97,21 +119,222 @@ anim.addEventListener('DOMLoaded', () => {
   function sc(p,s,fi,fo,e){ if(p<=s)return s===0?1:.82; if(p<fi)return .82+.18*((p-s)/(fi-s||.001)); if(p>fo)return 1+.15*((p-fo)/(e-fo||.001)); return 1; }
   function bl(p,s,fi,fo,e){ if(s===0)return 0; if(p<=s)return 7; if(p<fi)return 7*(1-(p-s)/(fi-s||.001)); if(p>fo)return 6*((p-fo)/(e-fo||.001)); return 0; }
 
+  function apply(p) {
+    renderFrame(p * (total - 1));
+    gsap.set(fadeEl, { opacity: Math.max(0, 1 - p / FADE_END) });
+    /* il mp4 resta SEMPRE full screen (mai scalato: niente scatola):
+       la porta-maschera che si allarga dal centro mostra la sua
+       porzione centrale, come guardando attraverso il varco in fondo
+       al tunnel. A 260vmax la parte piena copre anche gli angoli */
+    if (!vLoaded && p > 0.5) { vLoaded = true; videoEl.preload = 'auto'; videoEl.load(); }
+    const vp = Math.min(1, Math.max(0, (p - V_START) / (1 - V_START)));
+    const sz = (Math.pow(vp, 1.2) * 260).toFixed(1) + 'vmax';
+    /* zoom dinamico della banda 8:3: nella fase porta è ingrandita
+       fino a coprire il viewport (cz — mai bordi tagliati in vista),
+       poi da metà apertura si rimpicciolisce con smoothstep fino a
+       scala 1 = larghezza piena con fasce nere, scritte intere */
+    const cz = Math.max(1, window.innerHeight / (window.innerWidth * 3 / 8));
+    const sh = Math.min(1, Math.max(0, (vp - 0.5) / 0.5));
+    const ease = sh * sh * (3 - 2 * sh);
+    gsap.set(videoEl, {
+      opacity: Math.min(1, vp * 3),
+      scale: cz + (1 - cz) * ease,
+      webkitMaskSize: `${sz} ${sz}`,
+      maskSize: `${sz} ${sz}`
+    });
+    if (vp > 0.02 && videoEl.paused) videoEl.play().catch(() => {});
+    else if (vp <= 0.01 && !videoEl.paused) { videoEl.pause(); videoEl.currentTime = 0; }
+
+    /* alone sulla giuntura: il contorno-porta sfumato scala insieme
+       alla maschera del video, così la luce cavalca sempre il bordo */
+    gsap.set(whiteEl, {
+      opacity: Math.min(1, vp * 3) * 0.55,
+      webkitMaskSize: `${sz} ${sz}`,
+      maskSize: `${sz} ${sz}`
+    });
+
+    /* fondale nero mascherato a porta: riempie il varco dietro la
+       banda già PRIMA che inizi a rimpicciolirsi, così nello spazio
+       che si apre non spunta mai il tunnel — fuori dalla porta il
+       tunnel resta visibile fino a essere inghiottito */
+    gsap.set(blackEl, {
+      opacity: Math.min(1, Math.max(0, (vp - 0.4) / 0.15)),
+      webkitMaskSize: `${sz} ${sz}`,
+      maskSize: `${sz} ${sz}`
+    });
+    CHS.forEach((c,i) => gsap.set(els[i],{
+      opacity: op(p,c.s,c.fi,c.fo,c.e),
+      scale:   sc(p,c.s,c.fi,c.fo,c.e),
+      filter: `blur(${bl(p,c.s,c.fi,c.fo,c.e).toFixed(1)}px)`
+    }));
+  }
+
+  /* Il video NON legge lo scroll 1:1: lo INSEGUE con un lerp
+     esponenziale (come il tunnel three.js del riferimento). Mentre
+     scrolli il divario col target cresce e la velocità sale
+     (accelerazione); quando ti fermi il divario si chiude planando —
+     il movimento continua da solo oltre l'inerzia di Lenis */
+  let target = 0;
+  let shown  = 0;
+  const CHASE = 4.5; /* 1/s: più basso = inseguimento più lungo e morbido */
+
   ScrollTrigger.create({
-    trigger:'#v-scroller', start:'top top', end:'bottom bottom', scrub:1,
-    onUpdate(self){
-      const p = self.progress;
-      gsap.to(proxy,{ frame:p*(total-1), duration:.4, ease:'none', overwrite:'auto',
-        onUpdate(){ anim.goToAndStop(Math.round(proxy.frame),true); }
-      });
-      CHS.forEach((c,i) => gsap.set(els[i],{
-        opacity: op(p,c.s,c.fi,c.fo,c.e),
-        scale:   sc(p,c.s,c.fi,c.fo,c.e),
-        filter: `blur(${bl(p,c.s,c.fi,c.fo,c.e).toFixed(1)}px)`
-      }));
-    }
+    trigger:'#v-scroller', start:'top top', end:'bottom bottom', scrub:true,
+    onUpdate(self){ target = self.progress; }
   });
-});
+
+  gsap.ticker.add((time, deltaTime) => {
+    const gap = target - shown;
+    if (Math.abs(gap) < 0.00004) return;
+    shown += gap * (1 - Math.exp(-CHASE * deltaTime / 1000));
+    apply(shown);
+  });
+
+  /* Snap ai punti CTA: se lo scroll si ferma TRA due call to action,
+     la pagina prosegue da sola (via lenis.scrollTo, quindi con la
+     stessa inerzia del resto) fino alla CTA piena nella direzione di
+     marcia — accelerazione al centro, frenata all'arrivo. Il video
+     segue con l'inseguitore qui sopra */
+  /* 0.885 = sosta "televisione": a metà tra l'ultima CTA e la fine,
+     la porta del tunnel è aperta a mezzo schermo col video già in
+     riproduzione dentro, incorniciato dal tunnel intorno */
+  const POINTS = CHS.map(c => c.s === 0 ? 0 : (c.fi + c.fo) / 2).concat(0.885, 1);
+  const scrollerEl = document.getElementById('v-scroller');
+  const heroMax    = () => scrollerEl.offsetHeight - window.innerHeight;
+  const SNAP_EPS   = 0.012;
+  let snapping = false;
+  let idleT    = null;
+  let lastDir  = 1;
+
+  function snapNow() {
+    const max = heroMax();
+    const y   = window.scrollY;
+    if (y <= 1 || y >= max - 1) return;
+    const p = y / max;
+    if (POINTS.some(pt => Math.abs(pt - p) < SNAP_EPS)) return;
+    const ahead   = POINTS.filter(pt => lastDir > 0 ? pt > p : pt < p);
+    const targetP = ahead.length
+      ? (lastDir > 0 ? Math.min(...ahead) : Math.max(...ahead))
+      : POINTS.reduce((a, b) => Math.abs(b - p) < Math.abs(a - p) ? b : a);
+    snapping = true;
+    /* rete di sicurezza se onComplete non arrivasse */
+    const failsafe = setTimeout(() => { snapping = false; }, 2500);
+    lenis.scrollTo(Math.round(targetP * max), {
+      duration: 1.2,
+      /* easeOutCubic: parte già in velocità — raccoglie la planata di
+         Lenis senza pausa né riaccelerazione, frena solo sulla CTA */
+      easing: t => 1 - (1 - t) ** 3,
+      lock: true,
+      onComplete: () => { clearTimeout(failsafe); snapping = false; }
+    });
+  }
+
+  /* La partenza scatta alla fine dell'INPUT (ultima tacca di rotella),
+     non alla fine dell'inerzia di Lenis: 90ms dopo l'ultimo evento la
+     corsa verso la CTA aggancia il movimento ancora in planata */
+  window.addEventListener('wheel', (e) => {
+    if (snapping) return;
+    if (e.deltaY) lastDir = e.deltaY > 0 ? 1 : -1;
+    clearTimeout(idleT);
+    idleT = setTimeout(snapNow, 90);
+  }, { passive: true });
+}
+
+if (isMobile()) {
+  /* Mobile: lottie-web col file verticale dedicato */
+  const anim = lottie.loadAnimation({
+    container: document.getElementById('lottie-bg'),
+    renderer: 'svg', loop: false, autoplay: false,
+    path: 'assets/lottie-hero-mobile.json',
+    rendererSettings: { preserveAspectRatio: 'xMidYMid slice', progressiveLoad: true }
+  });
+  anim.addEventListener('data_ready',    () => bar.style.width = '60%');
+  anim.addEventListener('loaded_images', () => bar.style.width = '90%');
+  anim.addEventListener('data_failed',   () => loader.querySelector('p').textContent = 'Errore');
+  anim.addEventListener('DOMLoaded', () => {
+    bar.style.width = '100%';
+    anim.goToAndStop(0, true);
+    setTimeout(hideLoader, 300);
+    initHeroScroll(f => anim.goToAndStop(Math.round(f), true), anim.totalFrames);
+  });
+} else {
+  /* Desktop: il Lottie esportato è una sequenza di immagini (un webp
+     per frame) e lottie-web può solo scattare da un frame all'altro.
+     Disegnamo noi la sequenza su canvas con crossfade tra frame
+     consecutivi: le posizioni intermedie dello scroll sono dissolvenze
+     tra due frame, percepite come movimento continuo */
+  (async () => {
+    try {
+      const res  = await fetch('assets/lottie-hero.json?v=3');
+      const data = await res.json();
+      bar.style.width = '40%';
+
+      const byId = {};
+      (data.assets || []).forEach(a => { byId[a.id] = a; });
+      const frames = (data.layers || [])
+        .filter(l => l.ty === 2)
+        .sort((a, b) => a.ip - b.ip)
+        .map(l => byId[l.refId] && byId[l.refId].p)
+        .filter(Boolean)
+        .map(src => { const img = new Image(); img.src = src; return img; });
+      if (!frames.length) throw new Error('nessun frame nella sequenza');
+
+      let decoded = 0;
+      await Promise.all(frames.map(img =>
+        img.decode().catch(() => {}).then(() => {
+          decoded++;
+          bar.style.width = (40 + 55 * decoded / frames.length) + '%';
+        })
+      ));
+
+      const box = document.getElementById('lottie-bg');
+      const cv  = document.createElement('canvas');
+      const ctx = cv.getContext('2d');
+      box.appendChild(cv);
+
+      const iw = frames[0].naturalWidth;
+      const ih = frames[0].naturalHeight;
+      let lastF = 0;
+
+      function draw(f) {
+        lastF = f;
+        const i = Math.max(0, Math.min(Math.floor(f), frames.length - 1));
+        const j = Math.min(i + 1, frames.length - 1);
+        const t = f - i;
+        /* cover: equivalente di preserveAspectRatio slice */
+        const s  = Math.max(cv.width / iw, cv.height / ih);
+        const dw = iw * s, dh = ih * s;
+        const dx = (cv.width - dw) / 2, dy = (cv.height - dh) / 2;
+        ctx.globalAlpha = 1;
+        ctx.drawImage(frames[i], dx, dy, dw, dh);
+        if (j !== i && t > 0.01) {
+          ctx.globalAlpha = t;
+          ctx.drawImage(frames[j], dx, dy, dw, dh);
+        }
+      }
+
+      function resize() {
+        /* DPR limitato: i frame sorgente sono 1280px, oltre non c'è
+           dettaglio da guadagnare e il paint del canvas raddoppia */
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        cv.width  = Math.round(box.clientWidth  * dpr);
+        cv.height = Math.round(box.clientHeight * dpr);
+        /* si azzera al resize del buffer: va rimesso ogni volta */
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        draw(lastF);
+      }
+      window.addEventListener('resize', debounce(resize, 150));
+      resize();
+
+      bar.style.width = '100%';
+      setTimeout(hideLoader, 300);
+      initHeroScroll(draw, frames.length);
+    } catch (err) {
+      loader.querySelector('p').textContent = 'Errore';
+    }
+  })();
+}
 
 /* ── Counters ─────────────────────────────────── */
 document.querySelectorAll('[data-count]').forEach(el => {

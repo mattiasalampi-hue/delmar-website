@@ -22,8 +22,10 @@
   padding: 0;
 }
 
+/* Niente scroll-behavior:smooth — lo smooth scroll è di Lenis,
+   e i due si contendono la posizione se attivi insieme */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 body {
@@ -176,6 +178,99 @@ nav a {
   height: 100% !important;
 }
 
+#lottie-bg canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Alone di luce sulla giuntura tra i due video: solo il CONTORNO
+   della stessa porta del tunnel, senza riempimento, tutto blur —
+   pura sfumatura che cavalca il bordo del reveal e viaggia con lui.
+   Figlio di #lottie-bg: eredita il fade-out di fine hero */
+#hero-white {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: #fff;
+  opacity: 0;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='4'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='none' stroke='white' stroke-width='3.5' filter='url(%23b)'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='4'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='none' stroke='white' stroke-width='3.5' filter='url(%23b)'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 0.1px 0.1px;
+  mask-size: 0.1px 0.1px;
+}
+
+/* Video finale: emerge dentro la luce bianca (opacity/scale pilotate
+   da initHeroScroll) e continua a scorrere sullo schermo bianco.
+   Centrato con inset+margin auto, NON con translate: GSAP scrive
+   scale nel transform e sovrascriverebbe il centraggio */
+/* Sempre full screen: a rivelarlo è una maschera a forma di PORTA
+   DEL TUNNEL (pavimento piatto, pareti dritte, volta ad arco) con
+   bordi sfumati dal blur SVG. La dimensione della maschera è
+   pilotata da initHeroScroll (mask-size), la forma è statica */
+/* Fondale nero delle fasce cinemascope: compare SOLO nel tratto
+   finale (pilotato da initHeroScroll), quando la porta ha ormai
+   inghiottito lo schermo — prima, sopra e sotto il video si
+   continua a vedere il tunnel */
+#hero-black {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: #000;
+  opacity: 0;
+  /* stessa maschera-porta del video: il nero riempie solo il varco
+     (dietro la banda che si rimpicciolisce), fuori resta il tunnel */
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 0.1px 0.1px;
+  mask-size: 0.1px 0.1px;
+}
+
+#hero-video {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  /* banda cinemascope a larghezza PIENA (il file è 1280x480, 8:3):
+     niente ritagli laterali, le scritte del video restano intere;
+     sopra e sotto, tunnel prima e fasce nere (#hero-black) alla fine */
+  width: 100vw;
+  aspect-ratio: 8 / 3;
+  height: auto;
+  z-index: 3;
+  opacity: 0;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 0.1px 0.1px;
+  mask-size: 0.1px 0.1px;
+}
+
+/* Velo nero iniziale: all'apertura copre il video, si dissolve
+   nel primo tratto di scroll (pilotato da initHeroScroll) */
+#hero-fade {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  background: #000;
+  pointer-events: none;
+}
+
 #vig {
   position: fixed;
   top: 0;
@@ -191,14 +286,14 @@ nav a {
 #v-scroller {
   position: relative;
   z-index: 3;
-  height: 900vh;
+  height: 500vh;
 }
 
 #v-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
@@ -228,7 +323,7 @@ nav a {
   text-align: center;
 }
 
-#c2, #c3, #c4, #c5 {
+#c2, #c3, #c4 {
   top: 50%;
   left: 50%;
   width: 88%;
@@ -2167,7 +2262,7 @@ hr.div {
   }
 
   /* ─── Hero chapters (mobile: meno testo, CTA grandi) ── */
-  #c1, #c2, #c3, #c4, #c5 {
+  #c1, #c2, #c3, #c4 {
     width: 92%;
   }
 
@@ -2212,8 +2307,7 @@ hr.div {
      restano label, titolo grande e bottone */
   #c2 .ch-sub,
   #c3 .ch-sub,
-  #c4 .ch-sub,
-  #c5 .ch-sub {
+  #c4 .ch-sub {
     display: none;
   }
 
