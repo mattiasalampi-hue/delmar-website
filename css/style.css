@@ -120,8 +120,10 @@ a {
 
 nav {
   display: flex;
-  gap: 2.2rem;
+  gap: clamp(1rem, 1.6vw, 2.2rem);
   align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 nav a {
@@ -131,6 +133,7 @@ nav a {
   text-transform: uppercase;
   color: rgba(0,0,0,.62);
   transition: color .3s;
+  white-space: nowrap;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -188,14 +191,14 @@ nav a {
 #v-scroller {
   position: relative;
   z-index: 3;
-  height: 500vh;
+  height: 900vh;
 }
 
 #v-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   pointer-events: none;
