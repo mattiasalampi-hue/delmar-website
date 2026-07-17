@@ -443,6 +443,10 @@ mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
         }
       } else {
         s.classList.remove('lit');
+        // killTweensOf obbligatorio: con scroll veloce il fromTo di
+        // entrata è ancora in corsa e riporterebbe visibile lo step
+        // uscente sopra quello nuovo (scritte sovrapposte)
+        gsap.killTweensOf(s);
         gsap.set(s, { opacity:0, y:0 });
       }
     });

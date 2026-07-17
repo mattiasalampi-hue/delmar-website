@@ -2913,9 +2913,83 @@ hr.div {
     padding: .75rem 1.5rem;
   }
 
-  /* Il mockup scala col viewport mantenendo il rapporto 1:2 */
+  /* Il mockup deve stare per intero sotto l'header fisso,
+     mantenendo il rapporto 1:2 */
   #marina-phone {
-    height: min(570px, 80vh);
-    width: min(285px, 40vh);
+    height: min(570px, calc(100vh - 8rem));
+    width: min(285px, calc(50vh - 4rem));
+  }
+
+  /* La chat non scrolla (overflow:hidden): col telefono più basso
+     i testi si riducono perché la conversazione resti integrale */
+  .phone-chat-body {
+    padding: .45rem .6rem;
+    gap: .35rem;
+  }
+
+  .phone-bubble {
+    font-size: clamp(.56rem, 1.5vh, .7rem);
+    line-height: 1.5;
+    padding: .4rem .6rem;
+  }
+
+  .pb-time {
+    font-size: .44rem;
+  }
+
+  .phone-date-badge {
+    font-size: .48rem;
+  }
+
+  .phone-wa-hdr {
+    padding: .4rem .65rem;
+  }
+
+  .phone-wa-ava {
+    width: 26px;
+    height: 26px;
+  }
+
+  /* ─ Contatti: tutte le info in una schermata ─ */
+  #contatti {
+    padding: 7vh 6%;
+  }
+
+  .contatti-grid .big-title {
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    margin-bottom: 1.6rem;
+  }
+
+  .contatti-form {
+    gap: .8rem;
+  }
+
+  .form-field {
+    gap: .35rem;
+  }
+
+  .form-field input,
+  .form-field textarea,
+  .form-field select {
+    font-size: .85rem;
+    padding: .45rem 0;
+  }
+
+  .form-field textarea {
+    height: 70px;
+  }
+
+  .btn-submit {
+    padding: .9rem 2.2rem;
+    margin-top: .3rem;
+  }
+
+  .contatti-info {
+    gap: 1.7rem;
+    padding-top: .5rem;
+  }
+
+  .info-block .info-val {
+    font-size: .92rem;
   }
 }
