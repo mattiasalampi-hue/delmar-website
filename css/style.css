@@ -100,7 +100,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 3rem;
+  padding: .8rem 3rem;
   opacity: 0;
   background: #fff;
   border-bottom: 1px solid rgba(0,0,0,.08);
@@ -115,9 +115,11 @@ a {
   box-shadow: 0 1px 14px rgba(0,0,0,.08);
 }
 
+/* Altezza fissata (il PNG è 1920x720): governa lo spessore
+   dell'header, che deve restare sottile su ogni schermo */
 .logo {
-  max-width: 8rem;
-  height: auto;
+  height: 2.4rem;
+  width: auto;
 }
 
 nav {
@@ -2851,5 +2853,69 @@ hr.div {
 
   .prod-text {
     padding: 3rem 2.5rem;
+  }
+}
+
+/* ─ Schermi larghi e bassi (laptop 16:9, ultrawide) ──
+   Le sezioni sticky sono alte 100vh con overflow:hidden:
+   se il contenuto supera il viewport viene tagliato.
+   Qui si compatta tutto perché stia dentro ~850px di altezza. */
+@media (min-width: 769px) and (max-height: 850px) {
+  #hdr {
+    padding: .55rem 3rem;
+  }
+
+  .logo {
+    height: 2rem;
+  }
+
+  /* L'header fisso copre la fascia alta del viewport: il contenuto
+     centrato deve stare sotto, non dietro */
+  #marina-sticky {
+    padding-top: 3.4rem;
+  }
+
+  .marina-container {
+    gap: 3vw;
+  }
+
+  .marina-info {
+    gap: clamp(.7rem, 1.8vh, 1.2rem);
+  }
+
+  .marina-title {
+    font-size: clamp(2.2rem, 4vw, 3.6rem);
+  }
+
+  .marina-avatar-sm {
+    width: 52px;
+    height: 52px;
+  }
+
+  .marina-desc {
+    font-size: .82rem;
+    line-height: 1.6;
+  }
+
+  .marina-chips {
+    gap: .4rem;
+  }
+
+  .marina-chip {
+    padding: .45rem .8rem;
+  }
+
+  .chip-label {
+    font-size: .7rem;
+  }
+
+  .marina-cta-btn {
+    padding: .75rem 1.5rem;
+  }
+
+  /* Il mockup scala col viewport mantenendo il rapporto 1:2 */
+  #marina-phone {
+    height: min(570px, 80vh);
+    width: min(285px, 40vh);
   }
 }
