@@ -174,12 +174,6 @@ nav a {
   background: var(--bg);
 }
 
-#lottie-bg svg {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-}
-
 #lottie-bg canvas {
   display: block;
   width: 100%;

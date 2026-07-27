@@ -240,101 +240,84 @@ function initHeroScroll(renderFrame, total) {
   }, { passive: true });
 }
 
-if (isMobile()) {
-  /* Mobile: lottie-web col file verticale dedicato */
-  const anim = lottie.loadAnimation({
-    container: document.getElementById('lottie-bg'),
-    renderer: 'svg', loop: false, autoplay: false,
-    path: 'assets/lottie-hero-mobile.json',
-    rendererSettings: { preserveAspectRatio: 'xMidYMid slice', progressiveLoad: true }
-  });
-  anim.addEventListener('data_ready',    () => bar.style.width = '60%');
-  anim.addEventListener('loaded_images', () => bar.style.width = '90%');
-  anim.addEventListener('data_failed',   () => loader.querySelector('p').textContent = 'Errore');
-  anim.addEventListener('DOMLoaded', () => {
-    bar.style.width = '100%';
-    anim.goToAndStop(0, true);
-    setTimeout(hideLoader, 300);
-    initHeroScroll(f => anim.goToAndStop(Math.round(f), true), anim.totalFrames);
-  });
-} else {
-  /* Desktop: il Lottie esportato è una sequenza di immagini (un webp
-     per frame) e lottie-web può solo scattare da un frame all'altro.
-     Disegnamo noi la sequenza su canvas con crossfade tra frame
-     consecutivi: le posizioni intermedie dello scroll sono dissolvenze
-     tra due frame, percepite come movimento continuo */
-  (async () => {
-    try {
-      const res  = await fetch('assets/lottie-hero.json?v=3');
-      const data = await res.json();
-      bar.style.width = '40%';
+/* Tunnel per tutti (desktop e mobile): il Lottie esportato è una
+   sequenza di immagini (un webp per frame) e lottie-web può solo
+   scattare da un frame all'altro. Disegnamo noi la sequenza su canvas
+   con crossfade tra frame consecutivi: le posizioni intermedie dello
+   scroll sono dissolvenze tra due frame, percepite come movimento
+   continuo. Su schermo verticale il draw "cover" centra il varco del
+   tunnel e ritaglia i lati — l'immersione resta identica */
+(async () => {
+  try {
+    const res  = await fetch('assets/lottie-hero.json?v=3');
+    const data = await res.json();
+    bar.style.width = '40%';
 
-      const byId = {};
-      (data.assets || []).forEach(a => { byId[a.id] = a; });
-      const frames = (data.layers || [])
-        .filter(l => l.ty === 2)
-        .sort((a, b) => a.ip - b.ip)
-        .map(l => byId[l.refId] && byId[l.refId].p)
-        .filter(Boolean)
-        .map(src => { const img = new Image(); img.src = src; return img; });
-      if (!frames.length) throw new Error('nessun frame nella sequenza');
+    const byId = {};
+    (data.assets || []).forEach(a => { byId[a.id] = a; });
+    const frames = (data.layers || [])
+      .filter(l => l.ty === 2)
+      .sort((a, b) => a.ip - b.ip)
+      .map(l => byId[l.refId] && byId[l.refId].p)
+      .filter(Boolean)
+      .map(src => { const img = new Image(); img.src = src; return img; });
+    if (!frames.length) throw new Error('nessun frame nella sequenza');
 
-      let decoded = 0;
-      await Promise.all(frames.map(img =>
-        img.decode().catch(() => {}).then(() => {
-          decoded++;
-          bar.style.width = (40 + 55 * decoded / frames.length) + '%';
-        })
-      ));
+    let decoded = 0;
+    await Promise.all(frames.map(img =>
+      img.decode().catch(() => {}).then(() => {
+        decoded++;
+        bar.style.width = (40 + 55 * decoded / frames.length) + '%';
+      })
+    ));
 
-      const box = document.getElementById('lottie-bg');
-      const cv  = document.createElement('canvas');
-      const ctx = cv.getContext('2d');
-      box.appendChild(cv);
+    const box = document.getElementById('lottie-bg');
+    const cv  = document.createElement('canvas');
+    const ctx = cv.getContext('2d');
+    box.appendChild(cv);
 
-      const iw = frames[0].naturalWidth;
-      const ih = frames[0].naturalHeight;
-      let lastF = 0;
+    const iw = frames[0].naturalWidth;
+    const ih = frames[0].naturalHeight;
+    let lastF = 0;
 
-      function draw(f) {
-        lastF = f;
-        const i = Math.max(0, Math.min(Math.floor(f), frames.length - 1));
-        const j = Math.min(i + 1, frames.length - 1);
-        const t = f - i;
-        /* cover: equivalente di preserveAspectRatio slice */
-        const s  = Math.max(cv.width / iw, cv.height / ih);
-        const dw = iw * s, dh = ih * s;
-        const dx = (cv.width - dw) / 2, dy = (cv.height - dh) / 2;
-        ctx.globalAlpha = 1;
-        ctx.drawImage(frames[i], dx, dy, dw, dh);
-        if (j !== i && t > 0.01) {
-          ctx.globalAlpha = t;
-          ctx.drawImage(frames[j], dx, dy, dw, dh);
-        }
+    function draw(f) {
+      lastF = f;
+      const i = Math.max(0, Math.min(Math.floor(f), frames.length - 1));
+      const j = Math.min(i + 1, frames.length - 1);
+      const t = f - i;
+      /* cover: equivalente di preserveAspectRatio slice */
+      const s  = Math.max(cv.width / iw, cv.height / ih);
+      const dw = iw * s, dh = ih * s;
+      const dx = (cv.width - dw) / 2, dy = (cv.height - dh) / 2;
+      ctx.globalAlpha = 1;
+      ctx.drawImage(frames[i], dx, dy, dw, dh);
+      if (j !== i && t > 0.01) {
+        ctx.globalAlpha = t;
+        ctx.drawImage(frames[j], dx, dy, dw, dh);
       }
-
-      function resize() {
-        /* DPR limitato: i frame sorgente sono 1280px, oltre non c'è
-           dettaglio da guadagnare e il paint del canvas raddoppia */
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        cv.width  = Math.round(box.clientWidth  * dpr);
-        cv.height = Math.round(box.clientHeight * dpr);
-        /* si azzera al resize del buffer: va rimesso ogni volta */
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        draw(lastF);
-      }
-      window.addEventListener('resize', debounce(resize, 150));
-      resize();
-
-      bar.style.width = '100%';
-      setTimeout(hideLoader, 300);
-      initHeroScroll(draw, frames.length);
-    } catch (err) {
-      loader.querySelector('p').textContent = 'Errore';
     }
-  })();
-}
+
+    function resize() {
+      /* DPR limitato: i frame sorgente sono 1280px, oltre non c'è
+         dettaglio da guadagnare e il paint del canvas raddoppia */
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      cv.width  = Math.round(box.clientWidth  * dpr);
+      cv.height = Math.round(box.clientHeight * dpr);
+      /* si azzera al resize del buffer: va rimesso ogni volta */
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      draw(lastF);
+    }
+    window.addEventListener('resize', debounce(resize, 150));
+    resize();
+
+    bar.style.width = '100%';
+    setTimeout(hideLoader, 300);
+    initHeroScroll(draw, frames.length);
+  } catch (err) {
+    loader.querySelector('p').textContent = 'Errore';
+  }
+})();
 
 /* ── Counters ─────────────────────────────────── */
 document.querySelectorAll('[data-count]').forEach(el => {
