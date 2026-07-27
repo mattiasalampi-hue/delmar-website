@@ -130,6 +130,17 @@ function initHeroScroll(renderFrame, total) {
   let   lastVp   = -1;
   const lastChO  = els.map(() => -1);
 
+  /* Mobile: variante leggera del mp4 (640x240) e download avviato
+     SUBITO, non a metà scroll — su rete cellulare il file deve avere
+     un vantaggio; col faststart bastano i primi secondi bufferizzati
+     perché la porta si apra col video già in movimento */
+  if (isMob) {
+    videoEl.src = 'assets/video/hero-final-m.mp4?v=1';
+    videoEl.preload = 'auto';
+    videoEl.load();
+    vLoaded = true;
+  }
+
   function apply(p) {
     renderFrame(p * (total - 1));
     const fade = Math.max(0, 1 - p / FADE_END);
@@ -274,7 +285,15 @@ function initHeroScroll(renderFrame, total) {
    tunnel e ritaglia i lati — l'immersione resta identica */
 (async () => {
   try {
-    const res  = await fetch('assets/lottie-hero.json?v=3');
+    /* Su mobile un file dedicato (generato da _source/scripts/
+       build-hero-mobile.js): 65 frame già sfoltiti e ritagliati alla
+       fetta centrale 540x720 — ~1.6MB invece degli 8.6MB del file
+       desktop. Se manca (deploy parziale) si ripiega sul desktop */
+    let res = isMobile()
+      ? await fetch('assets/lottie-hero-m.json?v=1').catch(() => null)
+      : null;
+    let thinned = !!(res && res.ok);
+    if (!thinned) res = await fetch('assets/lottie-hero.json?v=3');
     const data = await res.json();
     bar.style.width = '40%';
 
@@ -342,7 +361,8 @@ function initHeroScroll(renderFrame, total) {
        alla fetta cover visibile e scalate al buffer del canvas: il
        draw diventa un blit 1:1 senza decode né resample, e la
        memoria resta nei limiti del device */
-    const MOBILE_STEP = 2;
+    /* col file mobile dedicato i frame sono già sfoltiti alla fonte */
+    const MOBILE_STEP = thinned ? 1 : 2;
     let bitmapsMode = false;
 
     async function buildBitmaps() {
