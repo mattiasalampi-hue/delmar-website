@@ -746,42 +746,62 @@ a {
   color: var(--text-mid);
 }
 
-/* Come funziona: 3 step */
+/* Come funziona: tre card col numerone in filigrana, lette come un
+   percorso (freccia tra una e l'altra su desktop) */
 .mdm-steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2.5rem;
-  margin-top: 4.5rem;
-  padding-top: 3rem;
-  border-top: 1px solid rgba(0,0,0,.08);
+  gap: 1.8rem;
+  margin-top: 4rem;
+}
+
+.mdm-step {
+  position: relative;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.09);
+  border-radius: 6px;
+  box-shadow: 0 2px 14px rgba(0,0,0,.05);
+  padding: 2.6rem 2rem 2.3rem;
 }
 
 .step-num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid rgba(0,0,0,.3);
-  border-radius: 50%;
-  font-size: .8rem;
-  font-weight: 600;
-  color: var(--text-hi);
-  margin-bottom: 1rem;
+  position: absolute;
+  top: .9rem;
+  right: 1.3rem;
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.04em;
+  color: rgba(16,16,20,.06);
+  pointer-events: none;
+  user-select: none;
 }
 
 .mdm-step h3 {
-  font-size: .95rem;
-  font-weight: 600;
-  letter-spacing: .02em;
-  margin-bottom: .5rem;
+  position: relative;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: .7rem;
 }
 
 .mdm-step p {
-  font-size: .8rem;
+  position: relative;
+  font-size: .88rem;
   font-weight: 300;
-  line-height: 1.6;
+  line-height: 1.7;
   color: var(--text-mid);
+}
+
+/* freccia di percorso nello spazio tra le card */
+.mdm-step:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: -1.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.15rem;
+  color: rgba(16,16,20,.35);
 }
 
 /* ─ Sezioni generiche ───────────────────────── */
@@ -1469,8 +1489,17 @@ a {
 
   .mdm-steps {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.2rem;
     margin-top: 3rem;
+  }
+
+  .mdm-step {
+    padding: 2rem 1.5rem 1.8rem;
+  }
+
+  /* in colonna la freccia laterale non ha senso */
+  .mdm-step:not(:last-child)::after {
+    display: none;
   }
 
   .mdm-sticky-cta {
