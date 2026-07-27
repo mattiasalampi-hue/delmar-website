@@ -511,7 +511,7 @@ if (orderForm) {
       });
       const json = await res.json();
       if (json.success) {
-        ok.textContent = '✓ Prenotazione ricevuta. Ti confermiamo box e ritiro al telefono.';
+        ok.textContent = '✓ Prenotazione ricevuta. Ti inviamo il riepilogo e il link per il pagamento.';
         ok.style.display = 'block';
         form.reset();
         setTimeout(() => { ok.style.display = 'none'; }, 6000);

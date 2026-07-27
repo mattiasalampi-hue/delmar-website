@@ -2,16 +2,19 @@
    Il Mercato del Mare — Stylesheet (B2C)
    Foglio indipendente dal B2B (style.css)
    ════════════════════════════════════════ */
+/* TEMA CHIARO (richiesta Mattias: il B2C deve essere bianco, più in
+   linea col prodotto). L'HERO resta scuro — tunnel video, loader e
+   overlay del menu hanno colori hardcoded, non i token qui sotto */
 :root {
-  --bg: #080808;
-  --bg-rgb: 8,8,8;
-  --bg-alt: #101013;
+  --bg: #ffffff;
+  --bg-alt: #f5f5f3;
+  --ink: #101014;
   --white: #fff;
   --wa: #25D366;
   --wa-hover: #1ebe5a;
-  --text-dim: rgba(255,255,255,.5);
-  --text-mid: rgba(255,255,255,.65);
-  --text-hi: rgba(255,255,255,.92);
+  --text-dim: rgba(16,16,20,.45);
+  --text-mid: rgba(16,16,20,.62);
+  --text-hi: rgba(16,16,20,.9);
   --font: 'Outfit', sans-serif;
 }
 
@@ -26,7 +29,7 @@
 
 body {
   background: var(--bg);
-  color: #fff;
+  color: var(--ink);
   font-family: var(--font);
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
@@ -150,7 +153,7 @@ a {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--bg);
+  background: #080808;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -193,7 +196,7 @@ a {
   height: 100vh;
   z-index: 1;
   overflow: hidden;
-  background: var(--bg);
+  background: #080808;
 }
 
 #lottie-bg canvas {
@@ -278,7 +281,7 @@ a {
   height: 160px;
   z-index: 2;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(var(--bg-rgb),.75) 0%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(8,8,8,.75) 0%, transparent 100%);
 }
 
 /* ─ Video scroller ──────────────────────────── */
@@ -302,6 +305,9 @@ a {
   position: absolute;
   opacity: 0;
   isolation: isolate;
+  /* i capitoli vivono sopra il video scuro: testo sempre bianco,
+     anche col tema chiaro del resto della pagina */
+  color: #fff;
 }
 
 .ch::before {
@@ -358,7 +364,7 @@ a {
   font-size: clamp(.83rem, 1.3vw, .98rem);
   font-weight: 300;
   line-height: 1.7;
-  color: var(--text-hi);
+  color: rgba(255,255,255,.92);
   margin-bottom: 1.8rem;
   text-shadow: 0 1px 14px rgba(0,0,0,.95), 0 2px 6px rgba(0,0,0,.8);
 }
@@ -459,8 +465,8 @@ a {
   display: inline-flex;
   align-items: center;
   gap: .6rem;
-  background: #fff;
-  color: var(--bg);
+  background: var(--ink);
+  color: #fff;
   font-size: .72rem;
   font-weight: 700;
   letter-spacing: .16em;
@@ -472,7 +478,7 @@ a {
 
 @media (hover: hover) and (pointer: fine) {
   .btn-primary:hover {
-    background: rgba(255,255,255,.85);
+    background: #2b2b31;
   }
 }
 
@@ -484,15 +490,15 @@ a {
   font-weight: 600;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: #fff;
-  border-bottom: 1px solid rgba(255,255,255,.4);
+  color: var(--ink);
+  border-bottom: 1px solid rgba(0,0,0,.35);
   padding-bottom: 4px;
   transition: border-color .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .btn-secondary:hover {
-    border-color: #fff;
+    border-color: #000;
   }
 }
 
@@ -519,18 +525,19 @@ a {
 .mdm-box-card {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%);
-  border: 1px solid rgba(255,255,255,.1);
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.09);
   border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0 2px 14px rgba(0,0,0,.05);
   transition: border-color .35s, transform .35s, box-shadow .35s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .mdm-box-card:hover {
-    border-color: rgba(255,255,255,.28);
+    border-color: rgba(0,0,0,.18);
     transform: translateY(-5px);
-    box-shadow: 0 22px 50px rgba(0,0,0,.45);
+    box-shadow: 0 22px 50px rgba(0,0,0,.14);
   }
 
   .mdm-box-card:hover .box-photo img {
@@ -551,12 +558,12 @@ a {
   transition: transform .6s ease;
 }
 
-/* Velo dal basso: cuce la foto al corpo scuro della card */
+/* Leggero scurimento in alto: fa staccare il badge dalla foto */
 .box-photo::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8,8,8,.12) 0%, transparent 30%, transparent 62%, rgba(10,10,12,.82) 100%);
+  background: linear-gradient(180deg, rgba(8,8,8,.2) 0%, transparent 35%);
   pointer-events: none;
 }
 
@@ -569,9 +576,9 @@ a {
   font-weight: 600;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: var(--text-hi);
-  background: rgba(8,8,8,.66);
-  border: 1px solid rgba(255,255,255,.22);
+  color: rgba(255,255,255,.95);
+  background: rgba(8,8,8,.6);
+  border: 1px solid rgba(255,255,255,.25);
   border-radius: 999px;
   padding: .45rem .85rem;
   backdrop-filter: blur(6px);
@@ -629,7 +636,7 @@ a {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgba(255,255,255,.4);
+  background: rgba(0,0,0,.3);
 }
 
 /* Selettore persone: i tondi 4/6/8 come i coperti al ristorante */
@@ -653,7 +660,7 @@ a {
   align-items: center;
   justify-content: center;
   background: transparent;
-  border: 1px solid rgba(255,255,255,.25);
+  border: 1px solid rgba(0,0,0,.25);
   border-radius: 50%;
   color: var(--text-mid);
   font-family: var(--font);
@@ -665,15 +672,15 @@ a {
 
 @media (hover: hover) and (pointer: fine) {
   .box-size:hover {
-    border-color: rgba(255,255,255,.6);
-    color: #fff;
+    border-color: rgba(0,0,0,.6);
+    color: #000;
   }
 }
 
 .box-size.is-active {
-  background: #fff;
-  border-color: #fff;
-  color: #0a0a0a;
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
 }
 
 .box-size-label {
@@ -718,9 +725,10 @@ a {
 .mdm-banner {
   margin-top: 4rem;
   text-align: center;
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid rgba(0,0,0,.09);
   border-radius: 6px;
-  background: linear-gradient(180deg, rgba(255,255,255,.045) 0%, rgba(255,255,255,.015) 100%);
+  background: #fff;
+  box-shadow: 0 2px 14px rgba(0,0,0,.05);
   padding: 2.4rem 2rem;
 }
 
@@ -745,7 +753,7 @@ a {
   gap: 2.5rem;
   margin-top: 4.5rem;
   padding-top: 3rem;
-  border-top: 1px solid rgba(255,255,255,.08);
+  border-top: 1px solid rgba(0,0,0,.08);
 }
 
 .step-num {
@@ -754,7 +762,7 @@ a {
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border: 1px solid rgba(255,255,255,.25);
+  border: 1px solid rgba(0,0,0,.3);
   border-radius: 50%;
   font-size: .8rem;
   font-weight: 600;
@@ -854,16 +862,18 @@ a {
   background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.85) 100%);
 }
 
+/* Testi sempre bianchi: stanno sopra la foto col gradient scuro */
 .mdm-card-overlay h3 {
   font-size: 1.05rem;
   font-weight: 600;
   margin-bottom: .4rem;
+  color: #fff;
 }
 
 .mdm-card-overlay p {
   font-size: .78rem;
   line-height: 1.5;
-  color: var(--text-hi);
+  color: rgba(255,255,255,.92);
 }
 
 /* ─ Vieni a trovarci (stile scheda ristorante) ── */
@@ -900,9 +910,10 @@ a {
 }
 
 .visit-card {
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid rgba(0,0,0,.09);
   border-radius: 6px;
-  background: linear-gradient(180deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,.012) 100%);
+  background: #fff;
+  box-shadow: 0 2px 14px rgba(0,0,0,.05);
   padding: 1.8rem 1.7rem;
   display: flex;
   flex-direction: column;
@@ -913,18 +924,18 @@ a {
   font-size: 1.02rem;
   font-weight: 400;
   line-height: 1.65;
-  color: rgba(255,255,255,.88);
+  color: rgba(16,16,20,.85);
 }
 
 .visit-main a {
-  border-bottom: 1px solid rgba(255,255,255,.25);
+  border-bottom: 1px solid rgba(0,0,0,.25);
   padding-bottom: 1px;
   transition: border-color .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .visit-main a:hover {
-    border-color: rgba(255,255,255,.7);
+    border-color: rgba(0,0,0,.7);
   }
 }
 
@@ -953,7 +964,7 @@ a {
   justify-content: space-between;
   gap: 1rem;
   padding: .6rem 0;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid rgba(0,0,0,.08);
   font-size: .88rem;
 }
 
@@ -994,18 +1005,18 @@ a {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
-  color: rgba(255,255,255,.85);
+  color: rgba(16,16,20,.85);
 }
 
 .info-block .info-val a {
-  border-bottom: 1px solid rgba(255,255,255,.25);
+  border-bottom: 1px solid rgba(0,0,0,.25);
   padding-bottom: 1px;
   transition: border-color .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .info-block .info-val a:hover {
-    border-color: rgba(255,255,255,.7);
+    border-color: rgba(0,0,0,.7);
   }
 }
 
@@ -1045,9 +1056,10 @@ a {
 
 /* Il form dentro una card in evidenza, come il widget prenotazioni */
 .book-card {
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid rgba(0,0,0,.1);
   border-radius: 6px;
-  background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.015) 100%);
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,.07);
   padding: 2.4rem 2.2rem;
 }
 
@@ -1089,7 +1101,7 @@ a {
   font-weight: 500;
   letter-spacing: .3em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.55);
+  color: rgba(16,16,20,.55);
 }
 
 .form-field input,
@@ -1097,8 +1109,8 @@ a {
 .form-field select {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255,255,255,.15);
-  color: #fff;
+  border-bottom: 1px solid rgba(0,0,0,.18);
+  color: var(--ink);
   font-family: var(--font);
   font-size: .92rem;
   font-weight: 300;
@@ -1106,32 +1118,32 @@ a {
   outline: none;
   transition: border-color .3s;
   width: 100%;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 .form-field input:focus,
 .form-field textarea:focus,
 .form-field select:focus {
-  border-color: rgba(255,255,255,.6);
+  border-color: rgba(0,0,0,.6);
 }
 
 .form-field select {
   appearance: none;
   cursor: pointer;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='rgba(255,255,255,.5)' stroke-width='1.5'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='rgba(0,0,0,.5)' stroke-width='1.5'/></svg>");
   background-repeat: no-repeat;
   background-position: right .2rem center;
 }
 
 .form-field select option {
-  background: var(--bg-alt);
-  color: #fff;
+  background: #fff;
+  color: var(--ink);
 }
 
 .label-opt {
   text-transform: none;
   letter-spacing: .05em;
-  color: rgba(255,255,255,.35);
+  color: rgba(16,16,20,.38);
 }
 
 /* Taglia: radio a pillola */
@@ -1153,7 +1165,7 @@ a {
   letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--text-mid);
-  border: 1px solid rgba(255,255,255,.2);
+  border: 1px solid rgba(0,0,0,.22);
   border-radius: 2px;
   padding: .65rem 1.4rem;
   cursor: pointer;
@@ -1161,13 +1173,13 @@ a {
 }
 
 .size-pill input:checked + span {
-  background: #fff;
-  color: var(--bg);
-  border-color: #fff;
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
 }
 
 .size-pill input:focus-visible + span {
-  border-color: #fff;
+  border-color: #000;
 }
 
 .mdm-price-recap {
@@ -1187,8 +1199,8 @@ a {
 
 .btn-submit {
   align-self: flex-start;
-  background: #fff;
-  color: var(--bg);
+  background: var(--ink);
+  color: #fff;
   border: none;
   font-family: var(--font);
   font-size: .7rem;
@@ -1203,14 +1215,14 @@ a {
 
 @media (hover: hover) and (pointer: fine) {
   .btn-submit:hover {
-    background: rgba(255,255,255,.85);
+    background: #2b2b31;
   }
 }
 
 #mdm-form-ok {
   display: none;
   font-size: .8rem;
-  color: rgba(255,255,255,.6);
+  color: rgba(16,16,20,.65);
   margin-top: .5rem;
 }
 
@@ -1264,19 +1276,19 @@ a {
   font-weight: 500;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.6);
+  color: rgba(16,16,20,.6);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .mdm-footer-links a:hover {
-    color: #fff;
+    color: #000;
   }
 }
 
 .mdm-footer-b2b {
   font-size: .72rem;
-  color: rgba(255,255,255,.75);
-  border-bottom: 1px solid rgba(255,255,255,.3);
+  color: rgba(16,16,20,.75);
+  border-bottom: 1px solid rgba(0,0,0,.3);
   padding-bottom: 3px;
 }
 
@@ -1292,24 +1304,24 @@ a {
   font-weight: 500;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.5);
+  color: rgba(16,16,20,.5);
 }
 
 .mdm-footer-info {
   font-size: .74rem;
   font-weight: 300;
-  color: rgba(255,255,255,.55);
+  color: rgba(16,16,20,.55);
 }
 
 .mdm-footer-info a {
-  border-bottom: 1px solid rgba(255,255,255,.25);
+  border-bottom: 1px solid rgba(0,0,0,.25);
   padding-bottom: 1px;
 }
 
 .mdm-footer-copy {
   text-align: center;
   font-size: .62rem;
-  color: rgba(255,255,255,.3);
+  color: rgba(16,16,20,.35);
   padding: 0 6% 3vh;
 }
 
@@ -1323,8 +1335,8 @@ a {
   right: 1rem;
   bottom: 1rem;
   z-index: 90;
-  background: #fff;
-  color: var(--bg);
+  background: var(--ink);
+  color: #fff;
   font-size: .72rem;
   font-weight: 700;
   letter-spacing: .16em;
@@ -1332,7 +1344,7 @@ a {
   text-align: center;
   padding: 1.05rem 1.5rem;
   border-radius: 2px;
-  box-shadow: 0 8px 30px rgba(0,0,0,.55);
+  box-shadow: 0 8px 30px rgba(0,0,0,.3);
   opacity: 0;
   transform: translateY(12px);
   transition: opacity .35s ease, transform .35s ease;
