@@ -251,6 +251,165 @@ a {
   }
 }
 
+/* ─ I Box del Mercato ───────────────────────── */
+.mdm-box-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  margin-top: 3rem;
+}
+
+.mdm-box-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mdm-box-card:hover {
+    border-color: rgba(255,255,255,.22);
+  }
+
+  .mdm-box-card:hover .box-photo img {
+    transform: scale(1.05);
+  }
+}
+
+.box-photo {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.box-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease;
+}
+
+.box-badge {
+  position: absolute;
+  top: .9rem;
+  left: .9rem;
+  font-size: .55rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-hi);
+  background: rgba(8,8,8,.72);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 2px;
+  padding: .4rem .7rem;
+}
+
+.box-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.5rem 1.5rem 1.6rem;
+}
+
+.box-body h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: .9rem;
+}
+
+.box-list {
+  list-style: none;
+  margin-bottom: 1.3rem;
+}
+
+.box-list li {
+  position: relative;
+  font-size: .82rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--text-mid);
+  padding: .28rem 0 .28rem 1.1rem;
+}
+
+.box-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--text-dim);
+}
+
+.box-prices {
+  display: flex;
+  gap: 1.6rem;
+  margin-top: auto;
+  margin-bottom: 1.2rem;
+  font-size: .78rem;
+  color: var(--text-dim);
+}
+
+.box-prices strong {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-hi);
+  margin-top: .15rem;
+}
+
+.box-book {
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  justify-content: center;
+}
+
+.mdm-box-note {
+  margin-top: 2.2rem;
+  font-size: .8rem;
+  color: var(--text-dim);
+}
+
+/* Come funziona: 3 step */
+.mdm-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  margin-top: 4.5rem;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 50%;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--text-hi);
+  margin-bottom: 1rem;
+}
+
+.mdm-step h3 {
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  margin-bottom: .5rem;
+}
+
+.mdm-step p {
+  font-size: .8rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--text-mid);
+}
+
 /* ─ Sezioni generiche ───────────────────────── */
 .mdm-section {
   position: relative;
@@ -377,6 +536,18 @@ a {
   color: rgba(255,255,255,.85);
 }
 
+.info-block .info-val a {
+  border-bottom: 1px solid rgba(255,255,255,.25);
+  padding-bottom: 1px;
+  transition: border-color .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .info-block .info-val a:hover {
+    border-color: rgba(255,255,255,.7);
+  }
+}
+
 .mdm-map {
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -456,7 +627,8 @@ a {
 }
 
 .form-field input,
-.form-field textarea {
+.form-field textarea,
+.form-field select {
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(255,255,255,.15);
@@ -468,11 +640,78 @@ a {
   outline: none;
   transition: border-color .3s;
   width: 100%;
+  color-scheme: dark;
 }
 
 .form-field input:focus,
-.form-field textarea:focus {
+.form-field textarea:focus,
+.form-field select:focus {
   border-color: rgba(255,255,255,.6);
+}
+
+.form-field select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='rgba(255,255,255,.5)' stroke-width='1.5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right .2rem center;
+}
+
+.form-field select option {
+  background: var(--bg-alt);
+  color: #fff;
+}
+
+.label-opt {
+  text-transform: none;
+  letter-spacing: .05em;
+  color: rgba(255,255,255,.35);
+}
+
+/* Taglia: radio a pillola */
+.size-pills {
+  display: flex;
+  gap: .8rem;
+}
+
+.size-pill input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.size-pill span {
+  display: inline-block;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 2px;
+  padding: .65rem 1.4rem;
+  cursor: pointer;
+  transition: background .3s, color .3s, border-color .3s;
+}
+
+.size-pill input:checked + span {
+  background: #fff;
+  color: var(--bg);
+  border-color: #fff;
+}
+
+.size-pill input:focus-visible + span {
+  border-color: #fff;
+}
+
+.mdm-price-recap {
+  font-size: .82rem;
+  color: var(--text-mid);
+}
+
+.mdm-price-recap strong {
+  font-size: 1rem;
+  color: var(--text-hi);
 }
 
 .form-field textarea {
@@ -597,9 +836,45 @@ a {
   padding: 0 6% 3vh;
 }
 
+/* ─ CTA sticky mobile ───────────────────────── */
+/* Nascosta di default (desktop e prima dello scroll): la mostra
+   il JS solo su mobile, dopo l'hero e fuori dalla sezione form */
+.mdm-sticky-cta {
+  display: none;
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 90;
+  background: #fff;
+  color: var(--bg);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 1.05rem 1.5rem;
+  border-radius: 2px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.55);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .35s ease, transform .35s ease;
+  pointer-events: none;
+}
+
+.mdm-sticky-cta.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
 /* ─ Responsive ──────────────────────────────── */
 @media (max-width: 1024px) {
   .mdm-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mdm-box-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -676,6 +951,21 @@ a {
   .mdm-grid {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+  }
+
+  .mdm-box-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .mdm-steps {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .mdm-sticky-cta {
+    display: block;
   }
 
   .mdm-hero-cta {

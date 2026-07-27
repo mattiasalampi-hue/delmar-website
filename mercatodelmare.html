@@ -37,7 +37,18 @@
         "postalCode": "54100",
         "addressCountry": "IT"
       },
-      "priceRange": "€€"
+      "priceRange": "€€",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "I Box del Mercato",
+        "itemListElement": [
+          { "@type": "Offer", "name": "Box Griglia", "description": "Orata e spigola già squamate ed eviscerate, gamberoni e calamari puliti, pronti per la griglia.", "price": "45", "priceCurrency": "EUR" },
+          { "@type": "Offer", "name": "Box Crudo", "description": "Ostriche, scampi, gambero rosso, carpaccio e tartare. Abbattuto a norma.", "price": "55", "priceCurrency": "EUR" },
+          { "@type": "Offer", "name": "Box Frittura", "description": "Calamari, gamberi, alici e merluzzetti già puliti, da infarinare e friggere.", "price": "30", "priceCurrency": "EUR" },
+          { "@type": "Offer", "name": "Box Zuppa", "description": "Scorfano, gallinella, cozze, vongole e tranci per zuppa o sugo, con ricetta.", "price": "35", "priceCurrency": "EUR" },
+          { "@type": "Offer", "name": "Box Convivio", "description": "Griglia e frittura insieme per tavolate da 4-6 persone.", "price": "75", "priceCurrency": "EUR" }
+        ]
+      }
     }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -45,7 +56,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/mercatodelmare.css?v=1" />
+    <link rel="stylesheet" href="css/mercatodelmare.css?v=2" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -58,28 +69,161 @@
     <header id="mdm-hdr">
       <a href="mercatodelmare.html"><img src="assets/logo.png" alt="DelMar" class="mdm-logo" /></a>
       <nav id="mdm-nav">
+        <a href="#box">I Box</a>
         <a href="#negozio">Il Negozio</a>
         <a href="#prodotti">Cosa Trovi</a>
         <a href="#dove-siamo">Dove Siamo</a>
         <a href="#orari">Orari</a>
-        <a href="#contatti">Contatti</a>
+        <a href="#contatti">Prenota</a>
         <a href="index.html" class="nav-b2b">Sei un ristoratore? →</a>
       </nav>
       <button class="mdm-hamburger" id="mdm-hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="mdm-nav"><span></span><span></span><span></span></button>
     </header>
     <!-- Hero -->
     <section id="mdm-hero">
-      <img class="mdm-hero-bg" src="assets/shop-1.jpg" alt="Banco del pesce fresco al Mercato del Mare" />
+      <!-- La sorgente del video la sceglie il JS in base al viewport
+           (mobile: variante leggera). Il poster garantisce l'hero
+           anche a rete lenta o con prefers-reduced-motion -->
+      <video class="mdm-hero-bg" id="mdm-hero-video" autoplay muted playsinline loop preload="metadata" poster="assets/shop-1.jpg" aria-label="Il mare ripreso da sott'acqua"></video>
       <div class="mdm-hero-overlay"></div>
       <div class="mdm-hero-content">
         <p class="mdm-eyebrow">DelMar Store · Massa</p>
         <h1>Il Mercato<br />del Mare.</h1>
         <p class="mdm-hero-sub">
-          Lo stesso pesce che riforniamo ai migliori ristoranti d'Italia, ora anche per la tua tavola. Vieni a trovarci nel nostro negozio aperto al pubblico.
+          Lo stesso pesce che riforniamo ai migliori ristoranti d'Italia, ora anche per la tua tavola — e con i nostri box è già pulito, porzionato e pronto da cucinare.
         </p>
         <div class="mdm-hero-cta">
-          <a href="#contatti" class="btn-primary">Richiedi un ordine</a>
-          <a href="#dove-siamo" class="btn-secondary">Dove siamo →</a>
+          <a href="#box" class="btn-primary">Prenota un box →</a>
+          <a href="#prodotti" class="btn-secondary">Cosa trovi al banco</a>
+        </div>
+      </div>
+    </section>
+    <!-- I Box del Mercato -->
+    <section class="mdm-section mdm-section-dark" id="box">
+      <div class="reveal-el">
+        <p class="label">Prenota E Ritira Al Banco</p>
+        <h2 class="big-title">Il pesce giusto,<br />già pronto per la tua ricetta.</h2>
+        <p class="body-text">
+          Scegli il box, prenota entro le 18 e ritira l'indomani al banco: lo prepariamo noi col pescato del giorno,
+          pulito e porzionato. Prezzi fissi, zero sorprese.
+        </p>
+      </div>
+      <div class="mdm-box-grid">
+        <!-- FOTO PROVVISORIE: sostituirle con scatti dedicati dei box appena disponibili -->
+        <article class="mdm-box-card reveal-el" data-box="griglia" data-nome="Box Griglia" data-p2="45" data-p4="85">
+          <div class="box-photo">
+            <img src="assets/processing-1.jpg" alt="Orate e spigole pulite al banco" loading="lazy" />
+            <span class="box-badge">Pulito e pronto</span>
+          </div>
+          <div class="box-body">
+            <h3>Box Griglia</h3>
+            <ul class="box-list">
+              <li>Orata e spigola squamate ed eviscerate</li>
+              <li>Gamberoni argentini</li>
+              <li>Calamari già puliti</li>
+            </ul>
+            <div class="box-prices">
+              <span>Per 2 <strong>€45</strong></span>
+              <span>Per 4 <strong>€85</strong></span>
+            </div>
+            <button type="button" class="btn-primary box-book">Prenota</button>
+          </div>
+        </article>
+        <article class="mdm-box-card reveal-el" data-box="crudo" data-nome="Box Crudo" data-p2="55" data-p4="105">
+          <div class="box-photo">
+            <img src="assets/lavorazione-salmone-quadrato.jpg" alt="Carpaccio e crudi di mare" loading="lazy" />
+            <span class="box-badge">Abbattuto a norma</span>
+          </div>
+          <div class="box-body">
+            <h3>Box Crudo</h3>
+            <ul class="box-list">
+              <li>Ostriche e scampi</li>
+              <li>Gambero rosso</li>
+              <li>Carpaccio e tartare del giorno</li>
+            </ul>
+            <div class="box-prices">
+              <span>Per 2 <strong>€55</strong></span>
+              <span>Per 4 <strong>€105</strong></span>
+            </div>
+            <button type="button" class="btn-primary box-book">Prenota</button>
+          </div>
+        </article>
+        <article class="mdm-box-card reveal-el" data-box="frittura" data-nome="Box Frittura" data-p2="30" data-p4="55">
+          <div class="box-photo">
+            <img src="assets/alici-1.jpg" alt="Alici e pesce da frittura" loading="lazy" />
+            <span class="box-badge">Da infarinare e friggere</span>
+          </div>
+          <div class="box-body">
+            <h3>Box Frittura</h3>
+            <ul class="box-list">
+              <li>Calamari e gamberi</li>
+              <li>Alici pulite</li>
+              <li>Merluzzetti</li>
+            </ul>
+            <div class="box-prices">
+              <span>Per 2 <strong>€30</strong></span>
+              <span>Per 4 <strong>€55</strong></span>
+            </div>
+            <button type="button" class="btn-primary box-book">Prenota</button>
+          </div>
+        </article>
+        <article class="mdm-box-card reveal-el" data-box="zuppa" data-nome="Box Zuppa" data-p2="35" data-p4="65">
+          <div class="box-photo">
+            <img src="assets/shop-2.jpg" alt="Banco del pesce misto per zuppa" loading="lazy" />
+            <span class="box-badge">Con ricetta inclusa</span>
+          </div>
+          <div class="box-body">
+            <h3>Box Zuppa</h3>
+            <ul class="box-list">
+              <li>Scorfano e gallinella</li>
+              <li>Cozze e vongole</li>
+              <li>Tranci per zuppa o sugo</li>
+            </ul>
+            <div class="box-prices">
+              <span>Per 2 <strong>€35</strong></span>
+              <span>Per 4 <strong>€65</strong></span>
+            </div>
+            <button type="button" class="btn-primary box-book">Prenota</button>
+          </div>
+        </article>
+        <article class="mdm-box-card reveal-el" data-box="convivio" data-nome="Box Convivio" data-p4="75" data-unica="1">
+          <div class="box-photo">
+            <img src="assets/selezionato-mercato.jpg" alt="Il pescato del giorno al rientro delle barche" loading="lazy" />
+            <span class="box-badge">Per tavolate</span>
+          </div>
+          <div class="box-body">
+            <h3>Box Convivio</h3>
+            <ul class="box-list">
+              <li>Griglia e frittura insieme</li>
+              <li>Selezione del banco per 4-6 persone</li>
+              <li>Il misto delle feste</li>
+            </ul>
+            <div class="box-prices">
+              <span>Taglia unica <strong>€75</strong></span>
+            </div>
+            <button type="button" class="btn-primary box-book">Prenota</button>
+          </div>
+        </article>
+      </div>
+      <p class="mdm-box-note reveal-el">
+        I box si preparano col pescato del giorno: prenota entro le 18 per il ritiro dell'indomani.
+        <!-- PREZZI PLACEHOLDER: realistici ma da confermare con Mattias (aggiornare anche il JSON-LD in testa) -->
+      </p>
+      <div class="mdm-steps reveal-el">
+        <div class="mdm-step">
+          <span class="step-num">1</span>
+          <h3>Prenoti</h3>
+          <p>Col form o su WhatsApp: scegli box, taglia e giorno di ritiro.</p>
+        </div>
+        <div class="mdm-step">
+          <span class="step-num">2</span>
+          <h3>Prepariamo</h3>
+          <p>Il banco monta il tuo box col pescato del giorno, pulito e porzionato.</p>
+        </div>
+        <div class="mdm-step">
+          <span class="step-num">3</span>
+          <h3>Ritiri</h3>
+          <p>Al banco, nel giorno scelto: paghi al ritiro, porti a casa e cucini.</p>
         </div>
       </div>
     </section>
@@ -148,7 +292,7 @@
           </div>
           <div class="info-block">
             <div class="info-label">Telefono</div>
-            <div class="info-val">+39 0585 834572</div>
+            <div class="info-val"><a href="tel:+390585834572">+39 0585 834572</a></div>
           </div>
           <a href="https://www.google.com/maps/dir/?api=1&destination=Via+Dorsale+13,+54100+Massa+MS" target="_blank" rel="noopener noreferrer" class="btn-secondary">Apri in Google Maps →</a>
         </div>
@@ -167,43 +311,74 @@
       <div class="reveal-el">
         <p class="label">Orari Di Apertura</p>
         <h2 class="big-title">Quando trovarci.</h2>
-        <!-- PLACEHOLDER: orari da confermare — sostituire con quelli reali del negozio -->
+        <!-- ORARI DA CONFERMARE con Mattias prima di toglierla dalla nota -->
         <ul class="mdm-hours">
-          <li><span>Lunedì – Venerdì</span><span>[ORARIO DA CONFERMARE]</span></li>
-          <li><span>Sabato</span><span>[ORARIO DA CONFERMARE]</span></li>
+          <li><span>Martedì – Sabato</span><span>8:30 – 13:00 / 16:00 – 19:30</span></li>
           <li><span>Domenica</span><span>Chiuso</span></li>
+          <li><span>Lunedì</span><span>Chiuso</span></li>
         </ul>
-        <p class="mdm-hours-note">Orari indicativi in attesa di conferma — verificare prima della pubblicazione.</p>
+        <p class="mdm-hours-note">Orari indicativi, in attesa di conferma.</p>
       </div>
     </section>
     <!-- Contatti / Ordina -->
     <section class="mdm-section" id="contatti">
       <div class="mdm-contact-grid">
         <div class="reveal-el">
-          <p class="label">Ordina Ora</p>
-          <h2 class="big-title">Dicci cosa ti serve.</h2>
+          <p class="label">Prenota Il Ritiro</p>
+          <h2 class="big-title">Il tuo box ti aspetta<br />al banco.</h2>
           <p class="body-text">
-            Il catalogo con ordini online arriverà presto. Per ora scrivici cosa cerchi: ti confermiamo disponibilità
-            e prezzo prima del ritiro in negozio.
+            Scegli box, taglia e giorno: ti confermiamo la prenotazione al telefono e paghi al ritiro in negozio.
+            Per la spesa libera scrivici cosa cerchi nelle note.
           </p>
           <form class="contatti-form" id="mdm-order-form">
-            <!-- Web3Forms: stesso access_key usato in index.html, da configurare su https://web3forms.com -->
+            <!-- Web3Forms — SENZA questa chiave il form NON invia nulla.
+                 Per attivarlo (2 minuti): 1) vai su https://web3forms.com
+                 2) inserisci info@del-mar.it (o mattias.alampi@gmail.com)
+                 3) ricevi l'access key via mail 4) incollala al posto del
+                 placeholder qui sotto. La STESSA chiave va incollata anche
+                 nel form del sito B2B (index.html, cerca "access_key") -->
             <input type="hidden" name="access_key" value="INCOLLA_QUI_IL_TUO_ACCESS_KEY" />
-            <input type="hidden" name="subject" value="Nuova richiesta da Il Mercato del Mare" />
+            <input type="hidden" name="subject" value="Prenotazione box — Il Mercato del Mare" />
             <input type="hidden" name="from_name" value="Il Mercato del Mare" />
             <div class="form-row">
               <div class="form-field"><label>Nome</label><input type="text" name="nome" placeholder="Mario Rossi" required /></div>
-              <div class="form-field"><label>Telefono</label><input type="tel" name="telefono" placeholder="+39 333 1234567" /></div>
+              <div class="form-field"><label>Telefono</label><input type="tel" name="telefono" placeholder="+39 333 1234567" required /></div>
             </div>
             <div class="form-field">
-              <label>Email</label><input type="email" name="email" placeholder="mario@email.it" required />
+              <label>Email <span class="label-opt">(facoltativa)</span></label><input type="email" name="email" placeholder="mario@email.it" />
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Il tuo box</label>
+                <select name="box" id="mdm-box-select" required>
+                  <option value="" disabled selected>Scegli un box…</option>
+                  <option value="griglia">Box Griglia</option>
+                  <option value="crudo">Box Crudo</option>
+                  <option value="frittura">Box Frittura</option>
+                  <option value="zuppa">Box Zuppa</option>
+                  <option value="convivio">Box Convivio</option>
+                  <option value="altro">Altro / spesa libera</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Giorno di ritiro</label>
+                <input type="date" name="giorno_ritiro" id="mdm-date" required />
+              </div>
+            </div>
+            <div class="form-field" id="mdm-size-field">
+              <label>Taglia</label>
+              <div class="size-pills">
+                <label class="size-pill"><input type="radio" name="taglia" value="per 2" checked /><span>Per 2</span></label>
+                <label class="size-pill"><input type="radio" name="taglia" value="per 4" /><span>Per 4</span></label>
+              </div>
             </div>
             <div class="form-field">
-              <label>Cosa ti serve</label>
-              <textarea name="messaggio" placeholder="Es: 1kg di gamberi rossi e due branzini, per sabato mattina..."></textarea>
+              <label>Note <span class="label-opt">(allergie, preferenze, spesa libera…)</span></label>
+              <textarea name="messaggio" placeholder="Es: senza cozze nel box zuppa, oppure: 1kg di gamberi rossi e due branzini..."></textarea>
             </div>
-            <button type="submit" class="btn-submit">Invia richiesta</button>
-            <p id="mdm-form-ok">Richiesta inviata. Ti contatteremo presto.</p>
+            <p class="mdm-price-recap" id="mdm-price-recap" hidden>Totale indicativo: <strong id="mdm-price-val"></strong> — si conferma al ritiro</p>
+            <button type="submit" class="btn-submit">Prenota il ritiro</button>
+            <p id="mdm-form-ok">Prenotazione ricevuta. Ti confermiamo box e ritiro al telefono.</p>
           </form>
         </div>
         <div class="mdm-contact-side reveal-el">
@@ -213,11 +388,11 @@
           </a>
           <div class="info-block">
             <div class="info-label">Telefono</div>
-            <div class="info-val">+39 0585 834572</div>
+            <div class="info-val"><a href="tel:+390585834572">+39 0585 834572</a></div>
           </div>
           <div class="info-block">
             <div class="info-label">Email</div>
-            <div class="info-val">info@del-mar.it</div>
+            <div class="info-val"><a href="mailto:info@del-mar.it">info@del-mar.it</a></div>
           </div>
           <div class="info-block">
             <div class="info-label">Indirizzo</div>
@@ -229,11 +404,12 @@
     <!-- Footer -->
     <footer id="mdm-footer">
       <div class="mdm-footer-links">
+        <a href="#box">I Box</a>
         <a href="#negozio">Il Negozio</a>
         <a href="#prodotti">Cosa Trovi</a>
         <a href="#dove-siamo">Dove Siamo</a>
         <a href="#orari">Orari</a>
-        <a href="#contatti">Contatti</a>
+        <a href="#contatti">Prenota</a>
       </div>
       <img src="assets/logo.png" alt="DelMar" class="mdm-footer-logo" />
       <a href="index.html" class="mdm-footer-b2b">Sei un ristoratore? Scopri l'offerta all'ingrosso →</a>
@@ -242,7 +418,9 @@
     <p class="mdm-footer-copy">
       &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
     </p>
+    <!-- CTA sticky mobile: compare dopo l'hero, sparisce sul form -->
+    <a href="#box" class="mdm-sticky-cta" id="mdm-sticky-cta">Prenota un box →</a>
     <!-- Scripts -->
-    <script src="js/mercatodelmare.js"></script>
+    <script src="js/mercatodelmare.js?v=2"></script>
   </body>
 </html>
