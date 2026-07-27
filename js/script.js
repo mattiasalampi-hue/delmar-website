@@ -1,4 +1,4 @@
-/* ════════════════════════════════════════
+﻿/* ════════════════════════════════════════
    DelMar — Main Script
    ════════════════════════════════════════ */
 gsap.registerPlugin(ScrollTrigger);
@@ -255,65 +255,147 @@ function initHeroScroll(renderFrame, total) {
 
     const byId = {};
     (data.assets || []).forEach(a => { byId[a.id] = a; });
-    const frames = (data.layers || [])
+    const srcs = (data.layers || [])
       .filter(l => l.ty === 2)
       .sort((a, b) => a.ip - b.ip)
       .map(l => byId[l.refId] && byId[l.refId].p)
-      .filter(Boolean)
-      .map(src => { const img = new Image(); img.src = src; return img; });
-    if (!frames.length) throw new Error('nessun frame nella sequenza');
+      .filter(Boolean);
+    if (!srcs.length) throw new Error('nessun frame nella sequenza');
 
-    let decoded = 0;
-    await Promise.all(frames.map(img =>
-      img.decode().catch(() => {}).then(() => {
-        decoded++;
-        bar.style.width = (40 + 55 * decoded / frames.length) + '%';
-      })
-    ));
+    const a0 = (data.assets || []).find(a => a.w && a.h) || {};
+    const iw = a0.w || 1280;
+    const ih = a0.h || 720;
 
     const box = document.getElementById('lottie-bg');
     const cv  = document.createElement('canvas');
     const ctx = cv.getContext('2d');
     box.appendChild(cv);
 
-    const iw = frames[0].naturalWidth;
-    const ih = frames[0].naturalHeight;
+    let seq   = null;
+    let seqW  = iw;
+    let seqH  = ih;
     let lastF = 0;
 
     function draw(f) {
       lastF = f;
-      const i = Math.max(0, Math.min(Math.floor(f), frames.length - 1));
-      const j = Math.min(i + 1, frames.length - 1);
+      if (!seq) return;
+      const i = Math.max(0, Math.min(Math.floor(f), seq.length - 1));
+      const j = Math.min(i + 1, seq.length - 1);
       const t = f - i;
-      /* cover: equivalente di preserveAspectRatio slice */
-      const s  = Math.max(cv.width / iw, cv.height / ih);
-      const dw = iw * s, dh = ih * s;
+      /* cover: equivalente di preserveAspectRatio slice — con le
+         bitmap mobile pre-scalate s=1, dx=dy=0: blit puro */
+      const s  = Math.max(cv.width / seqW, cv.height / seqH);
+      const dw = seqW * s, dh = seqH * s;
       const dx = (cv.width - dw) / 2, dy = (cv.height - dh) / 2;
       ctx.globalAlpha = 1;
-      ctx.drawImage(frames[i], dx, dy, dw, dh);
+      ctx.drawImage(seq[i], dx, dy, dw, dh);
       if (j !== i && t > 0.01) {
         ctx.globalAlpha = t;
-        ctx.drawImage(frames[j], dx, dy, dw, dh);
+        ctx.drawImage(seq[j], dx, dy, dw, dh);
       }
     }
 
-    function resize() {
+    function sizeCanvas() {
       /* DPR limitato: i frame sorgente sono 1280px, oltre non c'è
-         dettaglio da guadagnare e il paint del canvas raddoppia */
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+         dettaglio da guadagnare e il paint del canvas raddoppia.
+         Su mobile DPR 1: la fetta sorgente visibile è ~330px (già
+         upscalata comunque) e le bitmap devono stare in memoria */
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 1.5);
       cv.width  = Math.round(box.clientWidth  * dpr);
       cv.height = Math.round(box.clientHeight * dpr);
       /* si azzera al resize del buffer: va rimesso ogni volta */
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
+    }
+
+    /* Su mobile le Image full-res non stanno nella decoded-image
+       cache del telefono: Chrome le ri-decodifica in sync a ogni
+       draw e lo scrub va a scatti. Costruiamo — direttamente dai
+       data-URI, senza mai passare da <img>.decode() che con questa
+       mole può non risolvere — ImageBitmap un frame su due (il
+       crossfade copre i salti: la sorgente è 30fps), già ritagliate
+       alla fetta cover visibile e scalate al buffer del canvas: il
+       draw diventa un blit 1:1 senza decode né resample, e la
+       memoria resta nei limiti del device */
+    const MOBILE_STEP = 2;
+    let bitmapsMode = false;
+
+    async function buildBitmaps() {
+      const picks = [];
+      for (let k = 0; k < srcs.length; k += MOBILE_STEP) picks.push(srcs[k]);
+      const s  = Math.max(cv.width / iw, cv.height / ih);
+      const sw = Math.min(iw, Math.round(cv.width  / s));
+      const sh = Math.min(ih, Math.round(cv.height / s));
+      const sx = Math.round((iw - sw) / 2);
+      const sy = Math.round((ih - sh) / 2);
+      const opts = { resizeWidth: cv.width, resizeHeight: cv.height, resizeQuality: 'high' };
+      let scaled = true;
+      let done   = 0;
+      const mk = async (src) => {
+        const blob = await (await fetch(src)).blob();
+        let bm;
+        if (scaled) {
+          try { bm = await createImageBitmap(blob, sx, sy, sw, sh, opts); }
+          catch (e) { scaled = false; }
+        }
+        /* Safari senza crop/resize: bitmap intera, il cover del draw compensa */
+        if (!bm) bm = await createImageBitmap(blob);
+        done++;
+        bar.style.width = (40 + 55 * done / picks.length) + '%';
+        return bm;
+      };
+      /* il primo da solo: stabilisce se le opzioni sono supportate,
+         così il resto del lotto non esce di taglia mista */
+      const first = await mk(picks[0]);
+      const rest  = await Promise.all(picks.slice(1).map(mk));
+      const old   = seq;
+      seq  = [first, ...rest];
+      seqW = scaled ? cv.width  : iw;
+      seqH = scaled ? cv.height : ih;
+      bitmapsMode = true;
+      if (old) old.forEach(b => b.close && b.close());
+    }
+
+    function resize() {
+      sizeCanvas();
+      /* rotazione o resize marcato: bitmap da rigenerare sulla nuova
+         geometria; sotto il 15% (URL bar) il cover assorbe da solo */
+      if (bitmapsMode &&
+          (Math.abs(cv.width  - seqW) / seqW > 0.15 ||
+           Math.abs(cv.height - seqH) / seqH > 0.15)) {
+        buildBitmaps().then(() => draw(lastF));
+      }
       draw(lastF);
     }
     window.addEventListener('resize', debounce(resize, 150));
-    resize();
+    sizeCanvas();
+
+    if (isMobile()) {
+      try { await buildBitmaps(); }
+      catch (e) { /* si ripiega sulle Image */ }
+    }
+    if (!seq) {
+      /* Desktop (o fallback): una Image per frame. Il pre-decode è
+         solo un warm-up con tetto: se il decoder è saturo si parte
+         comunque e i frame si decodificano al primo draw */
+      const frames = srcs.map(src => { const img = new Image(); img.src = src; return img; });
+      let decoded = 0;
+      await Promise.race([
+        Promise.all(frames.map(img =>
+          img.decode().catch(() => {}).then(() => {
+            decoded++;
+            bar.style.width = (40 + 55 * decoded / frames.length) + '%';
+          })
+        )),
+        new Promise(r => setTimeout(r, 5000))
+      ]);
+      seq = frames;
+    }
 
     bar.style.width = '100%';
     setTimeout(hideLoader, 300);
-    initHeroScroll(draw, frames.length);
+    draw(lastF);
+    initHeroScroll(draw, seq.length);
   } catch (err) {
     loader.querySelector('p').textContent = 'Errore';
   }
