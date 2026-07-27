@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/mercatodelmare.css?v=7" />
+    <link rel="stylesheet" href="css/mercatodelmare.css?v=8" />
   </head>
   <body class="shop-page">
     <!-- Header -->
@@ -23,27 +23,42 @@
       </nav>
     </header>
     <main class="shop-main">
+      <!-- Percorso d'acquisto -->
+      <ol class="shop-steps" aria-label="Percorso d'acquisto">
+        <li class="is-current"><span class="step-dot">1</span>Carrello</li>
+        <li><span class="step-dot">2</span>Checkout</li>
+        <li><span class="step-dot">3</span>Conferma</li>
+      </ol>
       <div class="shop-head">
-        <p class="label">Il Tuo Ordine</p>
-        <h1 class="big-title">Carrello.</h1>
+        <h1 class="shop-title">Il tuo carrello</h1>
+        <p class="shop-sub" id="cart-count"></p>
       </div>
       <!-- Carrello pieno -->
       <div class="cart-layout" id="cart-full" hidden>
-        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-panel" id="cart-items"></div>
         <aside class="cart-summary book-card">
           <h2 class="summary-title">Riepilogo</h2>
           <div class="summary-rows" id="summary-rows"></div>
+          <div class="summary-row summary-free">
+            <span>Ritiro al banco</span>
+            <span>Gratis</span>
+          </div>
           <div class="summary-total">
             <span>Totale</span>
             <strong id="summary-total">€0</strong>
           </div>
-          <p class="summary-note">Ritiro gratuito al banco — Via Dorsale 13, Massa</p>
           <a href="checkout.html" class="btn-primary summary-cta">Vai al checkout →</a>
           <a href="mercatodelmare.html#box" class="btn-secondary summary-back">Aggiungi un altro box</a>
+          <ul class="trust-list">
+            <li>Pagamento online sicuro</li>
+            <li>Preparato col pescato del giorno</li>
+            <li>Ritiro senza coda — Via Dorsale 13, Massa</li>
+          </ul>
         </aside>
       </div>
       <!-- Carrello vuoto -->
       <div class="cart-empty" id="cart-empty" hidden>
+        <div class="cart-empty-badge">◌</div>
         <p class="cart-empty-title">Il carrello è vuoto.</p>
         <p class="cart-empty-text">Scegli un box dal banco: lo prepariamo col pescato del giorno.</p>
         <a href="mercatodelmare.html#box" class="btn-primary">Scopri i box →</a>
@@ -52,6 +67,6 @@
     <p class="mdm-footer-copy">
       &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
     </p>
-    <script src="js/mdm-shop.js?v=1"></script>
+    <script src="js/mdm-shop.js?v=2"></script>
   </body>
 </html>

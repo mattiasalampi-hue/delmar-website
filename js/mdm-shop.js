@@ -54,11 +54,14 @@ function renderSummary() {
 
   const full  = document.getElementById('cart-full');
   const empty = document.getElementById('cart-empty');
+  const count = document.getElementById('cart-count');
 
   function render() {
     const cart = cartRead();
     full.hidden  = cart.length === 0;
     empty.hidden = cart.length > 0;
+    const n = cart.reduce((s, i) => s + i.qty, 0);
+    count.textContent = n === 0 ? '' : n === 1 ? 'Un box pronto per il checkout' : n + ' box pronti per il checkout';
     if (!cart.length) return;
 
     list.innerHTML = cart.map((i, idx) => `
@@ -130,6 +133,9 @@ function renderSummary() {
 
   renderSummary();
 
+  /* il bottone dice quanto si paga: niente sorprese */
+  document.getElementById('co-pay').textContent = 'Paga ora — ' + euro(cartTotal(cartRead()));
+
   /* ritiro: da domani in poi */
   const dateInput = document.getElementById('co-date');
   const d = new Date();
@@ -175,6 +181,11 @@ function renderSummary() {
     } catch (e) { /* la conferma a schermo non dipende dalla mail */ }
 
     document.getElementById('order-code').textContent = code;
+    const giorno = new Date(data.get('giorno_ritiro'));
+    document.getElementById('order-day').textContent =
+      giorno.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+    document.getElementById('order-slot').textContent = data.get('fascia');
+    document.getElementById('order-total').textContent = euro(total);
     document.getElementById('co-flow').hidden = true;
     document.getElementById('order-ok').hidden = false;
     cartWrite([]);

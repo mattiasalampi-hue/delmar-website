@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/mercatodelmare.css?v=7" />
+    <link rel="stylesheet" href="css/mercatodelmare.css?v=8" />
   </head>
   <body class="shop-page">
     <!-- Header -->
@@ -25,14 +25,19 @@
     <main class="shop-main">
       <!-- Checkout -->
       <div id="co-flow">
+        <ol class="shop-steps" aria-label="Percorso d'acquisto">
+          <li class="is-done"><span class="step-dot">✓</span>Carrello</li>
+          <li class="is-current"><span class="step-dot">2</span>Checkout</li>
+          <li><span class="step-dot">3</span>Conferma</li>
+        </ol>
         <div class="shop-head">
-          <p class="label">Ultimo Passo</p>
-          <h1 class="big-title">Checkout.</h1>
+          <h1 class="shop-title">Checkout</h1>
+          <p class="shop-sub">Un minuto e il banco si mette al lavoro.</p>
         </div>
         <div class="co-layout">
           <form class="co-form" id="co-form">
             <div class="book-card co-block">
-              <h2 class="co-block-title">I tuoi dati</h2>
+              <h2 class="co-block-title"><span class="co-num">1</span>I tuoi dati</h2>
               <div class="form-row">
                 <div class="form-field"><label>Nome e cognome</label><input type="text" name="nome" placeholder="Mario Rossi" required /></div>
                 <div class="form-field"><label>Telefono</label><input type="tel" name="telefono" placeholder="+39 333 1234567" required /></div>
@@ -43,7 +48,7 @@
               </div>
             </div>
             <div class="book-card co-block">
-              <h2 class="co-block-title">Ritiro al banco</h2>
+              <h2 class="co-block-title"><span class="co-num">2</span>Ritiro al banco</h2>
               <div class="form-row">
                 <div class="form-field">
                   <label>Giorno di ritiro</label>
@@ -52,8 +57,8 @@
                 <div class="form-field">
                   <label>Fascia oraria</label>
                   <select name="fascia" required>
-                    <option value="mattina">Mattina (8:30 – 13:00)</option>
-                    <option value="pomeriggio">Pomeriggio (16:00 – 19:30)</option>
+                    <option value="Mattina (8:30 – 13:00)">Mattina (8:30 – 13:00)</option>
+                    <option value="Pomeriggio (16:00 – 19:30)">Pomeriggio (16:00 – 19:30)</option>
                   </select>
                 </div>
               </div>
@@ -61,59 +66,91 @@
                 <label>Note <span class="label-opt">(allergie, preferenze…)</span></label>
                 <textarea name="note" placeholder="Es: le orate già sfilettate, per favore"></textarea>
               </div>
-              <p class="co-hint">Ritiro in Via Dorsale 13, Massa — prenota entro le 18:00 per l'indomani.</p>
+              <p class="co-hint">Via Dorsale 13, Massa — prenota entro le 18:00 per l'indomani.</p>
             </div>
             <div class="book-card co-block">
-              <h2 class="co-block-title">Metodo di pagamento</h2>
+              <h2 class="co-block-title"><span class="co-num">3</span>Pagamento</h2>
               <div class="pay-methods">
                 <label class="pay-method">
-                  <input type="radio" name="pagamento" value="paypal" checked />
+                  <input type="radio" name="pagamento" value="PayPal" checked />
+                  <span class="pay-radio" aria-hidden="true"></span>
                   <span class="pay-body">
                     <span class="pay-name">PayPal</span>
-                    <span class="pay-desc">Paghi col tuo account PayPal, protetto dalla Protezione Acquisti</span>
+                    <span class="pay-desc">Paghi col tuo account, protetto dalla Protezione Acquisti</span>
                   </span>
-                  <span class="pay-mark pp">P</span>
+                  <span class="pay-mark pp">PayPal</span>
                 </label>
                 <label class="pay-method">
-                  <input type="radio" name="pagamento" value="carta" />
+                  <input type="radio" name="pagamento" value="Carta (via PayPal)" />
+                  <span class="pay-radio" aria-hidden="true"></span>
                   <span class="pay-body">
                     <span class="pay-name">Carta di credito o debito</span>
-                    <span class="pay-desc">Visa, Mastercard e le principali carte — tramite circuito PayPal</span>
+                    <span class="pay-desc">Visa, Mastercard e le principali carte, senza account</span>
                   </span>
-                  <span class="pay-mark cc">💳</span>
+                  <span class="pay-mark cc">VISA · MC</span>
                 </label>
               </div>
-              <p class="co-hint">Pagamento sicuro: verrai reindirizzato al circuito per completare l'ordine.</p>
+              <button type="submit" class="btn-submit co-pay" id="co-pay">Paga ora</button>
+              <p class="co-error" id="co-error" hidden>Compila tutti i campi obbligatori per continuare.</p>
+              <p class="co-secure">🔒 Connessione protetta — verrai reindirizzato al circuito di pagamento</p>
             </div>
-            <button type="submit" class="btn-submit co-pay" id="co-pay">Paga ora</button>
-            <p class="co-error" id="co-error" hidden>Compila tutti i campi obbligatori per continuare.</p>
           </form>
           <aside class="cart-summary book-card co-aside">
             <h2 class="summary-title">Il tuo ordine</h2>
             <div class="summary-rows" id="summary-rows"></div>
+            <div class="summary-row summary-free">
+              <span>Ritiro al banco</span>
+              <span>Gratis</span>
+            </div>
             <div class="summary-total">
               <span>Totale</span>
               <strong id="summary-total">€0</strong>
             </div>
-            <p class="summary-note">Ritiro gratuito al banco — paghi online, nessuna coda</p>
+            <a href="carrello.html" class="btn-secondary summary-back">Modifica il carrello</a>
+            <ul class="trust-list">
+              <li>Pagamento online sicuro</li>
+              <li>Preparato col pescato del giorno</li>
+              <li>Paghi ora, ritiri senza coda</li>
+            </ul>
           </aside>
         </div>
       </div>
       <!-- Conferma ordine -->
       <div class="order-ok" id="order-ok" hidden>
-        <div class="order-ok-badge">✓</div>
-        <h1 class="big-title">Ordine confermato.</h1>
-        <p class="order-ok-code">Codice ordine: <strong id="order-code"></strong></p>
-        <p class="order-ok-text" id="order-ok-text">
-          Grazie! Il tuo box sarà pronto al banco nel giorno scelto.
-          Ti abbiamo inviato il riepilogo via email — al ritiro basta il codice ordine.
-        </p>
-        <a href="mercatodelmare.html" class="btn-primary">Torna al Mercato del Mare</a>
+        <ol class="shop-steps" aria-label="Percorso d'acquisto">
+          <li class="is-done"><span class="step-dot">✓</span>Carrello</li>
+          <li class="is-done"><span class="step-dot">✓</span>Checkout</li>
+          <li class="is-current"><span class="step-dot">3</span>Conferma</li>
+        </ol>
+        <div class="order-ok-card book-card">
+          <div class="order-ok-badge">✓</div>
+          <h1 class="shop-title">Ordine confermato</h1>
+          <p class="order-ok-code">Codice ordine <strong id="order-code"></strong></p>
+          <div class="order-ok-details">
+            <div class="order-ok-detail">
+              <span>Ritiro</span>
+              <strong id="order-day">—</strong>
+            </div>
+            <div class="order-ok-detail">
+              <span>Fascia</span>
+              <strong id="order-slot">—</strong>
+            </div>
+            <div class="order-ok-detail">
+              <span>Totale pagato</span>
+              <strong id="order-total">—</strong>
+            </div>
+          </div>
+          <p class="order-ok-text">
+            Il banco prepara il tuo box col pescato del giorno. Al ritiro in Via Dorsale 13 a Massa
+            basta il codice ordine — è tutto già pagato.
+          </p>
+          <a href="mercatodelmare.html" class="btn-primary">Torna al Mercato del Mare</a>
+        </div>
       </div>
     </main>
     <p class="mdm-footer-copy">
       &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
     </p>
-    <script src="js/mdm-shop.js?v=1"></script>
+    <script src="js/mdm-shop.js?v=2"></script>
   </body>
 </html>
