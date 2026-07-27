@@ -119,54 +119,79 @@ function initHeroScroll(renderFrame, total) {
   function sc(p,s,fi,fo,e){ if(p<=s)return s===0?1:.82; if(p<fi)return .82+.18*((p-s)/(fi-s||.001)); if(p>fo)return 1+.15*((p-fo)/(e-fo||.001)); return 1; }
   function bl(p,s,fi,fo,e){ if(s===0)return 0; if(p<=s)return 7; if(p<fi)return 7*(1-(p-s)/(fi-s||.001)); if(p>fo)return 6*((p-fo)/(e-fo||.001)); return 0; }
 
+  /* Su mobile ogni ms di paint conta: niente blur sui capitoli (la
+     ri-rasterizzazione del testo con Gaussian blur a raggio variabile
+     è la voce di paint più cara sui telefoni) e scritture di stile
+     solo quando il valore cambia davvero — per l'80% dell'hero le
+     maschere del video e il velo nero sono costanti, riscriverle a
+     ogni frame invalida lo stile per niente */
+  const isMob    = isMobile();
+  let   lastFade = -1;
+  let   lastVp   = -1;
+  const lastChO  = els.map(() => -1);
+
   function apply(p) {
     renderFrame(p * (total - 1));
-    gsap.set(fadeEl, { opacity: Math.max(0, 1 - p / FADE_END) });
+    const fade = Math.max(0, 1 - p / FADE_END);
+    if (fade !== lastFade) {
+      gsap.set(fadeEl, { opacity: fade });
+      lastFade = fade;
+    }
     /* il mp4 resta SEMPRE full screen (mai scalato: niente scatola):
        la porta-maschera che si allarga dal centro mostra la sua
        porzione centrale, come guardando attraverso il varco in fondo
        al tunnel. A 260vmax la parte piena copre anche gli angoli */
     if (!vLoaded && p > 0.5) { vLoaded = true; videoEl.preload = 'auto'; videoEl.load(); }
     const vp = Math.min(1, Math.max(0, (p - V_START) / (1 - V_START)));
-    const sz = (Math.pow(vp, 1.2) * 260).toFixed(1) + 'vmax';
-    /* zoom dinamico della banda 8:3: nella fase porta è ingrandita
-       fino a coprire il viewport (cz — mai bordi tagliati in vista),
-       poi da metà apertura si rimpicciolisce con smoothstep fino a
-       scala 1 = larghezza piena con fasce nere, scritte intere */
-    const cz = Math.max(1, window.innerHeight / (window.innerWidth * 3 / 8));
-    const sh = Math.min(1, Math.max(0, (vp - 0.5) / 0.5));
-    const ease = sh * sh * (3 - 2 * sh);
-    gsap.set(videoEl, {
-      opacity: Math.min(1, vp * 3),
-      scale: cz + (1 - cz) * ease,
-      webkitMaskSize: `${sz} ${sz}`,
-      maskSize: `${sz} ${sz}`
-    });
-    if (vp > 0.02 && videoEl.paused) videoEl.play().catch(() => {});
-    else if (vp <= 0.01 && !videoEl.paused) { videoEl.pause(); videoEl.currentTime = 0; }
+    if (vp > 0 || lastVp !== 0) {
+      const sz = (Math.pow(vp, 1.2) * 260).toFixed(1) + 'vmax';
+      /* zoom dinamico della banda 8:3: nella fase porta è ingrandita
+         fino a coprire il viewport (cz — mai bordi tagliati in vista),
+         poi da metà apertura si rimpicciolisce con smoothstep fino a
+         scala 1 = larghezza piena con fasce nere, scritte intere */
+      const cz = Math.max(1, window.innerHeight / (window.innerWidth * 3 / 8));
+      const sh = Math.min(1, Math.max(0, (vp - 0.5) / 0.5));
+      const ease = sh * sh * (3 - 2 * sh);
+      gsap.set(videoEl, {
+        opacity: Math.min(1, vp * 3),
+        scale: cz + (1 - cz) * ease,
+        webkitMaskSize: `${sz} ${sz}`,
+        maskSize: `${sz} ${sz}`
+      });
+      if (vp > 0.02 && videoEl.paused) videoEl.play().catch(() => {});
+      else if (vp <= 0.01 && !videoEl.paused) { videoEl.pause(); videoEl.currentTime = 0; }
 
-    /* alone sulla giuntura: il contorno-porta sfumato scala insieme
-       alla maschera del video, così la luce cavalca sempre il bordo */
-    gsap.set(whiteEl, {
-      opacity: Math.min(1, vp * 3) * 0.55,
-      webkitMaskSize: `${sz} ${sz}`,
-      maskSize: `${sz} ${sz}`
-    });
+      /* alone sulla giuntura: il contorno-porta sfumato scala insieme
+         alla maschera del video, così la luce cavalca sempre il bordo */
+      gsap.set(whiteEl, {
+        opacity: Math.min(1, vp * 3) * 0.55,
+        webkitMaskSize: `${sz} ${sz}`,
+        maskSize: `${sz} ${sz}`
+      });
 
-    /* fondale nero mascherato a porta: riempie il varco dietro la
-       banda già PRIMA che inizi a rimpicciolirsi, così nello spazio
-       che si apre non spunta mai il tunnel — fuori dalla porta il
-       tunnel resta visibile fino a essere inghiottito */
-    gsap.set(blackEl, {
-      opacity: Math.min(1, Math.max(0, (vp - 0.4) / 0.15)),
-      webkitMaskSize: `${sz} ${sz}`,
-      maskSize: `${sz} ${sz}`
+      /* fondale nero mascherato a porta: riempie il varco dietro la
+         banda già PRIMA che inizi a rimpicciolirsi, così nello spazio
+         che si apre non spunta mai il tunnel — fuori dalla porta il
+         tunnel resta visibile fino a essere inghiottito */
+      gsap.set(blackEl, {
+        opacity: Math.min(1, Math.max(0, (vp - 0.4) / 0.15)),
+        webkitMaskSize: `${sz} ${sz}`,
+        maskSize: `${sz} ${sz}`
+      });
+    }
+    lastVp = vp;
+    CHS.forEach((c,i) => {
+      const o = op(p,c.s,c.fi,c.fo,c.e);
+      /* capitolo spento e già spento: nessuna scrittura */
+      if (o === 0 && lastChO[i] === 0) return;
+      lastChO[i] = o;
+      const props = {
+        opacity: o,
+        scale:   sc(p,c.s,c.fi,c.fo,c.e)
+      };
+      if (!isMob) props.filter = `blur(${bl(p,c.s,c.fi,c.fo,c.e).toFixed(1)}px)`;
+      gsap.set(els[i], props);
     });
-    CHS.forEach((c,i) => gsap.set(els[i],{
-      opacity: op(p,c.s,c.fi,c.fo,c.e),
-      scale:   sc(p,c.s,c.fi,c.fo,c.e),
-      filter: `blur(${bl(p,c.s,c.fi,c.fo,c.e).toFixed(1)}px)`
-    }));
   }
 
   /* Il video NON legge lo scroll 1:1: lo INSEGUE con un lerp

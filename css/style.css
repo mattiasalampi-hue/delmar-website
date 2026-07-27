@@ -2041,6 +2041,13 @@ hr.div {
     max-width: 100vw;
   }
 
+  /* Layer dell'hero animati ogni frame durante lo scrub: promossi al
+     compositor, così opacity e scale non ripagano il paint del testo */
+  .ch,
+  #hero-fade {
+    will-change: opacity, transform;
+  }
+
   /* Blocca il pan orizzontale della pagina (rubber-band iOS) senza
      touch-action:pan-y sul body — quello impediva anche lo swipe
      degli scroller orizzontali interni (chips, gallery) */
