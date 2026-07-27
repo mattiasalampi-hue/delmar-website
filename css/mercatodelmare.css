@@ -1,4 +1,4 @@
-/* ════════════════════════════════════════
+﻿/* ════════════════════════════════════════
    Il Mercato del Mare — Stylesheet (B2C)
    Foglio indipendente dal B2B (style.css)
    ════════════════════════════════════════ */
@@ -8,13 +8,13 @@
 :root {
   --bg: #ffffff;
   --bg-alt: #f5f5f3;
-  --ink: #101014;
+  --ink: #151c64;
   --white: #fff;
   --wa: #25D366;
   --wa-hover: #1ebe5a;
-  --text-dim: rgba(16,16,20,.45);
-  --text-mid: rgba(16,16,20,.62);
-  --text-hi: rgba(16,16,20,.9);
+  --text-dim: rgba(21,28,100,.45);
+  --text-mid: rgba(21,28,100,.62);
+  --text-hi: rgba(21,28,100,.9);
   --font: 'Outfit', sans-serif;
 }
 
@@ -118,14 +118,14 @@ a {
   font-weight: 500;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: rgba(0,0,0,.62);
+  color: rgba(21,28,100,.7);
   transition: color .3s;
   white-space: nowrap;
 }
 
 @media (hover: hover) and (pointer: fine) {
   #mdm-nav a:hover {
-    color: #000;
+    color: #151c64;
   }
 }
 
@@ -133,7 +133,7 @@ a {
   border: 1px solid rgba(0,0,0,.35);
   padding: .55rem 1.2rem;
   border-radius: 2px;
-  color: rgba(0,0,0,.78) !important;
+  color: rgba(21,28,100,.85) !important;
   transition: background .3s, border-color .3s;
 }
 
@@ -478,7 +478,7 @@ a {
 
 @media (hover: hover) and (pointer: fine) {
   .btn-primary:hover {
-    background: #2b2b31;
+    background: #232c7e;
   }
 }
 
@@ -498,7 +498,7 @@ a {
 
 @media (hover: hover) and (pointer: fine) {
   .btn-secondary:hover {
-    border-color: #000;
+    border-color: #151c64;
   }
 }
 
@@ -586,7 +586,7 @@ a {
 }
 
 .box-badge.star {
-  color: #0a0a0a;
+  color: #151c64;
   background: rgba(255,255,255,.92);
   border-color: transparent;
 }
@@ -637,7 +637,7 @@ a {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgba(0,0,0,.3);
+  background: rgba(21,28,100,.35);
 }
 
 /* Selettore persone: i tondi 4/6/8 come i coperti al ristorante */
@@ -674,7 +674,7 @@ a {
 @media (hover: hover) and (pointer: fine) {
   .box-size:hover {
     border-color: rgba(0,0,0,.6);
-    color: #000;
+    color: #151c64;
   }
 }
 
@@ -773,7 +773,7 @@ a {
   font-weight: 800;
   line-height: 1;
   letter-spacing: -.04em;
-  color: rgba(16,16,20,.06);
+  color: rgba(21,28,100,.06);
   pointer-events: none;
   user-select: none;
 }
@@ -802,7 +802,7 @@ a {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.15rem;
-  color: rgba(16,16,20,.35);
+  color: rgba(21,28,100,.35);
 }
 
 /* ─ Sezioni generiche ───────────────────────── */
@@ -945,7 +945,7 @@ a {
   font-size: 1.02rem;
   font-weight: 400;
   line-height: 1.65;
-  color: rgba(16,16,20,.85);
+  color: rgba(21,28,100,.85);
 }
 
 .visit-main a {
@@ -1015,7 +1015,7 @@ a {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
-  color: rgba(16,16,20,.85);
+  color: rgba(21,28,100,.85);
 }
 
 .info-block .info-val a {
@@ -1087,7 +1087,7 @@ a {
   font-weight: 500;
   letter-spacing: .3em;
   text-transform: uppercase;
-  color: rgba(16,16,20,.55);
+  color: rgba(21,28,100,.55);
 }
 
 .form-field input,
@@ -1129,7 +1129,7 @@ a {
 .label-opt {
   text-transform: none;
   letter-spacing: .05em;
-  color: rgba(16,16,20,.38);
+  color: rgba(21,28,100,.38);
 }
 
 .form-field textarea {
@@ -1155,7 +1155,7 @@ a {
 
 @media (hover: hover) and (pointer: fine) {
   .btn-submit:hover {
-    background: #2b2b31;
+    background: #232c7e;
   }
 }
 
@@ -1179,18 +1179,18 @@ a {
   font-weight: 500;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: rgba(16,16,20,.6);
+  color: rgba(21,28,100,.6);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .mdm-footer-links a:hover {
-    color: #000;
+    color: #151c64;
   }
 }
 
 .mdm-footer-b2b {
   font-size: .72rem;
-  color: rgba(16,16,20,.75);
+  color: rgba(21,28,100,.75);
   border-bottom: 1px solid rgba(0,0,0,.3);
   padding-bottom: 3px;
 }
@@ -1207,13 +1207,13 @@ a {
   font-weight: 500;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: rgba(16,16,20,.5);
+  color: rgba(21,28,100,.5);
 }
 
 .mdm-footer-info {
   font-size: .74rem;
   font-weight: 300;
-  color: rgba(16,16,20,.55);
+  color: rgba(21,28,100,.55);
 }
 
 .mdm-footer-info a {
@@ -1224,7 +1224,7 @@ a {
 .mdm-footer-copy {
   text-align: center;
   font-size: .62rem;
-  color: rgba(16,16,20,.35);
+  color: rgba(21,28,100,.35);
   padding: 0 6% 3vh;
 }
 
@@ -1339,7 +1339,7 @@ a {
     display: block;
     width: 22px;
     height: 1.5px;
-    background: #111;
+    background: #151c64;
     transition: transform .3s ease, opacity .25s ease, background .3s ease;
     transform-origin: center;
   }
@@ -1470,7 +1470,7 @@ a {
     font-weight: 700;
     letter-spacing: .12em;
     background: #fff;
-    color: #0a0a0a;
+    color: #151c64;
     border-bottom: none;
     border-radius: 6px;
     box-shadow: 0 12px 34px rgba(0,0,0,.5);
@@ -1722,14 +1722,14 @@ body.shop-page #mdm-hdr {
   border: none;
   font-size: 1.35rem;
   line-height: 1;
-  color: rgba(16,16,20,.35);
+  color: rgba(21,28,100,.35);
   cursor: pointer;
   transition: color .25s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .cart-item-remove:hover {
-    color: #000;
+    color: #151c64;
   }
 }
 
@@ -1943,7 +1943,7 @@ body.shop-page #mdm-hdr {
 
 .pay-method:has(input:checked) {
   border-color: var(--ink);
-  background: rgba(16,16,20,.03);
+  background: rgba(21,28,100,.03);
   box-shadow: 0 0 0 1px var(--ink);
 }
 
@@ -2110,11 +2110,11 @@ body.shop-page #mdm-hdr {
 
   body.shop-page #mdm-nav a {
     font-size: .58rem;
-    color: rgba(0,0,0,.62);
+    color: rgba(21,28,100,.7);
   }
 
   body.shop-page #mdm-nav .nav-b2b {
-    color: rgba(0,0,0,.78) !important;
+    color: rgba(21,28,100,.85) !important;
     border-color: rgba(0,0,0,.35);
     padding: .45rem .8rem;
   }
