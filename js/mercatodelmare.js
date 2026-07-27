@@ -111,6 +111,12 @@ function initHeroScroll(renderFrame, total) {
     videoEl.preload = 'auto';
     videoEl.load();
     vLoaded = true;
+    /* iOS in risparmio energetico rifiuta anche l'autoplay muto e il
+       ticker smette di ritentare quando lo scroll si ferma: il primo
+       tocco riprova il play se la porta è aperta e il video è fermo */
+    window.addEventListener('touchend', () => {
+      if (videoEl.paused && lastVp > 0.02) videoEl.play().catch(() => {});
+    }, { passive: true });
   }
 
   function apply(p) {
