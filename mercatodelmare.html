@@ -56,7 +56,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/mercatodelmare.css?v=2" />
+    <link rel="stylesheet" href="css/mercatodelmare.css?v=3" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -65,6 +65,19 @@
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </symbol>
     </svg>
+    <!-- Loading -->
+    <div id="loading">
+      <p>Il Mercato del Mare</p>
+      <div id="bar-wrap"><div id="bar"></div></div>
+    </div>
+    <!-- Tunnel bg fisso (stessa macchina hero del B2B) -->
+    <div id="lottie-bg">
+      <div id="hero-white"></div>
+      <div id="hero-black"></div>
+      <video id="hero-video" src="assets/video/hero-final.mp4?v=3" muted playsinline preload="none" loop></video>
+    </div>
+    <div id="hero-fade"></div>
+    <div id="vig"></div>
     <!-- Header -->
     <header id="mdm-hdr">
       <a href="mercatodelmare.html"><img src="assets/logo.png" alt="DelMar" class="mdm-logo" /></a>
@@ -79,25 +92,43 @@
       </nav>
       <button class="mdm-hamburger" id="mdm-hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="mdm-nav"><span></span><span></span><span></span></button>
     </header>
-    <!-- Hero -->
-    <section id="mdm-hero">
-      <!-- La sorgente del video la sceglie il JS in base al viewport
-           (mobile: variante leggera). Il poster garantisce l'hero
-           anche a rete lenta o con prefers-reduced-motion -->
-      <video class="mdm-hero-bg" id="mdm-hero-video" autoplay muted playsinline loop preload="metadata" poster="assets/shop-1.jpg" aria-label="Il mare ripreso da sott'acqua"></video>
-      <div class="mdm-hero-overlay"></div>
-      <div class="mdm-hero-content">
-        <p class="mdm-eyebrow">DelMar Store · Massa</p>
-        <h1>Il Mercato<br />del Mare.</h1>
-        <p class="mdm-hero-sub">
-          Lo stesso pesce che riforniamo ai migliori ristoranti d'Italia, ora anche per la tua tavola — e con i nostri box è già pulito, porzionato e pronto da cucinare.
-        </p>
-        <div class="mdm-hero-cta">
-          <a href="#box" class="btn-primary">Prenota un box →</a>
-          <a href="#prodotti" class="btn-secondary">Cosa trovi al banco</a>
+    <!-- ════════════════════ HERO TUNNEL ══════════ -->
+    <div id="v-scroller">
+      <div id="v-sticky">
+        <div class="ch" id="c1">
+          <h1 class="ch-title">Il Mercato<br />del Mare.</h1>
+          <p class="ch-sub">
+            Lo stesso pesce che serviamo ai migliori ristoranti d'Italia,<br />ora anche per la tua tavola.
+          </p>
+          <div class="cue">
+            <span>Scroll</span>
+            <div class="cue-line"></div>
+          </div>
+        </div>
+        <div class="ch" id="c2">
+          <p class="ch-label">I box del mercato</p>
+          <h2 class="ch-title">Già pulito, pronto<br />da cucinare.</h2>
+          <p class="ch-sub">
+            Griglia, crudo, frittura o zuppa: scegli il box, lo prepariamo noi col pescato del giorno. Prezzi fissi, zero sorprese.
+          </p>
+          <a href="#box" class="ch-cta">Prenota un box →</a>
+        </div>
+        <div class="ch" id="c3">
+          <p class="ch-label">Al banco ogni mattina</p>
+          <h2 class="ch-title">Fresco, vivo<br />e surgelato.</h2>
+          <p class="ch-sub">
+            Pescato selezionato ogni mattina, vasche con crostacei vivi e una linea di surgelati premium.
+          </p>
+          <a href="#prodotti" class="ch-cta">Cosa trovi al banco →</a>
+        </div>
+        <div class="ch" id="c4">
+          <p class="ch-label">Prenota e ritira a Massa</p>
+          <h2 class="ch-title">Il tuo box<br />ti aspetta.</h2>
+          <p class="ch-sub">Prenoti in un minuto, ritiri al banco nel giorno che scegli e paghi in negozio.</p>
+          <a href="#contatti" class="ch-cta">Prenota il ritiro →</a>
         </div>
       </div>
-    </section>
+    </div>
     <!-- I Box del Mercato -->
     <section class="mdm-section mdm-section-dark" id="box">
       <div class="reveal-el">
@@ -420,7 +451,10 @@
     </p>
     <!-- CTA sticky mobile: compare dopo l'hero, sparisce sul form -->
     <a href="#box" class="mdm-sticky-cta" id="mdm-sticky-cta">Prenota un box →</a>
-    <!-- Scripts -->
-    <script src="js/mercatodelmare.js?v=2"></script>
+    <!-- Scripts (stessa toolchain hero del B2B: GSAP + ScrollTrigger + Lenis) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="js/mercatodelmare.js?v=3"></script>
   </body>
 </html>
