@@ -405,11 +405,11 @@ const revealObserver = new IntersectionObserver(entries => {
 }, { threshold: .15 });
 revealEls.forEach(el => revealObserver.observe(el));
 
-/* ── Box: prefill dalla card + riepilogo prezzo ── */
-/* Unica fonte dei prezzi: i data-attribute delle card in HTML */
+/* ── Box: taglie 4/6/8, prefill e riepilogo prezzo ── */
+/* Unica fonte dei prezzi: i data-attribute delle card in HTML
+   (data-p4/p6/p8) — card, form e riepilogo leggono da lì */
 (function () {
   const select    = document.getElementById('mdm-box-select');
-  const sizeField = document.getElementById('mdm-size-field');
   const recap     = document.getElementById('mdm-price-recap');
   const recapVal  = document.getElementById('mdm-price-val');
   const dateInput = document.getElementById('mdm-date');
@@ -422,31 +422,47 @@ revealEls.forEach(el => revealObserver.observe(el));
     dateInput.min = d.toISOString().split('T')[0];
   }
 
-  const cardOf = key => document.querySelector(`.mdm-box-card[data-box="${key}"]`);
+  const cardOf   = key => document.querySelector(`.mdm-box-card[data-box="${key}"]`);
+  const formSize = () => {
+    const r = document.querySelector('input[name="persone"]:checked');
+    return r ? r.value : '4';
+  };
 
-  function refresh() {
-    const card  = cardOf(select.value);
-    const unica = !!(card && card.dataset.unica);
-    sizeField.hidden = !card || unica;
+  /* Riepilogo nel form: segue box selezionato + persone */
+  function refreshForm() {
+    const card = cardOf(select.value);
     if (!card) {
       recap.hidden = true;
       return;
     }
-    const per4  = unica || document.querySelector('input[name="taglia"][value="per 4"]').checked;
-    const price = per4 ? card.dataset.p4 : card.dataset.p2;
-    recapVal.textContent = '€' + price;
+    recapVal.textContent = '€' + card.dataset['p' + formSize()];
     recap.hidden = false;
   }
 
-  select.addEventListener('change', refresh);
-  document.querySelectorAll('input[name="taglia"]').forEach(r => r.addEventListener('change', refresh));
+  select.addEventListener('change', refreshForm);
+  document.querySelectorAll('input[name="persone"]').forEach(r => r.addEventListener('change', refreshForm));
 
-  /* "Prenota" sulla card: preseleziona il box e scrolla al form */
+  /* Selettore persone sulla card: aggiorna il prezzo mostrato */
+  document.querySelectorAll('.mdm-box-card').forEach(card => {
+    const priceEl = card.querySelector('.box-price');
+    card.querySelectorAll('.box-size').forEach(btn => {
+      btn.addEventListener('click', () => {
+        card.querySelectorAll('.box-size').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        priceEl.textContent = '€' + card.dataset['p' + btn.dataset.size];
+      });
+    });
+  });
+
+  /* "Prenota questo box": porta nel form box + persone scelte sulla card */
   document.querySelectorAll('.box-book').forEach(btn => {
     btn.addEventListener('click', () => {
       const card = btn.closest('.mdm-box-card');
+      const size = card.querySelector('.box-size.is-active').dataset.size;
       select.value = card.dataset.box;
-      refresh();
+      const radio = document.querySelector(`input[name="persone"][value="${size}"]`);
+      if (radio) radio.checked = true;
+      refreshForm();
       lenis.scrollTo(document.getElementById('contatti'));
     });
   });
