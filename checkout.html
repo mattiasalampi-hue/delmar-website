@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout — Il Mercato del Mare</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" href="assets/logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/mercatodelmare.css?v=7" />
+  </head>
+  <body class="shop-page">
+    <!-- Header -->
+    <header id="mdm-hdr">
+      <a href="mercatodelmare.html"><img src="assets/logo.png" alt="DelMar" class="mdm-logo" /></a>
+      <nav id="mdm-nav" class="shop-nav">
+        <a href="carrello.html">← Torna al carrello</a>
+        <a href="tel:+390585834572" class="nav-b2b">Serve aiuto? Chiamaci</a>
+      </nav>
+    </header>
+    <main class="shop-main">
+      <!-- Checkout -->
+      <div id="co-flow">
+        <div class="shop-head">
+          <p class="label">Ultimo Passo</p>
+          <h1 class="big-title">Checkout.</h1>
+        </div>
+        <div class="co-layout">
+          <form class="co-form" id="co-form">
+            <div class="book-card co-block">
+              <h2 class="co-block-title">I tuoi dati</h2>
+              <div class="form-row">
+                <div class="form-field"><label>Nome e cognome</label><input type="text" name="nome" placeholder="Mario Rossi" required /></div>
+                <div class="form-field"><label>Telefono</label><input type="tel" name="telefono" placeholder="+39 333 1234567" required /></div>
+              </div>
+              <div class="form-field">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="mario@email.it" required />
+              </div>
+            </div>
+            <div class="book-card co-block">
+              <h2 class="co-block-title">Ritiro al banco</h2>
+              <div class="form-row">
+                <div class="form-field">
+                  <label>Giorno di ritiro</label>
+                  <input type="date" name="giorno_ritiro" id="co-date" required />
+                </div>
+                <div class="form-field">
+                  <label>Fascia oraria</label>
+                  <select name="fascia" required>
+                    <option value="mattina">Mattina (8:30 – 13:00)</option>
+                    <option value="pomeriggio">Pomeriggio (16:00 – 19:30)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-field">
+                <label>Note <span class="label-opt">(allergie, preferenze…)</span></label>
+                <textarea name="note" placeholder="Es: le orate già sfilettate, per favore"></textarea>
+              </div>
+              <p class="co-hint">Ritiro in Via Dorsale 13, Massa — prenota entro le 18:00 per l'indomani.</p>
+            </div>
+            <div class="book-card co-block">
+              <h2 class="co-block-title">Metodo di pagamento</h2>
+              <div class="pay-methods">
+                <label class="pay-method">
+                  <input type="radio" name="pagamento" value="paypal" checked />
+                  <span class="pay-body">
+                    <span class="pay-name">PayPal</span>
+                    <span class="pay-desc">Paghi col tuo account PayPal, protetto dalla Protezione Acquisti</span>
+                  </span>
+                  <span class="pay-mark pp">P</span>
+                </label>
+                <label class="pay-method">
+                  <input type="radio" name="pagamento" value="carta" />
+                  <span class="pay-body">
+                    <span class="pay-name">Carta di credito o debito</span>
+                    <span class="pay-desc">Visa, Mastercard e le principali carte — tramite circuito PayPal</span>
+                  </span>
+                  <span class="pay-mark cc">💳</span>
+                </label>
+              </div>
+              <p class="co-hint">Pagamento sicuro: verrai reindirizzato al circuito per completare l'ordine.</p>
+            </div>
+            <button type="submit" class="btn-submit co-pay" id="co-pay">Paga ora</button>
+            <p class="co-error" id="co-error" hidden>Compila tutti i campi obbligatori per continuare.</p>
+          </form>
+          <aside class="cart-summary book-card co-aside">
+            <h2 class="summary-title">Il tuo ordine</h2>
+            <div class="summary-rows" id="summary-rows"></div>
+            <div class="summary-total">
+              <span>Totale</span>
+              <strong id="summary-total">€0</strong>
+            </div>
+            <p class="summary-note">Ritiro gratuito al banco — paghi online, nessuna coda</p>
+          </aside>
+        </div>
+      </div>
+      <!-- Conferma ordine -->
+      <div class="order-ok" id="order-ok" hidden>
+        <div class="order-ok-badge">✓</div>
+        <h1 class="big-title">Ordine confermato.</h1>
+        <p class="order-ok-code">Codice ordine: <strong id="order-code"></strong></p>
+        <p class="order-ok-text" id="order-ok-text">
+          Grazie! Il tuo box sarà pronto al banco nel giorno scelto.
+          Ti abbiamo inviato il riepilogo via email — al ritiro basta il codice ordine.
+        </p>
+        <a href="mercatodelmare.html" class="btn-primary">Torna al Mercato del Mare</a>
+      </div>
+    </main>
+    <p class="mdm-footer-copy">
+      &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
+    </p>
+    <script src="js/mdm-shop.js?v=1"></script>
+  </body>
+</html>

@@ -405,43 +405,11 @@ const revealObserver = new IntersectionObserver(entries => {
 }, { threshold: .15 });
 revealEls.forEach(el => revealObserver.observe(el));
 
-/* ── Box: taglie 4/6/8, prefill e riepilogo prezzo ── */
-/* Unica fonte dei prezzi: i data-attribute delle card in HTML
-   (data-p4/p6/p8) — card, form e riepilogo leggono da lì */
+/* ── Box: taglie 4/6/8 e carrello ─────────────── */
+/* Unica fonte dei prezzi: i data-attribute delle card (data-p4/p6/p8).
+   "Prenota questo box" mette l'articolo nel carrello (localStorage,
+   con l'intero listino della card) e porta alla pagina dedicata */
 (function () {
-  const select    = document.getElementById('mdm-box-select');
-  const recap     = document.getElementById('mdm-price-recap');
-  const recapVal  = document.getElementById('mdm-price-val');
-  const dateInput = document.getElementById('mdm-date');
-  if (!select) return;
-
-  /* ritiro: da domani in poi */
-  if (dateInput) {
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    dateInput.min = d.toISOString().split('T')[0];
-  }
-
-  const cardOf   = key => document.querySelector(`.mdm-box-card[data-box="${key}"]`);
-  const formSize = () => {
-    const r = document.querySelector('input[name="persone"]:checked');
-    return r ? r.value : '4';
-  };
-
-  /* Riepilogo nel form: segue box selezionato + persone */
-  function refreshForm() {
-    const card = cardOf(select.value);
-    if (!card) {
-      recap.hidden = true;
-      return;
-    }
-    recapVal.textContent = '€' + card.dataset['p' + formSize()];
-    recap.hidden = false;
-  }
-
-  select.addEventListener('change', refreshForm);
-  document.querySelectorAll('input[name="persone"]').forEach(r => r.addEventListener('change', refreshForm));
-
   /* Selettore persone sulla card: aggiorna il prezzo mostrato */
   document.querySelectorAll('.mdm-box-card').forEach(card => {
     const priceEl = card.querySelector('.box-price');
@@ -454,16 +422,23 @@ revealEls.forEach(el => revealObserver.observe(el));
     });
   });
 
-  /* "Prenota questo box": porta nel form box + persone scelte sulla card */
   document.querySelectorAll('.box-book').forEach(btn => {
     btn.addEventListener('click', () => {
       const card = btn.closest('.mdm-box-card');
-      const size = card.querySelector('.box-size.is-active').dataset.size;
-      select.value = card.dataset.box;
-      const radio = document.querySelector(`input[name="persone"][value="${size}"]`);
-      if (radio) radio.checked = true;
-      refreshForm();
-      lenis.scrollTo(document.getElementById('contatti'));
+      const size = +card.querySelector('.box-size.is-active').dataset.size;
+      const item = {
+        box: card.dataset.box,
+        nome: card.dataset.nome,
+        img: card.querySelector('.box-photo img').getAttribute('src'),
+        prezzi: { p4: +card.dataset.p4, p6: +card.dataset.p6, p8: +card.dataset.p8 },
+        size: size,
+        qty: 1
+      };
+      const cart = JSON.parse(localStorage.getItem('mdm_cart') || '[]');
+      const ex = cart.find(i => i.box === item.box && i.size === item.size);
+      if (ex) ex.qty += 1; else cart.push(item);
+      localStorage.setItem('mdm_cart', JSON.stringify(cart));
+      location.href = 'carrello.html';
     });
   });
 })();
@@ -491,40 +466,5 @@ revealEls.forEach(el => revealObserver.observe(el));
   io.observe(form);
 })();
 
-/* ── Form ordine → Web3Forms ──────────────────── */
-const orderForm = document.getElementById('mdm-order-form');
-if (orderForm) {
-  orderForm.addEventListener('submit', async e => {
-    e.preventDefault();
-    const form = e.target;
-    const btn = form.querySelector('.btn-submit');
-    const ok = document.getElementById('mdm-form-ok');
-    const origTxt = btn.textContent;
-
-    btn.textContent = 'Invio in corso…';
-    btn.disabled = true;
-
-    try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: new FormData(form)
-      });
-      const json = await res.json();
-      if (json.success) {
-        ok.textContent = '✓ Prenotazione ricevuta. Ti inviamo il riepilogo e il link per il pagamento.';
-        ok.style.display = 'block';
-        form.reset();
-        setTimeout(() => { ok.style.display = 'none'; }, 6000);
-      } else {
-        ok.textContent = 'Errore nell\'invio. Riprova o scrivici su WhatsApp.';
-        ok.style.display = 'block';
-      }
-    } catch (_) {
-      ok.textContent = 'Errore di rete. Riprova o scrivici su WhatsApp.';
-      ok.style.display = 'block';
-    } finally {
-      btn.textContent = origTxt;
-      btn.disabled = false;
-    }
-  });
-}
+/* Il form di prenotazione non vive più qui: il flusso è
+   carrello.html → checkout.html (vedi js/mdm-shop.js) */

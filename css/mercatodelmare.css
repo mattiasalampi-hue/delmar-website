@@ -515,10 +515,11 @@ a {
   margin-right: auto;
 }
 
+/* 4 box, 4 colonne: la fila è sempre completa, niente card orfane */
 .mdm-box-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.8rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
   margin-top: 3.5rem;
 }
 
@@ -964,17 +965,6 @@ a {
   align-self: flex-start;
 }
 
-.wa-link {
-  color: var(--wa);
-  border-bottom-color: rgba(37,211,102,.45);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .wa-link:hover {
-    border-bottom-color: var(--wa);
-  }
-}
-
 .visit-hours {
   list-style: none;
 }
@@ -1065,37 +1055,13 @@ a {
   margin-right: auto;
 }
 
-.book-grid {
-  display: grid;
-  grid-template-columns: 1.15fr .85fr;
-  gap: 3rem;
-  align-items: start;
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
-/* Il form dentro una card in evidenza, come il widget prenotazioni */
+/* Card bianca in evidenza: riusata da checkout e riepilogo carrello */
 .book-card {
   border: 1px solid rgba(0,0,0,.1);
   border-radius: 6px;
   background: #fff;
   box-shadow: 0 4px 24px rgba(0,0,0,.07);
   padding: 2.4rem 2.2rem;
-}
-
-.book-side-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -.01em;
-  margin-bottom: .7rem;
-}
-
-.book-side-text {
-  font-size: .86rem;
-  font-weight: 300;
-  line-height: 1.7;
-  color: var(--text-mid);
-  margin-bottom: 1.6rem;
 }
 
 .contatti-form {
@@ -1166,52 +1132,6 @@ a {
   color: rgba(16,16,20,.38);
 }
 
-/* Taglia: radio a pillola */
-.size-pills {
-  display: flex;
-  gap: .8rem;
-}
-
-.size-pill input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.size-pill span {
-  display: inline-block;
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--text-mid);
-  border: 1px solid rgba(0,0,0,.22);
-  border-radius: 2px;
-  padding: .65rem 1.4rem;
-  cursor: pointer;
-  transition: background .3s, color .3s, border-color .3s;
-}
-
-.size-pill input:checked + span {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
-}
-
-.size-pill input:focus-visible + span {
-  border-color: #000;
-}
-
-.mdm-price-recap {
-  font-size: .82rem;
-  color: var(--text-mid);
-}
-
-.mdm-price-recap strong {
-  font-size: 1rem;
-  color: var(--text-hi);
-}
-
 .form-field textarea {
   resize: none;
   height: 100px;
@@ -1237,43 +1157,6 @@ a {
   .btn-submit:hover {
     background: #2b2b31;
   }
-}
-
-#mdm-form-ok {
-  display: none;
-  font-size: .8rem;
-  color: rgba(16,16,20,.65);
-  margin-top: .5rem;
-}
-
-.mdm-contact-side {
-  padding-top: 1rem;
-}
-
-.wa-big {
-  display: inline-flex;
-  align-items: center;
-  gap: .8rem;
-  background: var(--wa);
-  color: #fff;
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  padding: 1.1rem 2.2rem;
-  border-radius: 2px;
-  transition: background .3s;
-  margin-bottom: 2.5rem;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .wa-big:hover {
-    background: var(--wa-hover);
-  }
-}
-
-.wa-big svg {
-  flex-shrink: 0;
 }
 
 /* ─ Footer ──────────────────────────────────── */
@@ -1612,5 +1495,409 @@ a {
 @media (max-width: 480px) {
   .mdm-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ════════════════════════════════════════
+   Shop: carrello.html + checkout.html
+   ════════════════════════════════════════ */
+/* Niente loader su queste pagine: header subito visibile */
+body.shop-page #mdm-hdr {
+  opacity: 1;
+}
+
+.shop-main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 9rem 6% 6rem;
+}
+
+.shop-head {
+  margin-bottom: 2.5rem;
+}
+
+/* ─ Carrello ────────────────────────────────── */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1.4fr .6fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-areas: "img info qty price remove";
+  grid-template-columns: 90px 1fr auto auto auto;
+  gap: 1.2rem;
+  align-items: center;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.09);
+  border-radius: 6px;
+  box-shadow: 0 2px 14px rgba(0,0,0,.05);
+  padding: 1rem 1.2rem;
+}
+
+.cart-item-img {
+  grid-area: img;
+  width: 90px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cart-item-info {
+  grid-area: info;
+}
+
+.cart-item-info h3 {
+  font-size: .98rem;
+  font-weight: 700;
+  margin-bottom: .4rem;
+}
+
+.cart-item-size {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.cart-item-size select {
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 2px;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: .8rem;
+  padding: .35rem .5rem;
+  cursor: pointer;
+}
+
+.cart-item-qty {
+  grid-area: qty;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.cart-item-qty button {
+  width: 1.7rem;
+  height: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,.25);
+  border-radius: 50%;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: .95rem;
+  cursor: pointer;
+  transition: background .25s, color .25s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cart-item-qty button:hover {
+    background: var(--ink);
+    color: #fff;
+  }
+}
+
+.cart-item-qty span {
+  font-weight: 600;
+  min-width: 1.1rem;
+  text-align: center;
+}
+
+.cart-item-price {
+  grid-area: price;
+  font-size: 1.05rem;
+  font-weight: 700;
+  min-width: 3.4rem;
+  text-align: right;
+}
+
+.cart-item-remove {
+  grid-area: remove;
+  background: none;
+  border: none;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: rgba(16,16,20,.35);
+  cursor: pointer;
+  transition: color .25s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cart-item-remove:hover {
+    color: #000;
+  }
+}
+
+/* ─ Riepilogo ───────────────────────────────── */
+.summary-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: .85rem;
+  color: var(--text-mid);
+  padding: .45rem 0;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 1px solid rgba(0,0,0,.12);
+  margin-top: .6rem;
+  padding-top: 1rem;
+  font-size: .95rem;
+}
+
+.summary-total strong {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.summary-note {
+  font-size: .74rem;
+  color: var(--text-dim);
+  margin-top: .8rem;
+}
+
+.summary-cta {
+  width: 100%;
+  justify-content: center;
+  margin-top: 1.4rem;
+}
+
+.summary-back {
+  margin-top: 1.2rem;
+}
+
+/* ─ Carrello vuoto ──────────────────────────── */
+.cart-empty {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.cart-empty-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: .6rem;
+}
+
+.cart-empty-text {
+  font-size: .95rem;
+  color: var(--text-mid);
+  margin-bottom: 2rem;
+}
+
+/* ─ Checkout ────────────────────────────────── */
+.co-layout {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.co-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.co-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.co-block-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.co-hint {
+  font-size: .75rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.pay-methods {
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+}
+
+.pay-method {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 4px;
+  padding: 1rem 1.1rem;
+  cursor: pointer;
+  transition: border-color .25s, background .25s;
+}
+
+.pay-method input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pay-method:has(input:checked) {
+  border-color: var(--ink);
+  background: rgba(16,16,20,.03);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.pay-body {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.pay-name {
+  font-size: .92rem;
+  font-weight: 700;
+}
+
+.pay-desc {
+  font-size: .76rem;
+  line-height: 1.5;
+  color: var(--text-mid);
+}
+
+.pay-mark {
+  margin-left: auto;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.pay-mark.pp {
+  color: #003087;
+}
+
+.co-pay {
+  width: 100%;
+  text-align: center;
+}
+
+.co-error {
+  font-size: .8rem;
+  color: #b00020;
+}
+
+/* ─ Ordine confermato ───────────────────────── */
+.order-ok {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.order-ok-badge {
+  width: 4rem;
+  height: 4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #12b76a;
+  color: #fff;
+  font-size: 1.8rem;
+  border-radius: 50%;
+  margin-bottom: 1.6rem;
+}
+
+.order-ok-code {
+  font-size: .95rem;
+  color: var(--text-mid);
+  margin-bottom: 1.2rem;
+}
+
+.order-ok-code strong {
+  color: var(--ink);
+  letter-spacing: .06em;
+}
+
+.order-ok-text {
+  max-width: 480px;
+  margin: 0 auto 2.2rem;
+  font-size: .92rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+}
+
+/* ─ Shop responsive ─────────────────────────── */
+@media (max-width: 1024px) {
+  .cart-layout,
+  .co-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .shop-main {
+    padding: 7.5rem 5% 4rem;
+  }
+
+  /* Sulle pagine shop non c'è hamburger: il nav resta in barra,
+     non deve ereditare l'overlay a scomparsa del sito */
+  body.shop-page #mdm-nav {
+    position: static;
+    flex-direction: row;
+    background: none;
+    opacity: 1;
+    pointer-events: auto;
+    gap: .9rem;
+  }
+
+  body.shop-page #mdm-nav a {
+    font-size: .58rem;
+    color: rgba(0,0,0,.62);
+  }
+
+  body.shop-page #mdm-nav .nav-b2b {
+    color: rgba(0,0,0,.78) !important;
+    border-color: rgba(0,0,0,.35);
+    padding: .45rem .8rem;
+  }
+
+  .cart-item {
+    grid-template-areas:
+      "img info remove"
+      "img qty price";
+    grid-template-columns: 72px 1fr auto;
+    gap: .7rem 1rem;
+  }
+
+  .cart-item-img {
+    width: 72px;
+    height: 100%;
+    min-height: 84px;
+  }
+
+  .summary-cta,
+  .co-pay {
+    width: 100%;
   }
 }
