@@ -2170,3 +2170,74 @@ body.shop-page #mdm-hdr {
     display: none;
   }
 }
+
+/* ════════════════════════════════════════
+   Schermi larghi e bassi (finestre snappate,
+   zoom alto del browser, ultrawide a mezza
+   altezza): header sottile e capitoli hero
+   ridimensionati, mai tagliati dietro la
+   barra — stesso approccio del B2B
+   ════════════════════════════════════════ */
+@media (min-width: 769px) and (max-height: 850px) {
+  #mdm-hdr {
+    padding: .55rem 3rem;
+  }
+
+  .mdm-logo {
+    height: 2rem;
+  }
+}
+
+@media (max-height: 620px) {
+  #mdm-hdr {
+    padding: .45rem 1.2rem;
+  }
+
+  .mdm-logo {
+    height: 1.6rem;
+  }
+
+  /* il centro dei capitoli scende di mezzo header: la prima riga
+     del titolo non finisce più dietro la barra bianca */
+  .ch {
+    top: calc(50% + 1.6rem) !important;
+  }
+
+  .ch-title {
+    font-size: clamp(1.5rem, 9vh, 2.8rem) !important;
+    margin-bottom: .6rem;
+  }
+
+  #c1 .ch-title {
+    font-size: clamp(1.7rem, 10.5vh, 3.2rem) !important;
+  }
+
+  .ch-sub {
+    font-size: clamp(.7rem, 3.4vh, .95rem);
+    line-height: 1.5;
+    margin-bottom: .9rem;
+  }
+
+  .ch-label {
+    margin-bottom: .6rem;
+  }
+
+  .ch-cta {
+    padding: .65rem 1.2rem;
+    font-size: .68rem;
+  }
+
+  .cue {
+    margin-top: .7rem;
+    gap: .4rem;
+  }
+
+  .cue span {
+    font-size: .56rem;
+    padding: .4rem .7rem .4rem 1rem;
+  }
+
+  .cue-line {
+    height: 26px;
+  }
+}
