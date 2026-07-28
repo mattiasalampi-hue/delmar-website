@@ -2265,6 +2265,13 @@ hr.div {
   }
 
   /* ─── Hero chapters (mobile: meno testo, CTA grandi) ── */
+  /* Su touch NON c'è lo snap (ascolta solo la rotella): una flickata
+     con inerzia copre ~2500px e brucerebbe due capitoli. Corsa più
+     lunga = ogni capitolo occupa più scroll e il ritmo torna suo */
+  #v-scroller {
+    height: 760vh;
+  }
+
   #c1, #c2, #c3, #c4 {
     width: 92%;
   }

@@ -1412,6 +1412,12 @@ a {
   }
 
   /* ─── Hero tunnel mobile (stessi parametri del B2B) ── */
+  /* Su touch NON c'è lo snap (ascolta solo la rotella): corsa più
+     lunga così una flickata non brucia i capitoli */
+  #v-scroller {
+    height: 760vh;
+  }
+
   #lottie-bg {
     clip-path: inset(0 0 0 0);
     max-width: 100vw;
