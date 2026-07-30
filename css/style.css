@@ -1,4 +1,4 @@
-/* ════════════════════════════════════════
+﻿/* ════════════════════════════════════════
    DelMar — Stylesheet
    ════════════════════════════════════════ */
 :root {
@@ -849,184 +849,6 @@ hr.div {
   letter-spacing: .35em;
   text-transform: uppercase;
   color: rgba(255,255,255,.35);
-}
-
-/* ─ §LA FILIERA (video scrub) ───────────────── */
-/* ─ FILIERA (cinema overlay) ────────────────────── */
-#filiera {
-  padding: 14vh 0 16vh;
-}
-
-#fil3-wrap {
-  max-width: 1220px;
-  margin: 0 auto;
-  padding: 0 5%;
-}
-
-#fil3-header {
-  text-align: center;
-  margin-bottom: 4.5vh;
-}
-
-#fil3-header .label {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-}
-
-#fil3-cinema {
-  position: relative;
-  aspect-ratio: 16/9;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #000;
-  box-shadow: 0 0 0 1px rgba(255,255,255,.07), 0 50px 130px rgba(0,0,0,.85);
-}
-
-#fil3-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#fil3-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,.92) 0%, rgba(0,0,0,.7) 22%, rgba(0,0,0,.32) 50%, transparent 70%);
-}
-
-#fil3-topbar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 2.4rem 3rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2;
-}
-
-.fil3-brand {
-  font-size: .5rem;
-  letter-spacing: .45em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.58);
-  font-weight: 500;
-}
-
-#fil3-segs {
-  display: flex;
-  gap: 4px;
-  width: 140px;
-  align-items: center;
-}
-
-.fil3-seg {
-  flex: 1;
-  height: 1.5px;
-  background: rgba(255,255,255,.16);
-  border-radius: 1px;
-  position: relative;
-  cursor: pointer;
-}
-
-/* Hit-area estesa: i segmenti sono tappabili per saltare ai capitoli */
-.fil3-seg::after {
-  content: '';
-  position: absolute;
-  inset: -14px -2px;
-}
-
-.fil3-seg-fill {
-  position: absolute;
-  inset: 0;
-  width: 0;
-  background: #fff;
-  border-radius: 1px;
-}
-
-#fil3-text {
-  position: absolute;
-  left: 3%;
-  bottom: 0;
-  z-index: 2;
-  padding: 2rem 2rem 3.8rem;
-  width: 40%;
-}
-
-#fil3-num {
-  font-size: .5rem;
-  font-weight: 600;
-  letter-spacing: .45em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.55);
-  margin-bottom: .9rem;
-  display: flex;
-  align-items: center;
-  gap: .85rem;
-}
-
-#fil3-num::after {
-  content: '';
-  display: inline-block;
-  width: 22px;
-  height: 1px;
-  background: rgba(255,255,255,.32);
-}
-
-#fil3-title {
-  font-size: clamp(2rem, 4.2vw, 4.8rem);
-  font-weight: 800;
-  letter-spacing: -.04em;
-  line-height: .93;
-  margin-bottom: 1.2rem;
-}
-
-#fil3-desc {
-  font-size: clamp(.8rem, 1.1vw, .92rem);
-  color: rgba(255,255,255,.72);
-  line-height: 1.82;
-  font-weight: 300;
-}
-
-#fil3-progbar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  z-index: 3;
-  background: rgba(255,255,255,.1);
-}
-
-#fil3-progfill {
-  height: 100%;
-  width: 0;
-  background: rgba(255,255,255,.9);
-}
-
-.fil3-mark {
-  position: absolute;
-  top: -4px;
-  width: 1.5px;
-  height: 10px;
-  background: rgba(255,255,255,.3);
-  transform: translateX(-50%);
-}
-
-.fil3-mark:nth-child(2) {
-  left: 25%;
-}
-
-.fil3-mark:nth-child(3) {
-  left: 50%;
-}
-
-.fil3-mark:nth-child(4) {
-  left: 75%;
 }
 
 /* ─ §4 AZIENDA / CHI SIAMO ─────────────────── */
@@ -2238,18 +2060,6 @@ hr.div {
     color: rgba(255,255,255,.85);
   }
 
-  #fil3-desc {
-    color: rgba(255,255,255,.85);
-  }
-
-  .fil3-brand {
-    color: rgba(255,255,255,.6);
-  }
-
-  #fil3-num {
-    color: rgba(255,255,255,.7);
-  }
-
   #proc-photo-counter {
     color: rgba(255,255,255,.65);
   }
@@ -2653,40 +2463,6 @@ hr.div {
     justify-content: center;
     font-size: .63rem;
     padding: .85rem 1.8rem;
-  }
-
-  /* ─── Filiera cinema (mobile) ───────────────── */
-  #filiera {
-    padding: 10vh 0 12vh;
-  }
-
-  #fil3-cinema {
-    aspect-ratio: 4/3;
-  }
-
-  #fil3-topbar {
-    padding: 1.4rem 1.5rem;
-  }
-
-  #fil3-segs {
-    width: 150px;
-  }
-
-  /* Su mobile il pannello resta sempre a sinistra, JS non deve spostarlo */
-  #fil3-text {
-    left: 3% !important;
-    width: 88% !important;
-    padding: 1.5rem 1.5rem 2.8rem;
-  }
-
-  #fil3-title {
-    font-size: clamp(1.6rem, 7.5vw, 2.6rem);
-  }
-
-  #fil3-desc {
-    font-size: .76rem;
-    line-height: 1.65;
-    max-width: 46ch;
   }
 
   /* ─── §4 Azienda ─────────────────────────── */
