@@ -2,17 +2,16 @@
    DelMar — Stylesheet
    ════════════════════════════════════════ */
 :root {
-  --bg: #080808;
-  --bg-rgb: 8,8,8;
-  --bg-alt: #0d0d0d;
-  --bg-dark: #030305;
+  --bg: #ffffff;
+  --bg-alt: #f5f5f3;
+  --ink: #151c64;
   --white: #fff;
   --wa: #25D366;
   --wa-hover: #1ebe5a;
-  --border: rgba(255,255,255,.06);
-  --text-dim: rgba(255,255,255,.45);
-  --text-mid: rgba(255,255,255,.58);
-  --text-hi: rgba(255,255,255,.88);
+  --border: rgba(21,28,100,.12);
+  --text-dim: rgba(21,28,100,.45);
+  --text-mid: rgba(21,28,100,.62);
+  --text-hi: rgba(21,28,100,.9);
   --font: 'Outfit', sans-serif;
 }
 
@@ -30,7 +29,7 @@ html {
 
 body {
   background: var(--bg);
-  color: #fff;
+  color: var(--ink);
   font-family: var(--font);
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
@@ -52,11 +51,12 @@ a {
 }
 
 /* ─ Loading ─────────────────────────────────── */
+/* Il loader resta scuro: sbocca direttamente nel tunnel */
 #loading {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--bg);
+  background: #080808;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -171,7 +171,7 @@ nav a {
   height: 100vh;
   z-index: 1;
   overflow: hidden;
-  background: var(--bg);
+  background: #080808;
 }
 
 #lottie-bg canvas {
@@ -209,18 +209,19 @@ nav a {
    DEL TUNNEL (pavimento piatto, pareti dritte, volta ad arco) con
    bordi sfumati dal blur SVG. La dimensione della maschera è
    pilotata da initHeroScroll (mask-size), la forma è statica */
-/* Fondale nero delle fasce cinemascope: compare SOLO nel tratto
-   finale (pilotato da initHeroScroll), quando la porta ha ormai
-   inghiottito lo schermo — prima, sopra e sotto il video si
-   continua a vedere il tunnel */
-#hero-black {
+/* Fondale delle fasce cinemascope: compare SOLO nel tratto finale
+   (pilotato da initHeroScroll), quando la porta ha ormai inghiottito
+   lo schermo — prima, sopra e sotto il video si continua a vedere il
+   tunnel. Bianco come il resto del sito: così l'hero finisce sullo
+   stesso fondo delle sezioni e la giuntura non si vede */
+#hero-fill {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  background: #000;
+  background: #fff;
   opacity: 0;
-  /* stessa maschera-porta del video: il nero riempie solo il varco
+  /* stessa maschera-porta del video: il fondale riempie solo il varco
      (dietro la banda che si rimpicciolisce), fuori resta il tunnel */
   -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
   mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
@@ -238,7 +239,7 @@ nav a {
   margin: auto;
   /* banda cinemascope a larghezza PIENA (il file è 1280x480, 8:3):
      niente ritagli laterali, le scritte del video restano intere;
-     sopra e sotto, tunnel prima e fasce nere (#hero-black) alla fine */
+     sopra e sotto, tunnel prima e fasce bianche (#hero-fill) alla fine */
   width: 100vw;
   aspect-ratio: 8 / 3;
   height: auto;
@@ -254,19 +255,6 @@ nav a {
   mask-size: 0.1px 0.1px;
 }
 
-/* Velo nero iniziale: all'apertura copre il video, si dissolve
-   nel primo tratto di scroll (pilotato da initHeroScroll) */
-#hero-fade {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1;
-  background: #000;
-  pointer-events: none;
-}
-
 #vig {
   position: fixed;
   top: 0;
@@ -275,7 +263,7 @@ nav a {
   height: 160px;
   z-index: 2;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(var(--bg-rgb),.75) 0%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(8,8,8,.75) 0%, transparent 100%);
 }
 
 /* ─ Video scroller ──────────────────────────── */
@@ -295,10 +283,13 @@ nav a {
   pointer-events: none;
 }
 
+/* I capitoli vivono sopra il tunnel scuro: testo sempre bianco,
+   anche ora che il resto della pagina è a inchiostro su bianco */
 .ch {
   position: absolute;
   opacity: 0;
   isolation: isolate;
+  color: #fff;
 }
 
 .ch::before {
@@ -355,7 +346,7 @@ nav a {
   font-size: clamp(.83rem, 1.3vw, .98rem);
   font-weight: 300;
   line-height: 1.7;
-  color: var(--text-hi);
+  color: rgba(255,255,255,.88);
   margin-bottom: 1.8rem;
   text-shadow: 0 1px 14px rgba(0,0,0,.95), 0 2px 6px rgba(0,0,0,.8);
 }
@@ -527,32 +518,17 @@ nav a {
   will-change: transform;
 }
 
-/* divider */
-hr.div {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 0;
-}
-
 /* ─ §1 NUMERI ───────────────────────────────── */
 #stats {
   padding: 12vh 6%;
 }
 
+/* Niente cornice né divisori: sul nero erano righe appena accennate,
+   sul bianco disegnavano una tabella. I numeri stanno da soli */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  border: 1px solid var(--border);
-}
-
-.stat-box {
-  padding: 3.5rem 2.5rem;
-  border-right: 1px solid var(--border);
-}
-
-.stat-box:last-child {
-  border-right: none;
+  gap: 4rem 3vw;
 }
 
 .stat-n {
@@ -567,7 +543,7 @@ hr.div {
   font-weight: 400;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.55);
+  color: rgba(21,28,100,.6);
   margin-top: .7rem;
   line-height: 1.5;
 }
@@ -629,7 +605,7 @@ hr.div {
   font-weight: 600;
   letter-spacing: .14em;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(255,255,255,.3);
+  border-bottom: 1px solid rgba(0,0,0,.35);
   padding-bottom: 3px;
   display: inline-block;
   transition: border-color .3s;
@@ -637,7 +613,7 @@ hr.div {
 
 @media (hover: hover) and (pointer: fine) {
   .prod-link:hover {
-    border-color: #fff;
+    border-color: var(--ink);
   }
 }
 
@@ -697,7 +673,7 @@ hr.div {
   top: 14px;
   bottom: 14px;
   width: 1px;
-  background: rgba(255,255,255,.07);
+  background: rgba(21,28,100,.14);
 }
 
 #proc-tl-fill {
@@ -706,7 +682,7 @@ hr.div {
   top: 14px;
   width: 1px;
   height: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,.95) 0%, rgba(255,255,255,.35) 100%);
+  background: linear-gradient(to bottom, rgba(21,28,100,.95) 0%, rgba(21,28,100,.35) 100%);
   z-index: 1;
 }
 
@@ -717,8 +693,8 @@ hr.div {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(255,255,255,.95), 0 0 24px rgba(255,255,255,.55), 0 0 48px rgba(255,255,255,.22);
+  background: var(--ink);
+  box-shadow: 0 0 10px rgba(21,28,100,.55), 0 0 24px rgba(21,28,100,.3), 0 0 48px rgba(21,28,100,.15);
   z-index: 3;
   opacity: 0;
 }
@@ -729,15 +705,15 @@ hr.div {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(21,28,100,.08);
+  border: 1px solid rgba(21,28,100,.22);
   z-index: 4;
 }
 
 .ptl-dot.lit {
-  background: #fff;
-  border-color: rgba(255,255,255,.9);
-  box-shadow: 0 0 14px rgba(255,255,255,.9), 0 0 32px rgba(255,255,255,.45), 0 0 60px rgba(255,255,255,.18);
+  background: var(--ink);
+  border-color: rgba(21,28,100,.9);
+  box-shadow: 0 0 14px rgba(21,28,100,.45), 0 0 32px rgba(21,28,100,.22), 0 0 60px rgba(21,28,100,.1);
 }
 
 #ptl-dot-0 {
@@ -793,7 +769,7 @@ hr.div {
   font-weight: 600;
   letter-spacing: .45em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.42);
+  color: rgba(21,28,100,.5);
   margin-bottom: .55rem;
 }
 
@@ -807,7 +783,7 @@ hr.div {
 
 .ptl-desc {
   font-size: .86rem;
-  color: rgba(255,255,255,.58);
+  color: rgba(21,28,100,.65);
   line-height: 1.78;
   max-width: 360px;
 }
@@ -818,7 +794,7 @@ hr.div {
   min-height: 420px;
   overflow: hidden;
   border-radius: 2px;
-  background: #111;
+  background: #e9e9e6;
 }
 
 .ptl-photo {
@@ -875,7 +851,7 @@ hr.div {
   left: 0;
   right: 0;
   padding: 2.5rem 6%;
-  background: linear-gradient(to top, rgba(var(--bg-rgb),.7) 0%, transparent 100%);
+  background: linear-gradient(to top, rgba(8,8,8,.7) 0%, transparent 100%);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -883,7 +859,7 @@ hr.div {
 
 .azienda-facade-caption .label {
   margin-bottom: 0;
-  color: rgba(255,255,255,.5);
+  color: rgba(255,255,255,.75);
 }
 
 .azienda-body {
@@ -1055,7 +1031,7 @@ hr.div {
   font-weight: 400;
   letter-spacing: .15em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.55);
+  color: rgba(21,28,100,.6);
   margin-top: .3rem;
 }
 
@@ -1088,19 +1064,22 @@ hr.div {
 #cta-full-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(var(--bg-rgb),.65);
+  background: rgba(8,8,8,.65);
 }
 
+/* Testo sopra foto scurita: resta bianco anche col sito chiaro */
 #cta-full-content {
   position: relative;
   z-index: 1;
   max-width: 700px;
   padding: 2rem;
+  color: #fff;
 }
 
 #cta-full-content .label {
   display: flex;
   justify-content: center;
+  color: rgba(255,255,255,.6);
 }
 
 #cta-full-content .big-title {
@@ -1163,7 +1142,7 @@ hr.div {
   font-weight: 500;
   letter-spacing: .3em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.55);
+  color: rgba(21,28,100,.6);
 }
 
 .form-field input,
@@ -1171,8 +1150,8 @@ hr.div {
 .form-field select {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255,255,255,.15);
-  color: #fff;
+  border-bottom: 1px solid rgba(21,28,100,.25);
+  color: var(--ink);
   font-family: var(--font);
   font-size: .92rem;
   font-weight: 300;
@@ -1185,7 +1164,7 @@ hr.div {
 .form-field input:focus,
 .form-field textarea:focus,
 .form-field select:focus {
-  border-color: rgba(255,255,255,.6);
+  border-color: rgba(21,28,100,.7);
 }
 
 .form-field textarea {
@@ -1199,13 +1178,13 @@ hr.div {
 }
 
 .form-field select option {
-  background: #111;
+  background: #fff;
 }
 
 .btn-submit {
   align-self: flex-start;
-  background: #fff;
-  color: var(--bg);
+  background: var(--ink);
+  color: #fff;
   border: none;
   font-family: var(--font);
   font-size: .7rem;
@@ -1220,14 +1199,14 @@ hr.div {
 
 @media (hover: hover) and (pointer: fine) {
   .btn-submit:hover {
-    background: rgba(255,255,255,.85);
+    background: #232c7e;
   }
 }
 
 #form-ok {
   display: none;
   font-size: .8rem;
-  color: rgba(255,255,255,.5);
+  color: rgba(21,28,100,.6);
   margin-top: .5rem;
 }
 
@@ -1251,7 +1230,7 @@ hr.div {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
-  color: rgba(255,255,255,.75);
+  color: rgba(21,28,100,.8);
 }
 
 .wa-big {
@@ -1293,11 +1272,8 @@ hr.div {
   gap: 2rem;
 }
 
-/* Logo reso bianco via filter: il PNG blu scuro sparirebbe sul nero */
 #footer img {
   max-width: 6rem;
-  opacity: .85;
-  filter: brightness(0) invert(1);
 }
 
 .footer-links {
@@ -1310,13 +1286,13 @@ hr.div {
   font-weight: 400;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.62);
+  color: rgba(21,28,100,.7);
   transition: color .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .footer-links a:hover {
-    color: #fff;
+    color: var(--ink);
   }
 }
 
@@ -1324,7 +1300,7 @@ hr.div {
   font-size: .62rem;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.45);
+  color: rgba(21,28,100,.5);
   text-align: center;
   padding: 1.2rem;
   background: var(--bg);
@@ -1341,13 +1317,13 @@ hr.div {
   font-weight: 400;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.62);
+  color: rgba(21,28,100,.7);
   transition: color .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .footer-social a:hover {
-    color: #fff;
+    color: var(--ink);
   }
 }
 
@@ -1355,7 +1331,7 @@ hr.div {
 #marina-beam {
   position: relative;
   z-index: 4;
-  background: var(--bg-dark);
+  background: var(--bg);
 }
 
 #mb-pin {
@@ -1367,7 +1343,7 @@ hr.div {
   top: 0;
   height: 80vh;
   overflow: hidden;
-  background: var(--bg-dark);
+  background: var(--bg);
 }
 
 #mb-sticky::after {
@@ -1377,7 +1353,7 @@ hr.div {
   left: 0;
   right: 0;
   height: 22vh;
-  background: linear-gradient(to bottom, rgba(3,3,5,0) 0%, var(--bg-dark) 85%);
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--bg) 85%);
   pointer-events: none;
   z-index: 10;
 }
@@ -1438,18 +1414,20 @@ hr.div {
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: var(--bg-dark);
+  background: var(--bg);
   display: flex;
   align-items: center;
 }
 
+/* Rete neurale a inchiostro sul bianco: opacità piena, le tracce
+   sono già tenui di loro e sul chiaro sbiadivano fino a sparire */
 #marina-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: .55;
+  opacity: 1;
 }
 
 #marina-line-cvs {
@@ -1485,8 +1463,8 @@ hr.div {
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1.5px solid rgba(37,211,102,.35);
-  box-shadow: 0 0 0 4px rgba(37,211,102,.07), 0 0 20px rgba(37,211,102,.12);
+  border: 1.5px solid rgba(37,211,102,.55);
+  box-shadow: 0 0 0 4px rgba(37,211,102,.1), 0 6px 20px rgba(21,28,100,.1);
 }
 
 /* ── left info ── */
@@ -1505,8 +1483,8 @@ hr.div {
   font-weight: 600;
   letter-spacing: .32em;
   text-transform: uppercase;
-  color: var(--wa);
-  border: 1px solid rgba(37,211,102,.28);
+  color: #17a34a;
+  border: 1px solid rgba(37,211,102,.45);
   border-radius: 2px;
   padding: .32rem .8rem;
 }
@@ -1514,9 +1492,9 @@ hr.div {
 .marina-badge-dot {
   width: 5px;
   height: 5px;
-  background: var(--wa);
+  background: #17a34a;
   border-radius: 50%;
-  box-shadow: 0 0 7px var(--wa);
+  box-shadow: 0 0 7px rgba(37,211,102,.8);
   animation: mblink 1.8s step-end infinite;
 }
 
@@ -1541,7 +1519,7 @@ hr.div {
   font-weight: 500;
   letter-spacing: .28em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.48);
+  color: var(--text-dim);
   margin-top: .5rem;
 }
 
@@ -1566,22 +1544,22 @@ hr.div {
   padding: .6rem .9rem;
   border: 1px solid var(--border);
   border-radius: 3px;
-  background: rgba(255,255,255,.015);
+  background: var(--bg-alt);
 }
 
 .chip-dot {
   width: 5px;
   height: 5px;
-  background: var(--wa);
+  background: #17a34a;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(37,211,102,.7);
+  box-shadow: 0 0 8px rgba(37,211,102,.5);
 }
 
 .chip-label {
   font-size: .78rem;
   font-weight: 400;
-  color: rgba(255,255,255,.72);
+  color: var(--text-mid);
   line-height: 1.3;
 }
 
@@ -1616,7 +1594,7 @@ hr.div {
   font-size: .52rem;
   letter-spacing: .3em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.13);
+  color: rgba(21,28,100,.3);
 }
 
 /* ── phone mockup ── */
@@ -1627,20 +1605,22 @@ hr.div {
   height: 100%;
 }
 
+/* Mockup in tema chiaro di WhatsApp: sul sito bianco la scocca nera
+   e la chat scura sarebbero l'unico blocco cupo della pagina */
 #marina-phone {
   width: 285px;
   border-radius: 38px;
   overflow: hidden;
-  background: #0b0b0b;
-  border: 1.5px solid rgba(255,255,255,.1);
-  box-shadow: 0 50px 120px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.04), 0 0 50px rgba(37,211,102,.08);
+  background: #fff;
+  border: 1.5px solid rgba(21,28,100,.14);
+  box-shadow: 0 40px 90px rgba(21,28,100,.18), 0 0 0 1px rgba(21,28,100,.04);
   display: flex;
   flex-direction: column;
   height: 570px;
 }
 
 .phone-status-bar {
-  background: #128c7e;
+  background: #008069;
   padding: .28rem .9rem;
   display: flex;
   justify-content: space-between;
@@ -1660,12 +1640,12 @@ hr.div {
 }
 
 .phone-wa-hdr {
-  background: #075E54;
+  background: #008069;
   padding: .55rem .75rem;
   display: flex;
   align-items: center;
   gap: .6rem;
-  border-bottom: 1px solid rgba(0,0,0,.3);
+  border-bottom: 1px solid rgba(0,0,0,.12);
 }
 
 .phone-wa-ava {
@@ -1684,14 +1664,14 @@ hr.div {
 
 .phone-wa-online {
   font-size: .56rem;
-  color: rgba(255,255,255,.65);
+  color: rgba(255,255,255,.8);
 }
 
 .phone-chat-body {
   flex: 1;
   padding: .55rem .7rem;
   overflow: hidden;
-  background: #0d1117;
+  background: #efeae2;
   display: flex;
   flex-direction: column;
   gap: .45rem;
@@ -1700,11 +1680,12 @@ hr.div {
 .phone-date-badge {
   align-self: center;
   font-size: .52rem;
-  color: rgba(255,255,255,.3);
-  background: var(--border);
+  color: rgba(17,27,33,.45);
+  background: #fff;
   border-radius: 5px;
   padding: .18rem .5rem;
   margin: .2rem 0;
+  box-shadow: 0 1px 1px rgba(11,20,26,.08);
 }
 
 .phone-bubble {
@@ -1713,26 +1694,27 @@ hr.div {
   font-size: .7rem;
   font-weight: 300;
   line-height: 1.55;
-  color: rgba(255,255,255,.88);
+  color: #111b21;
   border-radius: 10px;
+  box-shadow: 0 1px 1px rgba(11,20,26,.13);
   will-change: transform, opacity;
 }
 
 .phone-bubble.user {
   align-self: flex-end;
-  background: #005C4B;
+  background: #d9fdd3;
   border-radius: 10px 10px 3px 10px;
 }
 
 .phone-bubble.ai {
   align-self: flex-start;
-  background: #1f2c34;
+  background: #fff;
   border-radius: 10px 10px 10px 3px;
 }
 
 .pb-time {
   font-size: .5rem;
-  color: var(--text-dim);
+  color: rgba(17,27,33,.45);
   margin-top: .2rem;
   text-align: right;
   display: flex;
@@ -1747,12 +1729,13 @@ hr.div {
 
 .phone-typing {
   align-self: flex-start;
-  background: #1f2c34;
+  background: #fff;
   border-radius: 10px 10px 10px 3px;
   padding: .5rem .7rem;
   display: flex;
   gap: 3px;
   align-items: center;
+  box-shadow: 0 1px 1px rgba(11,20,26,.13);
   will-change: opacity;
   opacity: 0;
 }
@@ -1760,7 +1743,7 @@ hr.div {
 .phone-typing span {
   width: 5px;
   height: 5px;
-  background: rgba(255,255,255,.38);
+  background: rgba(17,27,33,.35);
   border-radius: 50%;
   animation: tdot 1.1s ease-in-out infinite;
 }
@@ -1819,7 +1802,7 @@ hr.div {
 
 /* ─ Focus visible ───────────────────────────── */
 :focus-visible {
-  outline: 2px solid rgba(255,255,255,.55);
+  outline: 2px solid rgba(21,28,100,.55);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -1865,8 +1848,7 @@ hr.div {
 
   /* Layer dell'hero animati ogni frame durante lo scrub: promossi al
      compositor, così opacity e scale non ripagano il paint del testo */
-  .ch,
-  #hero-fade {
+  .ch {
     will-change: opacity, transform;
   }
 
@@ -1886,12 +1868,12 @@ hr.div {
     overscroll-behavior-x: contain;
   }
 
-  /* Leggibilità: su schermo piccolo i grigi scuri diventano
+  /* Leggibilità: su schermo piccolo gli inchiostri sbiaditi diventano
      illeggibili — opacità dei testi alzate */
   :root {
-    --text-dim: rgba(255,255,255,.5);
-    --text-mid: rgba(255,255,255,.62);
-    --text-hi: rgba(255,255,255,.9);
+    --text-dim: rgba(21,28,100,.52);
+    --text-mid: rgba(21,28,100,.68);
+    --text-hi: rgba(21,28,100,.95);
   }
 
   /* svh: altezza viewport stabile — evita i salti dei pin
@@ -1953,7 +1935,7 @@ hr.div {
     position: fixed;
     inset: 0;
     z-index: 99;
-    background: rgba(var(--bg-rgb),.97);
+    background: rgba(8,8,8,.97);
     backdrop-filter: blur(24px);
     flex-direction: column;
     align-items: center;
@@ -2026,38 +2008,38 @@ hr.div {
     margin-bottom: 1.5rem;
   }
 
-  /* Leggibilità: override dei grigi hardcoded troppo scuri */
+  /* Leggibilità: override degli inchiostri hardcoded troppo tenui */
   .stat-l {
-    color: rgba(255,255,255,.55);
+    color: rgba(21,28,100,.65);
   }
 
   .team-stat-l {
-    color: rgba(255,255,255,.55);
+    color: rgba(21,28,100,.65);
   }
 
   .gallery-cap {
-    color: rgba(255,255,255,.55);
+    color: rgba(21,28,100,.65);
   }
 
   .chip-label {
     font-size: .82rem;
-    color: rgba(255,255,255,.78);
+    color: rgba(21,28,100,.78);
   }
 
   .marina-sub {
-    color: rgba(255,255,255,.5);
+    color: rgba(21,28,100,.55);
   }
 
   .marina-poweredby {
-    color: rgba(255,255,255,.35);
+    color: rgba(21,28,100,.4);
   }
 
   .form-field label {
-    color: rgba(255,255,255,.55);
+    color: rgba(21,28,100,.65);
   }
 
   .info-block .info-val {
-    color: rgba(255,255,255,.85);
+    color: rgba(21,28,100,.88);
   }
 
   #proc-photo-counter {
@@ -2066,12 +2048,12 @@ hr.div {
 
   .footer-links a,
   .footer-social a {
-    color: rgba(255,255,255,.5);
+    color: rgba(21,28,100,.62);
   }
 
   .footer-copy {
     font-size: .6rem;
-    color: rgba(255,255,255,.35);
+    color: rgba(21,28,100,.45);
   }
 
   /* ─── Hero chapters (mobile: meno testo, CTA grandi) ── */
@@ -2171,29 +2153,15 @@ hr.div {
   }
 
   /* ─── §1 Stats ───────────────────────────── */
+  /* Senza la cornice il padding orizzontale non è più a carico dei
+     box: lo prende la sezione, altrimenti i numeri toccano il bordo */
   #stats {
-    padding: 8vh 0;
+    padding: 8vh 5%;
   }
 
   .stats-grid {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .stat-box {
-    padding: 2rem 1.4rem;
-  }
-
-  .stat-box:nth-child(2) {
-    border-right: none;
-  }
-
-  .stat-box:nth-child(3) {
-    border-top: 1px solid var(--border);
-  }
-
-  .stat-box:nth-child(4) {
-    border-top: 1px solid var(--border);
-    border-right: none;
+    gap: 3rem 1.5rem;
   }
 
   .stat-n {
@@ -2219,7 +2187,7 @@ hr.div {
     border-radius: 14px;
     overflow: hidden;
     background: var(--bg-alt);
-    box-shadow: 0 -18px 50px rgba(0,0,0,.55);
+    box-shadow: 0 -18px 50px rgba(0,0,0,.12);
     will-change: transform;
   }
 
@@ -2282,7 +2250,7 @@ hr.div {
     height: 54vw;
     min-height: 220px;
     border-radius: 12px;
-    box-shadow: 0 18px 40px rgba(0,0,0,.55);
+    box-shadow: 0 18px 40px rgba(0,0,0,.16);
   }
 
   .proc-tl-label {
@@ -2322,12 +2290,12 @@ hr.div {
   .ptl-desc {
     font-size: .86rem;
     max-width: none;
-    color: rgba(255,255,255,.62);
+    color: rgba(21,28,100,.68);
   }
 
   .ptl-num {
     font-size: .54rem;
-    color: rgba(255,255,255,.45);
+    color: rgba(21,28,100,.55);
   }
 
   /* ─── Marina AI ──────────────────────────── */
