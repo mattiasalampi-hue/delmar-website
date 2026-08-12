@@ -3,6 +3,7 @@
    ════════════════════════════════════════ */
 :root {
   --bg: #ffffff;
+  --bg-soft: #f7f8fa;
   --bg-alt: #f5f5f3;
   --ink: #151c64;
   --white: #fff;
@@ -284,12 +285,17 @@ nav a {
 }
 
 /* I capitoli vivono sopra il tunnel scuro: testo sempre bianco,
-   anche ora che il resto della pagina è a inchiostro su bianco */
+   anche ora che il resto della pagina è a inchiostro su bianco.
+   Nessuno di loro riceve clic finché initHeroScroll non lo accende:
+   sono tutti impilati nello stesso punto e a opacità 0 restano
+   comunque bersaglio del mouse — l'ultimo, invisibile, si prendeva
+   il clic destinato al capitolo in scena */
 .ch {
   position: absolute;
   opacity: 0;
   isolation: isolate;
   color: #fff;
+  pointer-events: none;
 }
 
 .ch::before {
@@ -314,41 +320,20 @@ nav a {
   top: 50%;
   left: 50%;
   width: 88%;
-  max-width: 820px;
+  max-width: 960px;
   text-align: center;
-  pointer-events: auto;
 }
 
-.ch-label {
-  font-size: .58rem;
-  font-weight: 500;
-  letter-spacing: .4em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.58);
-  margin-bottom: 1rem;
-  text-shadow: 0 1px 10px rgba(0,0,0,.95);
-}
-
+/* Corpo unico per tutti i capitoli, tarato sulla riga più lunga
+   (30 caratteri): a scale diverse le schermate dell'hero sembravano
+   quattro pezzi scollegati invece di una sequenza */
 .ch-title {
   font-weight: 700;
   letter-spacing: -.02em;
-  line-height: 1.05;
-  font-size: clamp(2.4rem, 5vw, 5.5rem);
-  margin-bottom: 1rem;
+  line-height: 1.08;
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+  margin-bottom: 1.6rem;
   text-shadow: 0 2px 24px rgba(0,0,0,.85), 0 0 80px rgba(0,0,0,.55);
-}
-
-#c1 .ch-title {
-  font-size: clamp(2.8rem, 6vw, 6.5rem);
-}
-
-.ch-sub {
-  font-size: clamp(.83rem, 1.3vw, .98rem);
-  font-weight: 300;
-  line-height: 1.7;
-  color: rgba(255,255,255,.88);
-  margin-bottom: 1.8rem;
-  text-shadow: 0 1px 14px rgba(0,0,0,.95), 0 2px 6px rgba(0,0,0,.8);
 }
 
 .ch-cta {
@@ -362,7 +347,6 @@ nav a {
   border-bottom: 1px solid rgba(255,255,255,.35);
   padding-bottom: 4px;
   transition: border-color .3s, gap .3s;
-  pointer-events: auto;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -472,6 +456,15 @@ nav a {
   max-width: 100%;
 }
 
+/* Alternanza dei fondi: le sezioni si distinguono per campitura
+   invece che per una riga di separazione. Assegnata a mano e non con
+   :nth-child perché l'ordine include blocchi che non partecipano
+   (l'hero, il beam) e una sezione aggiunta in mezzo ribalterebbe
+   tutta la sequenza a valle */
+.sec-soft {
+  background: var(--bg-soft);
+}
+
 .sec-pad {
   padding: 14vh 6%;
 }
@@ -520,7 +513,7 @@ nav a {
 
 /* ─ §1 NUMERI ───────────────────────────────── */
 #stats {
-  padding: 12vh 6%;
+  padding: 11vh 6%;
 }
 
 /* Niente cornice né divisori: sul nero erano righe appena accennate,
@@ -529,6 +522,7 @@ nav a {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 4rem 3vw;
+  text-align: center;
 }
 
 .stat-n {
@@ -538,27 +532,27 @@ nav a {
   line-height: 1;
 }
 
+/* Niente maiuscoletto spaziato: a .72rem con .18em di tracciatura
+   la frase si leggeva lettera per lettera. Il numero resta la voce
+   forte, la didascalia deve solo essere leggibile */
 .stat-l {
-  font-size: .72rem;
+  font-size: .98rem;
   font-weight: 400;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: rgba(21,28,100,.6);
-  margin-top: .7rem;
   line-height: 1.5;
+  color: rgba(21,28,100,.72);
+  margin-top: 1rem;
+  max-width: 24ch;
+  margin-inline: auto;
+  text-wrap: balance;
 }
 
 /* ─ §2 PRODOTTI ─────────────────────────────── */
+/* Nessun margine: la sezione è fatta solo di strisce a tutta
+   larghezza, e un margine bianco sopra o sotto non si legge come
+   respiro della sezione ma come una fascia vuota appiccicata fra due
+   sezioni di colore diverso */
 #prodotti {
-  padding: 14vh 0;
-}
-
-.prod-intro {
-  padding: 0 6% 6vh;
-}
-
-.prod-intro .big-title {
-  max-width: 700px;
+  padding: 0;
 }
 
 .prod-strip {
@@ -585,10 +579,6 @@ nav a {
   justify-content: center;
   padding: 5rem;
   background: var(--bg-alt);
-}
-
-.prod-text .label {
-  margin-bottom: 1.5rem;
 }
 
 .prod-text .big-title {
@@ -627,9 +617,13 @@ nav a {
 }
 
 /* ─ §3 COME LAVORIAMO (timeline animata) ─────── */
+/* Alta almeno quanto il viewport: GSAP la pinna avvolgendola in uno
+   .pin-spacer trasparente, quindi una sezione più bassa lascerebbe
+   affiorare il bianco del body ai bordi al posto del suo grigio */
 #processo {
   position: relative;
   z-index: 4;
+  min-height: 100vh;
   padding: 14vh 0 16vh;
 }
 
@@ -764,10 +758,12 @@ nav a {
   top: auto;
 }
 
+/* Non più solo "01" ma "01 · La sera": la spaziatura da numero
+   isolato spezzava la frase in lettere staccate */
 .ptl-num {
-  font-size: .52rem;
+  font-size: .56rem;
   font-weight: 600;
-  letter-spacing: .45em;
+  letter-spacing: .26em;
   text-transform: uppercase;
   color: rgba(21,28,100,.5);
   margin-bottom: .55rem;
@@ -1137,12 +1133,19 @@ nav a {
   gap: .5rem;
 }
 
+/* Unica sezione con uno sfondo animato dietro: qui i testi tenui
+   competono con le bolle, quindi vanno più carichi che altrove */
 .form-field label {
   font-size: .6rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: .3em;
   text-transform: uppercase;
-  color: rgba(21,28,100,.6);
+  color: rgba(21,28,100,.75);
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: rgba(21,28,100,.42);
 }
 
 .form-field input,
@@ -1219,10 +1222,10 @@ nav a {
 
 .info-block .info-label {
   font-size: .58rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: .4em;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: rgba(21,28,100,.7);
   margin-bottom: .7rem;
 }
 
@@ -1230,7 +1233,7 @@ nav a {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
-  color: rgba(21,28,100,.8);
+  color: var(--ink);
 }
 
 .wa-big {
@@ -1263,68 +1266,103 @@ nav a {
 #footer {
   position: relative;
   z-index: 4;
-  background: var(--bg);
   border-top: 1px solid var(--border);
-  padding: 3rem 3rem 2rem;
+  padding: 5rem 6% 2rem;
+}
+
+/* Il marchio prende più spazio delle colonne di link, che invece
+   sono larghe uguali: con 1fr per tutte la colonna del claim
+   andava a capo ogni due parole */
+.footer-top {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 2rem;
+  grid-template-columns: 1.6fr 1fr 1fr 1.1fr;
+  gap: 4rem 3rem;
+  align-items: start;
 }
 
-#footer img {
-  max-width: 6rem;
-}
-
-.footer-links {
+.footer-brand {
   display: flex;
-  gap: 2rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.4rem;
 }
 
-.footer-links a {
-  font-size: .68rem;
-  font-weight: 400;
-  letter-spacing: .18em;
+.footer-logo {
+  max-width: 7.5rem;
+}
+
+.footer-claim {
+  font-size: .84rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-mid);
+  max-width: 30ch;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .9rem;
+}
+
+.footer-col-title {
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .32em;
   text-transform: uppercase;
-  color: rgba(21,28,100,.7);
+  color: var(--text-dim);
+  margin-bottom: .3rem;
+}
+
+.footer-col a {
+  font-size: .88rem;
+  font-weight: 400;
+  color: var(--text-hi);
   transition: color .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .footer-links a:hover {
-    color: var(--ink);
+  .footer-col a:hover {
+    color: var(--wa);
   }
 }
 
-.footer-copy {
-  font-size: .62rem;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: rgba(21,28,100,.5);
-  text-align: center;
-  padding: 1.2rem;
-  background: var(--bg);
+.footer-note {
+  font-size: .8rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text-mid);
 }
 
 .footer-social {
   display: flex;
-  justify-content: flex-end;
   gap: 1.5rem;
 }
 
 .footer-social a {
-  font-size: .68rem;
-  font-weight: 400;
+  font-size: .62rem;
+  font-weight: 500;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: rgba(21,28,100,.7);
+  color: var(--text-mid);
   transition: color .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .footer-social a:hover {
-    color: var(--ink);
+    color: var(--wa);
   }
+}
+
+.footer-legal {
+  margin-top: 4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--border);
+  font-size: .62rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
 }
 
 /* ─ BEAM TRANSITION ─────────────────────────── */
@@ -1590,12 +1628,6 @@ nav a {
   }
 }
 
-.marina-poweredby {
-  font-size: .52rem;
-  letter-spacing: .3em;
-  text-transform: uppercase;
-  color: rgba(21,28,100,.3);
-}
 
 /* ── phone mockup ── */
 .marina-phone-col {
@@ -2009,10 +2041,6 @@ nav a {
   }
 
   /* Leggibilità: override degli inchiostri hardcoded troppo tenui */
-  .stat-l {
-    color: rgba(21,28,100,.65);
-  }
-
   .team-stat-l {
     color: rgba(21,28,100,.65);
   }
@@ -2030,10 +2058,6 @@ nav a {
     color: rgba(21,28,100,.55);
   }
 
-  .marina-poweredby {
-    color: rgba(21,28,100,.4);
-  }
-
   .form-field label {
     color: rgba(21,28,100,.65);
   }
@@ -2046,14 +2070,13 @@ nav a {
     color: rgba(255,255,255,.65);
   }
 
-  .footer-links a,
   .footer-social a {
-    color: rgba(21,28,100,.62);
+    color: rgba(21,28,100,.68);
   }
 
-  .footer-copy {
-    font-size: .6rem;
-    color: rgba(21,28,100,.45);
+  .footer-legal {
+    font-size: .58rem;
+    color: rgba(21,28,100,.5);
   }
 
   /* ─── Hero chapters (mobile: meno testo, CTA grandi) ── */
@@ -2068,49 +2091,15 @@ nav a {
     width: 92%;
   }
 
-  .ch-label {
-    font-size: .62rem;
-    letter-spacing: .32em;
-    color: rgba(255,255,255,.8);
-    margin-bottom: 1.2rem;
-  }
-
   .ch-title {
-    font-size: clamp(2.3rem, 10vw, 3.1rem) !important;
-    margin-bottom: 1.2rem;
-  }
-
-  #c1 .ch-title {
-    font-size: clamp(2.6rem, 11.5vw, 3.4rem) !important;
-  }
-
-  .ch-sub {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: rgba(255,255,255,.92);
-  }
-
-  /* Tagline di apertura ben leggibile sopra il video */
-  #c1 .ch-sub {
-    font-size: 1.06rem;
-    font-weight: 400;
-    line-height: 1.65;
-    color: #fff;
-    text-shadow: 0 2px 16px rgba(0,0,0,.95), 0 1px 5px rgba(0,0,0,.9);
+    font-size: clamp(1.9rem, 8vw, 2.6rem) !important;
+    margin-bottom: 1.4rem;
   }
 
   /* Scrim più deciso dietro il primo capitolo: il testo stacca
      dal video anche nei frame più chiari */
   #c1::before {
     background: radial-gradient(ellipse at center, rgba(0,0,0,.68) 0%, transparent 72%);
-  }
-
-  /* Meno roba scritta: nei capitoli con CTA la sub sparisce —
-     restano label, titolo grande e bottone */
-  #c2 .ch-sub,
-  #c3 .ch-sub,
-  #c4 .ch-sub {
-    display: none;
   }
 
   /* CTA: da link testuale sottolineato a bottone pieno */
@@ -2169,12 +2158,13 @@ nav a {
   }
 
   .stat-l {
-    font-size: .68rem;
+    font-size: .88rem;
+    max-width: 20ch;
   }
 
   /* ─── §2 Prodotti (stacking cards) ─────────── */
   #prodotti {
-    padding: 10vh 0;
+    padding: 0;
   }
 
   /* Le strip diventano card sticky che si impilano scrollando:
@@ -2407,10 +2397,6 @@ nav a {
     text-align: left;
   }
 
-  .marina-poweredby {
-    font-size: .46rem;
-  }
-
   .marina-avatar-sm {
     width: 52px;
     height: 52px;
@@ -2565,26 +2551,30 @@ nav a {
 
   /* ─── Footer ─────────────────────────────── */
   #footer {
-    grid-template-columns: 1fr;
+    padding: 4rem 5% 2rem;
+  }
+
+  /* Due colonne, non una: in colonna singola le quattro liste
+     diventavano un muro alto mezzo schermo da scorrere */
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.6rem 1.5rem;
+  }
+
+  /* Il marchio occupa la riga intera: il claim su mezza colonna
+     andava a capo a ogni parola */
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-claim {
+    max-width: none;
+  }
+
+  .footer-legal {
+    margin-top: 2.6rem;
     text-align: center;
-    padding: 3rem 5% 2rem;
-    gap: 1.8rem;
-  }
-
-  /* In colonna il logo va in cima, non in mezzo ai link */
-  #footer img {
-    order: -1;
-    margin: 0 auto;
-  }
-
-  .footer-links {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: .8rem 1.5rem;
-  }
-
-  .footer-social {
-    justify-content: center;
+    line-height: 1.9;
   }
 }
 
