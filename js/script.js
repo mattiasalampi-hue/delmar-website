@@ -211,7 +211,11 @@ function initHeroScroll(renderFrame, total) {
       lastChO[i] = o;
       const props = {
         opacity: o,
-        scale:   sc(p,c.s,c.fi,c.fo,c.e)
+        scale:   sc(p,c.s,c.fi,c.fo,c.e),
+        /* Cliccabile solo il capitolo in scena: gli altri sono
+           trasparenti ma occupano lo stesso spazio al centro, e senza
+           questo il clic finiva sulla CTA di un capitolo invisibile */
+        pointerEvents: o > 0.6 ? 'auto' : 'none'
       };
       if (!isMob) props.filter = `blur(${bl(p,c.s,c.fi,c.fo,c.e).toFixed(1)}px)`;
       gsap.set(els[i], props);
@@ -462,7 +466,9 @@ function initHeroScroll(renderFrame, total) {
 /* ── Counters ─────────────────────────────────── */
 document.querySelectorAll('[data-count]').forEach(el => {
   const target = +el.dataset.count;
-  const suffix = el.dataset.suffix || (target >= 100 ? '+' : target === 24 ? 'h' : '+');
+  /* Presenza, non verità: data-suffix="" vuol dire "nessun suffisso"
+     (35 porti, non 35+) e con || sarebbe ricaduto sul default */
+  const suffix = 'suffix' in el.dataset ? el.dataset.suffix : '+';
   ScrollTrigger.create({
     trigger: el, start: 'top 85%', once: true, invalidateOnRefresh: true,
     onEnter() {
@@ -738,7 +744,6 @@ if (document.getElementById('marina-pin')) {
     gsap.set('#marina-info > *', { opacity:0, y:22 });
     gsap.set('.marina-chip', { opacity:0, x:-18 });
     gsap.set('#marina-cta', { opacity:0, y:12 });
-    gsap.set('.marina-poweredby', { opacity:0 });
     gsap.set('#marina-phone', { opacity:0, y:60, rotateX:8 });
     gsap.set('#pb1,#pb2,#pb3,#pb4', { opacity:0, y:14, scale:.97 });
     gsap.set('#pt1,#pt2', { opacity:0 });
@@ -749,7 +754,6 @@ if (document.getElementById('marina-pin')) {
     mt.to('#marina-info > *', { opacity:1, y:0, duration:.3, stagger:.07, ease:'power3.out' }, 0)
       .to('.marina-chip', { opacity:1, x:0, duration:.25, stagger:.07, ease:'power2.out' }, 0.18)
       .to('#marina-cta', { opacity:1, y:0, duration:.2, ease:'power3.out' }, 0.40)
-      .to('.marina-poweredby', { opacity:1, duration:.15 }, 0.50)
 
     /* phone appears */
       .to('#marina-phone', { opacity:1, y:0, rotateX:0, duration:.3, ease:'power3.out' }, 0.12)
@@ -1268,7 +1272,10 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
   const ctx = cvs.getContext('2d');
   let W, H;
   const mouse = { x:-9999, y:-9999 };
-  const N     = isMobile() ? 220 : 700;
+  /* Poche bolle e ben visibili, non tante e slavate: a 700 l'azzurro
+     saturo diventava un muro di puntini davanti al form e le scritte
+     non si leggevano piu */
+  const N     = isMobile() ? 120 : 240;
   /* Su mobile meno bolle ma più grandi e luminose: con le dimensioni
      desktop erano quasi invisibili e l'interazione touch si perdeva.
      Anche il desktop è stato ingrandito passando al fondo bianco: a
@@ -1292,7 +1299,7 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
       vx:     (Math.random() - .5) * .25,
       vy:     -(0.12 + Math.random() * 0.32),   // sale verso l'alto
       r,
-      a:      Math.min(.92, (0.34 + Math.random() * 0.48) * GLOW),   // opacità bordo
+      a:      Math.min(.7, (0.2 + Math.random() * 0.35) * GLOW),   // opacità bordo
       wobble: Math.random() * Math.PI * 2,
       wFreq:  0.3 + Math.random() * 0.5
     };
@@ -1343,7 +1350,7 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
       // Corpo bolla — fill translucido
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(56,178,236,${a * .3})`;
+      ctx.fillStyle = `rgba(56,178,236,${a * .2})`;
       ctx.fill();
 
       // Bordo bolla
