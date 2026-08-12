@@ -34,6 +34,14 @@ function debounce(fn, ms) {
   let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
 
+/* Palette dei canvas — beam, rete neurale e linea di raccordo verso
+   Marina. Sul fondo bianco il tratto è l'inchiostro del sito e
+   l'alone un blu che sfuma via; sul nero di prima erano luce bianca,
+   che sul chiaro sparirebbe del tutto */
+const CV_INK  = '21,28,100';
+const CV_HALO = '45,80,180';
+const CV_FAR  = '90,140,220';
+
 /* ── Header scroll state ──────────────────────── */
 const hdr = document.getElementById('hdr');
 ScrollTrigger.create({
@@ -44,10 +52,12 @@ ScrollTrigger.create({
 
 /* ── Lottie bg: solo nell'hero ────────────────── */
 /* Il Lottie è un layer fixed dietro tutto il sito: mentre l'hero
-   scorre via si dissolve nel nero (scrub) e resta nascosto — così
-   non spunta mai negli spiragli tra le sezioni (pin spacer, reveal
-   con transform) e il paint si azzera oltre l'hero */
-gsap.to('#lottie-bg, #vig', {
+   scorre via si dissolve (scrub) e resta nascosto — così non spunta
+   mai negli spiragli tra le sezioni (pin spacer, reveal con
+   transform) e il paint si azzera oltre l'hero.
+   #vig NON è qui: si dissolve prima, insieme all'apertura della
+   porta — vedi initHeroScroll */
+gsap.to('#lottie-bg', {
   autoAlpha: 0,
   ease: 'none',
   scrollTrigger: {
@@ -96,17 +106,14 @@ function initHeroScroll(renderFrame, total) {
   ];
   const els = CHS.map(c => document.querySelector(c.el));
 
-  /* Velo nero iniziale: pieno a p=0, dissolto entro il 10% di scroll */
-  const fadeEl   = document.getElementById('hero-fade');
-  const FADE_END = 0.10;
-
   /* Transizione finale video-su-video: il mp4 (sotto maschera
      circolare sfumata) si apre dal centro mentre il tunnel scorre
      ancora intorno; sulla giuntura viaggia solo un anello di luce
      sottile (#hero-white mascherato a ciambella). Preload pigro */
   const whiteEl  = document.getElementById('hero-white');
-  const blackEl  = document.getElementById('hero-black');
+  const fillEl   = document.getElementById('hero-fill');
   const videoEl  = document.getElementById('hero-video');
+  const vigEl    = document.getElementById('vig');
   const V_START  = 0.80;
   let vLoaded = false;
 
@@ -123,10 +130,9 @@ function initHeroScroll(renderFrame, total) {
      ri-rasterizzazione del testo con Gaussian blur a raggio variabile
      è la voce di paint più cara sui telefoni) e scritture di stile
      solo quando il valore cambia davvero — per l'80% dell'hero le
-     maschere del video e il velo nero sono costanti, riscriverle a
-     ogni frame invalida lo stile per niente */
+     maschere del video sono costanti, riscriverle a ogni frame
+     invalida lo stile per niente */
   const isMob    = isMobile();
-  let   lastFade = -1;
   let   lastVp   = -1;
   const lastChO  = els.map(() => -1);
 
@@ -149,11 +155,6 @@ function initHeroScroll(renderFrame, total) {
 
   function apply(p) {
     renderFrame(p * (total - 1));
-    const fade = Math.max(0, 1 - p / FADE_END);
-    if (fade !== lastFade) {
-      gsap.set(fadeEl, { opacity: fade });
-      lastFade = fade;
-    }
     /* il mp4 resta SEMPRE full screen (mai scalato: niente scatola):
        la porta-maschera che si allarga dal centro mostra la sua
        porzione centrale, come guardando attraverso il varco in fondo
@@ -186,15 +187,21 @@ function initHeroScroll(renderFrame, total) {
         maskSize: `${sz} ${sz}`
       });
 
-      /* fondale nero mascherato a porta: riempie il varco dietro la
-         banda già PRIMA che inizi a rimpicciolirsi, così nello spazio
-         che si apre non spunta mai il tunnel — fuori dalla porta il
+      /* fondale mascherato a porta: riempie il varco dietro la banda
+         già PRIMA che inizi a rimpicciolirsi, così nello spazio che
+         si apre non spunta mai il tunnel — fuori dalla porta il
          tunnel resta visibile fino a essere inghiottito */
-      gsap.set(blackEl, {
+      gsap.set(fillEl, {
         opacity: Math.min(1, Math.max(0, (vp - 0.4) / 0.15)),
         webkitMaskSize: `${sz} ${sz}`,
         maskSize: `${sz} ${sz}`
       });
+
+      /* La vignettatura scurisce la fascia alta del tunnel, ma il
+         fondale che si apre dietro il video è bianco: se restasse
+         accesa lascerebbe una velatura grigia sulla banda superiore.
+         Si spegne prima che il fondale entri in scena */
+      gsap.set(vigEl, { opacity: 1 - Math.min(1, vp * 2.5) });
     }
     lastVp = vp;
     CHS.forEach((c,i) => {
@@ -585,6 +592,12 @@ mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
     activeIdx = i;
   }
 
+  /* Primo step acceso subito, non al primo onUpdate: il pin scatta
+     quando la sezione tocca il bordo alto, ma nei 100vh precedenti è
+     già in campo — senza questo entra come un fotogramma vuoto,
+     timeline senza testo e riquadro foto grigio */
+  setStep(0);
+
   /* Desktop: timeline pinnata con scrub */
   mm.add(DESKTOP_MQ, () => {
     const dotTops  = dots.map(d => d ? d.offsetTop : 0);
@@ -827,18 +840,18 @@ if (document.getElementById('marina-pin')) {
     if (curveP > 0) {
       const y2 = curveP * tY;
       const vg = ctx.createLinearGradient(cx, 0, cx, y2);
-      vg.addColorStop(0,  `rgba(255,255,255,${a * .55})`);
-      vg.addColorStop(.6, `rgba(255,255,255,${a * .78})`);
-      vg.addColorStop(1,  `rgba(255,255,255,${a * .95})`);
+      vg.addColorStop(0,  `rgba(${CV_INK},${a * .45})`);
+      vg.addColorStop(.6, `rgba(${CV_INK},${a * .68})`);
+      vg.addColorStop(1,  `rgba(${CV_INK},${a * .9})`);
       ctx.save();
-      ctx.shadowColor = 'rgba(200,225,255,.55)'; ctx.shadowBlur = 10;
+      ctx.shadowColor = `rgba(${CV_HALO},.35)`; ctx.shadowBlur = 10;
       ctx.strokeStyle = vg; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, y2); ctx.stroke();
       ctx.restore();
       if (curveP < 0.99) {
         ctx.save();
-        ctx.shadowColor = 'white'; ctx.shadowBlur = 18;
-        ctx.fillStyle = `rgba(255,255,255,${a})`;
+        ctx.shadowColor = `rgba(${CV_HALO},.5)`; ctx.shadowBlur = 18;
+        ctx.fillStyle = `rgba(${CV_INK},${a})`;
         ctx.beginPath(); ctx.arc(cx, y2, 4, 0, Math.PI*2); ctx.fill();
         ctx.restore();
       }
@@ -848,15 +861,15 @@ if (document.getElementById('marina-pin')) {
       const gi = cl(impactP * 1.9, 0, 1) * a;
       const r  = 110 * cl(impactP, 0, 1);
       const gg = ctx.createRadialGradient(cx, tY, 0, cx, tY, r);
-      gg.addColorStop(0,   `rgba(255,255,255,${gi})`);
-      gg.addColorStop(.12, `rgba(220,235,255,${gi * .72})`);
-      gg.addColorStop(.42, `rgba(155,195,255,${gi * .22})`);
-      gg.addColorStop(1,   'rgba(80,140,255,0)');
+      gg.addColorStop(0,   `rgba(${CV_INK},${gi * .5})`);
+      gg.addColorStop(.12, `rgba(${CV_HALO},${gi * .3})`);
+      gg.addColorStop(.42, `rgba(${CV_FAR},${gi * .12})`);
+      gg.addColorStop(1,   `rgba(${CV_FAR},0)`);
       ctx.fillStyle = gg;
       ctx.beginPath(); ctx.arc(cx, tY, r, 0, Math.PI*2); ctx.fill();
       ctx.save();
-      ctx.shadowColor = 'white'; ctx.shadowBlur = 24;
-      ctx.fillStyle = `rgba(255,255,255,${cl(gi, 0, 1)})`;
+      ctx.shadowColor = `rgba(${CV_HALO},.5)`; ctx.shadowBlur = 24;
+      ctx.fillStyle = `rgba(${CV_INK},${cl(gi, 0, 1)})`;
       ctx.beginPath(); ctx.arc(cx, tY, 5 * cl(impactP, 0, 1), 0, Math.PI*2); ctx.fill();
       ctx.restore();
     }
@@ -907,7 +920,7 @@ if (document.getElementById('marina-pin')) {
     }
     draw() {
       const alpha = (1 - this.life / this.max) * (0.15 - this.d * 0.025);
-      ctx2.strokeStyle = `rgba(255,255,255,${Math.max(0, alpha)})`;
+      ctx2.strokeStyle = `rgba(${CV_INK},${Math.max(0, alpha)})`;
       ctx2.lineWidth = Math.max(0.2, this.w * (1 - this.life / this.max));
       ctx2.beginPath(); ctx2.moveTo(this.px, this.py); ctx2.lineTo(this.x, this.y); ctx2.stroke();
     }
@@ -953,15 +966,15 @@ if (document.getElementById('marina-pin')) {
 
   function drawBall(x, y, a) {
     const gg = ctx.createRadialGradient(x, y, 0, x, y, 44);
-    gg.addColorStop(0,    `rgba(255,255,255,${a})`);
-    gg.addColorStop(0.18, `rgba(220,235,255,${a*.55})`);
-    gg.addColorStop(0.5,  `rgba(170,200,255,${a*.18})`);
-    gg.addColorStop(1,    'rgba(100,150,255,0)');
+    gg.addColorStop(0,    `rgba(${CV_INK},${a*.5})`);
+    gg.addColorStop(0.18, `rgba(${CV_HALO},${a*.3})`);
+    gg.addColorStop(0.5,  `rgba(${CV_FAR},${a*.12})`);
+    gg.addColorStop(1,    `rgba(${CV_FAR},0)`);
     ctx.fillStyle = gg;
     ctx.beginPath(); ctx.arc(x, y, 44, 0, Math.PI*2); ctx.fill();
     ctx.save();
-    ctx.shadowColor = 'rgba(255,255,255,.95)'; ctx.shadowBlur = 14;
-    ctx.fillStyle = `rgba(255,255,255,${a})`;
+    ctx.shadowColor = `rgba(${CV_HALO},.5)`; ctx.shadowBlur = 14;
+    ctx.fillStyle = `rgba(${CV_INK},${a})`;
     ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI*2); ctx.fill();
     ctx.restore();
   }
@@ -969,16 +982,16 @@ if (document.getElementById('marina-pin')) {
   function drawHLine(x1, y, x2, dir, a) {
     const g = ctx.createLinearGradient(x1, y, x2, y);
     if (dir==='L') {
-      g.addColorStop(0, 'rgba(255,255,255,0)');
-      g.addColorStop(.65, `rgba(255,255,255,${a*.28})`);
-      g.addColorStop(1,  `rgba(255,255,255,${a*.82})`);
+      g.addColorStop(0, `rgba(${CV_INK},0)`);
+      g.addColorStop(.65, `rgba(${CV_INK},${a*.26})`);
+      g.addColorStop(1,  `rgba(${CV_INK},${a*.78})`);
     } else {
-      g.addColorStop(0,  `rgba(255,255,255,${a*.82})`);
-      g.addColorStop(.35,`rgba(255,255,255,${a*.28})`);
-      g.addColorStop(1,  'rgba(255,255,255,0)');
+      g.addColorStop(0,  `rgba(${CV_INK},${a*.78})`);
+      g.addColorStop(.35,`rgba(${CV_INK},${a*.26})`);
+      g.addColorStop(1,  `rgba(${CV_INK},0)`);
     }
     ctx.save();
-    ctx.shadowColor='rgba(180,210,255,.6)'; ctx.shadowBlur=20;
+    ctx.shadowColor=`rgba(${CV_HALO},.35)`; ctx.shadowBlur=20;
     ctx.strokeStyle=g; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
     ctx.restore();
@@ -987,16 +1000,16 @@ if (document.getElementById('marina-pin')) {
   function drawVLine(x, y1, y2, dir, a) {
     const g = ctx.createLinearGradient(x, y1, x, y2);
     if (dir==='T') {
-      g.addColorStop(0, 'rgba(255,255,255,0)');
-      g.addColorStop(.65, `rgba(255,255,255,${a*.28})`);
-      g.addColorStop(1,  `rgba(255,255,255,${a*.82})`);
+      g.addColorStop(0, `rgba(${CV_INK},0)`);
+      g.addColorStop(.65, `rgba(${CV_INK},${a*.26})`);
+      g.addColorStop(1,  `rgba(${CV_INK},${a*.78})`);
     } else {
-      g.addColorStop(0,  `rgba(255,255,255,${a*.82})`);
-      g.addColorStop(.35,`rgba(255,255,255,${a*.28})`);
-      g.addColorStop(1,  'rgba(255,255,255,0)');
+      g.addColorStop(0,  `rgba(${CV_INK},${a*.78})`);
+      g.addColorStop(.35,`rgba(${CV_INK},${a*.26})`);
+      g.addColorStop(1,  `rgba(${CV_INK},0)`);
     }
     ctx.save();
-    ctx.shadowColor='rgba(180,210,255,.6)'; ctx.shadowBlur=20;
+    ctx.shadowColor=`rgba(${CV_HALO},.35)`; ctx.shadowBlur=20;
     ctx.strokeStyle=g; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,y2); ctx.stroke();
     ctx.restore();
@@ -1034,15 +1047,15 @@ if (document.getElementById('marina-pin')) {
       drawVLine(cx, beamY, H, 'B', gi * .88);
       const r  = 90 * gi;
       const gg = ctx.createRadialGradient(cx, beamY, 0, cx, beamY, r);
-      gg.addColorStop(0,    `rgba(255,255,255,${gi})`);
-      gg.addColorStop(.12,  `rgba(220,235,255,${gi*.72})`);
-      gg.addColorStop(.42,  `rgba(155,195,255,${gi*.22})`);
-      gg.addColorStop(1,    'rgba(80,140,255,0)');
+      gg.addColorStop(0,    `rgba(${CV_INK},${gi*.5})`);
+      gg.addColorStop(.12,  `rgba(${CV_HALO},${gi*.3})`);
+      gg.addColorStop(.42,  `rgba(${CV_FAR},${gi*.12})`);
+      gg.addColorStop(1,    `rgba(${CV_FAR},0)`);
       ctx.fillStyle = gg;
       ctx.beginPath(); ctx.arc(cx, beamY, r, 0, Math.PI*2); ctx.fill();
       ctx.save();
-      ctx.shadowColor='white'; ctx.shadowBlur=22;
-      ctx.fillStyle = `rgba(255,255,255,${cl(gi,0,1)})`;
+      ctx.shadowColor=`rgba(${CV_HALO},.5)`; ctx.shadowBlur=22;
+      ctx.fillStyle = `rgba(${CV_INK},${cl(gi,0,1)})`;
       ctx.beginPath(); ctx.arc(cx, beamY, 5*gi, 0, Math.PI*2); ctx.fill();
       ctx.restore();
     }
@@ -1051,18 +1064,18 @@ if (document.getElementById('marina-pin')) {
     if (curveP > 0) {
       const y2 = beamY + curveP * (H - beamY + 5);
       const vg = ctx.createLinearGradient(cx, beamY, cx, y2);
-      vg.addColorStop(0,  'rgba(255,255,255,.92)');
-      vg.addColorStop(.6, 'rgba(255,255,255,.65)');
-      vg.addColorStop(1,  'rgba(255,255,255,.42)');
+      vg.addColorStop(0,  `rgba(${CV_INK},.9)`);
+      vg.addColorStop(.6, `rgba(${CV_INK},.6)`);
+      vg.addColorStop(1,  `rgba(${CV_INK},.38)`);
       ctx.save();
-      ctx.shadowColor = 'rgba(200,225,255,.55)'; ctx.shadowBlur = 10;
+      ctx.shadowColor = `rgba(${CV_HALO},.35)`; ctx.shadowBlur = 10;
       ctx.strokeStyle = vg; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(cx, beamY); ctx.lineTo(cx, y2); ctx.stroke();
       ctx.restore();
       if (curveP < 0.98) {
         ctx.save();
-        ctx.shadowColor = 'white'; ctx.shadowBlur = 20;
-        ctx.fillStyle = 'rgba(255,255,255,.95)';
+        ctx.shadowColor = `rgba(${CV_HALO},.5)`; ctx.shadowBlur = 20;
+        ctx.fillStyle = `rgba(${CV_INK},.95)`;
         ctx.beginPath(); ctx.arc(cx, y2, 4, 0, Math.PI*2); ctx.fill();
         ctx.restore();
       }
@@ -1101,15 +1114,15 @@ if (document.getElementById('marina-pin')) {
       drawHLine(cx, beamY, W,  'R', gi * .88);
       const r  = 100 * gi;
       const gg = ctx.createRadialGradient(cx, beamY, 0, cx, beamY, r);
-      gg.addColorStop(0,    `rgba(255,255,255,${gi})`);
-      gg.addColorStop(.12,  `rgba(220,235,255,${gi*.72})`);
-      gg.addColorStop(.42,  `rgba(155,195,255,${gi*.22})`);
-      gg.addColorStop(1,    'rgba(80,140,255,0)');
+      gg.addColorStop(0,    `rgba(${CV_INK},${gi*.5})`);
+      gg.addColorStop(.12,  `rgba(${CV_HALO},${gi*.3})`);
+      gg.addColorStop(.42,  `rgba(${CV_FAR},${gi*.12})`);
+      gg.addColorStop(1,    `rgba(${CV_FAR},0)`);
       ctx.fillStyle = gg;
       ctx.beginPath(); ctx.arc(cx, beamY, r, 0, Math.PI*2); ctx.fill();
       ctx.save();
-      ctx.shadowColor='white'; ctx.shadowBlur=22;
-      ctx.fillStyle = `rgba(255,255,255,${cl(gi,0,1)})`;
+      ctx.shadowColor=`rgba(${CV_HALO},.5)`; ctx.shadowBlur=22;
+      ctx.fillStyle = `rgba(${CV_INK},${cl(gi,0,1)})`;
       ctx.beginPath(); ctx.arc(cx, beamY, 5*gi, 0, Math.PI*2); ctx.fill();
       ctx.restore();
     }
@@ -1118,18 +1131,18 @@ if (document.getElementById('marina-pin')) {
     if (curveP > 0) {
       const y2 = beamY + curveP * (H - beamY + 5);
       const vg = ctx.createLinearGradient(cx, beamY, cx, y2);
-      vg.addColorStop(0,  'rgba(255,255,255,.92)');
-      vg.addColorStop(.6, 'rgba(255,255,255,.65)');
-      vg.addColorStop(1,  'rgba(255,255,255,.42)');
+      vg.addColorStop(0,  `rgba(${CV_INK},.9)`);
+      vg.addColorStop(.6, `rgba(${CV_INK},.6)`);
+      vg.addColorStop(1,  `rgba(${CV_INK},.38)`);
       ctx.save();
-      ctx.shadowColor = 'rgba(200,225,255,.55)'; ctx.shadowBlur = 10;
+      ctx.shadowColor = `rgba(${CV_HALO},.35)`; ctx.shadowBlur = 10;
       ctx.strokeStyle = vg; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(cx, beamY); ctx.lineTo(cx, y2); ctx.stroke();
       ctx.restore();
       if (curveP < 0.98) {
         ctx.save();
-        ctx.shadowColor = 'white'; ctx.shadowBlur = 20;
-        ctx.fillStyle = 'rgba(255,255,255,.95)';
+        ctx.shadowColor = `rgba(${CV_HALO},.5)`; ctx.shadowBlur = 20;
+        ctx.fillStyle = `rgba(${CV_INK},.95)`;
         ctx.beginPath(); ctx.arc(cx, y2, 4, 0, Math.PI*2); ctx.fill();
         ctx.restore();
       }
@@ -1257,8 +1270,11 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
   const mouse = { x:-9999, y:-9999 };
   const N     = isMobile() ? 220 : 700;
   /* Su mobile meno bolle ma più grandi e luminose: con le dimensioni
-     desktop erano quasi invisibili e l'interazione touch si perdeva */
-  const SCALE = isMobile() ? 1.7 : 1;
+     desktop erano quasi invisibili e l'interazione touch si perdeva.
+     Anche il desktop è stato ingrandito passando al fondo bianco: a
+     raggio 0,4-2,2px le bolle si leggevano solo perché luminose sul
+     nero, sul chiaro sparivano */
+  const SCALE = isMobile() ? 1.7 : 1.5;
   const GLOW  = isMobile() ? 1.9 : 1;
   const REPEL = isMobile() ? 150 : 120;
   const FORCE = 0.85;
@@ -1276,7 +1292,7 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
       vx:     (Math.random() - .5) * .25,
       vy:     -(0.12 + Math.random() * 0.32),   // sale verso l'alto
       r,
-      a:      Math.min(.78, (0.12 + Math.random() * 0.42) * GLOW),   // opacità bordo
+      a:      Math.min(.92, (0.34 + Math.random() * 0.48) * GLOW),   // opacità bordo
       wobble: Math.random() * Math.PI * 2,
       wFreq:  0.3 + Math.random() * 0.5
     };
@@ -1320,26 +1336,28 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
       const dx   = p.x - mouse.x, dy = p.y - mouse.y;
       const prox = Math.max(0, 1 - Math.sqrt(dx*dx+dy*dy) / 130);
       const r    = p.r + prox * 4;
-      const a    = Math.min(.9, p.a + prox * .35);
+      const a    = Math.min(1, p.a + prox * .35);
 
-      // Corpo bolla — fill quasi trasparente
+      /* Azzurro marino saturo: sul nero bastava una luce tenue, sul
+         bianco un celeste slavato si confonde con la carta */
+      // Corpo bolla — fill translucido
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(100,195,255,${a * .07})`;
+      ctx.fillStyle = `rgba(56,178,236,${a * .3})`;
       ctx.fill();
 
       // Bordo bolla
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-      ctx.strokeStyle = `rgba(120,210,255,${a})`;
-      ctx.lineWidth = SCALE > 1 ? 1 : 0.6;
+      ctx.strokeStyle = `rgba(0,145,214,${a})`;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       // Riflesso (solo per bolle abbastanza grandi)
-      if (r > 1.6) {
+      if (r > 2.2) {
         ctx.beginPath();
         ctx.arc(p.x - r * .3, p.y - r * .28, r * .25, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(255,255,255,${a * .6})`;
+        ctx.fillStyle = `rgba(255,255,255,${a})`;
         ctx.fill();
       }
     }

@@ -58,7 +58,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css?v=16" />
+    <link rel="stylesheet" href="css/style.css?v=22" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -75,10 +75,9 @@
     <!-- Lottie bg fisso -->
     <div id="lottie-bg">
       <div id="hero-white"></div>
-      <div id="hero-black"></div>
+      <div id="hero-fill"></div>
       <video id="hero-video" src="assets/video/hero-final.mp4?v=3" muted playsinline preload="none" loop></video>
     </div>
-    <div id="hero-fade"></div>
     <div id="vig"></div>
     <!-- Header -->
     <header id="hdr">
@@ -94,9 +93,9 @@
     <div id="v-scroller">
       <div id="v-sticky">
         <div class="ch" id="c1">
-          <h1 class="ch-title">L'eccellenza<br />del mare.</h1>
+          <h1 class="ch-title">Un mare<br />di qualità.</h1>
           <p class="ch-sub">
-            Forniture ittiche premium per l'alta ristorazione.<br />Dal mare aperto, direttamente alla tua cucina.
+            Un solo fornitore.<br />Tutto il pesce che ti serve.
           </p>
           <div class="cue">
             <span>Scroll</span>
@@ -104,18 +103,17 @@
           </div>
         </div>
         <div class="ch" id="c2">
-          <p class="ch-label">Cosa offriamo</p>
-          <h2 class="ch-title">Fresco, surgelato<br />e lavorato.</h2>
+          <p class="ch-label">Il nostro servizio</p>
+          <h2 class="ch-title">Ordina a fine servizio.<br />Ricevi entro le 11.</h2>
           <p class="ch-sub">
-            Pesce fresco selezionato ogni mattina, surgelati premium e specialità lavorate. Tutto in un unico fornitore.
+            Accettiamo ordini fino alle 2 di notte e consegniamo con la nostra flotta di mezzi refrigerati entro le 11 dello stesso mattino. In tempo per il pranzo.
           </p>
           <a href="#prodotti" class="ch-cta">Scopri i prodotti →</a>
         </div>
         <div class="ch" id="c3">
-          <p class="ch-label">Perché sceglierci</p>
           <h2 class="ch-title">Tracciabilità<br />certificata.</h2>
           <p class="ch-sub">
-            Ogni lotto documentato dall'origine alla consegna. Certificazioni HACCP e BRC aggiornate.
+            Sai da dove arriva. E puoi dimostrarlo.<br />Controllo qualità in accettazione e registrazione per lotto: con ogni consegna ti mandiamo il dettaglio di tracciabilità di ogni prodotto, anche via email. Sempre disponibile quando ti serve.
           </p>
           <a href="#processo" class="ch-cta">Come lavoriamo →</a>
         </div>
@@ -155,7 +153,6 @@
         </div>
       </div>
     </section>
-    <hr class="div section" />
     <!-- ════════════════════ §2 PRODOTTI ══════════ -->
     <section class="section" id="prodotti">
       <div class="prod-intro">
@@ -170,10 +167,10 @@
         <div class="prod-img par-img"><img src="assets/alici.jpg" alt="Alici fresche" loading="lazy" /></div>
         <div class="prod-text">
           <p class="label">Pesce Fresco</p>
-          <h3 class="big-title">Selezionato ogni mattina.</h3>
+          <h3 class="big-title">Il pesce locale che vuoi,<br />il mondo che ti serve.</h3>
           <p class="body-text">
-            Branzino, orata, tonno, spada, alici e molto altro. Selezioniamo personalmente il pescato dai migliori
-            mercati ittici italiani e lo consegniamo fresco entro 24 ore.
+            Ogni notte selezioniamo solo il meglio: dai pescherecci dell'Alto Tirreno, dai mercati del Mediterraneo e
+            del Nord Europa e, via aerea, dai mari di tutto il mondo. Tutto in un'unica consegna.
           </p>
           <a href="#contatti" class="prod-link">Richiedi il listino prezzi →</a>
         </div>
@@ -182,10 +179,11 @@
         <div class="prod-img par-img"><img src="assets/fish-tanks.jpg" alt="Vasche pesce vivo" loading="lazy" /></div>
         <div class="prod-text">
           <p class="label">Crostacei e Molluschi</p>
-          <h3 class="big-title">Vivi e freschi<br />su ordinazione.</h3>
+          <h3 class="big-title">Vivi in vasca,<br />non su ordinazione.</h3>
           <p class="body-text">
-            Astici, aragoste, gamberi rossi, scampi, vongole veraci e cozze. Disponibili vivi, freschi o porzionati
-            secondo le esigenze della cucina.
+            Il nostro vivaio mantiene oltre 2.000 kg di crostacei vivi da ogni mare: astici, aragoste, granchi, king
+            crab. Ogni giorno partono dalle vasche e arrivano vivi nella tua cucina, senza giorni di anticipo: quello
+            che ti serve domani, da noi c'è già.
           </p>
           <a href="#contatti" class="prod-link">Richiedi disponibilità →</a>
         </div>
@@ -195,17 +193,17 @@
         <div class="prod-text">
           <p class="label">Linea Surgelati</p>
           <h3 class="big-title">
-            Abbattimento rapido.<br />Qualità intatta.
+            La scorta<br />la teniamo noi.
           </h3>
           <p class="body-text">
-            Abbattimento immediato post-pesca per preservare freschezza, colore e proprietà organolettiche. La stessa
-            qualità del fresco, con maggiore flessibilità operativa.
+            Pesce, verdure, pasta e prodotti da forno: oltre 1.000 pallet di gelo sempre pronti nel nostro
+            stabilimento. Niente cella piena e capitale fermo: ordini ogni giorno il quantitativo esatto che ti serve,
+            e lo trovi sempre.
           </p>
           <a href="#contatti" class="prod-link">Scopri il catalogo →</a>
         </div>
       </div>
     </section>
-    <hr class="div section" />
     <!-- ════════════════════ §3 PROCESSO (timeline) ═ -->
     <section class="section" id="processo">
       <div id="proc-wrap">
@@ -393,7 +391,6 @@
         </div>
       </div>
     </section>
-    <hr class="div section" />
     <!-- ════════════════════ §4 AZIENDA ══════════ -->
     <section class="section" id="azienda">
       <!-- Facciata — panoramica full width, proporzione naturale -->
@@ -432,7 +429,6 @@
         </div>
       </div>
     </section>
-    <hr class="div section" />
     <!-- ════════════════════ §5 GALLERY ══════════ -->
     <section class="section" id="gallery">
       <div class="gallery-intro">
@@ -484,7 +480,6 @@
         </div>
       </div>
     </section>
-    <hr class="div section" />
     <!-- ════════════════════ §6 TEAM ══════════════ -->
     <section class="section sec-pad" id="team">
       <p class="label reveal-label">Il Nostro Team</p>
@@ -633,6 +628,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="js/script.js?v=17"></script>
+    <script src="js/script.js?v=23"></script>
   </body>
 </html>
