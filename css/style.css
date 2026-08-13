@@ -2401,8 +2401,14 @@ nav a {
   /* svh e non vh: con l'unità classica la sezione resta alta quanto il
      viewport a barra ritratta e il nastro balla mentre la barra del
      browser entra ed esce */
+  /* Il contenuto parte dall'alto invece di essere centrato: centrato,
+     quando è più alto del viewport, viene tagliato da ENTRAMBI i lati e
+     sparisce anche il titolo. Così l'eventuale eccedenza esce solo dal
+     fondo, dove c'è la fase successiva a raccogliere l'attenzione */
   #processo {
     height: 100svh;
+    justify-content: flex-start;
+    padding-top: 4vh;
   }
 
   .titolo-sezione {
@@ -2410,8 +2416,13 @@ nav a {
     margin-bottom: 4vh;
   }
 
+  /* Il titolo torna nel flusso. Su desktop è sfilato e sovrapposto
+     perché il nastro occupa tutta l'altezza e sopra la foto c'è spazio
+     vuoto; in colonna quello spazio non esiste, la foto sale fino in
+     cima e il titolo le finiva sopra */
   .proc-tl-label {
-    top: 5vh;
+    position: static;
+    margin: 0 0 2vh;
   }
 
   /* In colonna il filo non collega più niente: le fasi restano
@@ -2422,12 +2433,17 @@ nav a {
 
   .fase {
     flex-direction: column;
-    gap: 1.8rem;
+    gap: 1.1rem;
     padding: 0 8%;
   }
 
+  /* Misurata sull'ALTEZZA prima che sulla larghezza: in colonna foto e
+     testo si sommano in verticale, quindi su uno schermo corto è
+     l'altezza a mancare, ed è lì che la descrizione veniva tagliata in
+     fondo. Legandola ai vh la foto si ritira da sola sui telefoni
+     piccoli invece di rubare spazio al testo */
   .fase-tondo {
-    width: min(34vh, 66vw);
+    width: min(23vh, 56vw);
   }
 
   .fase-testo {
@@ -2452,12 +2468,18 @@ nav a {
   }
 
   .fase-desc {
-    font-size: .92rem;
-    line-height: 1.65;
+    font-size: .86rem;
+    line-height: 1.55;
   }
 
+  /* Via la barra di avanzamento. Sta in fondo alla sezione a posizione
+     fissa, ma in colonna il testo arriva fin laggiù e la riga rossa
+     passava SOPRA le ultime righe della descrizione. Su desktop serve
+     perché il movimento è laterale e senza non si capisce quanto manca;
+     qui il dito sa già dove si trova, quindi si toglie invece di
+     cercarle un posto che non c'è */
   #fasi-barra {
-    bottom: 4vh;
+    display: none;
   }
 
   /* ─── Marina AI ──────────────────────────── */
@@ -2680,8 +2702,19 @@ nav a {
   }
 
   /* ─── CTA Fullbleed ──────────────────────── */
+  /* Il filmato è 8:3, larghissimo, e ha i suoi versi impressi dentro
+     l'immagine. Imponendogli un'altezza di 65vh su uno schermo verticale
+     il riempimento a copertura ne mostrava solo una colonna centrale,
+     strappando via le parole ai due lati. Qui la sezione prende la
+     proporzione DEL VIDEO e diventa una fascia bassa: si vede tutto il
+     fotogramma, testo compreso, e non si taglia niente */
   #cta-full {
-    height: 65vh;
+    height: auto;
+    aspect-ratio: 8 / 3;
+  }
+
+  #cta-full video {
+    object-fit: contain;
   }
 
 
