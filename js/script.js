@@ -694,18 +694,30 @@ mm.add(DESKTOP_MQ, () => {
   });
 });
 
-/* ── Prodotti stacking cards (mobile): la card coperta
-      si rimpicciolisce e si scurisce — effetto "deck" ── */
+/* ── Prodotti stacking cards (mobile): la card coperta arretra
+      e sfuma — effetto "deck" ── */
+/* Sfuma, non si spegne. Prima scendeva a brightness(.55): un filtro
+   scurisce TUTTO insieme, foto e testo, e su una pagina bianca una card
+   che diventa grigio scuro non sembra allontanarsi, sembra un guasto —
+   il titolo e la descrizione finivano quasi neri su fondo quasi nero.
+   Con l'opacità la card si dissolve verso il bianco della pagina, che è
+   la direzione giusta su un sito chiaro, e il testo se ne va insieme al
+   resto invece di restare leggibile dentro una macchia buia.
+   L'ease non è più lineare ma power2.in: la card resta piena per quasi
+   tutto il passaggio e sfuma solo alla fine, quando ormai è coperta. È
+   questo a togliere l'aggressività, più ancora del valore finale.
+   In più sparisce l'animazione di un filter, che a ogni fotogramma
+   costringe il telefono a ridipingere l'intera card. */
 mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
   const strips = gsap.utils.toArray('.prod-strip');
   strips.forEach((strip, i) => {
     const next = strips[i + 1];
     if (!next) return;
     gsap.to(strip, {
-      scale: .93,
-      filter: 'brightness(.55)',
+      scale: .96,
+      opacity: .4,
       transformOrigin: 'center top',
-      ease: 'none',
+      ease: 'power2.in',
       scrollTrigger: {
         trigger: next,
         start: 'top bottom',
