@@ -596,20 +596,38 @@ function initHeroScroll(renderFrame, total) {
 
   let caricato = false;
 
+  /* Si osserva la SEZIONE e non il video. Il video ha dimensioni sue,
+     che dipendono da quando arriva il file e da come il browser risolve
+     le altezze: se il suo riquadro collassa, l'osservatore non scatta
+     mai e il file non viene nemmeno chiesto — cioè il video non si
+     carica per un motivo che col video non c'entra niente. La sezione
+     invece sta nel flusso e un'altezza ce l'ha sempre */
+  const sezione = document.getElementById('cta-full') || v;
+
   new IntersectionObserver((entries) => {
     const dentro = entries[0].isIntersecting;
     if (dentro && !caricato) {
       caricato = true;
+      v.muted = true;
       v.src = isMobile() ? v.dataset.srcM : v.dataset.src;
     }
     if (dentro) v.play().catch(() => {});
     else if (!v.paused) v.pause();
-  }, { rootMargin: '200px 0px' }).observe(v);
+  }, { rootMargin: '400px 0px' }).observe(sezione);
 
-  /* iOS in risparmio energetico rifiuta anche l'autoplay muto */
-  window.addEventListener('touchend', () => {
-    if (caricato && v.paused) v.play().catch(() => {});
-  }, { passive: true });
+  /* Il play automatico può essere rifiutato in silenzio: risparmio
+     energetico iOS, impostazione del browser, scheda in secondo piano.
+     Si riprova a ogni occasione utile, come per il video dell'hero */
+  const riprova = () => {
+    if (caricato && v.paused && sezione.getBoundingClientRect().bottom > 0) {
+      v.play().catch(() => {});
+    }
+  };
+  v.addEventListener('canplay', riprova);
+  v.addEventListener('loadeddata', riprova);
+  ['touchstart', 'touchend', 'pointerdown', 'click'].forEach(ev => {
+    window.addEventListener(ev, riprova, { passive: true });
+  });
 })();
 
 /* ── Counters ─────────────────────────────────── */

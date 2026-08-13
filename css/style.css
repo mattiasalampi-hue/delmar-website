@@ -2708,12 +2708,21 @@ nav a {
      strappando via le parole ai due lati. Qui la sezione prende la
      proporzione DEL VIDEO e diventa una fascia bassa: si vede tutto il
      fotogramma, testo compreso, e non si taglia niente */
+  /* La proporzione la porta il VIDEO, non la sezione, e la sezione lo
+     avvolge. Mettendola sulla sezione serviva che il video ereditasse
+     l'altezza con height:100%, e quella catena — percentuale figlia di
+     un'altezza calcolata da aspect-ratio — su iOS non regge: il riquadro
+     del video collassava e non si vedeva niente.
+     Con aspect-ratio sul video il riquadro è definito dal primo istante,
+     prima ancora che il file arrivi, quindi non c'è nemmeno lo scarto di
+     impaginazione al caricamento */
   #cta-full {
     height: auto;
-    aspect-ratio: 8 / 3;
   }
 
   #cta-full video {
+    height: auto;
+    aspect-ratio: 8 / 3;
     object-fit: contain;
   }
 
