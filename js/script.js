@@ -128,12 +128,11 @@ gsap.set('#c3', { xPercent:-50, yPercent:-50 });
 gsap.set('#c4', { xPercent:-50, yPercent:-50 });
 gsap.set('#c5', { xPercent:-50, yPercent:-50 });
 
-/* Scrub dell'hero: lo scroll (già ammorbidito da Lenis) pilota i frame
-   dell'animazione — renderFrame riceve un frame FRAZIONARIO, che su
-   canvas diventa crossfade tra due frame — i capitoli testuali e il
-   velo nero d'apertura. Stessa ricetta del riferimento
-   squaremarketing.it: Lenis + scrub, nessun hijack dello scroll */
-function initHeroScroll(renderFrame, total) {
+/* I capitoli dell'hero seguono lo scroll, già ammorbidito da Lenis.
+   Il video no: scorre per conto suo, in loop, e questa funzione non lo
+   tocca più — prima riceveva anche un numero di fotogramma da mostrare,
+   ora il montaggio del filmato è indipendente da dove sei nella pagina */
+function initHeroScroll() {
   const CHS = [
     {el:'#c1',s:0.00,fi:0.00,fo:0.14,e:0.20},
     {el:'#c2',s:0.22,fi:0.28,fo:0.38,e:0.44},
@@ -161,7 +160,6 @@ function initHeroScroll(renderFrame, total) {
   const lastChO  = els.map(() => -1);
 
   function apply(p) {
-    renderFrame(p * (total - 1));
     CHS.forEach((c,i) => {
       const o = op(p,c.s,c.fi,c.fo,c.e);
       /* capitolo spento e già spento: nessuna scrittura */
@@ -180,11 +178,10 @@ function initHeroScroll(renderFrame, total) {
     });
   }
 
-  /* Il video NON legge lo scroll 1:1: lo INSEGUE con un lerp
-     esponenziale (come il tunnel three.js del riferimento). Mentre
-     scrolli il divario col target cresce e la velocità sale
-     (accelerazione); quando ti fermi il divario si chiude planando —
-     il movimento continua da solo oltre l'inerzia di Lenis */
+  /* I capitoli NON leggono lo scroll 1:1: lo INSEGUONO con un lerp
+     esponenziale. Mentre scrolli il divario col target cresce e la
+     velocità sale (accelerazione); quando ti fermi il divario si chiude
+     planando — il movimento continua da solo oltre l'inerzia di Lenis */
   let target = 0;
   let shown  = 0;
   const CHASE = 2.6; /* 1/s: più basso = inseguimento più lungo e morbido */
@@ -248,315 +245,116 @@ function initHeroScroll(renderFrame, total) {
   }, { passive: true });
 }
 
-/* Sfondo hero: un mp4 a tutto schermo che avanza con lo scroll invece
-   di scorrere da solo. Il file e' ricodificato con un keyframe su OGNI
-   fotogramma: l'originale ne aveva uno solo in dieci secondi e ogni
-   seek avrebbe costretto il browser a ridecodificare dall'inizio, a
-   scatti. Al posto della sequenza di immagini su canvas del tunnel
-   basta scrivere currentTime, la decodifica la fa il browser */
+/* Sfondo hero: un mp4 a tutto schermo che scorre da solo, in loop,
+   mentre lo scroll fa passare i capitoli davanti. Stesso comportamento
+   su desktop e su telefono.
+
+   Prima il video era legato allo scroll fotogramma per fotogramma. Ha
+   funzionato bene solo su Chrome: Safari e Firefox sono piu' lenti e
+   meno puntuali a confermare un salto, e bastava UN salto perso perche'
+   l'immagine restasse congelata per il resto della visita. Tutta la
+   macchina che serviva a tenerlo in piedi — il file scaricato per
+   intero in memoria prima di partire, un salto per volta incatenato
+   all'evento 'seeked', una guardia sui salti persi, la resa automatica
+   a riproduzione continua quando il browser non ce la faceva — e'
+   sparita insieme al problema che risolveva.
+
+   Ci ha guadagnato anche l'immagine, ed e' la parte controintuitiva.
+   Per rendere i salti istantanei il file era codificato con un
+   keyframe su OGNI fotogramma: nessuna compressione fra un fotogramma e
+   il successivo, quindi la banda spesa a ripetere lo stesso mare invece
+   che a descriverlo meglio. Tolto quel vincolo, misurando contro la
+   sorgente, la somiglianza sale da 0,982 a 0,994 di SSIM E il file
+   scende da 4,7 a 3,0 MB. Il file piu' grosso era il piu' brutto. */
 (function(){
   const videoEl = document.getElementById('hero-video');
   if (!videoEl) return;
 
-  const FPS = 24;
-  const SRC   = videoEl.dataset.src;
-  const SRC_M = videoEl.dataset.srcM;
+  /* Muto e in loop da subito, prima ancora che il file arrivi: senza
+     muted il browser rifiuta la riproduzione automatica, e il rifiuto
+     e' silenzioso — resta un fotogramma fermo e nessun errore */
+  videoEl.muted = true;
+  videoEl.loop  = true;
 
-  /* DIAGNOSTICA TEMPORANEA — da togliere appena sappiamo quale strada e'
-     la piu' fluida.
-       ?video=rete  -> file via rete, come prima della correzione
-       (default)    -> file scaricato tutto e letto dalla memoria
-     Il percorso dello scrub e' identico nei due casi: cambia solo la
-     sorgente, quindi il confronto isola quella e nient'altro.
-     In console, __hero() dice quanti seek sono stati fatti e quanto
-     sono durati: un numero al posto di un'impressione */
-  const MODO = new URLSearchParams(location.search).get('video');
-
-  let nSeek = 0, sommaMs = 0, maxMs = 0, avvioSeek = 0;
-  window.__hero = () => ({
-    modo:    MODO === 'rete' ? 'rete' : 'memoria',
-    seek:    nSeek,
-    medioMs: nSeek ? +(sommaMs / nSeek).toFixed(1) : 0,
-    maxMs:   +maxMs.toFixed(1),
-    inciampi: inciampi,
-    scrubAttivo: scrub
-  });
-
-  /* Un seek per volta, e il successivo parte solo quando il precedente
-     ha davvero dipinto il fotogramma. Scrivere currentTime a ogni
-     frame dello scroll accoda richieste che il decoder non smaltisce:
-     il video arranca indietro e il movimento si vede a gradini.
-     Aspettando 'seeked' si va sempre alla velocità massima che il
-     decoder regge, e si salta direttamente all'ultimo valore
-     richiesto invece di ripercorrere quelli intermedi ormai vecchi */
-  let wanted   = 0;
-  let seeking  = false;
-  let duration = 10;
-  let frames   = 240;
-
-  /* Oltre l'ultimo capitolo lo scroll molla la presa e il video finisce
-     da solo: chi è arrivato a "Sali a bordo" ha già letto tutto, e
-     costringerlo a continuare a scrollare per vedere la coda spezzerebbe
-     il finale */
-  const PLAY_FROM = 0.86;
-  let running = false;
-
-  /* Quando lo scrub non e' sostenibile il video passa a scorrere da
-     solo: un fotogramma congelato dietro le scritte sembra un sito
-     rotto, un video che scorre no */
-  let scrub    = true;
-  let inciampi = 0;
-  let guardia  = 0;
-
-  /* SALVAGENTE. 'seeked' puo' non arrivare mai: il seek viene abortito
-     dal browser, il decoder resta appeso, la rete non risponde. Senza
-     questo la catena muore li' e l'immagine resta ferma per sempre
-     mentre la pagina continua a scorrere — cioe' esattamente il guasto
-     segnalato da chi non usa Chrome, dove i seek sono piu' lenti e meno
-     puntuali. Il tempo e' largo: da file gia' in memoria un seek sta
-     sotto i 100ms, quindi 900ms non scatta per un semplice rallentamento */
-  const ATTESA_MAX = 900;
-
-  function disarma() {
-    clearTimeout(guardia);
-    guardia = 0;
-  }
-
-  function scorriDaSolo() {
-    scrub = false;
-    disarma();
-    seeking = false;
-    videoEl.loop = true;
-    /* Ribadito da codice e non solo nell'attributo: senza muted il
-       browser rifiuta la riproduzione automatica, e un play() rifiutato
-       si limita a lasciare il video fermo sul primo fotogramma */
-    videoEl.muted = true;
-    videoEl.play().catch(() => {});
-  }
-
-  /* Il play automatico puo' essere rifiutato per motivi che non
-     dipendono dalla pagina: risparmio energetico su iOS, impostazione
-     del browser, scheda aperta in secondo piano. Un solo tentativo non
-     basta, e il rifiuto e' silenzioso — resta un fotogramma fermo, che
-     e' esattamente il sintomo segnalato. Qui si riprova a ogni occasione
-     utile: quando arrivano altri dati e al primo gesto di chi guarda,
-     qualunque esso sia, perche' su iOS il permesso lo sblocca il gesto */
-  function insisti() {
-    const riprova = () => { if (videoEl.paused && !scrub) videoEl.play().catch(() => {}); };
-    videoEl.addEventListener('canplay', riprova);
-    videoEl.addEventListener('loadeddata', riprova);
-    ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll'].forEach(ev => {
-      window.addEventListener(ev, riprova, { passive: true });
-    });
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) riprova();
-    });
-  }
-
-  function arrenditi() {
-    if (!scrub) return;
-    scorriDaSolo();
-  }
+  let avviato = false;
 
   /* initHeroScroll registra uno ScrollTrigger che pilota opacita', scala
      e blur dei capitoli: chiamarlo due volte ne lascia due che scrivono
-     le stesse proprieta' sugli stessi elementi a ogni frame. Puo'
-     succedere se il salvagente dei 9 secondi fa partire i capitoli
-     senza video e il file arriva dopo */
+     le stesse proprieta' sugli stessi elementi a ogni frame */
   let scrollPronto = false;
-  function avviaScroll(renderFrame, total) {
+  function avviaScroll() {
     if (scrollPronto) return;
     scrollPronto = true;
-    initHeroScroll(renderFrame, total);
+    initHeroScroll();
   }
 
-  function pump() {
-    if (!scrub || running || seeking) return;
-    if (Math.abs(videoEl.currentTime - wanted) < 1 / (FPS * 2)) return;
-    seeking = true;
-    avvioSeek = performance.now();
-    const bersaglio = wanted;
-    guardia = setTimeout(() => {
-      /* il seek non si e' concluso: lo si considera perso e si riprova.
-         Se succede di continuo il browser non ce la fa e si cambia modo */
-      seeking = false;
-      if (++inciampi >= 4) { arrenditi(); return; }
-      pump();
-    }, ATTESA_MAX);
-    videoEl.currentTime = bersaglio;
-  }
-
-  videoEl.addEventListener('seeked', () => {
-    disarma();
-    if (avvioSeek) {
-      const d = performance.now() - avvioSeek;
-      nSeek++;
-      sommaMs += d;
-      if (d > maxMs) maxMs = d;
-      avvioSeek = 0;
-    }
-    inciampi = 0;
-    seeking  = false;
-    pump();
-  });
-  /* se un seek non si conclude (rete, decoder sotto sforzo) la catena
-     si fermerebbe per sempre: l'errore la fa ripartire */
-  videoEl.addEventListener('error', () => { disarma(); seeking = false; });
-
-  function seekTo(frame) {
-    if (!scrub) return;
-    const p = frames > 1 ? frame / (frames - 1) : 0;
-
-    if (p >= PLAY_FROM) {
-      if (!running) { running = true; disarma(); videoEl.play().catch(() => {}); }
-      return;
-    }
-    /* tornando indietro si riprende il comando fotogramma per fotogramma */
-    if (running) { running = false; videoEl.pause(); }
-
-    wanted = Math.max(0, Math.min(duration - 0.05, frame / FPS));
-    pump();
-  }
-
-  function loopMobile() {
-    /* niente scrub: play in loop, i capitoli restano legati allo scroll */
-    scorriDaSolo();
-    insisti();
-  }
-
-  let avviato = false;
-  function begin() {
+  function parti() {
     if (avviato) return;
     avviato = true;
-    duration = videoEl.duration || 10;
-    frames   = Math.round(duration * FPS);
     bar.style.width = '100%';
     setTimeout(hideLoader, 300);
-
-    if (isMobile()) {
-      loopMobile();
-      avviaScroll(() => {}, frames);
-      return;
-    }
-
-    /* Il salvagente dei 9 secondi ha gia' fatto partire i capitoli senza
-       video: qui il file e' arrivato in ritardo e si limita a scorrere */
-    if (!scrub || scrollPronto) {
-      scorriDaSolo();
-      avviaScroll(() => {}, frames);
-      return;
-    }
-
-    /* Safari non dipinge i fotogrammi di un video che non e' MAI stato
-       riprodotto: senza questo giro di play/pause lo scrub comanda un
-       filmato che resta sulla locandina */
-    const avvia = videoEl.play();
-    const pronti = () => {
-      videoEl.pause();
-      videoEl.currentTime = 0;
-      avviaScroll(seekTo, frames);
-    };
-    if (avvia && avvia.then) avvia.then(pronti).catch(pronti);
-    else pronti();
+    videoEl.play().catch(() => {});
+    avviaScroll();
   }
 
-  /* Il file viene scaricato TUTTO prima di dare il comando allo scroll,
-     e lo scrub lavora sulla copia in memoria.
+  /* Il play automatico puo' essere negato per motivi che non dipendono
+     dalla pagina: risparmio energetico su iOS, impostazione del browser,
+     scheda aperta in secondo piano. Un solo tentativo non basta, quindi
+     si riprova a ogni occasione utile — quando arrivano altri dati e al
+     primo gesto qualunque esso sia, perche' su iOS e' il gesto a
+     sbloccare il permesso e non si sa in anticipo quale sara' */
+  const riprova = () => { if (videoEl.paused) videoEl.play().catch(() => {}); };
+  videoEl.addEventListener('canplay', riprova);
+  videoEl.addEventListener('loadeddata', riprova);
+  ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll'].forEach(ev => {
+    window.addEventListener(ev, riprova, { passive: true });
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) riprova(); });
 
-     Prima si partiva appena arrivavano i metadati, cioe' con quasi
-     niente scaricato: ogni seek finiva su una parte di file non ancora
-     presente e diventava una richiesta di rete. In locale il file e'
-     li' e non si nota nulla — ed e' il motivo per cui questo guasto
-     non si e' mai visto in sviluppo. In produzione ogni fotogramma
-     costava un giro sulla rete, e il browser NON scarica avanti un
-     video in pausa: si ferma dopo pochi secondi di margine e aspetta.
-     Chrome regge perche' i suoi seek sono veloci e tolleranti; Safari e
-     Firefox no, e li' bastava un seek perso per piantare tutto.
+  /* Avanzamento vero del caricamento, non una percentuale inventata */
+  bar.style.width = '10%';
+  videoEl.addEventListener('progress', () => {
+    if (!videoEl.buffered.length || !videoEl.duration) return;
+    const p = videoEl.buffered.end(videoEl.buffered.length - 1) / videoEl.duration;
+    bar.style.width = (10 + 85 * Math.min(1, p)) + '%';
+  });
 
-     Un solo scaricamento sequenziale di 4,7 MB, misurato in meno di un
-     secondo sulla rete di casa. Dopo, ogni salto e' locale. */
-  bar.style.width = '8%';
+  /* Un caricamento fallito non deve restare tale per sempre: la sorgente
+     viene ricaricata una volta. Cinque secondi e non meno, perche' sotto
+     rete mobile un'attesa breve interromperebbe uno scaricamento che sta
+     andando bene */
+  const ATTESA_METADATI = 5000;
 
-  /* Sorgente + eventuale ripiego. Il blob e' la strada buona, ma Safari
-     ha una storia lunga di rifiuti sui blob: video, e un rifiuto qui
-     vorrebbe dire hero nero. Se i metadati non arrivano si torna al
-     file via rete, cioe' al comportamento di prima — meno fluido, ma
-     visibile. Meglio un ripiego che una schermata vuota */
-  const ATTESA_METADATI = 2500;
-
-  function avviaCon(url, ripiego, attesa) {
+  function avviaCon(url, ripiego) {
     videoEl.src = url;
     videoEl.load();
-    if (videoEl.readyState >= 1) { begin(); return; }
-    videoEl.addEventListener('loadedmetadata', begin, { once: true });
+    if (videoEl.readyState >= 1) { parti(); return; }
+    videoEl.addEventListener('loadedmetadata', parti, { once: true });
     if (ripiego) {
       setTimeout(() => {
         if (!avviato && !videoEl.duration) avviaCon(ripiego, null);
-      }, attesa || ATTESA_METADATI);
+      }, ATTESA_METADATI);
     }
   }
 
-  async function scaricaTutto(url) {
-    const risposta = await fetch(url, { cache: 'force-cache' });
-    if (!risposta.ok) throw new Error('HTTP ' + risposta.status);
-
-    const totale = +risposta.headers.get('Content-Length') || 0;
-    /* Senza corpo leggibile a pezzi si prende comunque il blob, si
-       perde solo l'avanzamento della barra */
-    if (!risposta.body || !totale) return URL.createObjectURL(await risposta.blob());
-
-    const lettore = risposta.body.getReader();
-    const pezzi = [];
-    let presi = 0;
-    for (;;) {
-      const { done, value } = await lettore.read();
-      if (done) break;
-      pezzi.push(value);
-      presi += value.length;
-      bar.style.width = (8 + 87 * Math.min(1, presi / totale)) + '%';
-    }
-    return URL.createObjectURL(new Blob(pezzi, { type: 'video/mp4' }));
-  }
-
-  /* Rete lenta, fetch negato, codec rifiutato: il sito parte comunque,
-     al peggio senza sfondo. Non deve mai restare bloccato sul loader */
+  /* Rete lenta, codec rifiutato: i capitoli partono comunque, al peggio
+     senza sfondo. Non si deve mai restare bloccati sul loader. Non tocca
+     'avviato', cosi' se il file arriva in ritardo il video parte lo
+     stesso — semplicemente i capitoli erano gia' in moto */
   setTimeout(() => {
-    if (!avviato) { hideLoader(); scrub = false; avviaScroll(() => {}, 240); }
+    if (!avviato) { hideLoader(); avviaScroll(); }
   }, 9000);
 
-  if (isMobile()) {
-    /* Su mobile non c'e' scrub, quindi non serve avere tutto in memoria:
-       si riproduce mentre scarica, e si risparmiano 2 MB di RAM.
-       Loop, muto e tentativi di play impostati SUBITO, prima ancora che
-       il file arrivi: cosi' il video parte al primo istante in cui il
-       browser lo permette, senza aspettare la catena degli eventi.
-       Il ripiego ricarica la stessa sorgente una volta sola: prima non
-       c'era alcun recupero e un caricamento fallito restava tale per
-       sempre, cioe' un fotogramma fermo per tutta la visita. Cinque
-       secondi e non due e mezzo, perche' qui si e' spesso sotto rete
-       mobile e un'attesa breve interromperebbe un download che sta
-       andando bene */
-    scrub = false;
-    videoEl.loop  = true;
-    videoEl.muted = true;
-    insisti();
-    avviaCon(SRC_M, SRC_M, 5000);
-  } else if (MODO === 'rete') {
-    avviaCon(SRC, null);
-  } else {
-    scaricaTutto(SRC)
-      .then(blob => avviaCon(blob, SRC))
-      /* il video in streaming resta meglio di nessun video: lo scrub
-         sara' meno fluido, ma il salvagente impedisce che si pianti */
-      .catch(() => avviaCon(SRC, null));
-  }
+  /* Su telefono un file dedicato, verticale: quello orizzontale, a
+     riempimento per copertura, perdeva quasi tutta la larghezza */
+  const sorgente = isMobile() ? videoEl.dataset.srcM : videoEl.dataset.src;
+  avviaCon(sorgente, sorgente);
 
   /* DIAGNOSTICA TEMPORANEA — ?debug=1 stampa a schermo lo stato del
      video. Su un telefono non c'e' una console da aprire, quindi senza
      questo l'unica informazione che torna indietro e' "non parte", che
      non distingue fra file non arrivato, codec rifiutato e riproduzione
-     negata dal browser: tre guasti diversi con tre rimedi diversi.
-     Da togliere insieme a ?video=rete e __hero() */
+     negata dal browser: tre guasti diversi con tre rimedi diversi */
   if (new URLSearchParams(location.search).get('debug') === '1') {
     const DATI = ['NIENTE', 'METADATI', 'FRAME CORRENTE', 'POCHI FRAME', 'ABBASTANZA'];
     const RETE = ['VUOTO', 'FERMO', 'SCARICA', 'NESSUNA SORGENTE'];
@@ -578,7 +376,6 @@ function initHeroScroll(renderFrame, total) {
         'muto    ' + videoEl.muted,
         'errore  ' + (videoEl.error ? videoEl.error.code + ' ' + (videoEl.error.message || '') : 'nessuno'),
         'buffer  ' + (b.join(' ') || 'vuoto'),
-        'scrub   ' + scrub,
         'schermo ' + window.innerWidth + 'x' + window.innerHeight
       ].join('\n');
     }, 400);
