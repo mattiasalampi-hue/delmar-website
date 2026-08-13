@@ -209,9 +209,7 @@ nav a {
 }
 
 /* Solo i bordi, e in nero neutro: un velo steso su tutto lo schermo
-   spegneva il mare e lo virava di blu. La leggibilità del testo la
-   garantisce l'ombra locale dietro ogni capitolo (.ch::before), che
-   scurisce dove serve invece che ovunque */
+   spegneva il mare e lo virava di blu */
 #hero-scrim {
   position: absolute;
   inset: 0;
@@ -281,25 +279,15 @@ nav a {
    sono tutti impilati nello stesso punto e a opacità 0 restano
    comunque bersaglio del mouse — l'ultimo, invisibile, si prendeva
    il clic destinato al capitolo in scena */
+/* PROVA: niente alone dietro le scritte. A tenerle leggibili restano
+   solo le ombre del testo e le due sfumature ai bordi del video.
+   Da rimettere se sui fotogrammi chiari — cielo all'alba, schiuma — il
+   bianco su bianco non regge */
 .ch {
   position: absolute;
   opacity: 0;
-  isolation: isolate;
   color: #fff;
   pointer-events: none;
-}
-
-/* Alone morbido sotto il testo, largo e sfumato fino a sparire: è lui
-   a tenere leggibili i capitoli ora che il video non è più coperto da
-   un velo generale */
-.ch::before {
-  content: '';
-  position: absolute;
-  inset: -7rem -8rem;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,.66) 0%, rgba(0,0,0,.34) 45%, transparent 72%);
-  z-index: -1;
-  pointer-events: none;
-  border-radius: 50%;
 }
 
 #c1 {
@@ -778,11 +766,10 @@ nav a {
   justify-content: center;
 }
 
-.proc-tl-label {
-  position: absolute;
-  top: 8vh;
-  left: 0;
-  right: 0;
+/* Nome della sezione, condiviso: centrato e a inchiostro pieno. Prima
+   era il maiuscoletto minuscolo e slavato usato per le sovrascritte, e
+   in cima a una sezione spariva del tutto */
+.titolo-sezione {
   text-align: center;
   font-size: clamp(1.8rem, 3vw, 3.2rem);
   font-weight: 300;
@@ -790,6 +777,23 @@ nav a {
   line-height: 1.05;
   text-transform: none;
   color: var(--ink);
+  margin: 0 0 6vh;
+}
+
+/* Sopra un impaginato a due colonne il titolo centrato resta sospeso
+   in mezzo al nulla: qui parte dallo stesso margine del testo che
+   introduce */
+.titolo-sinistra {
+  text-align: left;
+}
+
+/* In "Come Lavoriamo" il nastro occupa tutta l'altezza, quindi il
+   titolo va sfilato dal flusso e sovrapposto */
+.proc-tl-label {
+  position: absolute;
+  top: 8vh;
+  left: 0;
+  right: 0;
   margin: 0;
   z-index: 2;
 }
@@ -2264,10 +2268,6 @@ nav a {
     border-radius: 6px;
   }
 
-  .ch::before {
-    inset: -3rem 0;
-  }
-
   .cue {
     margin-top: 1.6rem;
     gap: .8rem;
@@ -2363,9 +2363,13 @@ nav a {
     height: 100svh;
   }
 
+  .titolo-sezione {
+    font-size: clamp(1.9rem, 7.5vw, 3rem);
+    margin-bottom: 4vh;
+  }
+
   .proc-tl-label {
     top: 5vh;
-    font-size: clamp(1.9rem, 7.5vw, 3rem);
   }
 
   /* In colonna il filo non collega più niente: le fasi restano
