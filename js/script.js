@@ -667,123 +667,80 @@ mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
   });
 });
 
-/* ── Processo — scroll driven (pin + scrub) ── */
+/* ── Come Lavoriamo: nastro che scorre di lato ──── */
+/* La sezione resta ferma a schermo e lo scroll verticale trascina le
+   quattro fasi da destra a sinistra. La corsa dura tre schermate: una
+   per ogni passaggio da una fase all'altra, così ogni fase ha il suo
+   tempo di lettura al centro prima che parta la successiva */
 (function(){
-  const fill    = document.getElementById('proc-tl-fill');
-  const spark   = document.getElementById('proc-spark');
-  const counter = document.getElementById('proc-photo-counter');
-  if (!fill || !spark) return;
+  const nastro = document.getElementById('fasi-nastro');
+  const barra  = document.getElementById('fasi-barra-fill');
+  const linea  = document.getElementById('fasi-linea');
+  if (!nastro) return;
 
-  const dots   = [0,1,2,3].map(i => document.getElementById('ptl-dot-' + i));
-  const steps  = [0,1,2,3].map(i => document.getElementById('ptl-' + i));
-  const photos = [0,1,2,3].map(i => document.getElementById('pp-' + i));
-  let activeIdx = -1;
+  const fasi = nastro.children.length;
 
-  function setStep(i) {
-    if (activeIdx === i) return;
+  /* Il vuoto fra il contenuto di una fase e il bordo. Va MISURATO e non
+     deciso a occhio: foto e testo sono centrati nella fase, quindi lo
+     spazio che avanza dipende da quanto è larga la finestra e da dove
+     va a capo il testo. Un valore fisso funzionerebbe su uno schermo e
+     sborderebbe su un altro */
+  let vuoto = 0;
 
-    // Testo: mostra solo lo step i
-    steps.forEach((s, idx) => {
-      if (!s) return;
-      if (idx === i) {
-        if (!s.classList.contains('lit')) {
-          s.classList.add('lit');
-          gsap.killTweensOf(s);
-          gsap.fromTo(s, { opacity:0, y:10 }, { opacity:1, y:0, duration:0.45, ease:'power2.out' });
-        }
-      } else {
-        s.classList.remove('lit');
-        // killTweensOf obbligatorio: con scroll veloce il fromTo di
-        // entrata è ancora in corsa e riporterebbe visibile lo step
-        // uscente sopra quello nuovo (scritte sovrapposte)
-        gsap.killTweensOf(s);
-        gsap.set(s, { opacity:0, y:0 });
-      }
-    });
-
-    // Pallini: accesi fino a i incluso
-    dots.forEach((d, idx) => {
-      if (!d) return;
-      if (idx <= i) d.classList.add('lit');
-      else          d.classList.remove('lit');
-    });
-
-    // Foto
-    photos.forEach((p, idx) => {
-      if (!p) return;
-      if (idx === i) p.classList.add('lit');
-      else           p.classList.remove('lit');
-    });
-
-    if (counter) counter.textContent = '0' + (i+1) + ' / 04';
-    activeIdx = i;
+  function misura() {
+    const fase  = nastro.children[0];
+    const testo = fase.querySelector('.fase-testo');
+    if (!testo) return;
+    vuoto = fase.getBoundingClientRect().right - testo.getBoundingClientRect().right;
   }
 
-  /* Primo step acceso subito, non al primo onUpdate: il pin scatta
-     quando la sezione tocca il bordo alto, ma nei 100vh precedenti è
-     già in campo — senza questo entra come un fotogramma vuoto,
-     timeline senza testo e riquadro foto grigio */
-  setStep(0);
+  const morbida = x => x * x * (3 - 2 * x);
+  const entro01 = x => Math.max(0, Math.min(1, x));
 
-  /* Desktop: timeline pinnata con scrub */
-  mm.add(DESKTOP_MQ, () => {
-    const dotTops  = dots.map(d => d ? d.offsetTop : 0);
-    const DIST     = dotTops[3] - dotTops[0];
-    // Soglie di progresso (0→1) a cui si attiva ogni step
-    const thresh   = dotTops.map(t => (t - dotTops[0]) / DIST);
+  ScrollTrigger.create({
+    trigger: '#processo',
+    start: 'top top',
+    end: () => '+=' + (window.innerHeight * (fasi - 1) * 1.15),
+    pin: true,
+    anticipatePin: 1,
+    scrub: 1,
+    invalidateOnRefresh: true,
+    onRefresh: misura,
+    onUpdate(self) {
+      const p = self.progress;
+      /* xPercent e non pixel: si ricalcola da solo al ridimensionare
+         della finestra, mentre una traslazione in pixel resterebbe
+         tarata sulla larghezza di quando è stata scritta */
+      gsap.set(nastro, { xPercent: -100 * p * (fasi - 1) / fasi });
+      if (barra) gsap.set(barra, { width: (100 / fasi + p * (100 - 100 / fasi)) + '%' });
 
-    gsap.set(spark, { opacity:1, y:0 });
-    gsap.set(fill,  { height:0 });
-
-    // Timeline linea + spark guidata dallo scroll
-    const tl = gsap.timeline();
-    tl.to(fill,  { height: DIST, ease:'none' }, 0)
-      .to(spark, { y: DIST,      ease:'none' }, 0);
-
-    ScrollTrigger.create({
-      trigger:          '#processo',
-      start:            'top top',
-      end:              '+=280%',
-      pin:              true,
-      anticipatePin:    1,
-      scrub:            1.1,
-      invalidateOnRefresh: true,
-      animation:        tl,
-      onUpdate(self) {
-        const p = self.progress;
-        // Trova lo step attivo in base al progresso corrente
-        let idx = 0;
-        for (let k = thresh.length - 1; k >= 0; k--) {
-          if (p >= thresh[k] - 0.015) { idx = k; break; }
-        }
-        setStep(idx);
+      /* Il filo nasce accanto alla fase che esce e si allunga verso
+         quella che entra, poi la coda raggiunge la testa e sparisce
+         dentro la fase nuova. Due movimenti sfalsati sullo stesso
+         binario: nella prima metà del passaggio corre la testa, nella
+         seconda recupera la coda.
+         Tutto è ancorato alla cucitura fra le due fasi, che il nastro
+         porta da destra a sinistra in modo lineare: le estremità si
+         muovono quindi in modo prevedibile, mentre calcolando la
+         posizione dal centro le due velocità si sommavano e il
+         movimento risultava sghembo */
+      if (linea && vuoto > 0) {
+        const t     = p * (fasi - 1);
+        const frac  = t - Math.floor(t);
+        const cuci  = window.innerWidth * (1 - frac);
+        /* STACCO generoso davanti: la testa non è solo il cerchio, si
+           porta dietro un alone di una quarantina di pixel. Fermandosi
+           a filo del bordo il cerchio resterebbe fuori ma la sua luce
+           finirebbe comunque sulla foto */
+        const STACCO = 56;
+        const parte = cuci - vuoto + 12;               /* accanto al contenuto che esce */
+        const corsa = vuoto * 2 - 12 - STACCO;         /* si ferma prima di quello che entra */
+        const testa = parte + corsa * morbida(entro01(frac / 0.5));
+        const coda  = parte + corsa * morbida(entro01((frac - 0.5) / 0.5));
+        linea.style.width = Math.max(0, testa - coda) + 'px';
+        gsap.set(linea, { x: coda });
       }
-    });
-  });
-
-  /* Mobile: niente pin — step in flusso normale, la foto sticky
-     cambia quando lo step entra nella fascia centrale del viewport */
-  mm.add(MOBILE_MQ, () => {
-    activeIdx = -1;
-    gsap.set(steps.filter(Boolean), { clearProps: 'opacity,transform' });
-
-    function lightStep(i) {
-      steps.forEach((s, k) => s && s.classList.toggle('lit', k === i));
-      photos.forEach((p, k) => p && p.classList.toggle('lit', k === i));
-      if (counter) counter.textContent = '0' + (i+1) + ' / 04';
     }
-
-    lightStep(0);
-
-    steps.forEach((s, i) => {
-      if (!s) return;
-      ScrollTrigger.create({
-        trigger: s,
-        start: 'top 62%',
-        end: 'bottom 38%',
-        onToggle(self) { if (self.isActive) lightStep(i); }
-      });
-    });
   });
 })();
 

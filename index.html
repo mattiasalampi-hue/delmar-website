@@ -58,7 +58,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css?v=60" />
+    <link rel="stylesheet" href="css/style.css?v=68" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -198,75 +198,66 @@
       </div>
     </section>
     <!-- ════════════════════ §3 PROCESSO (timeline) ═ -->
+    <!-- Le quattro fasi scorrono di lato mentre si scrolla in verticale:
+         la sezione resta ferma a schermo e il nastro trasla. Le foto
+         seguono l'ora del giorno, non il tipo di lavoro — sera, notte in
+         laboratorio, buio prima della partenza, luce piena all'arrivo -->
     <section class="section sec-soft" id="processo">
-      <div id="proc-wrap">
-        <!-- Left: label + timeline + text slot -->
-        <div id="proc-left-col">
-          <p class="label proc-tl-label">Come Lavoriamo</p>
-          <div id="proc-stage">
-            <!-- Linea + pallini -->
-            <div id="proc-tl">
-              <div id="proc-tl-fill"></div>
-              <div id="proc-spark"></div>
-              <div class="ptl-dot" id="ptl-dot-0"></div>
-              <div class="ptl-dot" id="ptl-dot-1"></div>
-              <div class="ptl-dot" id="ptl-dot-2"></div>
-              <div class="ptl-dot" id="ptl-dot-3"></div>
-            </div>
-            <!-- Step: ciascuno al livello verticale del proprio pallino -->
-            <div class="ptl-step" id="ptl-0">
-              <div class="ptl-num">01 · La sera</div>
-              <div class="ptl-title">Ci scrivi<br />su WhatsApp</div>
-              <div class="ptl-desc">
-                Un messaggio quando hai chiuso il servizio: scrivi la lista, mandala a voce o fotografa quello che ti
-                manca. Accettiamo ordini fino alle 2 di notte.
-              </div>
-            </div>
-            <div class="ptl-step" id="ptl-1">
-              <div class="ptl-num">02 · La notte</div>
-              <div class="ptl-title">Selezioniamo<br />e lavoriamo</div>
-              <div class="ptl-desc">
-                Scegliamo il pescato per il tuo ordine e lo prepariamo nei nostri laboratori certificati HACCP
-                secondo le richieste della tua cucina: pulito, eviscerato, sfilettato, porzionato.
-              </div>
-            </div>
-            <div class="ptl-step" id="ptl-2">
-              <div class="ptl-num">03 · Prima dell'alba</div>
-              <div class="ptl-title">Partono<br />i nostri furgoni</div>
-              <div class="ptl-desc">
-                La merce viaggia sulla nostra flotta refrigerata, non su corrieri terzi. La catena del freddo non si
-                interrompe mai, dal laboratorio alla tua porta.
-              </div>
-            </div>
-            <div class="ptl-step" id="ptl-3">
-              <div class="ptl-num">04 · Entro le 11</div>
-              <div class="ptl-title">Scarichiamo nel<br />tuo frigorifero</div>
-              <div class="ptl-desc">
-                I nostri autisti sistemano il pesce direttamente nel tuo frigorifero. Tu apri la cucina e trovi tutto
-                pronto, in tempo per il pranzo.
-              </div>
-            </div>
+      <p class="label proc-tl-label">Come Lavoriamo</p>
+      <!-- Filo conduttore: resta fermo mentre le fasi gli scorrono
+           sopra, così il movimento laterale si legge come un percorso
+           e non come quattro schermate scollegate -->
+      <div id="fasi-linea"></div>
+      <div id="fasi-nastro">
+        <div class="fase">
+          <div class="fase-tondo"><img src="assets/chef-ordina.jpg" alt="Uno chef ordina dal telefono a fine servizio" loading="lazy" /></div>
+          <div class="fase-testo">
+            <p class="fase-ora">01 · La sera</p>
+            <h3 class="fase-titolo">Ci scrivi su WhatsApp</h3>
+            <p class="fase-clou">Ordini aperti fino alle <strong>2 di notte</strong></p>
+            <p class="fase-desc">
+              Un messaggio quando hai chiuso il servizio: scrivi la lista, mandala a voce o fotografa quello che ti
+              manca.
+            </p>
           </div>
         </div>
-        <!-- Right: photo -->
-        <!-- Le foto seguono l'ora del giorno, non il tipo di lavoro:
-             sera, notte in laboratorio, buio prima della partenza,
-             luce piena all'arrivo -->
-        <div id="proc-photo-col">
-          <div class="ptl-photo" id="pp-0">
-            <img src="assets/facade-night.jpg" alt="La sede DelMar di sera" loading="eager" />
+        <div class="fase">
+          <div class="fase-tondo"><img src="assets/processing-2.jpg" alt="Lavorazione del pesce in laboratorio" loading="lazy" /></div>
+          <div class="fase-testo">
+            <p class="fase-ora">02 · La notte</p>
+            <h3 class="fase-titolo">Selezioniamo e lavoriamo</h3>
+            <p class="fase-desc">
+              Scegliamo il pescato per il tuo ordine e lo prepariamo nei nostri laboratori certificati HACCP secondo
+              le richieste della tua cucina: pulito, eviscerato, sfilettato, porzionato.
+            </p>
           </div>
-          <div class="ptl-photo" id="pp-1">
-            <img src="assets/processing-2.jpg" alt="Lavorazione del pesce in laboratorio" loading="eager" />
-          </div>
-          <div class="ptl-photo" id="pp-2">
-            <img src="assets/truck-night-lights.jpg" alt="I furgoni refrigerati pronti a partire" loading="eager" />
-          </div>
-          <div class="ptl-photo" id="pp-3">
-            <img src="assets/truck-day.jpg" alt="Consegna al ristorante" loading="eager" />
-          </div>
-          <div id="proc-photo-counter">01 / 04</div>
         </div>
+        <div class="fase">
+          <div class="fase-tondo"><img src="assets/truck-night-lights.jpg" alt="I furgoni refrigerati pronti a partire" loading="lazy" /></div>
+          <div class="fase-testo">
+            <p class="fase-ora">03 · Prima dell'alba</p>
+            <h3 class="fase-titolo">Partono i nostri furgoni</h3>
+            <p class="fase-desc">
+              La merce viaggia sulla nostra flotta refrigerata, non su corrieri terzi. La catena del freddo non si
+              interrompe mai, dal laboratorio alla tua porta.
+            </p>
+          </div>
+        </div>
+        <div class="fase">
+          <div class="fase-tondo"><img src="assets/consegna-cella.jpg" alt="Cassa di branzini consegnata nella cella del ristorante" loading="lazy" /></div>
+          <div class="fase-testo">
+            <p class="fase-ora">04 · Entro le 11</p>
+            <h3 class="fase-titolo">Scarichiamo nel tuo frigorifero</h3>
+            <p class="fase-clou">Ogni consegna entro le <strong>11 di mattina</strong></p>
+            <p class="fase-desc">
+              I nostri autisti sistemano il pesce direttamente nel tuo frigorifero. Tu apri la cucina e trovi tutto
+              pronto, in tempo per il pranzo.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div id="fasi-barra">
+        <div id="fasi-barra-fill"></div>
       </div>
     </section>
     <!-- ════════════════════ IL RACCONTO ══════════ -->
@@ -651,6 +642,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="js/script.js?v=42"></script>
+    <script src="js/script.js?v=48"></script>
   </body>
 </html>
