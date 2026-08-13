@@ -764,220 +764,201 @@ nav a {
   direction: ltr;
 }
 
-/* ─ §3 COME LAVORIAMO (timeline animata) ─────── */
-/* Alta almeno quanto il viewport: GSAP la pinna avvolgendola in uno
-   .pin-spacer trasparente, quindi una sezione più bassa lascerebbe
-   affiorare il bianco del body ai bordi al posto del suo grigio */
+/* ─ §3 COME LAVORIAMO (nastro laterale) ───── */
+/* Alta quanto lo schermo perché GSAP la tiene ferma mentre il nastro
+   trasla: se fosse più bassa, sopra e sotto affiorerebbe il bianco
+   della pagina dentro il contenitore trasparente del pin */
 #processo {
   position: relative;
   z-index: 4;
-  min-height: 100vh;
-  padding: 14vh 0 16vh;
-}
-
-#proc-wrap {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6vw;
-  align-items: center;
-  padding: 0 6%;
-}
-
-#proc-left-col {
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
-/* Titolo di sezione a tutti gli effetti, non un'etichettina: era il
-   solo blocco del sito in cui il nome della sezione spariva */
 .proc-tl-label {
+  position: absolute;
+  top: 8vh;
+  left: 0;
+  right: 0;
+  text-align: center;
   font-size: clamp(1.8rem, 3vw, 3.2rem);
   font-weight: 300;
   letter-spacing: -.045em;
   line-height: 1.05;
   text-transform: none;
   color: var(--ink);
-  margin-bottom: 5vh;
-}
-
-/* Stage: contiene linea, canvas glow e testi sovrapposti */
-#proc-stage {
-  position: relative;
-  height: 62vh;
-  min-height: 320px;
-}
-
-#proc-tl {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 18px;
+  margin: 0;
   z-index: 2;
 }
 
-#proc-tl::before {
+/* Filo che si tende nella cucitura fra due fasi: viaggia insieme al
+   punto di giunzione del nastro, quindi resta sempre nel vuoto fra il
+   testo che esce e la foto che entra e non ci finisce mai sopra.
+   È largo quanto quel vuoto — i due margini laterali delle fasi — e
+   cresce dal centro: lunghezza zero quando una fase è ferma, massima a
+   metà del passaggio.
+   Si anima in scala e traslazione, mai in larghezza o posizione: le
+   prime vivono sul compositor, le seconde rifanno il layout a ogni
+   fotogramma */
+#fasi-linea {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent-bright);
+  box-shadow: 0 0 12px rgba(255,107,87,.85), 0 0 34px rgba(255,107,87,.35);
+  transform: translateX(100vw);
+  z-index: 0;
+}
+
+/* Testa luminosa su un capo solo, come le sfere del beam di Marina.
+   Sta a destra e indica il verso del racconto: le fasi si leggono da
+   sinistra a destra, quindi la testa punta a quella che deve ancora
+   arrivare mentre la scia resta indietro.
+   È uno pseudo-elemento e non parte della barra perché il filo cambia
+   larghezza: disegnata dentro si schiaccerebbe insieme a lei */
+#fasi-linea::after {
   content: '';
   position: absolute;
-  left: 7px;
-  top: 14px;
-  bottom: 14px;
-  width: 1px;
-  background: rgba(21,28,100,.14);
-}
-
-#proc-tl-fill {
-  position: absolute;
-  left: 7px;
-  top: 14px;
-  width: 1px;
-  height: 0;
-  background: linear-gradient(to bottom, rgba(21,28,100,.95) 0%, rgba(21,28,100,.35) 100%);
-  z-index: 1;
-}
-
-#proc-spark {
-  position: absolute;
-  left: 3px;
-  top: 14px;
-  width: 9px;
-  height: 9px;
+  top: 50%;
+  right: -6px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
-  background: var(--ink);
-  box-shadow: 0 0 10px rgba(21,28,100,.55), 0 0 24px rgba(21,28,100,.3), 0 0 48px rgba(21,28,100,.15);
-  z-index: 3;
-  opacity: 0;
+  background: var(--accent-bright);
+  box-shadow: 0 0 16px rgba(255,107,87,.95), 0 0 40px rgba(255,107,87,.5);
+  transform: translateY(-50%);
 }
 
-.ptl-dot {
-  position: absolute;
-  left: 3px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(21,28,100,.08);
-  border: 1px solid rgba(21,28,100,.22);
-  z-index: 4;
+/* La scia sfuma verso la coda: senza, un rettangolo pieno che si
+   allunga sembra una barra di caricamento, non una traccia luminosa */
+#fasi-linea {
+  background: linear-gradient(to right, rgba(255,107,87,0), var(--accent-bright));
 }
 
-.ptl-dot.lit {
-  background: var(--ink);
-  border-color: rgba(21,28,100,.9);
-  box-shadow: 0 0 14px rgba(21,28,100,.45), 0 0 32px rgba(21,28,100,.22), 0 0 60px rgba(21,28,100,.1);
-}
-
-#ptl-dot-0 {
-  top: 14px;
-}
-
-#ptl-dot-1 {
-  top: calc(33.3% - 4px);
-}
-
-#ptl-dot-2 {
-  top: calc(66.6% - 4px);
-}
-
-#ptl-dot-3 {
-  bottom: 14px;
-  top: auto;
-}
-
-/* Step: posizionato all'altezza del proprio pallino */
-.ptl-step {
-  position: absolute;
-  left: 44px;
-  right: 0;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 3;
-}
-
-.ptl-step.lit {
-  pointer-events: auto;
-}
-
-#ptl-0 {
-  top: 5px;
-}
-
-#ptl-1 {
-  top: calc(33.3% - 13px);
-}
-
-#ptl-2 {
-  top: calc(66.6% - 13px);
-}
-
-#ptl-3 {
-  bottom: 5px;
-  top: auto;
-}
-
-/* Non più solo "01" ma "01 · La sera": la spaziatura da numero
-   isolato spezzava la frase in lettere staccate. È l'orario a
-   raccontare il servizio, quindi va letto, non intuito */
-.ptl-num {
-  font-size: .74rem;
-  font-weight: 500;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--wa);
-  margin-bottom: .7rem;
-}
-
-.ptl-title {
-  font-size: clamp(1.5rem, 2.4vw, 2.4rem);
-  font-weight: 300;
-  letter-spacing: -.045em;
-  line-height: 1.14;
-  margin-bottom: .7rem;
-}
-
-.ptl-desc {
-  font-size: 1rem;
-  color: rgba(21,28,100,.8);
-  line-height: 1.7;
-  max-width: 420px;
-}
-
-#proc-photo-col {
+/* Nastro: quattro schermate affiancate, larghe una ciascuna. La
+   traslazione la scrive GSAP sullo scroll */
+#fasi-nastro {
+  display: flex;
+  width: 400vw;
   position: relative;
-  height: 65vh;
-  min-height: 420px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: #e9e9e6;
+  z-index: 1;
+  will-change: transform;
 }
 
-.ptl-photo {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity .95s ease;
+.fase {
+  width: 100vw;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: 0 7%;
 }
 
-.ptl-photo.lit {
-  opacity: 1;
+/* Cerchio dai bordi sfumati: la maschera radiale porta la foto a
+   svanire nel fondo invece di tagliarla con un bordo netto — è la
+   sfumatura a fare l'effetto, non la forma.
+   closest-side e non il valore predefinito: senza, il 100% della
+   sfumatura cade sugli ANGOLI del riquadro, e a metà dei lati — che
+   sono più vicini del 30% — la foto è ancora opaca a metà. Risultato:
+   un cerchio sfumato con quattro tagli netti sui lati. Con closest-side
+   il 100% cade proprio a metà lato, quindi la foto è già sparita
+   ovunque prima del bordo, angoli compresi */
+.fase-tondo {
+  width: min(50vh, 38vw);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  -webkit-mask-image: radial-gradient(circle closest-side at center, #000 56%, rgba(0,0,0,.5) 82%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side at center, #000 56%, rgba(0,0,0,.5) 82%, transparent 100%);
 }
 
-.ptl-photo img {
+.fase-tondo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  display: block;
 }
 
-#proc-photo-counter {
-  position: absolute;
-  bottom: 1.8rem;
-  right: 1.8rem;
-  z-index: 2;
-  font-size: .52rem;
+/* Il testo sta ACCANTO alla foto, non sopra: sovrapposto a un'immagine
+   fotografica cambiava contrasto a ogni fotogramma e non si leggeva */
+.fase-testo {
+  max-width: 42ch;
+  text-align: left;
+}
+
+.fase-ora {
+  font-size: .78rem;
   font-weight: 600;
-  letter-spacing: .35em;
+  letter-spacing: .18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.35);
+  color: var(--wa);
+  margin-bottom: 1.1rem;
+}
+
+.fase-titolo {
+  font-size: clamp(1.9rem, 3.4vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 1.3rem;
+}
+
+/* La promessa oraria è l'argomento di vendita di tutta la sezione:
+   dentro il testo corrente si perdeva in fondo a una frase. Qui è un
+   blocco a sé, in corallo, che si legge prima della descrizione */
+.fase-clou {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .4rem;
+  margin-bottom: 1.3rem;
+  padding: .62rem 1.15rem;
+  border-radius: 999px;
+  background: rgba(255,107,87,.1);
+  border: 1px solid rgba(255,107,87,.38);
+  font-size: 1.02rem;
+  font-weight: 400;
+  color: var(--wa);
+}
+
+.fase-clou strong {
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+.fase-desc {
+  font-size: 1.02rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--text-mid);
+}
+
+/* Barra di avanzamento: senza, in una sezione che non scorre in
+   verticale non si capisce quanto manca alla fine */
+#fasi-barra {
+  position: absolute;
+  bottom: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(280px, 60vw);
+  height: 2px;
+  background: rgba(21,28,100,.14);
+  border-radius: 2px;
+  overflow: hidden;
+  z-index: 2;
+}
+
+#fasi-barra-fill {
+  width: 25%;
+  height: 100%;
+  background: var(--wa);
+  border-radius: 2px;
 }
 
 /* ─ §4 AZIENDA / CHI SIAMO ─────────────────── */
@@ -2225,10 +2206,6 @@ nav a {
     color: rgba(21,28,100,.88);
   }
 
-  #proc-photo-counter {
-    color: rgba(255,255,255,.65);
-  }
-
   .footer-social a {
     color: rgba(21,28,100,.68);
   }
@@ -2378,81 +2355,63 @@ nav a {
     font-size: .84rem;
   }
 
-  /* ─── §3 Processo (foto sticky + step in flusso) ── */
-  /* Niente timeline pinnata su mobile: la foto resta sticky in alto
-     e cambia mentre gli step scorrono sotto e si accendono */
+  /* ─── §3 Come Lavoriamo ────────────── */
+  /* svh e non vh: con l'unità classica la sezione resta alta quanto il
+     viewport a barra ritratta e il nastro balla mentre la barra del
+     browser entra ed esce */
   #processo {
-    padding: 10vh 0 12vh;
+    height: 100svh;
   }
 
-  #proc-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 3vh;
-    padding: 0 5%;
-  }
-
-  #proc-left-col {
-    order: 1;
-  }
-
-  #proc-photo-col {
-    order: 0;
-    position: sticky;
-    top: 4.6rem;
-    z-index: 2;
-    height: 54vw;
-    min-height: 220px;
-    border-radius: 12px;
-    box-shadow: 0 18px 40px rgba(0,0,0,.16);
-  }
-
-  /* font-size esplicito: .label è ridefinita più in alto in questo
-     stesso media query e, a parità di specificità, vincerebbe lei
-     rimpicciolendo di nuovo il titolo */
   .proc-tl-label {
+    top: 5vh;
     font-size: clamp(1.9rem, 7.5vw, 3rem);
-    margin-bottom: 2vh;
   }
 
-  #proc-stage {
-    height: auto;
-    min-height: 0;
-  }
-
-  #proc-tl {
+  /* In colonna il filo non collega più niente: le fasi restano
+     affiancate ma foto e testo sono uno sopra l'altro */
+  #fasi-linea {
     display: none;
   }
 
-  .ptl-step {
-    position: static;
-    opacity: .3;
-    pointer-events: auto;
-    padding: 1.6rem 0;
-    border-top: 1px solid var(--border);
-    transition: opacity .45s ease;
+  .fase {
+    flex-direction: column;
+    gap: 1.8rem;
+    padding: 0 8%;
   }
 
-  .ptl-step:first-of-type {
-    border-top: none;
+  .fase-tondo {
+    width: min(34vh, 66vw);
   }
 
-  .ptl-step.lit {
-    opacity: 1;
-  }
-
-  .ptl-title {
-    font-size: 1.35rem;
-  }
-
-  .ptl-desc {
-    font-size: .94rem;
+  .fase-testo {
+    text-align: center;
     max-width: none;
   }
 
-  .ptl-num {
-    font-size: .68rem;
+  .fase-ora {
+    font-size: .66rem;
+    margin-bottom: .7rem;
+  }
+
+  .fase-titolo {
+    font-size: clamp(1.5rem, 6.4vw, 2.1rem);
+    margin-bottom: .8rem;
+  }
+
+  .fase-clou {
+    font-size: .92rem;
+    padding: .5rem .9rem;
+    margin-bottom: .9rem;
+  }
+
+  .fase-desc {
+    font-size: .92rem;
+    line-height: 1.65;
+  }
+
+  #fasi-barra {
+    bottom: 4vh;
   }
 
   /* ─── Marina AI ──────────────────────────── */
@@ -2750,10 +2709,6 @@ nav a {
   #marina-phone {
     width: 250px;
     height: 500px;
-  }
-
-  #proc-wrap {
-    gap: 4vw;
   }
 
   .prod-text {
