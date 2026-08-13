@@ -327,7 +327,30 @@ function initHeroScroll(renderFrame, total) {
     disarma();
     seeking = false;
     videoEl.loop = true;
+    /* Ribadito da codice e non solo nell'attributo: senza muted il
+       browser rifiuta la riproduzione automatica, e un play() rifiutato
+       si limita a lasciare il video fermo sul primo fotogramma */
+    videoEl.muted = true;
     videoEl.play().catch(() => {});
+  }
+
+  /* Il play automatico puo' essere rifiutato per motivi che non
+     dipendono dalla pagina: risparmio energetico su iOS, impostazione
+     del browser, scheda aperta in secondo piano. Un solo tentativo non
+     basta, e il rifiuto e' silenzioso — resta un fotogramma fermo, che
+     e' esattamente il sintomo segnalato. Qui si riprova a ogni occasione
+     utile: quando arrivano altri dati e al primo gesto di chi guarda,
+     qualunque esso sia, perche' su iOS il permesso lo sblocca il gesto */
+  function insisti() {
+    const riprova = () => { if (videoEl.paused && !scrub) videoEl.play().catch(() => {}); };
+    videoEl.addEventListener('canplay', riprova);
+    videoEl.addEventListener('loadeddata', riprova);
+    ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll'].forEach(ev => {
+      window.addEventListener(ev, riprova, { passive: true });
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) riprova();
+    });
   }
 
   function arrenditi() {
@@ -396,13 +419,9 @@ function initHeroScroll(renderFrame, total) {
   }
 
   function loopMobile() {
-    /* niente scrub: play in loop, i capitoli restano legati allo
-       scroll. iOS in risparmio energetico rifiuta anche l'autoplay
-       muto, quindi il primo tocco riprova */
+    /* niente scrub: play in loop, i capitoli restano legati allo scroll */
     scorriDaSolo();
-    window.addEventListener('touchend', () => {
-      if (videoEl.paused) videoEl.play().catch(() => {});
-    }, { passive: true });
+    insisti();
   }
 
   let avviato = false;
@@ -465,7 +484,7 @@ function initHeroScroll(renderFrame, total) {
      visibile. Meglio un ripiego che una schermata vuota */
   const ATTESA_METADATI = 2500;
 
-  function avviaCon(url, ripiego) {
+  function avviaCon(url, ripiego, attesa) {
     videoEl.src = url;
     videoEl.load();
     if (videoEl.readyState >= 1) { begin(); return; }
@@ -473,7 +492,7 @@ function initHeroScroll(renderFrame, total) {
     if (ripiego) {
       setTimeout(() => {
         if (!avviato && !videoEl.duration) avviaCon(ripiego, null);
-      }, ATTESA_METADATI);
+      }, attesa || ATTESA_METADATI);
     }
   }
 
@@ -506,9 +525,22 @@ function initHeroScroll(renderFrame, total) {
   }, 9000);
 
   if (isMobile()) {
-    /* su mobile non c'e' scrub, quindi non serve avere tutto in memoria:
-       si riproduce mentre scarica, e si risparmiano 2 MB di RAM */
-    avviaCon(SRC_M, null);
+    /* Su mobile non c'e' scrub, quindi non serve avere tutto in memoria:
+       si riproduce mentre scarica, e si risparmiano 2 MB di RAM.
+       Loop, muto e tentativi di play impostati SUBITO, prima ancora che
+       il file arrivi: cosi' il video parte al primo istante in cui il
+       browser lo permette, senza aspettare la catena degli eventi.
+       Il ripiego ricarica la stessa sorgente una volta sola: prima non
+       c'era alcun recupero e un caricamento fallito restava tale per
+       sempre, cioe' un fotogramma fermo per tutta la visita. Cinque
+       secondi e non due e mezzo, perche' qui si e' spesso sotto rete
+       mobile e un'attesa breve interromperebbe un download che sta
+       andando bene */
+    scrub = false;
+    videoEl.loop  = true;
+    videoEl.muted = true;
+    insisti();
+    avviaCon(SRC_M, SRC_M, 5000);
   } else if (MODO === 'rete') {
     avviaCon(SRC, null);
   } else {
@@ -517,6 +549,39 @@ function initHeroScroll(renderFrame, total) {
       /* il video in streaming resta meglio di nessun video: lo scrub
          sara' meno fluido, ma il salvagente impedisce che si pianti */
       .catch(() => avviaCon(SRC, null));
+  }
+
+  /* DIAGNOSTICA TEMPORANEA — ?debug=1 stampa a schermo lo stato del
+     video. Su un telefono non c'e' una console da aprire, quindi senza
+     questo l'unica informazione che torna indietro e' "non parte", che
+     non distingue fra file non arrivato, codec rifiutato e riproduzione
+     negata dal browser: tre guasti diversi con tre rimedi diversi.
+     Da togliere insieme a ?video=rete e __hero() */
+  if (new URLSearchParams(location.search).get('debug') === '1') {
+    const DATI = ['NIENTE', 'METADATI', 'FRAME CORRENTE', 'POCHI FRAME', 'ABBASTANZA'];
+    const RETE = ['VUOTO', 'FERMO', 'SCARICA', 'NESSUNA SORGENTE'];
+    const box = document.createElement('pre');
+    box.id = 'hero-debug';
+    document.body.appendChild(box);
+    setInterval(() => {
+      const b = [];
+      for (let i = 0; i < videoEl.buffered.length; i++) {
+        b.push(videoEl.buffered.start(i).toFixed(1) + '-' + videoEl.buffered.end(i).toFixed(1));
+      }
+      box.textContent = [
+        'file    ' + ((videoEl.currentSrc || '-').split('/').pop() || '-'),
+        'dati    ' + (DATI[videoEl.readyState] || videoEl.readyState),
+        'rete    ' + (RETE[videoEl.networkState] || videoEl.networkState),
+        'durata  ' + (videoEl.duration || 0).toFixed(2),
+        'tempo   ' + videoEl.currentTime.toFixed(2),
+        'in pausa ' + videoEl.paused,
+        'muto    ' + videoEl.muted,
+        'errore  ' + (videoEl.error ? videoEl.error.code + ' ' + (videoEl.error.message || '') : 'nessuno'),
+        'buffer  ' + (b.join(' ') || 'vuoto'),
+        'scrub   ' + scrub,
+        'schermo ' + window.innerWidth + 'x' + window.innerHeight
+      ].join('\n');
+    }, 400);
   }
 })();
 
