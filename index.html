@@ -55,10 +55,10 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css?v=31" />
+    <link rel="stylesheet" href="css/style.css?v=60" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -66,17 +66,23 @@
       <symbol id="ico-wa" viewBox="0 0 24 24">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </symbol>
+      <!-- Outfit non ha il glifo → (copre solo ↑ e ↓): scritta a mano
+           la freccia ricadeva su un carattere di sistema, con spessore
+           e proporzioni diversi dal resto. Disegnata, invece, eredita
+           colore e peso dal testo accanto -->
+      <symbol id="ico-arr" viewBox="0 0 24 24">
+        <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
     </svg>
     <!-- Loading -->
     <div id="loading">
       <p>DelMar</p>
       <div id="bar-wrap"><div id="bar"></div></div>
     </div>
-    <!-- Lottie bg fisso -->
-    <div id="lottie-bg">
-      <div id="hero-white"></div>
-      <div id="hero-fill"></div>
-      <video id="hero-video" src="assets/video/hero-final.mp4?v=3" muted playsinline preload="none" loop></video>
+    <!-- Sfondo hero: video a tutto schermo scrubbato dallo scroll -->
+    <div id="hero-bg">
+      <video id="hero-video" src="assets/video/hero-mare.mp4?v=2" muted playsinline preload="auto"></video>
+      <div id="hero-scrim"></div>
     </div>
     <div id="vig"></div>
     <!-- Header -->
@@ -101,11 +107,11 @@
         </div>
         <div class="ch" id="c2">
           <h2 class="ch-title">Un solo fornitore<br />Tutto il pesce che ti serve</h2>
-          <a href="#prodotti" class="ch-cta">Scopri i prodotti →</a>
+          <a href="#prodotti" class="ch-cta">Scopri i prodotti<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
         <div class="ch" id="c3">
           <h2 class="ch-title">Ordina fino alle 2 di notte<br />Ricevi entro le 11 di mattina</h2>
-          <a href="#processo" class="ch-cta">Come lavoriamo →</a>
+          <a href="#processo" class="ch-cta">Come lavoriamo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
         <div class="ch" id="c4">
           <h2 class="ch-title">Sali a bordo</h2>
@@ -118,8 +124,14 @@
             Scrivici su WhatsApp
           </a>
         </div>
+        <div class="ch" id="c5">
+          <img src="assets/logo.png" alt="DelMar" class="ch-logo" />
+        </div>
       </div>
     </div>
+    <!-- La pagina scorre SOPRA l'hero, che resta fisso dietro: è il
+         video a essere coperto, non a scorrere via -->
+    <div id="dopo-hero">
     <!-- ════════════════════ §1 NUMERI ════════════ -->
     <section class="section" id="stats">
       <div class="stats-grid">
@@ -131,9 +143,13 @@
           <div class="stat-n" data-count="30" data-suffix="+">0</div>
           <div class="stat-l">Anni di esperienza nella distribuzione del pesce</div>
         </div>
-        <div class="stat-box">
-          <div class="stat-n" data-count="12" data-suffix="h">0</div>
-          <div class="stat-l">Dal mare alla cucina del tuo ristorante</div>
+        <div class="stat-box stat-live">
+          <div class="stat-n" id="live-kg">0</div>
+          <div class="stat-l">Kg di pesce venduti oggi</div>
+          <p class="stat-live-badge" id="live-badge">
+            <span class="live-dot"></span><span id="live-state">in tempo reale</span> ·
+            <time id="live-time">00:00:00</time>
+          </p>
         </div>
         <div class="stat-box">
           <div class="stat-n" data-count="35" data-suffix="">0</div>
@@ -151,7 +167,7 @@
             Ogni notte selezioniamo solo il meglio: dai pescherecci dell'Alto Tirreno, dai mercati del Mediterraneo e
             del Nord Europa e, via aerea, dai mari di tutto il mondo. Tutto in un'unica consegna.
           </p>
-          <a href="#contatti" class="prod-link">Richiedi il listino prezzi →</a>
+          <a href="#contatti" class="prod-link">Richiedi il listino prezzi<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
       </div>
       <div class="prod-strip rev">
@@ -163,7 +179,7 @@
             crab. Ogni giorno partono dalle vasche e arrivano vivi nella tua cucina, senza giorni di anticipo: quello
             che ti serve domani, da noi c'è già.
           </p>
-          <a href="#contatti" class="prod-link">Richiedi disponibilità →</a>
+          <a href="#contatti" class="prod-link">Richiedi disponibilità<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
       </div>
       <div class="prod-strip">
@@ -173,11 +189,11 @@
             La scorta<br />la teniamo noi.
           </h3>
           <p class="body-text">
-            Pesce, verdure, pasta e prodotti da forno: oltre 1.000 pallet di gelo sempre pronti nel nostro
-            stabilimento. Niente cella piena e capitale fermo: ordini ogni giorno il quantitativo esatto che ti serve,
-            e lo trovi sempre.
+            Pesce, verdure, pasta e prodotti da forno: oltre 1.000 pallet di prodotti congelati sempre pronti nel
+            nostro stabilimento.<br />Niente cella piena e capitale fermo: ordini ogni giorno il quantitativo esatto
+            che ti serve, e lo trovi sempre.
           </p>
-          <a href="#contatti" class="prod-link">Scopri il catalogo →</a>
+          <a href="#contatti" class="prod-link">Scopri il catalogo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
       </div>
     </section>
@@ -202,16 +218,16 @@
               <div class="ptl-num">01 · La sera</div>
               <div class="ptl-title">Ci scrivi<br />su WhatsApp</div>
               <div class="ptl-desc">
-                Un messaggio a Marina quando hai chiuso il servizio: niente app da installare, niente portali, niente
-                telefonate. Accettiamo ordini fino alle 2 di notte.
+                Un messaggio quando hai chiuso il servizio: scrivi la lista, mandala a voce o fotografa quello che ti
+                manca. Accettiamo ordini fino alle 2 di notte.
               </div>
             </div>
             <div class="ptl-step" id="ptl-1">
               <div class="ptl-num">02 · La notte</div>
               <div class="ptl-title">Selezioniamo<br />e lavoriamo</div>
               <div class="ptl-desc">
-                Scegliamo il pescato per il tuo ordine e lo prepariamo come lo vuoi: pulito, sfilettato, porzionato.
-                Nei nostri laboratori certificati HACCP.
+                Scegliamo il pescato per il tuo ordine e lo prepariamo nei nostri laboratori certificati HACCP
+                secondo le richieste della tua cucina: pulito, eviscerato, sfilettato, porzionato.
               </div>
             </div>
             <div class="ptl-step" id="ptl-2">
@@ -226,8 +242,8 @@
               <div class="ptl-num">04 · Entro le 11</div>
               <div class="ptl-title">Scarichiamo nel<br />tuo frigorifero</div>
               <div class="ptl-desc">
-                I nostri autisti sistemano il pesce direttamente in cella. Tu apri la cucina e trovi tutto pronto, in
-                tempo per il pranzo.
+                I nostri autisti sistemano il pesce direttamente nel tuo frigorifero. Tu apri la cucina e trovi tutto
+                pronto, in tempo per il pranzo.
               </div>
             </div>
           </div>
@@ -253,12 +269,32 @@
         </div>
       </div>
     </section>
+    <!-- ════════════════════ IL RACCONTO ══════════ -->
+    <!-- Nessun testo sopra: il filmato ha già i suoi, e sovrapporne
+         altri metterebbe due voci a contendersi la stessa immagine.
+         Su desktop riusa il file che gira già nell'hero del B2C invece
+         di aggiungerne una seconda copia da 17 MB; su mobile serve una
+         versione dedicata, perché quella del B2C è larga 640px — nata
+         per essere vista dentro il varco del tunnel, non a schermo
+         pieno.
+         preload="none": sta sotto la piega, lo scarica solo chi
+         arriva davvero fin qui -->
+    <div class="section" id="cta-full">
+      <video
+        id="racconto"
+        data-src="assets/video/hero-final.mp4?v=3"
+        data-src-m="assets/video/racconto-m.mp4?v=1"
+        muted
+        loop
+        playsinline
+        preload="none"
+      ></video>
+    </div>
     <!-- ════════════════════ BEAM TRANSITION ══════ -->
     <section id="marina-beam">
       <div id="mb-pin">
         <div id="mb-sticky">
           <div id="mb-intro">
-            <p class="label">Tecnologia & Innovazione</p>
             <h2 id="mb-title">Un'azienda che evolve<br />con il mercato.</h2>
             <p id="mb-desc">
               Da 30 anni anticipiamo le esigenze del settore. Oggi l'intelligenza artificiale incontra la tradizione:
@@ -285,21 +321,21 @@
                 <img src="assets/marina.jpg" alt="Marina" class="marina-avatar-sm" />
                 <div>
                   <h2 class="marina-title">Marina</h2>
-                  <p class="marina-sub">Assistente AI · DelMar × Gastro Supply</p>
+                  <p class="marina-sub">Assistente AI · DelMar</p>
                 </div>
               </div>
               <p class="marina-desc">
                 Marina è la tua assistente AI su WhatsApp per ordinare i prodotti DelMar. Chatta con lei, registra la
-                tua attività in pochi minuti e fai il primo ordine: lo portiamo al tuo locale in meno di 24 ore. E fa
-                molto di più — conosce il catalogo completo, ti aggiorna su disponibilità e prezzi in tempo reale, e
-                suggerisce i prodotti giusti per il tuo menù.
+                tua attività in pochi minuti e fai il primo ordine: se arriva entro le 2 di notte, lo consegniamo
+                entro le 11 del mattino. E fa molto di più — conosce il catalogo completo, ti aggiorna su
+                disponibilità e prezzi in tempo reale, e suggerisce i prodotti giusti per il tuo menù.
               </p>
               <div class="marina-chips" id="marina-chips">
                 <div class="marina-chip">
                   <div class="chip-dot"></div>
                   <div class="chip-label">
-                    <strong>Ordina su WhatsApp, 24 ore su 24.</strong> Scrivi a Marina dal tuo telefono — niente app,
-                    niente portali. Un messaggio e l'ordine è fatto.
+                    <strong>Ordina su WhatsApp, 24 ore su 24.</strong> Scrivi a Marina dal tuo telefono: un messaggio,
+                    un vocale o una foto, e l'ordine è fatto.
                   </div>
                 </div>
                 <div class="marina-chip">
@@ -312,8 +348,8 @@
                 <div class="marina-chip">
                   <div class="chip-dot"></div>
                   <div class="chip-label">
-                    <strong>Registrati in un messaggio. Primo ordine in meno di 24h.</strong> Scrivi a Marina: attiva il
-                    tuo account in pochi minuti e ricevi subito la prima consegna.
+                    <strong>Registrati in un messaggio. Primo ordine già domani mattina.</strong> Scrivi a Marina:
+                    attiva il tuo account in pochi minuti e ricevi subito la prima consegna.
                   </div>
                 </div>
               </div>
@@ -331,7 +367,7 @@
             <div class="marina-phone-col">
               <div id="marina-phone">
                 <div class="phone-status-bar">
-                  <span class="phone-st-time">18:42</span> <span class="phone-st-icons">▲ ▼ ● ■</span>
+                  <span class="phone-st-time">01:13</span> <span class="phone-st-icons">▲ ▼ ● ■</span>
                 </div>
                 <div class="phone-wa-hdr">
                   <img src="assets/marina.jpg" alt="Marina" class="phone-wa-ava" />
@@ -343,28 +379,31 @@
                 <div class="phone-chat-body">
                   <div class="phone-date-badge">Oggi</div>
                   <div class="phone-bubble user" id="pb1">
-                    Ciao Marina! Ho bisogno di branzino, salmone e gamberi rossi per domani mattina. Siamo 60 coperti.
-                    <div class="pb-time">07:52 <span class="pb-ticks read">✓✓</span></div>
+                    Ciao Marina! Mi servono branzino, salmone e gamberi rossi per domani. Siamo 60 coperti.
+                    <div class="pb-time">01:12 <span class="pb-ticks read">✓✓</span></div>
                   </div>
                   <div class="phone-typing" id="pt1"><span></span><span></span><span></span></div>
                   <div class="phone-bubble ai" id="pb2">
-                    Ciao! Ecco disponibilità e prezzi:<br />
+                    Ecco disponibilità e prezzi:<br />
                     🐟 Branzino selvaggio · 16 kg · €18,50/kg<br />
                     🍣 Salmone atlantico · 8 kg · €12,90/kg<br />
                     🦐 Gamberi rossi Mazara · 5 kg · €38/kg<br />
-                    Totale stimato: <strong>€723</strong>. Confermo l'ordine?
-                    <div class="pb-time">07:52 <span class="pb-ticks read">✓✓</span></div>
+                    Totale: <strong>€723</strong>. Confermo?
+                    <div class="pb-time">01:12 <span class="pb-ticks read">✓✓</span></div>
                   </div>
                   <div class="phone-bubble user" id="pb3">
-                    Sì, confermato! 🙌 A che ora consegnate?
-                    <div class="pb-time">07:53 <span class="pb-ticks read">✓✓</span></div>
+                    Sì, confermato! 🙌
+                    <div class="pb-time">01:13 <span class="pb-ticks read">✓✓</span></div>
                   </div>
                   <div class="phone-typing" id="pt2"><span></span><span></span><span></span></div>
                   <div class="phone-bubble ai" id="pb4">
-                    ✅ Ordine confermato! Consegna domani tra le 05:30 e le 07:00. Riceverai un SMS con il tracker del
-                    furgone. Buon servizio! 🐟
-                    <div class="pb-time">07:53 <span class="pb-ticks read">✓✓</span></div>
+                    ✅ Ordine confermato, consegna entro le 11:00. Buon servizio! 🐟
+                    <div class="pb-time">01:13 <span class="pb-ticks read">✓✓</span></div>
                   </div>
+                </div>
+                <div class="phone-input">
+                  <span class="phone-input-field">Messaggio</span>
+                  <span class="phone-input-send" aria-hidden="true">➤</span>
                 </div>
               </div>
             </div>
@@ -392,16 +431,15 @@
               >
             </h2>
             <p class="body-text reveal-text">
-              LE DELIZIE DEL MARE S.R.L. nasce nel 2004 con un obiettivo preciso: portare il meglio del mare
-              direttamente nelle cucine dei professionisti. Da oltre 30 anni serviamo ristoranti, hotel, mense e
-              strutture della GDO con la stessa ossessione per la qualità del primo giorno.
+              DelMar nasce nel 1996 con un obiettivo preciso: portare il meglio del mare direttamente nelle cucine dei
+              professionisti. Da oltre 30 anni serviamo ristoranti, hotel, stabilimenti balneari e i migliori banchi
+              della distribuzione organizzata con la stessa ossessione per la qualità e il servizio del primo giorno.
             </p>
             <p class="body-text reveal-text">
               Con sede a Massa Carrara, in una posizione strategica per la logistica nazionale, contiamo su un magazzino
-              all'avanguardia, una flotta refrigerata moderna e circa 50 collaboratori che ogni giorno rendono possibile
-              la promessa DelMar: fresco, preciso, puntuale.
+              all'avanguardia, una flotta refrigerata moderna e più di 70 collaboratori che ogni giorno rendono
+              possibile la promessa DelMar: fresco, preciso, puntuale.
             </p>
-            <a href="#contatti" class="prod-link">Scopri la nostra storia →</a>
           </div>
           <div class="azienda-side-imgs reveal-img">
             <img src="assets/meeting-1.jpg" alt="Team in riunione" loading="lazy" />
@@ -478,48 +516,25 @@
           </p>
           <div class="team-stats">
             <div>
-              <div class="team-stat-n" data-count="50">0</div>
+              <div class="team-stat-n" data-count="70">0</div>
               <div class="team-stat-l">Collaboratori<br />nel 2026</div>
             </div>
             <div>
-              <div class="team-stat-n" data-count="20">0</div>
-              <div class="team-stat-l">Anni di storia<br />dal 2004</div>
+              <div class="team-stat-n" data-count="30">0</div>
+              <div class="team-stat-l">Anni di storia<br />dal 1996</div>
             </div>
             <div>
-              <div class="team-stat-n" data-count="13" data-suffix="M">0</div>
-              <div class="team-stat-l">Milioni di fatturato<br />anno 2024</div>
+              <div class="team-stat-n" data-count="2000" data-suffix="+">0</div>
+              <div class="team-stat-l">Ristoranti e attività<br />serviti ogni giorno</div>
             </div>
             <div>
-              <div class="team-stat-n" data-count="24" data-suffix="h">0</div>
-              <div class="team-stat-l">Ore dalla selezione<br />alla consegna</div>
+              <div class="team-stat-n" data-count="35" data-suffix="">0</div>
+              <div class="team-stat-l">Porti nel Mediterraneo<br />di approvvigionamento</div>
             </div>
           </div>
         </div>
       </div>
     </section>
-    <!-- ════════════════════ FULLBLEED CTA ════════ -->
-    <div class="section" id="cta-full">
-      <div id="cta-full-bg" class="par-img">
-        <img src="assets/truck-night.jpg" alt="Consegna notturna" loading="lazy" />
-      </div>
-      <div id="cta-full-overlay"></div>
-      <div id="cta-full-content">
-        <p class="label">Inizia oggi</p>
-        <h2 class="big-title">
-          <span class="clip-wrap"
-            ><span class="clip-inner">Portare il mare<br />nella tua cucina.</span></span
-          >
-        </h2>
-        <a
-          href="https://wa.me/393936762018?text=Ciao%20DelMar%2C%20vorrei%20un%20primo%20ordine"
-          target="_blank" rel="noopener noreferrer"
-          class="wa-big"
-        >
-          <svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
-          Contattaci su WhatsApp
-        </a>
-      </div>
-    </div>
     <!-- ════════════════════ §8 CONTATTI ══════════ -->
     <section class="section sec-pad" id="contatti">
       <canvas id="contatti-particles"></canvas>
@@ -629,12 +644,13 @@
         &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
       </p>
     </footer>
+    </div>
     <!-- Lightbox -->
     <div id="lightbox"><button id="lightbox-close">&times;</button><img id="lb-img" src="" alt="" /></div>
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="js/script.js?v=27"></script>
+    <script src="js/script.js?v=42"></script>
   </body>
 </html>

@@ -7,13 +7,27 @@
   --bg-alt: #f5f5f3;
   --ink: #151c64;
   --white: #fff;
-  --wa: #25D366;
-  --wa-hover: #1ebe5a;
+  /* Colore secondario del marchio: corallo. Caldo e complementare al
+     blu, è il colore del gambero rosso e del salmone — parla del
+     prodotto invece di prendere in prestito quello di un'app.
+     Due gradazioni, e la scelta fra le due non è estetica ma di
+     leggibilità: il corallo pieno con testo bianco sopra arriva a 2,8
+     di contrasto, sotto il minimo perfino per i corpi grandi. Quindi
+     i fondi pieni e il testo su bianco usano la gradazione scura
+     (4,86), mentre quella piena vive dove il fondo è scuro — dove
+     tocca 5,4 sul blu — e sui dettagli grafici, che non hanno
+     obblighi di contrasto.
+     Il nome --wa resta perché lo usano decine di punti: indica il
+     richiamo all'azione, non più WhatsApp */
+  --wa: #c9432c;
+  --wa-hover: #a8351f;
+  --accent-bright: #ff6b57;
   --border: rgba(21,28,100,.12);
   --text-dim: rgba(21,28,100,.45);
   --text-mid: rgba(21,28,100,.62);
   --text-hi: rgba(21,28,100,.9);
-  --font: 'Outfit', sans-serif;
+  /* Geometrico largo come il marchio DelMar, su tutto il sito */
+  --font: 'Poppins', sans-serif;
 }
 
 *, *::before, *::after {
@@ -151,6 +165,9 @@ nav a {
   border: 1px solid rgba(0,0,0,.35);
   padding: .55rem 1.3rem;
   border-radius: 2px;
+  font-family: var(--font);
+  font-size: .64rem;
+  font-weight: 400;
   color: rgba(0,0,0,.78) !important;
   transition: background .3s, border-color .3s !important;
 }
@@ -163,8 +180,13 @@ nav a {
   }
 }
 
-/* ─ Lottie bg ───────────────────────────────── */
-#lottie-bg {
+/* ─ Hero: video a tutto schermo ─────────────── */
+/* Sostituisce il tunnel Lottie: un solo mp4 che copre lo schermo e
+   avanza con lo scroll invece di scorrere da solo. Il file e' stato
+   ricodificato con un keyframe su OGNI fotogramma — l'originale ne
+   aveva uno solo in dieci secondi e ogni salto avrebbe costretto il
+   browser a decodificare dall'inizio, a scatti */
+#hero-bg {
   position: fixed;
   top: 0;
   left: 0;
@@ -172,88 +194,35 @@ nav a {
   height: 100vh;
   z-index: 1;
   overflow: hidden;
-  background: #080808;
-}
-
-#lottie-bg canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* Alone di luce sulla giuntura tra i due video: solo il CONTORNO
-   della stessa porta del tunnel, senza riempimento, tutto blur —
-   pura sfumatura che cavalca il bordo del reveal e viaggia con lui.
-   Figlio di #lottie-bg: eredita il fade-out di fine hero */
-#hero-white {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: #fff;
-  opacity: 0;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='4'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='none' stroke='white' stroke-width='3.5' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='4'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='none' stroke='white' stroke-width='3.5' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
-}
-
-/* Video finale: emerge dentro la luce bianca (opacity/scale pilotate
-   da initHeroScroll) e continua a scorrere sullo schermo bianco.
-   Centrato con inset+margin auto, NON con translate: GSAP scrive
-   scale nel transform e sovrascriverebbe il centraggio */
-/* Sempre full screen: a rivelarlo è una maschera a forma di PORTA
-   DEL TUNNEL (pavimento piatto, pareti dritte, volta ad arco) con
-   bordi sfumati dal blur SVG. La dimensione della maschera è
-   pilotata da initHeroScroll (mask-size), la forma è statica */
-/* Fondale delle fasce cinemascope: compare SOLO nel tratto finale
-   (pilotato da initHeroScroll), quando la porta ha ormai inghiottito
-   lo schermo — prima, sopra e sotto il video si continua a vedere il
-   tunnel. Bianco come il resto del sito: così l'hero finisce sullo
-   stesso fondo delle sezioni e la giuntura non si vede */
-#hero-fill {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: #fff;
-  opacity: 0;
-  /* stessa maschera-porta del video: il fondale riempie solo il varco
-     (dietro la banda che si rimpicciolisce), fuori resta il tunnel */
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
+  background: #04121c;
+  /* L'ombra è invisibile finché il video occupa tutto lo schermo, e
+     compare da sola quando si ritira nel riquadro */
+  box-shadow: 0 40px 90px rgba(4,18,28,.35);
+  will-change: transform;
 }
 
 #hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Solo i bordi, e in nero neutro: un velo steso su tutto lo schermo
+   spegneva il mare e lo virava di blu. La leggibilità del testo la
+   garantisce l'ombra locale dietro ogni capitolo (.ch::before), che
+   scurisce dove serve invece che ovunque */
+#hero-scrim {
   position: absolute;
   inset: 0;
-  margin: auto;
-  /* banda cinemascope a larghezza PIENA (il file è 1280x480, 8:3):
-     niente ritagli laterali, le scritte del video restano intere;
-     sopra e sotto, tunnel prima e fasce bianche (#hero-fill) alla fine */
-  width: 100vw;
-  aspect-ratio: 8 / 3;
-  height: auto;
-  z-index: 3;
-  opacity: 0;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.3) 0%,
+    rgba(0,0,0,0) 24%,
+    rgba(0,0,0,0) 74%,
+    rgba(0,0,0,.32) 100%
+  );
 }
 
 #vig {
@@ -272,6 +241,28 @@ nav a {
   position: relative;
   z-index: 3;
   height: 500vh;
+}
+
+/* Tutto ciò che segue l'hero sale sopra il video invece di spingerlo
+   fuori: l'hero resta fermo e viene coperto, come una tenda che si
+   chiude. Serve un fondo pieno, altrimenti il video trasparirebbe
+   dagli spiragli fra una sezione e l'altra */
+#dopo-hero {
+  position: relative;
+  z-index: 5;
+  background: var(--bg);
+}
+
+/* L'ombra proiettata verso l'alto stacca il bordo superiore dal video
+   e rende visibile la sovrapposizione mentre sale */
+#dopo-hero::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  box-shadow: 0 -22px 60px rgba(0,0,0,.45);
 }
 
 #v-sticky {
@@ -298,11 +289,14 @@ nav a {
   pointer-events: none;
 }
 
+/* Alone morbido sotto il testo, largo e sfumato fino a sparire: è lui
+   a tenere leggibili i capitoli ora che il video non è più coperto da
+   un velo generale */
 .ch::before {
   content: '';
   position: absolute;
-  inset: -5rem -6rem;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,.55) 0%, transparent 68%);
+  inset: -7rem -8rem;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.66) 0%, rgba(0,0,0,.34) 45%, transparent 72%);
   z-index: -1;
   pointer-events: none;
   border-radius: 50%;
@@ -316,7 +310,7 @@ nav a {
   text-align: center;
 }
 
-#c2, #c3, #c4 {
+#c2, #c3, #c4, #c5 {
   top: 50%;
   left: 50%;
   width: 88%;
@@ -324,29 +318,61 @@ nav a {
   text-align: center;
 }
 
+/* Il marchio chiude l'hero: bianco perché il blu del PNG è scuro
+   quanto il mare dietro. L'ombra resta comunque, serve sui fotogrammi
+   in cui il cielo è chiaro */
+.ch-logo {
+  width: min(190px, 34vw);
+  margin: 0 auto;
+  filter: brightness(0) invert(1) drop-shadow(0 2px 16px rgba(0,0,0,.6));
+  opacity: .96;
+}
+
 /* Corpo unico per tutti i capitoli, tarato sulla riga più lunga
    (30 caratteri): a scale diverse le schermate dell'hero sembravano
-   quattro pezzi scollegati invece di una sequenza */
+   quattro pezzi scollegati invece di una sequenza.
+   Peso sottile come il marchio, e corpo cresciuto di conseguenza: un
+   tratto filiforme ha bisogno di più superficie per avere presenza */
 .ch-title {
-  font-weight: 700;
-  letter-spacing: -.02em;
-  line-height: 1.08;
-  font-size: clamp(2.2rem, 3.8vw, 3.6rem);
-  margin-bottom: 1.6rem;
+  font-weight: 300;
+  /* Maiuscolo: in Poppins sottile le capitali hanno tutte la stessa
+     altezza e nessuna asta ascendente o discendente, quindi la riga
+     diventa una barra continua e regge la stretta molto meglio del
+     minuscolo. La crenatura resta negativa ma non troppo: fra due
+     capitali lo spazio ottico è già inferiore che fra due minuscole */
+  text-transform: uppercase;
+  letter-spacing: -.04em;
+  line-height: 1.18;
+  font-size: clamp(1.8rem, 3vw, 2.85rem);
+  margin-bottom: 1.8rem;
   text-shadow: 0 2px 24px rgba(0,0,0,.85), 0 0 80px rgba(0,0,0,.55);
 }
 
+/* Stessa voce dei titoli, non un'etichettina: maiuscoletto stretto e
+   tracciatura larga li facevano leggere come didascalie di servizio
+   sotto frasi grandi e in tondo. Qui il carattere è quello del sito,
+   con la spaziatura naturale */
 .ch-cta {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(255,255,255,.35);
-  padding-bottom: 4px;
+  gap: .55rem;
+  font-family: var(--font);
+  font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+  font-weight: 300;
+  letter-spacing: .015em;
+  border-bottom: 1px solid rgba(255,255,255,.45);
+  padding-bottom: 6px;
+  text-shadow: 0 1px 14px rgba(0,0,0,.75);
   transition: border-color .3s, gap .3s;
+}
+
+/* Freccia disegnata al posto del glifo: si dimensiona sul testo e ne
+   eredita il colore, quindi resta allineata a qualsiasi corpo */
+.arr {
+  width: 1.05em;
+  height: 1.05em;
+  flex-shrink: 0;
+  transition: transform .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -354,14 +380,26 @@ nav a {
     border-color: #fff;
     gap: .8rem;
   }
+
+  .ch-cta:hover .arr,
+  .prod-link:hover .arr {
+    transform: translateX(3px);
+  }
 }
 
+/* Il pulsante pieno non scende sotto il tondo normale: bianco su
+   verde, un tratto filiforme si impasta e diventa illeggibile */
+/* Il pulsante pieno non scende sotto il tondo normale: bianco su
+   verde, un tratto filiforme si impasta e diventa illeggibile */
 .ch-cta.wa {
   background: var(--wa);
   border: none;
-  padding: .9rem 2.2rem;
-  border-radius: 2px;
-  font-size: .7rem;
+  padding: 1rem 2.4rem;
+  border-radius: 3px;
+  font-size: clamp(.92rem, 1.18vw, 1.05rem);
+  font-weight: 400;
+  letter-spacing: .02em;
+  text-shadow: none;
   transition: background .3s;
 }
 
@@ -478,11 +516,15 @@ nav a {
   margin-bottom: 2.5rem;
 }
 
+/* Peso sottile come i capitoli dell'hero e come il marchio: è il
+   tratto filiforme a fare l'identità, e un titolo grassetto in mezzo
+   la spezzerebbe. Le cifre restano invece piene — sono dati, non
+   voce, e a peso sottile perderebbero il colpo d'occhio */
 .big-title {
-  font-weight: 700;
+  font-weight: 300;
   font-size: clamp(2rem, 4.5vw, 4.8rem);
-  letter-spacing: -.025em;
-  line-height: 1.05;
+  letter-spacing: -.045em;
+  line-height: 1.08;
 }
 
 .body-text {
@@ -525,11 +567,15 @@ nav a {
   text-align: center;
 }
 
+/* line-height 1.15 e non 1: i rulli del KPI in diretta hanno bisogno
+   di un filo di respiro sopra e sotto la cifra per non essere tagliati
+   dall'overflow, e vale per tutti e quattro perché le didascalie
+   restino sulla stessa riga */
 .stat-n {
-  font-weight: 800;
+  font-weight: 300;
   font-size: clamp(3rem, 6vw, 6rem);
-  letter-spacing: -.04em;
-  line-height: 1;
+  letter-spacing: -.055em;
+  line-height: 1.15;
 }
 
 /* Niente maiuscoletto spaziato: a .72rem con .18em di tracciatura
@@ -541,9 +587,106 @@ nav a {
   line-height: 1.5;
   color: rgba(21,28,100,.72);
   margin-top: 1rem;
-  max-width: 24ch;
+  max-width: 34ch;
   margin-inline: auto;
   text-wrap: balance;
+}
+
+/* ── Il KPI in diretta ─────────────────────── */
+/* Cifre a larghezza fissa: il numero cambia da solo e senza questo
+   l'intera colonna si allarga e si stringe a ogni scatto */
+.stat-live .stat-n {
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  justify-content: center;
+  transition: color .25s ease;
+}
+
+/* Lo scatto va visto: un salto di pochi kg su quattro cifre passa
+   inosservato se il numero non si accende per un istante */
+.stat-live .stat-n.is-bump {
+  color: var(--wa);
+}
+
+/* Rulli da slot machine: ogni cifra è una colonna 0-9 alta dieci
+   righe che scorre dentro una finestra alta una riga. Girano solo le
+   cifre che cambiano davvero — far girare anche le migliaia per un
+   salto di due chili si vedrebbe subito che è finto */
+/* La finestra sconta la crenatura negativa di .stat-n: senza, il
+   numero in diretta resterebbe più largo degli altri tre */
+.odo-d {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.15em;
+  width: calc(1ch - .04em);
+}
+
+.odo-reel {
+  display: block;
+  will-change: transform;
+}
+
+.odo-reel span {
+  display: block;
+  height: 1.15em;
+}
+
+.odo-sep {
+  display: inline-block;
+}
+
+.stat-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin-top: .9rem;
+  padding: .3rem .75rem;
+  border-radius: 999px;
+  background: rgba(255,107,87,.1);
+  border: 1px solid rgba(255,107,87,.28);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--wa);
+}
+
+.stat-live-badge time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Chiusa: niente verde e niente pulsazione, il numero è un totale */
+.stat-live-badge.is-closed {
+  background: rgba(21,28,100,.05);
+  border-color: var(--border);
+  color: var(--text-mid);
+}
+
+.stat-live-badge.is-closed .live-dot {
+  background: var(--text-dim);
+  box-shadow: none;
+  animation: none;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-bright);
+  box-shadow: 0 0 7px rgba(255,107,87,.9);
+  animation: livepulse 1.6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes livepulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .3;
+    transform: scale(.7);
+  }
 }
 
 /* ─ §2 PRODOTTI ─────────────────────────────── */
@@ -591,13 +734,18 @@ nav a {
 }
 
 .prod-link {
-  font-size: .68rem;
-  font-weight: 600;
-  letter-spacing: .14em;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-family: var(--font);
+  font-size: .7rem;
+  /* nei maiuscoletti si scende solo fino al tondo normale: sotto,
+     a questo corpo, il tratto si sgrana */
+  font-weight: 400;
+  letter-spacing: .16em;
   text-transform: uppercase;
   border-bottom: 1px solid rgba(0,0,0,.35);
   padding-bottom: 3px;
-  display: inline-block;
   transition: border-color .3s;
 }
 
@@ -640,7 +788,15 @@ nav a {
   flex-direction: column;
 }
 
+/* Titolo di sezione a tutti gli effetti, non un'etichettina: era il
+   solo blocco del sito in cui il nome della sezione spariva */
 .proc-tl-label {
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
+  font-weight: 300;
+  letter-spacing: -.045em;
+  line-height: 1.05;
+  text-transform: none;
+  color: var(--ink);
   margin-bottom: 5vh;
 }
 
@@ -759,29 +915,30 @@ nav a {
 }
 
 /* Non più solo "01" ma "01 · La sera": la spaziatura da numero
-   isolato spezzava la frase in lettere staccate */
+   isolato spezzava la frase in lettere staccate. È l'orario a
+   raccontare il servizio, quindi va letto, non intuito */
 .ptl-num {
-  font-size: .56rem;
-  font-weight: 600;
-  letter-spacing: .26em;
+  font-size: .74rem;
+  font-weight: 500;
+  letter-spacing: .18em;
   text-transform: uppercase;
-  color: rgba(21,28,100,.5);
-  margin-bottom: .55rem;
+  color: var(--wa);
+  margin-bottom: .7rem;
 }
 
 .ptl-title {
-  font-size: clamp(1.35rem, 2.2vw, 2.2rem);
-  font-weight: 700;
-  letter-spacing: -.03em;
-  line-height: 1.1;
+  font-size: clamp(1.5rem, 2.4vw, 2.4rem);
+  font-weight: 300;
+  letter-spacing: -.045em;
+  line-height: 1.14;
   margin-bottom: .7rem;
 }
 
 .ptl-desc {
-  font-size: .86rem;
-  color: rgba(21,28,100,.65);
-  line-height: 1.78;
-  max-width: 360px;
+  font-size: 1rem;
+  color: rgba(21,28,100,.8);
+  line-height: 1.7;
+  max-width: 420px;
 }
 
 #proc-photo-col {
@@ -1017,9 +1174,9 @@ nav a {
 }
 
 .team-stat-n {
-  font-weight: 800;
+  font-weight: 300;
   font-size: 2.8rem;
-  letter-spacing: -.03em;
+  letter-spacing: -.045em;
 }
 
 .team-stat-l {
@@ -1037,54 +1194,14 @@ nav a {
   z-index: 4;
   height: 80vh;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  background: #04121c;
 }
 
-#cta-full-bg {
-  position: absolute;
-  inset: 0;
-}
-
-#cta-full-bg img {
+#cta-full video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
-  transform: scale(1.1);
-  will-change: transform;
-}
-
-#cta-full-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(8,8,8,.65);
-}
-
-/* Testo sopra foto scurita: resta bianco anche col sito chiaro */
-#cta-full-content {
-  position: relative;
-  z-index: 1;
-  max-width: 700px;
-  padding: 2rem;
-  color: #fff;
-}
-
-#cta-full-content .label {
-  display: flex;
-  justify-content: center;
-  color: rgba(255,255,255,.6);
-}
-
-#cta-full-content .big-title {
-  font-size: clamp(2.4rem, 5vw, 5.5rem);
-  margin-bottom: 2rem;
-}
-
-#cta-full-content .wa-big {
-  margin: 0 auto;
+  display: block;
 }
 
 /* ─ §8 CONTATTI ─────────────────────────────── */
@@ -1190,8 +1307,8 @@ nav a {
   color: #fff;
   border: none;
   font-family: var(--font);
-  font-size: .7rem;
-  font-weight: 700;
+  font-size: .72rem;
+  font-weight: 500;
   letter-spacing: .2em;
   text-transform: uppercase;
   padding: 1.1rem 2.8rem;
@@ -1242,8 +1359,9 @@ nav a {
   gap: .8rem;
   background: var(--wa);
   color: #fff;
-  font-size: .78rem;
-  font-weight: 700;
+  font-family: var(--font);
+  font-size: .8rem;
+  font-weight: 500;
   letter-spacing: .14em;
   text-transform: uppercase;
   padding: 1.1rem 2.4rem;
@@ -1409,9 +1527,9 @@ nav a {
 
 #mb-title {
   font-size: clamp(2.4rem, 5vw, 5.5rem);
-  font-weight: 800;
-  letter-spacing: -.04em;
-  line-height: 1;
+  font-weight: 300;
+  letter-spacing: -.045em;
+  line-height: 1.08;
   margin-bottom: 1.5rem;
 }
 
@@ -1501,8 +1619,8 @@ nav a {
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1.5px solid rgba(37,211,102,.55);
-  box-shadow: 0 0 0 4px rgba(37,211,102,.1), 0 6px 20px rgba(21,28,100,.1);
+  border: 1.5px solid rgba(255,107,87,.55);
+  box-shadow: 0 0 0 4px rgba(255,107,87,.1), 0 6px 20px rgba(21,28,100,.1);
 }
 
 /* ── left info ── */
@@ -1521,8 +1639,8 @@ nav a {
   font-weight: 600;
   letter-spacing: .32em;
   text-transform: uppercase;
-  color: #17a34a;
-  border: 1px solid rgba(37,211,102,.45);
+  color: var(--wa);
+  border: 1px solid rgba(255,107,87,.45);
   border-radius: 2px;
   padding: .32rem .8rem;
 }
@@ -1530,9 +1648,9 @@ nav a {
 .marina-badge-dot {
   width: 5px;
   height: 5px;
-  background: #17a34a;
+  background: var(--accent-bright);
   border-radius: 50%;
-  box-shadow: 0 0 7px rgba(37,211,102,.8);
+  box-shadow: 0 0 7px rgba(255,107,87,.8);
   animation: mblink 1.8s step-end infinite;
 }
 
@@ -1546,10 +1664,10 @@ nav a {
 }
 
 .marina-title {
-  font-weight: 800;
+  font-weight: 300;
   font-size: clamp(3rem, 5vw, 5.5rem);
-  letter-spacing: -.04em;
-  line-height: .95;
+  letter-spacing: -.045em;
+  line-height: 1;
 }
 
 .marina-sub {
@@ -1588,10 +1706,10 @@ nav a {
 .chip-dot {
   width: 5px;
   height: 5px;
-  background: #17a34a;
+  background: var(--accent-bright);
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(37,211,102,.5);
+  box-shadow: 0 0 8px rgba(255,107,87,.5);
 }
 
 .chip-label {
@@ -1612,8 +1730,9 @@ nav a {
   gap: .7rem;
   background: var(--wa);
   color: #fff;
-  font-size: .68rem;
-  font-weight: 700;
+  font-family: var(--font);
+  font-size: .7rem;
+  font-weight: 500;
   letter-spacing: .14em;
   text-transform: uppercase;
   padding: 1rem 2rem;
@@ -1788,6 +1907,40 @@ nav a {
   animation-delay: .36s;
 }
 
+/* Barra di scrittura finta: chiude il mockup in basso come nell'app
+   vera. Senza, la conversazione galleggiava e lo spazio che avanza
+   sotto l'ultimo messaggio sembrava un errore di impaginazione */
+.phone-input {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .45rem .5rem;
+  background: #efeae2;
+}
+
+.phone-input-field {
+  flex: 1;
+  background: #fff;
+  border-radius: 999px;
+  padding: .38rem .7rem;
+  font-size: .64rem;
+  color: rgba(17,27,33,.4);
+  box-shadow: 0 1px 1px rgba(11,20,26,.08);
+}
+
+.phone-input-send {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #00a884;
+  color: #fff;
+  font-size: .62rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 @keyframes tdot {
   0%, 80%, 100% {
     transform: translateY(0);
@@ -1871,10 +2024,14 @@ nav a {
 @media (max-width: 768px) {
 
   /* ─── Fix overflow orizzontale iOS ───────────── */
-  /* clip-path:inset(0) clippa il Lottie SVG landscape dentro il container fixed —
-     overflow:hidden da solo non funziona su Safari mobile per elementi position:fixed */
-  #lottie-bg {
-    clip-path: inset(0 0 0 0);
+  /* overflow:hidden da solo non basta su Safari mobile per gli
+     elementi position:fixed: senza clip-path il video sfonda in
+     larghezza e la pagina scorre di lato */
+  /* clip-path con "round": senza, il ritaglio rettangolare che serve a
+     Safari mobile squadrerebbe gli angoli del riquadro proprio mentre
+     si arrotondano */
+  #hero-bg {
+    clip-path: inset(0 0 0 0 round 26px);
     max-width: 100vw;
   }
 
@@ -1992,12 +2149,14 @@ nav a {
     color: rgba(255,255,255,.65);
   }
 
+  /* Nel menu a schermo intero il fondo è quasi nero: qui serve la
+     gradazione piena, quella scura ci si perderebbe dentro */
   .nav-wa {
     display: inline-flex !important;
     border-radius: 2px !important;
-    background: rgba(37,211,102,.1) !important;
-    border: 1px solid rgba(37,211,102,.4) !important;
-    color: var(--wa) !important;
+    background: rgba(255,107,87,.1) !important;
+    border: 1px solid rgba(255,107,87,.4) !important;
+    color: var(--accent-bright) !important;
     padding: .8rem 2.4rem !important;
   }
 
@@ -2092,8 +2251,8 @@ nav a {
   }
 
   .ch-title {
-    font-size: clamp(1.9rem, 8vw, 2.6rem) !important;
-    margin-bottom: 1.4rem;
+    font-size: clamp(1.55rem, 6.4vw, 2.1rem) !important;
+    margin-bottom: 1.5rem;
   }
 
   /* Scrim più deciso dietro il primo capitolo: il testo stacca
@@ -2107,21 +2266,22 @@ nav a {
     justify-content: center;
     width: min(320px, 88%);
     padding: 1.05rem 1.5rem;
-    font-size: .82rem;
-    font-weight: 700;
-    letter-spacing: .12em;
+    font-size: 1.02rem;
+    font-weight: 400;
+    letter-spacing: .015em;
     background: #fff;
     color: #0a0a0a;
     border-bottom: none;
     border-radius: 6px;
     box-shadow: 0 12px 34px rgba(0,0,0,.5);
+    text-shadow: none;
     margin-top: .4rem;
   }
 
   .ch-cta.wa {
     width: min(320px, 88%);
     padding: 1.05rem 1.5rem;
-    font-size: .82rem;
+    font-size: 1rem;
     background: var(--wa);
     color: #fff;
     border-radius: 6px;
@@ -2146,6 +2306,11 @@ nav a {
      box: lo prende la sezione, altrimenti i numeri toccano il bordo */
   #stats {
     padding: 8vh 5%;
+  }
+
+  .stat-live-badge {
+    font-size: .56rem;
+    padding: .26rem .6rem;
   }
 
   .stats-grid {
@@ -2243,8 +2408,12 @@ nav a {
     box-shadow: 0 18px 40px rgba(0,0,0,.16);
   }
 
+  /* font-size esplicito: .label è ridefinita più in alto in questo
+     stesso media query e, a parità di specificità, vincerebbe lei
+     rimpicciolendo di nuovo il titolo */
   .proc-tl-label {
-    margin-bottom: 1vh;
+    font-size: clamp(1.9rem, 7.5vw, 3rem);
+    margin-bottom: 2vh;
   }
 
   #proc-stage {
@@ -2278,14 +2447,12 @@ nav a {
   }
 
   .ptl-desc {
-    font-size: .86rem;
+    font-size: .94rem;
     max-width: none;
-    color: rgba(21,28,100,.68);
   }
 
   .ptl-num {
-    font-size: .54rem;
-    color: rgba(21,28,100,.55);
+    font-size: .68rem;
   }
 
   /* ─── Marina AI ──────────────────────────── */
@@ -2512,10 +2679,6 @@ nav a {
     height: 65vh;
   }
 
-  #cta-full-content .big-title {
-    font-size: clamp(1.9rem, 7vw, 3rem) !important;
-    margin-bottom: 1.5rem !important;
-  }
 
   .wa-big {
     font-size: .7rem;
@@ -2695,11 +2858,18 @@ nav a {
     height: 26px;
   }
 
-  /* I pallini "sta scrivendo" occupano spazio in colonna anche da
-     invisibili: su schermi bassi si sacrificano per far entrare
-     tutti i messaggi */
-  .phone-typing {
-    display: none;
+  .phone-input {
+    padding: .32rem .45rem;
+  }
+
+  .phone-input-field {
+    font-size: .58rem;
+    padding: .3rem .6rem;
+  }
+
+  .phone-input-send {
+    width: 22px;
+    height: 22px;
   }
 
   /* ─ Contatti: tutte le info in una schermata ─ */

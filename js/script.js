@@ -34,13 +34,17 @@ function debounce(fn, ms) {
   let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
 
-/* Palette dei canvas — beam, rete neurale e linea di raccordo verso
-   Marina. Sul fondo bianco il tratto è l'inchiostro del sito e
-   l'alone un blu che sfuma via; sul nero di prima erano luce bianca,
-   che sul chiaro sparirebbe del tutto */
-const CV_INK  = '21,28,100';
-const CV_HALO = '45,80,180';
-const CV_FAR  = '90,140,220';
+/* Palette del beam e della linea che prosegue dentro Marina: corallo,
+   il secondario del marchio. Tre gradazioni perché la luce si legga —
+   nucleo scuro, alone pieno, coda che sfuma via */
+const CV_INK  = '201,67,44';
+const CV_HALO = '255,107,87';
+const CV_FAR  = '255,150,120';
+
+/* La rete neurale di sfondo resta a inchiostro: è una texture che
+   corre dietro ai testi di Marina e in corallo tingerebbe di rosa
+   tutta la sezione */
+const CV_NET  = '21,28,100';
 
 /* ── Header scroll state ──────────────────────── */
 const hdr = document.getElementById('hdr');
@@ -50,22 +54,53 @@ ScrollTrigger.create({
   onLeaveBack: () => hdr.classList.remove('scrolled')
 });
 
-/* ── Lottie bg: solo nell'hero ────────────────── */
-/* Il Lottie è un layer fixed dietro tutto il sito: mentre l'hero
-   scorre via si dissolve (scrub) e resta nascosto — così non spunta
-   mai negli spiragli tra le sezioni (pin spacer, reveal con
-   transform) e il paint si azzera oltre l'hero.
-   #vig NON è qui: si dissolve prima, insieme all'apertura della
-   porta — vedi initHeroScroll */
-gsap.to('#lottie-bg', {
+/* ── Chiusura dell'hero ───────────────────────── */
+/* Nell'ultimo tratto di scroll il video si ritira in un riquadro:
+   invece di sparire si stacca dai bordi e diventa un oggetto appoggiato
+   sulla pagina. Finisce di rimpicciolirsi esattamente quando la corsa
+   dell'hero termina, e da lì i numeri salgono a coprirlo */
+const CHIUSURA = {
+  trigger: '#v-scroller',
+  start: 'bottom 190%',
+  end: 'bottom bottom',
+  scrub: true
+};
+
+gsap.fromTo('#hero-bg',
+  { scale: 1, borderRadius: '0px' },
+  { scale: 0.74, borderRadius: '26px', ease: 'none', scrollTrigger: CHIUSURA }
+);
+
+/* I capitoli vivono in un contenitore separato dal video e non si
+   rimpicciolirebbero con lui: l'alone scuro dietro le scritte è più
+   largo del testo e resterebbe a sbordare ai lati del riquadro. Scala
+   con lo stesso fattore, così testo e alone restano dentro */
+gsap.fromTo('#v-sticky',
+  { scale: 1 },
+  { scale: 0.74, ease: 'none', scrollTrigger: CHIUSURA }
+);
+
+/* La vignettatura è ancorata al bordo alto dello schermo, non al
+   riquadro: mentre questo si stacca resterebbe a mezz'aria sul bianco */
+gsap.to('#vig', {
   autoAlpha: 0,
   ease: 'none',
   scrollTrigger: {
     trigger: '#v-scroller',
-    start: 'bottom 98%',
-    end: 'bottom 45%',
+    start: 'bottom 190%',
+    end: 'bottom 150%',
     scrub: true
   }
+});
+
+/* Una volta coperto del tutto sparisce davvero: un video fixed che
+   continua a decodificare dietro l'intera pagina costa paint e
+   batteria per qualcosa che nessuno vede */
+ScrollTrigger.create({
+  trigger: '#v-scroller',
+  start: 'bottom top',
+  onEnter:     () => gsap.set('#hero-bg, #vig', { visibility: 'hidden' }),
+  onLeaveBack: () => gsap.set('#hero-bg, #vig', { visibility: 'visible' })
 });
 
 /* ── Hero bg ──────────────────────────────────── */
@@ -91,6 +126,7 @@ gsap.set('#c1', { xPercent:-50, yPercent:-50, opacity:1 });
 gsap.set('#c2', { xPercent:-50, yPercent:-50 });
 gsap.set('#c3', { xPercent:-50, yPercent:-50 });
 gsap.set('#c4', { xPercent:-50, yPercent:-50 });
+gsap.set('#c5', { xPercent:-50, yPercent:-50 });
 
 /* Scrub dell'hero: lo scroll (già ammorbidito da Lenis) pilota i frame
    dell'animazione — renderFrame riceve un frame FRAZIONARIO, che su
@@ -103,19 +139,11 @@ function initHeroScroll(renderFrame, total) {
     {el:'#c2',s:0.22,fi:0.28,fo:0.38,e:0.44},
     {el:'#c3',s:0.46,fi:0.52,fo:0.60,e:0.65},
     {el:'#c4',s:0.67,fi:0.73,fo:0.80,e:0.86},
+    /* Il marchio chiude e non esce più: fo ed e oltre 1 perché op()
+       azzera l'opacità appena p raggiunge e, e qui p arriva a 1 */
+    {el:'#c5',s:0.87,fi:0.93,fo:1.01,e:1.02},
   ];
   const els = CHS.map(c => document.querySelector(c.el));
-
-  /* Transizione finale video-su-video: il mp4 (sotto maschera
-     circolare sfumata) si apre dal centro mentre il tunnel scorre
-     ancora intorno; sulla giuntura viaggia solo un anello di luce
-     sottile (#hero-white mascherato a ciambella). Preload pigro */
-  const whiteEl  = document.getElementById('hero-white');
-  const fillEl   = document.getElementById('hero-fill');
-  const videoEl  = document.getElementById('hero-video');
-  const vigEl    = document.getElementById('vig');
-  const V_START  = 0.80;
-  let vLoaded = false;
 
   /* Il primo capitolo (s=0) parte già in scena: a p=0 deve essere
      nitido e a scala piena, non nello stato "pre-ingresso" — senza
@@ -126,84 +154,14 @@ function initHeroScroll(renderFrame, total) {
   function sc(p,s,fi,fo,e){ if(p<=s)return s===0?1:.82; if(p<fi)return .82+.18*((p-s)/(fi-s||.001)); if(p>fo)return 1+.15*((p-fo)/(e-fo||.001)); return 1; }
   function bl(p,s,fi,fo,e){ if(s===0)return 0; if(p<=s)return 7; if(p<fi)return 7*(1-(p-s)/(fi-s||.001)); if(p>fo)return 6*((p-fo)/(e-fo||.001)); return 0; }
 
-  /* Su mobile ogni ms di paint conta: niente blur sui capitoli (la
+  /* Su mobile ogni ms di paint conta: niente blur sui capitoli, la
      ri-rasterizzazione del testo con Gaussian blur a raggio variabile
-     è la voce di paint più cara sui telefoni) e scritture di stile
-     solo quando il valore cambia davvero — per l'80% dell'hero le
-     maschere del video sono costanti, riscriverle a ogni frame
-     invalida lo stile per niente */
+     è la voce di paint più cara sui telefoni */
   const isMob    = isMobile();
-  let   lastVp   = -1;
   const lastChO  = els.map(() => -1);
-
-  /* Mobile: variante leggera del mp4 (640x240) e download avviato
-     SUBITO, non a metà scroll — su rete cellulare il file deve avere
-     un vantaggio; col faststart bastano i primi secondi bufferizzati
-     perché la porta si apra col video già in movimento */
-  if (isMob) {
-    videoEl.src = 'assets/video/hero-final-m.mp4?v=1';
-    videoEl.preload = 'auto';
-    videoEl.load();
-    vLoaded = true;
-    /* iOS in risparmio energetico rifiuta anche l'autoplay muto e il
-       ticker smette di ritentare quando lo scroll si ferma: il primo
-       tocco riprova il play se la porta è aperta e il video è fermo */
-    window.addEventListener('touchend', () => {
-      if (videoEl.paused && lastVp > 0.02) videoEl.play().catch(() => {});
-    }, { passive: true });
-  }
 
   function apply(p) {
     renderFrame(p * (total - 1));
-    /* il mp4 resta SEMPRE full screen (mai scalato: niente scatola):
-       la porta-maschera che si allarga dal centro mostra la sua
-       porzione centrale, come guardando attraverso il varco in fondo
-       al tunnel. A 260vmax la parte piena copre anche gli angoli */
-    if (!vLoaded && p > 0.5) { vLoaded = true; videoEl.preload = 'auto'; videoEl.load(); }
-    const vp = Math.min(1, Math.max(0, (p - V_START) / (1 - V_START)));
-    if (vp > 0 || lastVp !== 0) {
-      const sz = (Math.pow(vp, 1.2) * 260).toFixed(1) + 'vmax';
-      /* zoom dinamico della banda 8:3: nella fase porta è ingrandita
-         fino a coprire il viewport (cz — mai bordi tagliati in vista),
-         poi da metà apertura si rimpicciolisce con smoothstep fino a
-         scala 1 = larghezza piena con fasce nere, scritte intere */
-      const cz = Math.max(1, window.innerHeight / (window.innerWidth * 3 / 8));
-      const sh = Math.min(1, Math.max(0, (vp - 0.5) / 0.5));
-      const ease = sh * sh * (3 - 2 * sh);
-      gsap.set(videoEl, {
-        opacity: Math.min(1, vp * 3),
-        scale: cz + (1 - cz) * ease,
-        webkitMaskSize: `${sz} ${sz}`,
-        maskSize: `${sz} ${sz}`
-      });
-      if (vp > 0.02 && videoEl.paused) videoEl.play().catch(() => {});
-      else if (vp <= 0.01 && !videoEl.paused) { videoEl.pause(); videoEl.currentTime = 0; }
-
-      /* alone sulla giuntura: il contorno-porta sfumato scala insieme
-         alla maschera del video, così la luce cavalca sempre il bordo */
-      gsap.set(whiteEl, {
-        opacity: Math.min(1, vp * 3) * 0.55,
-        webkitMaskSize: `${sz} ${sz}`,
-        maskSize: `${sz} ${sz}`
-      });
-
-      /* fondale mascherato a porta: riempie il varco dietro la banda
-         già PRIMA che inizi a rimpicciolirsi, così nello spazio che
-         si apre non spunta mai il tunnel — fuori dalla porta il
-         tunnel resta visibile fino a essere inghiottito */
-      gsap.set(fillEl, {
-        opacity: Math.min(1, Math.max(0, (vp - 0.4) / 0.15)),
-        webkitMaskSize: `${sz} ${sz}`,
-        maskSize: `${sz} ${sz}`
-      });
-
-      /* La vignettatura scurisce la fascia alta del tunnel, ma il
-         fondale che si apre dietro il video è bianco: se restasse
-         accesa lascerebbe una velatura grigia sulla banda superiore.
-         Si spegne prima che il fondale entri in scena */
-      gsap.set(vigEl, { opacity: 1 - Math.min(1, vp * 2.5) });
-    }
-    lastVp = vp;
     CHS.forEach((c,i) => {
       const o = op(p,c.s,c.fi,c.fo,c.e);
       /* capitolo spento e già spento: nessuna scrittura */
@@ -229,7 +187,7 @@ function initHeroScroll(renderFrame, total) {
      il movimento continua da solo oltre l'inerzia di Lenis */
   let target = 0;
   let shown  = 0;
-  const CHASE = 4.5; /* 1/s: più basso = inseguimento più lungo e morbido */
+  const CHASE = 2.6; /* 1/s: più basso = inseguimento più lungo e morbido */
 
   ScrollTrigger.create({
     trigger:'#v-scroller', start:'top top', end:'bottom bottom', scrub:true,
@@ -248,10 +206,7 @@ function initHeroScroll(renderFrame, total) {
      stessa inerzia del resto) fino alla CTA piena nella direzione di
      marcia — accelerazione al centro, frenata all'arrivo. Il video
      segue con l'inseguitore qui sopra */
-  /* 0.885 = sosta "televisione": a metà tra l'ultima CTA e la fine,
-     la porta del tunnel è aperta a mezzo schermo col video già in
-     riproduzione dentro, incorniciato dal tunnel intorno */
-  const POINTS = CHS.map(c => c.s === 0 ? 0 : (c.fi + c.fo) / 2).concat(0.885, 1);
+  const POINTS = CHS.map(c => c.s === 0 ? 0 : (c.fi + c.fo) / 2).concat(1);
   const scrollerEl = document.getElementById('v-scroller');
   const heroMax    = () => scrollerEl.offsetHeight - window.innerHeight;
   const SNAP_EPS   = 0.012;
@@ -293,174 +248,133 @@ function initHeroScroll(renderFrame, total) {
   }, { passive: true });
 }
 
-/* Tunnel per tutti (desktop e mobile): il Lottie esportato è una
-   sequenza di immagini (un webp per frame) e lottie-web può solo
-   scattare da un frame all'altro. Disegnamo noi la sequenza su canvas
-   con crossfade tra frame consecutivi: le posizioni intermedie dello
-   scroll sono dissolvenze tra due frame, percepite come movimento
-   continuo. Su schermo verticale il draw "cover" centra il varco del
-   tunnel e ritaglia i lati — l'immersione resta identica */
-(async () => {
-  try {
-    /* Su mobile un file dedicato (generato da _source/scripts/
-       build-hero-mobile.js): 65 frame già sfoltiti e ritagliati alla
-       fetta centrale 540x720 — ~1.6MB invece degli 8.6MB del file
-       desktop. Se manca (deploy parziale) si ripiega sul desktop */
-    let res = isMobile()
-      ? await fetch('assets/lottie-hero-m.json?v=1').catch(() => null)
-      : null;
-    let thinned = !!(res && res.ok);
-    if (!thinned) res = await fetch('assets/lottie-hero.json?v=3');
-    const data = await res.json();
-    bar.style.width = '40%';
+/* Sfondo hero: un mp4 a tutto schermo che avanza con lo scroll invece
+   di scorrere da solo. Il file e' ricodificato con un keyframe su OGNI
+   fotogramma: l'originale ne aveva uno solo in dieci secondi e ogni
+   seek avrebbe costretto il browser a ridecodificare dall'inizio, a
+   scatti. Al posto della sequenza di immagini su canvas del tunnel
+   basta scrivere currentTime, la decodifica la fa il browser */
+(function(){
+  const videoEl = document.getElementById('hero-video');
+  if (!videoEl) return;
 
-    const byId = {};
-    (data.assets || []).forEach(a => { byId[a.id] = a; });
-    const srcs = (data.layers || [])
-      .filter(l => l.ty === 2)
-      .sort((a, b) => a.ip - b.ip)
-      .map(l => byId[l.refId] && byId[l.refId].p)
-      .filter(Boolean);
-    if (!srcs.length) throw new Error('nessun frame nella sequenza');
+  const FPS = 24;
 
-    const a0 = (data.assets || []).find(a => a.w && a.h) || {};
-    const iw = a0.w || 1280;
-    const ih = a0.h || 720;
+  /* Mobile: file piu' leggero (854px). Lo scrub via currentTime su iOS
+     resta pero' inaffidabile, quindi li' il video si limita a scorrere
+     in loop e sono solo i capitoli a seguire lo scroll */
+  if (isMobile()) videoEl.src = 'assets/video/hero-mare-m.mp4?v=2';
 
-    const box = document.getElementById('lottie-bg');
-    const cv  = document.createElement('canvas');
-    const ctx = cv.getContext('2d');
-    box.appendChild(cv);
+  /* Un seek per volta, e il successivo parte solo quando il precedente
+     ha davvero dipinto il fotogramma. Scrivere currentTime a ogni
+     frame dello scroll accoda richieste che il decoder non smaltisce:
+     il video arranca indietro e il movimento si vede a gradini.
+     Aspettando 'seeked' si va sempre alla velocità massima che il
+     decoder regge, e si salta direttamente all'ultimo valore
+     richiesto invece di ripercorrere quelli intermedi ormai vecchi */
+  let wanted   = 0;
+  let seeking  = false;
+  let duration = 10;
+  let frames   = 240;
 
-    let seq   = null;
-    let seqW  = iw;
-    let seqH  = ih;
-    let lastF = 0;
+  /* Oltre l'ultimo capitolo lo scroll molla la presa e il video finisce
+     da solo: chi è arrivato a "Sali a bordo" ha già letto tutto, e
+     costringerlo a continuare a scrollare per vedere la coda spezzerebbe
+     il finale */
+  const PLAY_FROM = 0.86;
+  let running = false;
 
-    function draw(f) {
-      lastF = f;
-      if (!seq) return;
-      const i = Math.max(0, Math.min(Math.floor(f), seq.length - 1));
-      const j = Math.min(i + 1, seq.length - 1);
-      const t = f - i;
-      /* cover: equivalente di preserveAspectRatio slice — con le
-         bitmap mobile pre-scalate s=1, dx=dy=0: blit puro */
-      const s  = Math.max(cv.width / seqW, cv.height / seqH);
-      const dw = seqW * s, dh = seqH * s;
-      const dx = (cv.width - dw) / 2, dy = (cv.height - dh) / 2;
-      ctx.globalAlpha = 1;
-      ctx.drawImage(seq[i], dx, dy, dw, dh);
-      if (j !== i && t > 0.01) {
-        ctx.globalAlpha = t;
-        ctx.drawImage(seq[j], dx, dy, dw, dh);
-      }
+  function pump() {
+    if (running || seeking) return;
+    if (Math.abs(videoEl.currentTime - wanted) < 1 / (FPS * 2)) return;
+    seeking = true;
+    videoEl.currentTime = wanted;
+  }
+
+  videoEl.addEventListener('seeked', () => { seeking = false; pump(); });
+  /* se un seek non si conclude (rete, decoder sotto sforzo) la catena
+     si fermerebbe per sempre: l'errore la fa ripartire */
+  videoEl.addEventListener('error', () => { seeking = false; });
+
+  function seekTo(frame) {
+    const p = frames > 1 ? frame / (frames - 1) : 0;
+
+    if (p >= PLAY_FROM) {
+      if (!running) { running = true; videoEl.play().catch(() => {}); }
+      return;
     }
+    /* tornando indietro si riprende il comando fotogramma per fotogramma */
+    if (running) { running = false; videoEl.pause(); }
 
-    function sizeCanvas() {
-      /* DPR limitato: i frame sorgente sono 1280px, oltre non c'è
-         dettaglio da guadagnare e il paint del canvas raddoppia.
-         Su mobile DPR 1: la fetta sorgente visibile è ~330px (già
-         upscalata comunque) e le bitmap devono stare in memoria */
-      const dpr = Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 1.5);
-      cv.width  = Math.round(box.clientWidth  * dpr);
-      cv.height = Math.round(box.clientHeight * dpr);
-      /* si azzera al resize del buffer: va rimesso ogni volta */
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-    }
+    wanted = Math.max(0, Math.min(duration - 0.05, frame / FPS));
+    pump();
+  }
 
-    /* Su mobile le Image full-res non stanno nella decoded-image
-       cache del telefono: Chrome le ri-decodifica in sync a ogni
-       draw e lo scrub va a scatti. Costruiamo — direttamente dai
-       data-URI, senza mai passare da <img>.decode() che con questa
-       mole può non risolvere — ImageBitmap un frame su due (il
-       crossfade copre i salti: la sorgente è 30fps), già ritagliate
-       alla fetta cover visibile e scalate al buffer del canvas: il
-       draw diventa un blit 1:1 senza decode né resample, e la
-       memoria resta nei limiti del device */
-    /* col file mobile dedicato i frame sono già sfoltiti alla fonte */
-    const MOBILE_STEP = thinned ? 1 : 2;
-    let bitmapsMode = false;
-
-    async function buildBitmaps() {
-      const picks = [];
-      for (let k = 0; k < srcs.length; k += MOBILE_STEP) picks.push(srcs[k]);
-      const s  = Math.max(cv.width / iw, cv.height / ih);
-      const sw = Math.min(iw, Math.round(cv.width  / s));
-      const sh = Math.min(ih, Math.round(cv.height / s));
-      const sx = Math.round((iw - sw) / 2);
-      const sy = Math.round((ih - sh) / 2);
-      const opts = { resizeWidth: cv.width, resizeHeight: cv.height, resizeQuality: 'high' };
-      let scaled = true;
-      let done   = 0;
-      const mk = async (src) => {
-        const blob = await (await fetch(src)).blob();
-        let bm;
-        if (scaled) {
-          try { bm = await createImageBitmap(blob, sx, sy, sw, sh, opts); }
-          catch (e) { scaled = false; }
-        }
-        /* Safari senza crop/resize: bitmap intera, il cover del draw compensa */
-        if (!bm) bm = await createImageBitmap(blob);
-        done++;
-        bar.style.width = (40 + 55 * done / picks.length) + '%';
-        return bm;
-      };
-      /* il primo da solo: stabilisce se le opzioni sono supportate,
-         così il resto del lotto non esce di taglia mista */
-      const first = await mk(picks[0]);
-      const rest  = await Promise.all(picks.slice(1).map(mk));
-      const old   = seq;
-      seq  = [first, ...rest];
-      seqW = scaled ? cv.width  : iw;
-      seqH = scaled ? cv.height : ih;
-      bitmapsMode = true;
-      if (old) old.forEach(b => b.close && b.close());
-    }
-
-    function resize() {
-      sizeCanvas();
-      /* rotazione o resize marcato: bitmap da rigenerare sulla nuova
-         geometria; sotto il 15% (URL bar) il cover assorbe da solo */
-      if (bitmapsMode &&
-          (Math.abs(cv.width  - seqW) / seqW > 0.15 ||
-           Math.abs(cv.height - seqH) / seqH > 0.15)) {
-        buildBitmaps().then(() => draw(lastF));
-      }
-      draw(lastF);
-    }
-    window.addEventListener('resize', debounce(resize, 150));
-    sizeCanvas();
-
-    if (isMobile()) {
-      try { await buildBitmaps(); }
-      catch (e) { /* si ripiega sulle Image */ }
-    }
-    if (!seq) {
-      /* Desktop (o fallback): una Image per frame. Il pre-decode è
-         solo un warm-up con tetto: se il decoder è saturo si parte
-         comunque e i frame si decodificano al primo draw */
-      const frames = srcs.map(src => { const img = new Image(); img.src = src; return img; });
-      let decoded = 0;
-      await Promise.race([
-        Promise.all(frames.map(img =>
-          img.decode().catch(() => {}).then(() => {
-            decoded++;
-            bar.style.width = (40 + 55 * decoded / frames.length) + '%';
-          })
-        )),
-        new Promise(r => setTimeout(r, 5000))
-      ]);
-      seq = frames;
-    }
-
+  function begin() {
+    duration = videoEl.duration || 10;
+    frames   = Math.round(duration * FPS);
     bar.style.width = '100%';
     setTimeout(hideLoader, 300);
-    draw(lastF);
-    initHeroScroll(draw, seq.length);
-  } catch (err) {
-    loader.querySelector('p').textContent = 'Errore';
+
+    if (isMobile()) {
+      /* niente scrub: play in loop, i capitoli restano legati allo
+         scroll. iOS in risparmio energetico rifiuta anche l'autoplay
+         muto, quindi il primo tocco riprova */
+      videoEl.loop = true;
+      videoEl.play().catch(() => {});
+      window.addEventListener('touchend', () => {
+        if (videoEl.paused) videoEl.play().catch(() => {});
+      }, { passive: true });
+      initHeroScroll(() => {}, Math.round(duration * FPS));
+      return;
+    }
+
+    videoEl.pause();
+    videoEl.currentTime = 0;
+    initHeroScroll(seekTo, Math.round(duration * FPS));
   }
+
+  bar.style.width = '40%';
+  videoEl.addEventListener('progress', () => {
+    if (videoEl.buffered.length && duration) {
+      const pct = videoEl.buffered.end(videoEl.buffered.length - 1) / (videoEl.duration || 10);
+      bar.style.width = (40 + 55 * Math.min(1, pct)) + '%';
+    }
+  });
+
+  if (videoEl.readyState >= 1) begin();
+  else {
+    videoEl.addEventListener('loadedmetadata', begin, { once: true });
+    /* rete lenta o codec rifiutato: il sito parte comunque, senza sfondo */
+    setTimeout(() => { if (!videoEl.duration) { hideLoader(); initHeroScroll(() => {}, 240); } }, 6000);
+  }
+})();
+
+/* ── Il racconto: video a tutta pagina ────────── */
+/* Sorgente assegnata solo quando la sezione si avvicina: il file pesa
+   17 MB e sta molto sotto la piega, scaricarlo al caricamento della
+   pagina lo farebbe pagare anche a chi non ci arriva mai. Fuori campo
+   si mette in pausa, così non decodifica per nessuno */
+(function(){
+  const v = document.getElementById('racconto');
+  if (!v) return;
+
+  let caricato = false;
+
+  new IntersectionObserver((entries) => {
+    const dentro = entries[0].isIntersecting;
+    if (dentro && !caricato) {
+      caricato = true;
+      v.src = isMobile() ? v.dataset.srcM : v.dataset.src;
+    }
+    if (dentro) v.play().catch(() => {});
+    else if (!v.paused) v.pause();
+  }, { rootMargin: '200px 0px' }).observe(v);
+
+  /* iOS in risparmio energetico rifiuta anche l'autoplay muto */
+  window.addEventListener('touchend', () => {
+    if (caricato && v.paused) v.play().catch(() => {});
+  }, { passive: true });
 })();
 
 /* ── Counters ─────────────────────────────────── */
@@ -478,6 +392,213 @@ document.querySelectorAll('[data-count]').forEach(el => {
     }
   });
 });
+
+/* ── Il KPI in diretta: kg venduti oggi ───────── */
+/* La media è 8.000 kg al giorno, ma l'80% passa entro le 15: spalmarli
+   sulle 24 ore darebbe numeri lontani dal vero per tutto il
+   pomeriggio, quindi la curva è spezzata in due tratti che si
+   incontrano alle 15.
+   Il numero mostrato NON insegue la curva secondo per secondo: si
+   ferma e poi scatta, perché il magazzino non vende un etto alla
+   volta, chiude ordini. La curva resta il vincolo — a fine giornata
+   il totale torna comunque — ma il momento dello scatto è casuale */
+(function(){
+  const kgEl    = document.getElementById('live-kg');
+  const tEl     = document.getElementById('live-time');
+  const badgeEl = document.getElementById('live-badge');
+  const stateEl = document.getElementById('live-state');
+  if (!kgEl || !tEl || !badgeEl || !stateEl) return;
+
+  const OPEN_SEC  = 8 * 3600;    /* si vende dalle 8 alle 17: prima il
+                                    contatore è a zero, dopo è fermo
+                                    sul totale della giornata */
+  const CLOSE_SEC = 17 * 3600;
+
+  /* Volume atteso per giorno della settimana, da domenica a sabato.
+     Il venerdì non era indicato: sta fra il giovedì e il sabato */
+  const WEEK_KG = [5000, 5000, 6000, 6500, 7000, 8000, 9000];
+  const SPREAD  = 0.12;          /* oscillazione attorno al valore del
+                                    giorno: senza, il totale di chiusura
+                                    sarebbe identico ogni lunedì */
+
+  /* Tutto il caso è SEMINATO CON LA DATA: due giorni hanno andamenti e
+     totali diversi, ma entro lo stesso giorno nulla cambia. Con un
+     seme davvero casuale il contatore salterebbe a ogni ricarica e due
+     schede aperte mostrerebbero numeri diversi */
+  function mulberry32(a) {
+    return function() {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  /* Deforma il tempo dentro la fascia: tre onde di ampiezza calante e
+     fase casuale sommate alla retta, così ci sono ore di corsa e ore
+     di calma. Le ampiezze sommano meno di 1, quindi la velocità
+     rallenta ma non si azzera e il totale non torna mai indietro.
+     Ogni onda compie un numero intero di periodi sulla fascia: agli
+     estremi la deformazione si annulla e la chiusura cade esatta sul
+     totale del giorno, comunque siano andate le ore in mezzo */
+  function makeWarp(rand) {
+    const waves = [0.34, 0.22, 0.12].map((amp, i) => ({
+      k: i + 1,
+      a: amp * (rand() < 0.5 ? -1 : 1),
+      p: rand() * Math.PI * 2
+    }));
+    return u => u + waves.reduce((sum, w) =>
+      sum + w.a * (Math.cos(w.p) - Math.cos(2 * Math.PI * w.k * u + w.p)) / (2 * Math.PI * w.k), 0);
+  }
+
+  const today = new Date();
+  const rand  = mulberry32(today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate());
+  const DAY_KG  = Math.round(WEEK_KG[today.getDay()] * (1 - SPREAD + rand() * SPREAD * 2));
+  const warpDay = makeWarp(rand);
+
+  function kgAt(sec) {
+    if (sec <= OPEN_SEC)  return 0;
+    if (sec >= CLOSE_SEC) return DAY_KG;
+    const u = (sec - OPEN_SEC) / (CLOSE_SEC - OPEN_SEC);
+    /* esponente sotto 1: al mattino si vende di più, come in un
+       magazzino ittico vero */
+    return DAY_KG * Math.pow(warpDay(u), 0.85);
+  }
+
+  const pad    = n => String(n).padStart(2, '0');
+  const secNow = () => { const d = new Date(); return d.getHours()*3600 + d.getMinutes()*60 + d.getSeconds(); };
+  const fmt    = v => Math.round(v).toLocaleString('it-IT');
+
+  /* ── Rulli ── */
+  const REEL  = 3;              /* cicli 0-9 impilati: il rullo può
+                                   girare più di un giro prima di
+                                   fermarsi sulla cifra nuova */
+  const SLOTS = REEL * 10;      /* celle totali nel rullo */
+  /* yPercent è una percentuale dell'altezza del RULLO INTERO, non
+     della singola cifra: con 30 celle una cifra vale 100/30, e usare
+     100 spedisce il rullo fuori dalla finestra */
+  const STEP  = 100 / SLOTS;
+  let cells = [];               /* una voce per carattere: {reel, digit} o null */
+
+  function buildOdometer(text) {
+    kgEl.textContent = '';
+    cells = text.split('').map(ch => {
+      if (!/\d/.test(ch)) {
+        const sep = document.createElement('span');
+        sep.className = 'odo-sep';
+        sep.textContent = ch;
+        kgEl.appendChild(sep);
+        return null;
+      }
+      const win  = document.createElement('span');
+      win.className = 'odo-d';
+      const reel = document.createElement('span');
+      reel.className = 'odo-reel';
+      for (let c = 0; c < REEL; c++) {
+        for (let d = 0; d < 10; d++) {
+          const s = document.createElement('span');
+          s.textContent = d;
+          reel.appendChild(s);
+        }
+      }
+      win.appendChild(reel);
+      kgEl.appendChild(win);
+      const digit = +ch;
+      gsap.set(reel, { yPercent: -STEP * digit });
+      return { reel, digit };
+    });
+  }
+
+  /* Girano TUTTI i rulli, anche quelli che atterrano sulla stessa
+     cifra, e si fermano uno dopo l'altro da sinistra a destra. Con
+     8.000 kg al giorno uno scatto vale un chilo o poco più: facendo
+     girare solo la cifra che cambia si muoverebbe l'ultima e basta,
+     e della slot non resterebbe niente */
+  function rollTo(text) {
+    if (text.length !== cells.length) { buildOdometer(text); return; }
+    let order = 0;
+    text.split('').forEach((ch, i) => {
+      const cell = cells[i];
+      if (!cell) return;
+      const target = +ch;
+      const laps   = 1 + Math.floor(Math.random() * (REEL - 1));
+      gsap.fromTo(cell.reel,
+        { yPercent: -STEP * cell.digit },
+        {
+          yPercent: -STEP * (10 * laps + target),
+          duration: 0.5 + laps * 0.18,
+          delay: order * 0.08,
+          ease: 'power3.out',
+          onComplete() { gsap.set(cell.reel, { yPercent: -STEP * target }); }
+        }
+      );
+      cell.digit = target;
+      order++;
+    });
+  }
+
+  let shown = Math.round(kgAt(secNow()));
+  buildOdometer(fmt(shown));
+
+  /* Nessuna vendita si chiude a un chilo per volta: il contatore
+     aspetta di aver maturato un blocco intero prima di scattare, e la
+     taglia del blocco cambia ogni volta. Sbilanciata verso il basso
+     perché gli ordini piccoli sono la maggioranza */
+  const pickBlock = () => 3 + Math.round(Math.random() * Math.random() * 32);
+  let nextBlock = pickBlock();
+
+  function setBadge(state, time, isClosed) {
+    badgeEl.classList.toggle('is-closed', isClosed);
+    stateEl.textContent = state;
+    tEl.textContent = time;
+  }
+
+  /* Fuori orario un cronometro che corre accanto a un numero fermo
+     sembra un contatore rotto: la pillola dice invece a che ora si
+     apre o si è chiuso, e smette di pulsare */
+  function phase() {
+    const s = secNow();
+    if (s < OPEN_SEC)  return 'prima';
+    if (s >= CLOSE_SEC) return 'dopo';
+    return 'durante';
+  }
+
+  function clock() {
+    const p = phase();
+    if (p === 'prima') { setBadge('le vendite aprono alle', '08:00', true); stop(); return; }
+    if (p === 'dopo')  { setBadge('vendite chiuse alle', '17:00', true);   stop(); return; }
+    const d = new Date();
+    setBadge('in tempo reale', `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`, false);
+  }
+
+  function bump() {
+    const target = Math.round(kgAt(secNow()));
+    if (target - shown < nextBlock) return;
+    shown = target;
+    nextBlock = pickBlock();
+    kgEl.classList.add('is-bump');
+    rollTo(fmt(shown));
+    setTimeout(() => kgEl.classList.remove('is-bump'), 900);
+  }
+
+  let clockT = null;
+  let bumpT  = null;
+
+  function start() {
+    if (clockT) return;
+    clock();
+    if (phase() !== 'durante') return;
+    clockT = setInterval(clock, 1000);
+    bumpT  = setInterval(bump, 2000);
+  }
+
+  function stop() {
+    clearInterval(clockT); clockT = null;
+    clearInterval(bumpT);  bumpT  = null;
+  }
+
+  new IntersectionObserver(e => e[0].isIntersecting ? start() : stop(), { threshold: 0 }).observe(kgEl);
+})();
 
 /* ── Clip reveals (testi grandi) ──────────────── */
 document.querySelectorAll('.clip-inner').forEach(el => {
@@ -924,7 +1045,7 @@ if (document.getElementById('marina-pin')) {
     }
     draw() {
       const alpha = (1 - this.life / this.max) * (0.15 - this.d * 0.025);
-      ctx2.strokeStyle = `rgba(${CV_INK},${Math.max(0, alpha)})`;
+      ctx2.strokeStyle = `rgba(${CV_NET},${Math.max(0, alpha)})`;
       ctx2.lineWidth = Math.max(0.2, this.w * (1 - this.life / this.max));
       ctx2.beginPath(); ctx2.moveTo(this.px, this.py); ctx2.lineTo(this.x, this.y); ctx2.stroke();
     }
@@ -1064,6 +1185,23 @@ if (document.getElementById('marina-pin')) {
       ctx.restore();
     }
 
+    /* Onda d'urto: dopo la collisione la luce si allarga e si spegne.
+       È un anello, non un disco pieno — un cerchio che cresce coprendo
+       il centro sembrerebbe una macchia, mentre il vuoto interno lo fa
+       leggere come energia che si propaga dal punto d'impatto */
+    if (curveP > 0 && curveP < 0.85) {
+      const w  = curveP / 0.85;
+      const rw = 70 + Math.pow(w, 0.7) * Math.max(W, H) * 0.9;
+      const aw = Math.pow(1 - w, 1.8);
+      const wg = ctx.createRadialGradient(cx, beamY, rw * 0.55, cx, beamY, rw);
+      wg.addColorStop(0,   `rgba(${CV_FAR},0)`);
+      wg.addColorStop(.72, `rgba(${CV_HALO},${aw * 0.22})`);
+      wg.addColorStop(.9,  `rgba(${CV_INK},${aw * 0.3})`);
+      wg.addColorStop(1,   `rgba(${CV_FAR},0)`);
+      ctx.fillStyle = wg;
+      ctx.beginPath(); ctx.arc(cx, beamY, rw, 0, Math.PI*2); ctx.fill();
+    }
+
     /* Linea che prosegue decisa verso Marina */
     if (curveP > 0) {
       const y2 = beamY + curveP * (H - beamY + 5);
@@ -1129,6 +1267,23 @@ if (document.getElementById('marina-pin')) {
       ctx.fillStyle = `rgba(${CV_INK},${cl(gi,0,1)})`;
       ctx.beginPath(); ctx.arc(cx, beamY, 5*gi, 0, Math.PI*2); ctx.fill();
       ctx.restore();
+    }
+
+    /* Onda d'urto: dopo la collisione la luce si allarga e si spegne.
+       È un anello, non un disco pieno — un cerchio che cresce coprendo
+       il centro sembrerebbe una macchia, mentre il vuoto interno lo fa
+       leggere come energia che si propaga dal punto d'impatto */
+    if (curveP > 0 && curveP < 0.85) {
+      const w  = curveP / 0.85;
+      const rw = 70 + Math.pow(w, 0.7) * Math.max(W, H) * 0.9;
+      const aw = Math.pow(1 - w, 1.8);
+      const wg = ctx.createRadialGradient(cx, beamY, rw * 0.55, cx, beamY, rw);
+      wg.addColorStop(0,   `rgba(${CV_FAR},0)`);
+      wg.addColorStop(.72, `rgba(${CV_HALO},${aw * 0.22})`);
+      wg.addColorStop(.9,  `rgba(${CV_INK},${aw * 0.3})`);
+      wg.addColorStop(1,   `rgba(${CV_FAR},0)`);
+      ctx.fillStyle = wg;
+      ctx.beginPath(); ctx.arc(cx, beamY, rw, 0, Math.PI*2); ctx.fill();
     }
 
     /* Linea verticale verso il basso */
