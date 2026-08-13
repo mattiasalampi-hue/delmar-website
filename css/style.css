@@ -323,12 +323,17 @@ nav a {
    tratto filiforme ha bisogno di più superficie per avere presenza */
 .ch-title {
   font-weight: 300;
-  /* Maiuscolo: in Poppins sottile le capitali hanno tutte la stessa
-     altezza e nessuna asta ascendente o discendente, quindi la riga
-     diventa una barra continua e regge la stretta molto meglio del
-     minuscolo. La crenatura resta negativa ma non troppo: fra due
-     capitali lo spazio ottico è già inferiore che fra due minuscole */
-  text-transform: uppercase;
+  /* Cassa naturale: la maiuscola iniziale la porta il testo nel markup,
+     non una regola. Cosi' "di qualità" resta minuscolo — e' il seguito
+     della riga sopra — mentre "Tutto il pesce che ti serve" e "Ricevi
+     entro le 11" partono maiuscole perche' sono frasi a se'. Con
+     text-transform quella differenza si perderebbe: la cassa dipende da
+     cosa la frase E', e questo lo sa solo il testo.
+     Nota per chi tornera' a provare il maiuscolo: in Poppins sottile le
+     capitali hanno tutte la stessa altezza e nessuna asta sporgente,
+     quindi reggono la crenatura stretta meglio del minuscolo. A -.04em
+     i punti dove si vede per primo sono "qualità", "notte" e "bordo" */
+  text-transform: none;
   letter-spacing: -.04em;
   line-height: 1.18;
   font-size: clamp(1.8rem, 3vw, 2.85rem);
@@ -348,7 +353,11 @@ nav a {
   font-size: clamp(1.02rem, 1.35vw, 1.22rem);
   font-weight: 300;
   letter-spacing: .015em;
-  border-bottom: 1px solid rgba(255,255,255,.45);
+  /* Sottolineatura nel corallo pieno, la gradazione nata per i fondi
+     scuri: qui sotto c'è il video. Due pixel e non uno perché a un
+     tratto filiforme il colore non si legge — sopra un mare che cambia
+     a ogni fotogramma resterebbe un grigio sporco */
+  border-bottom: 2px solid rgba(255,107,87,.85);
   padding-bottom: 6px;
   text-shadow: 0 1px 14px rgba(0,0,0,.75);
   transition: border-color .3s, gap .3s;
@@ -364,8 +373,11 @@ nav a {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  /* Al passaggio del mouse il corallo va pieno invece di virare al
+     bianco: portarlo a bianco toglieva il colore proprio nel momento in
+     cui il link viene guardato */
   .ch-cta:hover {
-    border-color: #fff;
+    border-color: var(--accent-bright);
     gap: .8rem;
   }
 
@@ -771,7 +783,7 @@ nav a {
    in cima a una sezione spariva del tutto */
 .titolo-sezione {
   text-align: center;
-  font-size: clamp(1.8rem, 3vw, 3.2rem);
+  font-size: clamp(1.6rem, 2.6vw, 2.75rem);
   font-weight: 300;
   letter-spacing: -.045em;
   line-height: 1.05;
@@ -917,10 +929,15 @@ nav a {
 /* La promessa oraria è l'argomento di vendita di tutta la sezione:
    dentro il testo corrente si perdeva in fondo a una frase. Qui è un
    blocco a sé, in corallo, che si legge prima della descrizione */
+/* inline-BLOCK, non inline-flex. Da contenitore flex il testo semplice
+   e lo <strong> diventavano due elementi affiancati e indipendenti, che
+   andavano a capo ognuno per conto suo: si leggeva "Ordini aperti / fino
+   alle" in una colonna e "2 di / notte" nell'altra, cioe' una frase
+   spezzata in due blocchi paralleli invece di una riga sola. Da blocco
+   in linea il testo torna a scorrere come una frase normale */
 .fase-clou {
-  display: inline-flex;
-  align-items: baseline;
-  gap: .4rem;
+  display: inline-block;
+  line-height: 1.45;
   margin-bottom: 1.3rem;
   padding: .62rem 1.15rem;
   border-radius: 999px;
@@ -931,9 +948,13 @@ nav a {
   color: var(--wa);
 }
 
+/* L'orario e' il dato che regge la sezione: se va a capo in mezzo
+   ("2 di / notte") smette di leggersi come un'ora e diventa due parole
+   sciolte. Su schermo stretto va a capo la frase, mai il numero */
 .fase-clou strong {
   font-weight: 600;
   letter-spacing: -.01em;
+  white-space: nowrap;
 }
 
 .fase-desc {
@@ -2364,7 +2385,7 @@ nav a {
   }
 
   .titolo-sezione {
-    font-size: clamp(1.9rem, 7.5vw, 3rem);
+    font-size: clamp(1.7rem, 6.6vw, 2.5rem);
     margin-bottom: 4vh;
   }
 

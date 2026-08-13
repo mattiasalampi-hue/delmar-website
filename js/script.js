@@ -259,11 +259,28 @@ function initHeroScroll(renderFrame, total) {
   if (!videoEl) return;
 
   const FPS = 24;
+  const SRC   = videoEl.dataset.src;
+  const SRC_M = videoEl.dataset.srcM;
 
-  /* Mobile: file piu' leggero (854px). Lo scrub via currentTime su iOS
-     resta pero' inaffidabile, quindi li' il video si limita a scorrere
-     in loop e sono solo i capitoli a seguire lo scroll */
-  if (isMobile()) videoEl.src = 'assets/video/hero-mare-m.mp4?v=2';
+  /* DIAGNOSTICA TEMPORANEA — da togliere appena sappiamo quale strada e'
+     la piu' fluida.
+       ?video=rete  -> file via rete, come prima della correzione
+       (default)    -> file scaricato tutto e letto dalla memoria
+     Il percorso dello scrub e' identico nei due casi: cambia solo la
+     sorgente, quindi il confronto isola quella e nient'altro.
+     In console, __hero() dice quanti seek sono stati fatti e quanto
+     sono durati: un numero al posto di un'impressione */
+  const MODO = new URLSearchParams(location.search).get('video');
+
+  let nSeek = 0, sommaMs = 0, maxMs = 0, avvioSeek = 0;
+  window.__hero = () => ({
+    modo:    MODO === 'rete' ? 'rete' : 'memoria',
+    seek:    nSeek,
+    medioMs: nSeek ? +(sommaMs / nSeek).toFixed(1) : 0,
+    maxMs:   +maxMs.toFixed(1),
+    inciampi: inciampi,
+    scrubAttivo: scrub
+  });
 
   /* Un seek per volta, e il successivo parte solo quando il precedente
      ha davvero dipinto il fotogramma. Scrivere currentTime a ogni
@@ -284,23 +301,91 @@ function initHeroScroll(renderFrame, total) {
   const PLAY_FROM = 0.86;
   let running = false;
 
-  function pump() {
-    if (running || seeking) return;
-    if (Math.abs(videoEl.currentTime - wanted) < 1 / (FPS * 2)) return;
-    seeking = true;
-    videoEl.currentTime = wanted;
+  /* Quando lo scrub non e' sostenibile il video passa a scorrere da
+     solo: un fotogramma congelato dietro le scritte sembra un sito
+     rotto, un video che scorre no */
+  let scrub    = true;
+  let inciampi = 0;
+  let guardia  = 0;
+
+  /* SALVAGENTE. 'seeked' puo' non arrivare mai: il seek viene abortito
+     dal browser, il decoder resta appeso, la rete non risponde. Senza
+     questo la catena muore li' e l'immagine resta ferma per sempre
+     mentre la pagina continua a scorrere — cioe' esattamente il guasto
+     segnalato da chi non usa Chrome, dove i seek sono piu' lenti e meno
+     puntuali. Il tempo e' largo: da file gia' in memoria un seek sta
+     sotto i 100ms, quindi 900ms non scatta per un semplice rallentamento */
+  const ATTESA_MAX = 900;
+
+  function disarma() {
+    clearTimeout(guardia);
+    guardia = 0;
   }
 
-  videoEl.addEventListener('seeked', () => { seeking = false; pump(); });
+  function scorriDaSolo() {
+    scrub = false;
+    disarma();
+    seeking = false;
+    videoEl.loop = true;
+    videoEl.play().catch(() => {});
+  }
+
+  function arrenditi() {
+    if (!scrub) return;
+    scorriDaSolo();
+  }
+
+  /* initHeroScroll registra uno ScrollTrigger che pilota opacita', scala
+     e blur dei capitoli: chiamarlo due volte ne lascia due che scrivono
+     le stesse proprieta' sugli stessi elementi a ogni frame. Puo'
+     succedere se il salvagente dei 9 secondi fa partire i capitoli
+     senza video e il file arriva dopo */
+  let scrollPronto = false;
+  function avviaScroll(renderFrame, total) {
+    if (scrollPronto) return;
+    scrollPronto = true;
+    initHeroScroll(renderFrame, total);
+  }
+
+  function pump() {
+    if (!scrub || running || seeking) return;
+    if (Math.abs(videoEl.currentTime - wanted) < 1 / (FPS * 2)) return;
+    seeking = true;
+    avvioSeek = performance.now();
+    const bersaglio = wanted;
+    guardia = setTimeout(() => {
+      /* il seek non si e' concluso: lo si considera perso e si riprova.
+         Se succede di continuo il browser non ce la fa e si cambia modo */
+      seeking = false;
+      if (++inciampi >= 4) { arrenditi(); return; }
+      pump();
+    }, ATTESA_MAX);
+    videoEl.currentTime = bersaglio;
+  }
+
+  videoEl.addEventListener('seeked', () => {
+    disarma();
+    if (avvioSeek) {
+      const d = performance.now() - avvioSeek;
+      nSeek++;
+      sommaMs += d;
+      if (d > maxMs) maxMs = d;
+      avvioSeek = 0;
+    }
+    inciampi = 0;
+    seeking  = false;
+    pump();
+  });
   /* se un seek non si conclude (rete, decoder sotto sforzo) la catena
      si fermerebbe per sempre: l'errore la fa ripartire */
-  videoEl.addEventListener('error', () => { seeking = false; });
+  videoEl.addEventListener('error', () => { disarma(); seeking = false; });
 
   function seekTo(frame) {
+    if (!scrub) return;
     const p = frames > 1 ? frame / (frames - 1) : 0;
 
     if (p >= PLAY_FROM) {
-      if (!running) { running = true; videoEl.play().catch(() => {}); }
+      if (!running) { running = true; disarma(); videoEl.play().catch(() => {}); }
       return;
     }
     /* tornando indietro si riprende il comando fotogramma per fotogramma */
@@ -310,43 +395,128 @@ function initHeroScroll(renderFrame, total) {
     pump();
   }
 
+  function loopMobile() {
+    /* niente scrub: play in loop, i capitoli restano legati allo
+       scroll. iOS in risparmio energetico rifiuta anche l'autoplay
+       muto, quindi il primo tocco riprova */
+    scorriDaSolo();
+    window.addEventListener('touchend', () => {
+      if (videoEl.paused) videoEl.play().catch(() => {});
+    }, { passive: true });
+  }
+
+  let avviato = false;
   function begin() {
+    if (avviato) return;
+    avviato = true;
     duration = videoEl.duration || 10;
     frames   = Math.round(duration * FPS);
     bar.style.width = '100%';
     setTimeout(hideLoader, 300);
 
     if (isMobile()) {
-      /* niente scrub: play in loop, i capitoli restano legati allo
-         scroll. iOS in risparmio energetico rifiuta anche l'autoplay
-         muto, quindi il primo tocco riprova */
-      videoEl.loop = true;
-      videoEl.play().catch(() => {});
-      window.addEventListener('touchend', () => {
-        if (videoEl.paused) videoEl.play().catch(() => {});
-      }, { passive: true });
-      initHeroScroll(() => {}, Math.round(duration * FPS));
+      loopMobile();
+      avviaScroll(() => {}, frames);
       return;
     }
 
-    videoEl.pause();
-    videoEl.currentTime = 0;
-    initHeroScroll(seekTo, Math.round(duration * FPS));
+    /* Il salvagente dei 9 secondi ha gia' fatto partire i capitoli senza
+       video: qui il file e' arrivato in ritardo e si limita a scorrere */
+    if (!scrub || scrollPronto) {
+      scorriDaSolo();
+      avviaScroll(() => {}, frames);
+      return;
+    }
+
+    /* Safari non dipinge i fotogrammi di un video che non e' MAI stato
+       riprodotto: senza questo giro di play/pause lo scrub comanda un
+       filmato che resta sulla locandina */
+    const avvia = videoEl.play();
+    const pronti = () => {
+      videoEl.pause();
+      videoEl.currentTime = 0;
+      avviaScroll(seekTo, frames);
+    };
+    if (avvia && avvia.then) avvia.then(pronti).catch(pronti);
+    else pronti();
   }
 
-  bar.style.width = '40%';
-  videoEl.addEventListener('progress', () => {
-    if (videoEl.buffered.length && duration) {
-      const pct = videoEl.buffered.end(videoEl.buffered.length - 1) / (videoEl.duration || 10);
-      bar.style.width = (40 + 55 * Math.min(1, pct)) + '%';
-    }
-  });
+  /* Il file viene scaricato TUTTO prima di dare il comando allo scroll,
+     e lo scrub lavora sulla copia in memoria.
 
-  if (videoEl.readyState >= 1) begin();
-  else {
+     Prima si partiva appena arrivavano i metadati, cioe' con quasi
+     niente scaricato: ogni seek finiva su una parte di file non ancora
+     presente e diventava una richiesta di rete. In locale il file e'
+     li' e non si nota nulla — ed e' il motivo per cui questo guasto
+     non si e' mai visto in sviluppo. In produzione ogni fotogramma
+     costava un giro sulla rete, e il browser NON scarica avanti un
+     video in pausa: si ferma dopo pochi secondi di margine e aspetta.
+     Chrome regge perche' i suoi seek sono veloci e tolleranti; Safari e
+     Firefox no, e li' bastava un seek perso per piantare tutto.
+
+     Un solo scaricamento sequenziale di 4,7 MB, misurato in meno di un
+     secondo sulla rete di casa. Dopo, ogni salto e' locale. */
+  bar.style.width = '8%';
+
+  /* Sorgente + eventuale ripiego. Il blob e' la strada buona, ma Safari
+     ha una storia lunga di rifiuti sui blob: video, e un rifiuto qui
+     vorrebbe dire hero nero. Se i metadati non arrivano si torna al
+     file via rete, cioe' al comportamento di prima — meno fluido, ma
+     visibile. Meglio un ripiego che una schermata vuota */
+  const ATTESA_METADATI = 2500;
+
+  function avviaCon(url, ripiego) {
+    videoEl.src = url;
+    videoEl.load();
+    if (videoEl.readyState >= 1) { begin(); return; }
     videoEl.addEventListener('loadedmetadata', begin, { once: true });
-    /* rete lenta o codec rifiutato: il sito parte comunque, senza sfondo */
-    setTimeout(() => { if (!videoEl.duration) { hideLoader(); initHeroScroll(() => {}, 240); } }, 6000);
+    if (ripiego) {
+      setTimeout(() => {
+        if (!avviato && !videoEl.duration) avviaCon(ripiego, null);
+      }, ATTESA_METADATI);
+    }
+  }
+
+  async function scaricaTutto(url) {
+    const risposta = await fetch(url, { cache: 'force-cache' });
+    if (!risposta.ok) throw new Error('HTTP ' + risposta.status);
+
+    const totale = +risposta.headers.get('Content-Length') || 0;
+    /* Senza corpo leggibile a pezzi si prende comunque il blob, si
+       perde solo l'avanzamento della barra */
+    if (!risposta.body || !totale) return URL.createObjectURL(await risposta.blob());
+
+    const lettore = risposta.body.getReader();
+    const pezzi = [];
+    let presi = 0;
+    for (;;) {
+      const { done, value } = await lettore.read();
+      if (done) break;
+      pezzi.push(value);
+      presi += value.length;
+      bar.style.width = (8 + 87 * Math.min(1, presi / totale)) + '%';
+    }
+    return URL.createObjectURL(new Blob(pezzi, { type: 'video/mp4' }));
+  }
+
+  /* Rete lenta, fetch negato, codec rifiutato: il sito parte comunque,
+     al peggio senza sfondo. Non deve mai restare bloccato sul loader */
+  setTimeout(() => {
+    if (!avviato) { hideLoader(); scrub = false; avviaScroll(() => {}, 240); }
+  }, 9000);
+
+  if (isMobile()) {
+    /* su mobile non c'e' scrub, quindi non serve avere tutto in memoria:
+       si riproduce mentre scarica, e si risparmiano 2 MB di RAM */
+    avviaCon(SRC_M, null);
+  } else if (MODO === 'rete') {
+    avviaCon(SRC, null);
+  } else {
+    scaricaTutto(SRC)
+      .then(blob => avviaCon(blob, SRC))
+      /* il video in streaming resta meglio di nessun video: lo scrub
+         sara' meno fluido, ma il salvagente impedisce che si pianti */
+      .catch(() => avviaCon(SRC, null));
   }
 })();
 

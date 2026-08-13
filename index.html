@@ -58,7 +58,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css?v=71" />
+    <link rel="stylesheet" href="css/style.css?v=76" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -81,7 +81,12 @@
     </div>
     <!-- Sfondo hero: video a tutto schermo scrubbato dallo scroll -->
     <div id="hero-bg">
-      <video id="hero-video" src="assets/video/hero-mare.mp4?v=2" muted playsinline preload="auto"></video>
+      <!-- Nessun src qui: su desktop il file viene scaricato tutto e lo
+           scrub lavora sulla copia in memoria, altrimenti ogni seek
+           diventa una richiesta di rete (vedi script.js). Lasciando il
+           src nel markup il browser aprirebbe in piu' un suo streaming
+           dello stesso file, scaricandolo due volte -->
+      <video id="hero-video" data-src="assets/video/hero-mare.mp4?v=2" data-src-m="assets/video/hero-mare-m.mp4?v=3" muted playsinline preload="auto"></video>
       <div id="hero-scrim"></div>
     </div>
     <div id="vig"></div>
@@ -442,7 +447,7 @@
     <!-- ════════════════════ §5 GALLERY ══════════ -->
     <section class="section" id="gallery">
       <div class="gallery-intro">
-        <p class="label reveal-label">Gallery</p>
+        <p class="titolo-sezione titolo-sinistra reveal-label">Gallery</p>
         <h2 class="big-title">
           <span class="clip-wrap"><span class="clip-inner">La nostra realtà.</span></span>
         </h2>
@@ -492,7 +497,7 @@
     </section>
     <!-- ════════════════════ §6 TEAM ══════════════ -->
     <section class="section sec-pad sec-soft" id="team">
-      <p class="label reveal-label">Il Nostro Team</p>
+      <p class="titolo-sezione titolo-sinistra reveal-label">Il Nostro Team</p>
       <div class="team-grid">
         <div class="team-photo-wrap reveal-img"><img src="assets/team-stairs.jpg" alt="Team DelMar" loading="lazy" /></div>
         <div class="team-copy">
@@ -531,7 +536,7 @@
       <canvas id="contatti-particles"></canvas>
       <div class="contatti-grid">
         <div>
-          <p class="label reveal-label">Contatti</p>
+          <p class="titolo-sezione titolo-sinistra reveal-label">Contatti</p>
           <h2 class="big-title">
             <span class="clip-wrap"><span class="clip-inner">Parliamo.</span></span>
           </h2>
@@ -642,6 +647,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="js/script.js?v=48"></script>
+    <script src="js/script.js?v=49"></script>
   </body>
 </html>
+
+
+
+
