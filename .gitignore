@@ -16,3 +16,6 @@ npm-debug.log*
 # Environment
 .env
 .env.local
+
+# Credenziali SMTP del form contatti: il repository e pubblico
+config.php

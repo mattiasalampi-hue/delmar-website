@@ -421,6 +421,18 @@ nav a {
   flex-shrink: 0;
 }
 
+/* Il campo esca per i robot. Non display:none e non hidden: i robot più
+   svegli saltano proprio quelli, mentre un campo fuori schermo per loro
+   è un campo come gli altri e lo compilano. Chi naviga da tastiera non
+   ci finisce dentro perché ha tabindex -1 */
+.campo-esca {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* ── Cursore personalizzato ─────────────────────── */
 /* Gli elementi li crea lo script, e SOLO dove esiste un mouse vero: su
    un touch il puntatore non c'è, e un cerchio che non insegue nessuno
@@ -452,27 +464,6 @@ html.cur-on select {
   pointer-events: none;
   opacity: 0;
   transition: opacity .25s;
-}
-
-/* DIAGNOSTICA TEMPORANEA — riquadro di stato del video, compare solo
-   con ?debug=1 nell'indirizzo. Serve a leggere lo stato da un telefono,
-   dove non c'è una console. Da togliere con il resto della diagnostica */
-#hero-debug {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  margin: 0;
-  padding: .6rem .7rem;
-  max-width: 100vw;
-  overflow-x: auto;
-  background: rgba(0,0,0,.82);
-  color: #7CFFB2;
-  font-family: ui-monospace, Menlo, Consolas, monospace;
-  font-size: 11px;
-  line-height: 1.45;
-  white-space: pre;
-  pointer-events: none;
 }
 
 /* Scroll cue "cometa": un punto luminoso scende lungo la guida

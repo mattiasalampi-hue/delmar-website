@@ -2,21 +2,6 @@
    DelMar — Main Script
    ════════════════════════════════════════ */
 
-/* DIAGNOSTICA TEMPORANEA — questo file è una sequenza di blocchi al
-   primo livello: un errore in uno qualsiasi ferma TUTTI quelli che
-   vengono dopo, in silenzio. Chi sta in fondo — oggi il cursore — non
-   parte e non c'è modo di accorgersene senza aprire la console.
-   Registrato qui, ?debug=1 lo mostra a schermo. Da togliere con il
-   resto della diagnostica */
-window.__erroriJS = 0;
-window.addEventListener('error', (e) => {
-  window.__erroriJS++;
-  if (!window.__primoErrore) {
-    window.__primoErrore = (e.message || '?') + ' @ ' +
-      String(e.filename || '').split('/').pop() + ':' + e.lineno;
-  }
-});
-
 gsap.registerPlugin(ScrollTrigger);
 
 /* ── Lenis smooth scroll ──────────────────────── */
@@ -369,48 +354,6 @@ function initHeroScroll() {
      riempimento per copertura, perdeva quasi tutta la larghezza */
   const sorgente = isMobile() ? videoEl.dataset.srcM : videoEl.dataset.src;
   avviaCon(sorgente, sorgente);
-
-  /* DIAGNOSTICA TEMPORANEA — ?debug=1 stampa a schermo lo stato del
-     video. Su un telefono non c'e' una console da aprire, quindi senza
-     questo l'unica informazione che torna indietro e' "non parte", che
-     non distingue fra file non arrivato, codec rifiutato e riproduzione
-     negata dal browser: tre guasti diversi con tre rimedi diversi */
-  if (new URLSearchParams(location.search).get('debug') === '1') {
-    const DATI = ['NIENTE', 'METADATI', 'FRAME CORRENTE', 'POCHI FRAME', 'ABBASTANZA'];
-    const RETE = ['VUOTO', 'FERMO', 'SCARICA', 'NESSUNA SORGENTE'];
-    const box = document.createElement('pre');
-    box.id = 'hero-debug';
-    document.body.appendChild(box);
-    setInterval(() => {
-      const b = [];
-      for (let i = 0; i < videoEl.buffered.length; i++) {
-        b.push(videoEl.buffered.start(i).toFixed(1) + '-' + videoEl.buffered.end(i).toFixed(1));
-      }
-      box.textContent = [
-        'file    ' + ((videoEl.currentSrc || '-').split('/').pop() || '-'),
-        'dati    ' + (DATI[videoEl.readyState] || videoEl.readyState),
-        'rete    ' + (RETE[videoEl.networkState] || videoEl.networkState),
-        'durata  ' + (videoEl.duration || 0).toFixed(2),
-        'tempo   ' + videoEl.currentTime.toFixed(2),
-        'in pausa ' + videoEl.paused,
-        'muto    ' + videoEl.muted,
-        'errore  ' + (videoEl.error ? videoEl.error.code + ' ' + (videoEl.error.message || '') : 'nessuno'),
-        'buffer  ' + (b.join(' ') || 'vuoto'),
-        'schermo ' + window.innerWidth + 'x' + window.innerHeight,
-        '',
-        'CURSORE',
-        /* Il cursore non dipende più da queste due: si accende quando un
-           mouse si muove davvero. Restano perché dicono quanto il
-           browser mentiva — su questo portatile "primario" è false */
-        'mouse dichiarato ' + matchMedia('(any-pointer: fine)').matches +
-          ' / primario ' + matchMedia('(pointer: fine)').matches,
-        'anim ridotte ' + matchMedia('(prefers-reduced-motion: reduce)').matches,
-        'tela nel DOM ' + !!document.getElementById('cur-cvs'),
-        'classe cur-on  ' + document.documentElement.classList.contains('cur-on'),
-        'errori JS   ' + (window.__erroriJS || 0) + (window.__primoErrore ? ' | ' + window.__primoErrore : '')
-      ].join('\n');
-    }, 400);
-  }
 })();
 
 /* ── Il racconto: video a tutta pagina ────────── */
@@ -1463,40 +1406,56 @@ window.addEventListener('load', () => {
   });
 })();
 
-/* ── Form submit → Web3Forms ─────────────────── */
-document.getElementById('contact-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const form   = e.target;
-  const btn    = form.querySelector('.btn-submit');
-  const ok     = document.getElementById('form-ok');
-  const origTxt = btn.textContent;
+/* ── Form contatti → invia.php → SMTP2GO ─────── */
+/* Il modulo parla con uno script sullo stesso dominio invece che con un
+   servizio esterno: le credenziali della posta stanno sul server, dove
+   nessuno le legge. L'indirizzo è quello dell'attributo action, così se
+   il JavaScript non parte il modulo si invia lo stesso alla vecchia
+   maniera e la richiesta arriva comunque */
+(function(){
+  const form = document.getElementById('contact-form');
+  if (!form) return;
 
-  btn.textContent = 'Invio in corso…';
-  btn.disabled = true;
+  const ok = document.getElementById('form-ok');
 
-  try {
-    const res  = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      body: new FormData(form)
-    });
-    const json = await res.json();
-    if (json.success) {
-      ok.textContent = '✓ Messaggio inviato. Ti contatteremo presto.';
-      ok.style.display = 'block';
-      form.reset();
-      setTimeout(() => { ok.style.display = 'none'; }, 6000);
-    } else {
-      ok.textContent = 'Errore nell\'invio. Riprova o scrivici su WhatsApp.';
-      ok.style.display = 'block';
-    }
-  } catch (_) {
-    ok.textContent = 'Errore di rete. Riprova o scrivici su WhatsApp.';
+  const dillo = (testo, html) => {
+    ok[html ? 'innerHTML' : 'textContent'] = testo;
     ok.style.display = 'block';
-  } finally {
-    btn.textContent = origTxt;
-    btn.disabled = false;
-  }
-});
+  };
+
+  const RIPIEGO = 'Scrivici su <a href="https://wa.me/393936762018" target="_blank" ' +
+    'rel="noopener noreferrer">WhatsApp</a> o a <a href="mailto:info@del-mar.it">info@del-mar.it</a>.';
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = form.querySelector('.btn-submit');
+    const testoBtn = btn.textContent;
+
+    btn.textContent = 'Invio in corso…';
+    btn.disabled = true;
+
+    try {
+      const res  = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      const json = await res.json().catch(() => ({}));
+
+      if (json.success) {
+        dillo('✓ Messaggio inviato. Ti contatteremo presto.');
+        form.reset();
+        setTimeout(() => { ok.style.display = 'none'; }, 6000);
+      } else {
+        /* Il messaggio del server è già scritto per chi legge — campo
+           mancante, troppe richieste, guasto — quindi si mostra quello
+           invece di un generico "errore" che non dice cosa fare */
+        dillo((json.message || 'Non siamo riusciti a inviare.') + ' ' + RIPIEGO, true);
+      }
+    } catch (_) {
+      dillo('Errore di rete. ' + RIPIEGO, true);
+    } finally {
+      btn.textContent = testoBtn;
+      btn.disabled = false;
+    }
+  });
+})();
 
 /* ── Contatti particles — nuvola di bolle marine ── */
 (function(){

@@ -58,7 +58,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css?v=89" />
+    <link rel="stylesheet" href="css/style.css?v=91" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -539,11 +539,19 @@
           <h2 class="big-title">
             <span class="clip-wrap"><span class="clip-inner">Parliamo.</span></span>
           </h2>
-          <form class="contatti-form" id="contact-form">
-            <!-- Web3Forms: ottieni il tuo access_key su https://web3forms.com con mattias.alampi@gmail.com -->
-            <input type="hidden" name="access_key" value="INCOLLA_QUI_IL_TUO_ACCESS_KEY" />
-            <input type="hidden" name="subject" value="Nuova richiesta da sito DelMar" />
-            <input type="hidden" name="from_name" value="Sito DelMar" />
+          <!-- Il modulo parla con invia.php sullo stesso dominio, che
+               spedisce via SMTP2GO — lo stesso servizio del progetto
+               listini. Serve PHP: su GitHub Pages, che è statico, il
+               modulo non può funzionare ed è normale -->
+          <form class="contatti-form" id="contact-form" action="invia.php" method="post">
+            <!-- Trappola per i robot: un campo che una persona non vede e
+                 non compila mai. Se arriva pieno, il server finge di aver
+                 inviato e non manda niente. Fuori dal flusso di
+                 tabulazione e invisibile ai lettori di schermo -->
+            <div class="campo-esca" aria-hidden="true">
+              <label for="sito_web">Non compilare</label>
+              <input type="text" id="sito_web" name="sito_web" tabindex="-1" autocomplete="off" />
+            </div>
             <div class="form-row">
               <div class="form-field"><label>Nome</label><input type="text" name="nome" placeholder="Mario Rossi" required /></div>
               <div class="form-field">
@@ -646,7 +654,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="js/script.js?v=62"></script>
+    <script src="js/script.js?v=64"></script>
   </body>
 </html>
 

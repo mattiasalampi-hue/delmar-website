@@ -1,0 +1,52 @@
+# Sito DelMar — regole del server.
+#
+# CREDENZIALI. config.php contiene utente e password del servizio di
+# posta. Oggi non si vedrebbe comunque, perche' PHP lo esegue e
+# restituisce una pagina vuota, ma quella e' una difesa che dipende da
+# PHP: basta un modulo disattivato o un aggiornamento del server e il
+# file verrebbe servito come TESTO, password compresa, a chiunque ne
+# indovini il nome. Sarebbe stato meglio tenerlo fuori dalla cartella del
+# sito, ma questo hosting non permette di scrivere un livello sopra:
+# questa regola e' il rimedio, e non dipende da PHP.
+<Files "config.php">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</Files>
+
+# Stessa protezione per il pezzo che dialoga col server di posta: non
+# contiene credenziali, ma non c'e' motivo di poterlo scaricare
+<Files "smtp.php">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</Files>
+
+# Compressione: il sito e' fatto di testo pesante — 74 KB di script e
+# 69 di stile — che compresso scende a circa un quinto
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# Durata in cache. Le risorse hanno il numero di versione nell'indirizzo
+# (style.css?v=91), quindi si possono tenere a lungo senza rischiare che
+# qualcuno resti con la copia vecchia: cambiando il numero cambia
+# l'indirizzo. Le pagine invece devono essere sempre fresche
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css                "access plus 1 year"
+  ExpiresByType text/javascript         "access plus 1 year"
+  ExpiresByType application/javascript  "access plus 1 year"
+  ExpiresByType image/jpeg              "access plus 6 months"
+  ExpiresByType image/png               "access plus 6 months"
+  ExpiresByType video/mp4               "access plus 6 months"
+  ExpiresByType text/html               "access plus 0 seconds"
+</IfModule>
