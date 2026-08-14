@@ -1,6 +1,22 @@
 ﻿/* ════════════════════════════════════════
    DelMar — Main Script
    ════════════════════════════════════════ */
+
+/* DIAGNOSTICA TEMPORANEA — questo file è una sequenza di blocchi al
+   primo livello: un errore in uno qualsiasi ferma TUTTI quelli che
+   vengono dopo, in silenzio. Chi sta in fondo — oggi il cursore — non
+   parte e non c'è modo di accorgersene senza aprire la console.
+   Registrato qui, ?debug=1 lo mostra a schermo. Da togliere con il
+   resto della diagnostica */
+window.__erroriJS = 0;
+window.addEventListener('error', (e) => {
+  window.__erroriJS++;
+  if (!window.__primoErrore) {
+    window.__primoErrore = (e.message || '?') + ' @ ' +
+      String(e.filename || '').split('/').pop() + ':' + e.lineno;
+  }
+});
+
 gsap.registerPlugin(ScrollTrigger);
 
 /* ── Lenis smooth scroll ──────────────────────── */
@@ -184,7 +200,11 @@ function initHeroScroll() {
      planando — il movimento continua da solo oltre l'inerzia di Lenis */
   let target = 0;
   let shown  = 0;
-  const CHASE = 2.6; /* 1/s: più basso = inseguimento più lungo e morbido */
+  /* 1/s: più basso = inseguimento più lungo e morbido. Alzato da 2,6
+     insieme all'accorciamento della corsa: su una corsa breve lo stesso
+     ritardo pesa il doppio, perché è una frazione più grande del
+     percorso totale, e il capitolo sembrerebbe arrivare in ritardo */
+  const CHASE = 3.6;
 
   ScrollTrigger.create({
     trigger:'#v-scroller', start:'top top', end:'bottom bottom', scrub:true,
@@ -376,17 +396,28 @@ function initHeroScroll() {
         'muto    ' + videoEl.muted,
         'errore  ' + (videoEl.error ? videoEl.error.code + ' ' + (videoEl.error.message || '') : 'nessuno'),
         'buffer  ' + (b.join(' ') || 'vuoto'),
-        'schermo ' + window.innerWidth + 'x' + window.innerHeight
+        'schermo ' + window.innerWidth + 'x' + window.innerHeight,
+        '',
+        'CURSORE',
+        /* Il cursore non dipende più da queste due: si accende quando un
+           mouse si muove davvero. Restano perché dicono quanto il
+           browser mentiva — su questo portatile "primario" è false */
+        'mouse dichiarato ' + matchMedia('(any-pointer: fine)').matches +
+          ' / primario ' + matchMedia('(pointer: fine)').matches,
+        'anim ridotte ' + matchMedia('(prefers-reduced-motion: reduce)').matches,
+        'tela nel DOM ' + !!document.getElementById('cur-cvs'),
+        'classe cur-on  ' + document.documentElement.classList.contains('cur-on'),
+        'errori JS   ' + (window.__erroriJS || 0) + (window.__primoErrore ? ' | ' + window.__primoErrore : '')
       ].join('\n');
     }, 400);
   }
 })();
 
 /* ── Il racconto: video a tutta pagina ────────── */
-/* Sorgente assegnata solo quando la sezione si avvicina: il file pesa
-   17 MB e sta molto sotto la piega, scaricarlo al caricamento della
-   pagina lo farebbe pagare anche a chi non ci arriva mai. Fuori campo
-   si mette in pausa, così non decodifica per nessuno */
+/* Il cortometraggio dura 2 minuti e mezzo: 20 MB su desktop, 8 su
+   telefono. La sorgente si assegna solo quando la sezione si avvicina,
+   altrimenti quel peso lo pagherebbe anche chi non ci arriva mai. Fuori
+   campo si mette in pausa, così non decodifica per nessuno. */
 (function(){
   const v = document.getElementById('racconto');
   if (!v) return;
@@ -401,16 +432,44 @@ function initHeroScroll() {
      invece sta nel flusso e un'altezza ce l'ha sempre */
   const sezione = document.getElementById('cta-full') || v;
 
+  /* RETE DI SICUREZZA. Il filmato dura 2 minuti e mezzo e pesa 8 MB su
+     telefono: se non parte — riproduzione automatica negata, decodifica
+     lenta, rete che singhiozza — al suo posto resta una striscia scura
+     che sembra un guasto. Con il fotogramma di riserva il peggio che può
+     capitare è un'immagine ferma del film, che è una cosa che ha senso.
+     Assegnato da JS e non scritto nel markup di proposito: l'attributo
+     poster si scarica al caricamento della pagina anche con
+     preload="none", e questa sezione sta molto sotto la piega */
+  const POSTER = 'assets/racconto-poster.jpg?v=1';
+  let tentativi = 0;
+
+  function carica() {
+    v.muted = true;
+    v.poster = POSTER;
+    v.src = isMobile() ? v.dataset.srcM : v.dataset.src;
+    v.load();
+  }
+
+  /* Un errore di rete non deve essere definitivo: si riprova una volta.
+     Se va male anche la seconda resta il fotogramma, e non si insiste —
+     ricaricare in eterno su rete mobile è peggio del difetto */
+  v.addEventListener('error', () => {
+    if (++tentativi > 1) return;
+    setTimeout(carica, 1500);
+  });
+
   new IntersectionObserver((entries) => {
     const dentro = entries[0].isIntersecting;
     if (dentro && !caricato) {
       caricato = true;
-      v.muted = true;
-      v.src = isMobile() ? v.dataset.srcM : v.dataset.src;
+      carica();
     }
     if (dentro) v.play().catch(() => {});
-    else if (!v.paused) v.pause();
-  }, { rootMargin: '400px 0px' }).observe(sezione);
+    /* Si mette in pausa solo quando ha già qualcosa da mostrare: farlo
+       prima fermerebbe lo scaricamento a metà, e tornando indietro il
+       video sarebbe ancora fermo al punto in cui l'avevamo lasciato */
+    else if (!v.paused && v.readyState >= 2) v.pause();
+  }, { rootMargin: '900px 0px' }).observe(sezione);
 
   /* Il play automatico può essere rifiutato in silenzio: risparmio
      energetico iOS, impostazione del browser, scheda in secondo piano.
@@ -1575,4 +1634,272 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
   window.addEventListener('resize', debounce(resize, 100));
 
   init();
+})();
+
+/* ── Cursore calamaro + pulsanti calamita ──────── */
+/* Si accende quando un mouse SI MUOVE DAVVERO, non quando il browser
+   dichiara di averne uno: (pointer: fine) descrive il dispositivo
+   PRINCIPALE, e su un portatile con schermo tattile e' il dito anche
+   mentre stai usando il mouse. Un pointermove di tipo 'mouse' invece e'
+   un fatto. Su un telefono quell'evento non arriva mai e non si crea
+   niente.
+
+   REGOLA da non violare: con il cursore di sistema nascosto, la punta
+   disegnata deve stare ESATTAMENTE sul pixel del puntatore. Se insegue
+   con un ritardo si mira in un punto e si clicca in un altro, e premere
+   un pulsante diventa un terno al lotto. Qui la punta del mantello e'
+   sul puntatore e a restare indietro sono SOLO i tentacoli, che non
+   servono a mirare. */
+(function(){
+  const mqMoto = matchMedia('(prefers-reduced-motion: no-preference)');
+
+  const SEL_TESTO = 'input, textarea, select';
+  const SEL_LINK  = 'a, button, [role="button"], summary, label';
+  const SEL_FOTO  = '.prod-img, .gallery-item, .azienda-facade, .azienda-side-imgs img, ' +
+                    '.fase-tondo, .team-photo-wrap, #cta-full';
+
+  const CALAMITA = '.ch-cta, .prod-link, .nav-wa, .wa-big, .btn-submit, .marina-cta-btn';
+  const TIRO  = .3;
+  const TETTO = 8;   /* tetto in PIXEL: senza, un pulsante largo si sposterebbe
+                        molto più di uno stretto a parità di gesto */
+
+  const MAX = 26;    /* posizioni ricordate: è la lunghezza delle code */
+  const N = 5;       /* tentacoli: meno sono, più il gesto resta leggibile */
+  const L = 8;       /* punti per tentacolo */
+  const DIETRO = 4;  /* i tentacoli nascono dietro il corpo, non sulla punta */
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const limita = (v, m) => Math.max(-m, Math.min(m, v));
+
+  let cvs = null, ctx = null;
+  let acceso = false;
+  let sospeso = false;
+  const storia = [];
+  let mx = 0, my = 0, vx = 0, vy = 0, ux = 0, uy = 0;
+  let ang = 0, t = 0;
+  let gran = 1, tgran = 1;
+  let mix = 0, tmix = 0;
+  let modo = 'base';
+  let scuro = false;
+  let sporco = null;
+
+  function dimensiona() {
+    /* Densità fermata a 1 anche sugli schermi che ne dichiarano 2: una
+       tela a schermo intero al doppio della densità sono quattro volte i
+       pixel da ridipingere a ogni fotogramma. Su linee sottili la
+       differenza non si vede */
+    const r = Math.min(window.devicePixelRatio || 1, 1);
+    cvs.width = innerWidth * r;
+    cvs.height = innerHeight * r;
+    ctx.setTransform(r, 0, 0, r, 0, 0);
+    sporco = null;
+  }
+
+  function costruisci() {
+    cvs = document.createElement('canvas');
+    cvs.id = 'cur-cvs';
+    document.body.appendChild(cvs);
+    ctx = cvs.getContext('2d');
+    dimensiona();
+    window.addEventListener('resize', debounce(dimensiona, 120));
+
+    if (mqMoto.matches) {
+      document.querySelectorAll(CALAMITA).forEach(el => {
+        const qx = gsap.quickTo(el, 'x', { duration: .5, ease: 'power3.out' });
+        const qy = gsap.quickTo(el, 'y', { duration: .5, ease: 'power3.out' });
+        el.addEventListener('mousemove', (e) => {
+          const r = el.getBoundingClientRect();
+          qx(limita((e.clientX - (r.left + r.width  / 2)) * TIRO, TETTO));
+          qy(limita((e.clientY - (r.top  + r.height / 2)) * TIRO, TETTO));
+        });
+        /* Il ritorno è più lento dell'andata: rilasciato di scatto
+           sembrerebbe che il pulsante scappi */
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: .7, ease: 'elastic.out(1, .45)' });
+        });
+      });
+    }
+
+    gsap.ticker.add(disegna);
+  }
+
+  function mostra() {
+    if (sospeso || !cvs) return;
+    document.documentElement.classList.add('cur-on');
+    cvs.style.opacity = 1;
+  }
+
+  /* SICUREZZA. Nascondere il puntatore di sistema è una promessa: che al
+     suo posto ce n'è un altro, sempre, e che si torna indietro appena
+     serve. Se quella promessa si rompe — la pagina perde il fuoco, il
+     mouse esce dalla finestra — chi sta davanti resta senza puntatore e
+     senza modo di uscirne */
+  function nascondi() {
+    document.documentElement.classList.remove('cur-on');
+    if (cvs) cvs.style.opacity = 0;
+  }
+
+  function disegna() {
+    if (!acceso || sospeso) return;
+    t += .06;
+
+    /* La velocità decade da sola: se non arrivano eventi tende a zero e
+       l'animale si calma, senza bisogno di un timer */
+    vx *= .82;
+    vy *= .82;
+    const vel = Math.hypot(vx, vy);
+    if (vel > .6) ang = Math.atan2(vy, vx);
+    const v = Math.min(vel / 20, 1);
+
+    gran = lerp(gran, tgran, .18);
+    mix  = lerp(mix,  tmix,  .16);
+
+    storia.unshift({ x: mx, y: my });
+    if (storia.length > MAX) storia.pop();
+
+    /* Si ripulisce SOLO il riquadro toccato al giro precedente: azzerare
+       tutta la tela a ogni fotogramma, per un animale che ne occupa
+       duecento pixel, era la causa degli scatti */
+    if (sporco) {
+      ctx.clearRect(sporco.x, sporco.y, sporco.w, sporco.h);
+      sporco = null;
+    }
+    if (modo === 'testo') return;
+
+    const p0 = storia[0];
+    const pN = storia[Math.min(MAX - 1, storia.length - 1)] || p0;
+    const M = 34 + 34 * gran;
+    sporco = {
+      x: Math.min(p0.x, pN.x) - M,
+      y: Math.min(p0.y, pN.y) - M,
+      w: Math.abs(p0.x - pN.x) + M * 2,
+      h: Math.abs(p0.y - pN.y) + M * 2
+    };
+
+    /* Sul video scuro dell'hero parte dal bianco, sulle sezioni chiare
+       dal corallo; sopra un pulsante vira verso il corallo scuro del
+       marchio. Scarto piccolo di proposito: deve dire "ci siamo" */
+    const da = scuro ? [255, 255, 255] : [255, 107, 87];
+    const a  = scuro ? [255, 107, 87]  : [201, 67, 44];
+    const col = da.map((n, i) => Math.round(n + (a[i] - n) * mix)).join(',');
+
+    /* Sopra una foto si distende, sopra un link si raccoglie e allarga i
+       tentacoli: è il gesto di chi sta per afferrare, e serve anche a non
+       coprire il pulsante proprio mentre lo stai per premere */
+    const lungo = modo === 'foto' ? 1.25 : modo === 'link' ? .6 : 1;
+    const apertura = (modo === 'link' ? 15 : 6.5) * gran;
+    const perp = ang + Math.PI / 2;
+    const cp = Math.cos(perp);
+    const sp = Math.sin(perp);
+
+    for (let j = 0; j < N; j++) {
+      const lato = (j - (N - 1) / 2) / ((N - 1) / 2);
+      const fase = j * .9;
+      ctx.beginPath();
+      for (let i = 0; i <= L; i++) {
+        const idx = DIETRO + Math.round(i * ((MAX - DIETRO) / L) * lungo);
+        const p = storia[Math.min(idx, storia.length - 1)];
+        if (!p) break;
+        const f = i / L;
+        /* L'ondulazione cresce verso la punta e si CALMA con la velocità:
+           a tutta corsa i tentacoli si stirano dritti */
+        const onda = Math.sin(t * 2.4 - i * .6 + fase) * (1.6 + 5.5 * (1 - v)) * f * gran;
+        const off = lato * apertura * f + onda;
+        i ? ctx.lineTo(p.x + cp * off, p.y + sp * off)
+          : ctx.moveTo(p.x + cp * off, p.y + sp * off);
+      }
+      ctx.strokeStyle = `rgba(${col},${.5 - Math.abs(lato) * .16})`;
+      ctx.lineWidth = (1.3 - Math.abs(lato) * .5) * gran;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+
+    /* Il corpo, con l'origine SULLA PUNTA: tutto il disegno sta dietro al
+       puntatore, come la punta di una freccia */
+    ctx.save();
+    ctx.translate(mx, my);
+    ctx.rotate(ang);
+
+    /* Un respiro leggero: i calamari si muovono a spinte, e un corpo di
+       misura fissa sembrerebbe un disegno trascinato */
+    const lun = (8 + v * 3.5 + Math.sin(t * 3) * (.5 + v * .8)) * gran;
+    ctx.beginPath();
+    ctx.ellipse(-lun, 0, lun, (4.2 - v * .7) * gran, 0, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${col},.9)`;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(-lun * 1.5, 0);
+    ctx.lineTo(-lun * 2.3, -5 * gran);
+    ctx.lineTo(-lun * 2.3, 5 * gran);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(${col},.4)`;
+    ctx.fill();
+
+    /* Gli occhi stanno fra mantello e tentacoli, non sulla punta: è
+       quello che lo rende un animale e non una freccia */
+    ctx.fillStyle = scuro ? 'rgba(13,27,42,.9)' : 'rgba(255,255,255,.95)';
+    for (const lato of [-1, 1]) {
+      ctx.beginPath();
+      ctx.arc(-lun * 1.75, lato * 2.1 * gran, 1.05 * gran, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function muovi(e) {
+    mx = e.clientX;
+    my = e.clientY;
+    vx += (e.clientX - ux) * .5;
+    vy += (e.clientY - uy) * .5;
+    ux = e.clientX;
+    uy = e.clientY;
+    if (!acceso) {
+      acceso = true;
+      costruisci();
+    }
+    mostra();
+  }
+
+  if (window.PointerEvent) {
+    window.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') muovi(e); }, { passive: true });
+    /* Schermo tattile E mouse insieme, il caso dei portatili di oggi: al
+       tocco il disegno si ritira e torna il cursore di sistema, perché un
+       animale fermo dove il dito ha toccato l'ultima volta è un disturbo */
+    window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') nascondi(); }, { passive: true });
+  } else {
+    window.addEventListener('mousemove', muovi, { passive: true });
+    window.addEventListener('touchstart', nascondi, { passive: true });
+  }
+
+  document.addEventListener('mouseleave', nascondi);
+  document.addEventListener('mouseenter', () => { if (acceso) mostra(); });
+  window.addEventListener('blur', nascondi);
+
+  /* Uscita di sicurezza: Esc restituisce il puntatore di sistema */
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    sospeso = !sospeso;
+    if (sospeso) nascondi(); else mostra();
+  });
+
+  /* Cosa c'è sotto: delegato, così vale anche per quello che nasce dopo */
+  document.addEventListener('mouseover', (e) => {
+    const el = e.target;
+    if (!el || !el.closest) return;
+
+    /* Sopra l'hero il fondo è il video scuro e serve un tratto chiaro;
+       sulle sezioni bianche il corallo */
+    scuro = !!el.closest('#v-scroller, #hero-bg, #cta-full, #marina, #footer');
+
+    let nuovo = 'base';
+    if (el.closest(SEL_TESTO)) nuovo = 'testo';
+    else if (el.closest(SEL_LINK)) nuovo = 'link';
+    else if (el.closest(SEL_FOTO)) nuovo = 'foto';
+
+    if (nuovo === modo) return;
+    modo = nuovo;
+    tgran = nuovo === 'link' ? 1.7 : nuovo === 'foto' ? 1.25 : 1;
+    tmix  = nuovo === 'link' ? 1 : 0;
+  });
 })();

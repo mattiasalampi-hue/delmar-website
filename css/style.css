@@ -235,10 +235,18 @@ nav a {
 }
 
 /* ─ Video scroller ──────────────────────────── */
+/* Quanto si deve scorrere per attraversare tutto l'hero. Le soglie dei
+   capitoli sono frazioni di QUESTA altezza, quindi è l'unico numero che
+   decide la distanza fra una call to action e la successiva.
+   A 500vh la corsa utile era 400vh e fra due CTA passavano ~92vh, cioè
+   quasi uno schermo intero: due gesti di rotella per ogni frase. A 320vh
+   la corsa utile è 220vh e fra due CTA restano ~46vh, mezza schermata.
+   Sotto non conviene andare: il gancio automatico alla CTA successiva
+   inizierebbe a scavalcarne una a ogni gesto */
 #v-scroller {
   position: relative;
   z-index: 3;
-  height: 500vh;
+  height: 320vh;
 }
 
 /* Tutto ciò che segue l'hero sale sopra il video invece di spingerlo
@@ -411,6 +419,39 @@ nav a {
 
 .ch-cta.wa svg {
   flex-shrink: 0;
+}
+
+/* ── Cursore personalizzato ─────────────────────── */
+/* Gli elementi li crea lo script, e SOLO dove esiste un mouse vero: su
+   un touch il puntatore non c'è, e un cerchio che non insegue nessuno
+   resterebbe piantato in un angolo dello schermo. Anche la classe qui
+   sotto la mette lo script, così il cursore di sistema sparisce soltanto
+   quando c'è già qualcosa a sostituirlo — se lo script non parte, il
+   puntatore resta quello normale invece di svanire e basta */
+html.cur-on,
+html.cur-on * {
+  cursor: none !important;
+}
+
+/* Nei campi di testo il cursore di sistema serve davvero: dice dove
+   cadrà la prossima lettera, e un cerchio non sa dirlo */
+html.cur-on input,
+html.cur-on textarea,
+html.cur-on select {
+  cursor: auto !important;
+}
+
+/* Una sola tela a tutto schermo: il calamaro è disegnato, non composto
+   da elementi. Le code sono curve che cambiano forma a ogni fotogramma,
+   e con gli elementi del documento servirebbero decine di nodi
+   riposizionati di continuo */
+#cur-cvs {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .25s;
 }
 
 /* DIAGNOSTICA TEMPORANEA — riquadro di stato del video, compare solo
@@ -2262,11 +2303,17 @@ nav a {
   }
 
   /* ─── Hero chapters (mobile: meno testo, CTA grandi) ── */
-  /* Su touch NON c'è lo snap (ascolta solo la rotella): una flickata
-     con inerzia copre ~2500px e brucerebbe due capitoli. Corsa più
-     lunga = ogni capitolo occupa più scroll e il ritmo torna suo */
+  /* Su touch NON c'è lo snap — ascolta solo la rotella — e una flickata
+     con inerzia copre ~2500px: per questo la corsa era stata ALLUNGATA a
+     760vh, così una sola flickata non bruciava due capitoli.
+     Ora però era l'eccesso opposto: fra due CTA passavano ~135vh, uno
+     schermo e mezzo. A 460vh ne restano ~74, meno della metà.
+     Il rischio di prima rientra in parte, ed è una scelta consapevole:
+     se una flickata decisa salta una frase, il rimedio è risalire verso
+     i 560vh — non toccare le soglie dei capitoli, che sono condivise
+     con il desktop */
   #v-scroller {
-    height: 760vh;
+    height: 460vh;
   }
 
   #c1, #c2, #c3, #c4 {
