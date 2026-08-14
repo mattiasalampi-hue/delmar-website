@@ -60,7 +60,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css?v=92" />
+    <link rel="stylesheet" href="css/style.css?v=93" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -566,23 +566,49 @@
               </div>
               <div class="form-field"><label>Telefono</label><input type="tel" name="telefono" placeholder="+39 333 1234567" /></div>
             </div>
+            <!-- Pastiglie invece del menu a tendina: le voci sono cinque e
+                 stanno tutte in vista, quindi si sceglie con un colpo
+                 d'occhio invece di aprire un elenco e scorrerlo. Sotto
+                 restano pulsanti radio veri, quindi tastiera e lettori di
+                 schermo funzionano senza che serva scrivere niente -->
             <div class="form-field">
-              <label>Cosa ti interessa</label>
-              <select name="interesse">
-                <option value="">Seleziona...</option>
-                <option>Pesce Fresco</option>
-                <option>Crostacei e Molluschi</option>
-                <option>Linea Surgelati</option>
-                <option>Tutto il catalogo</option>
-                <option>Consulenza personalizzata</option>
-              </select>
+              <span class="form-label" id="et-interesse">Cosa ti interessa</span>
+              <div class="scelte" role="radiogroup" aria-labelledby="et-interesse">
+                <label class="scelta"><input type="radio" name="interesse" value="Pesce fresco" /><span>Pesce fresco</span></label>
+                <label class="scelta"><input type="radio" name="interesse" value="Crostacei e molluschi" /><span>Crostacei e molluschi</span></label>
+                <label class="scelta"><input type="radio" name="interesse" value="Linea surgelati" /><span>Linea surgelati</span></label>
+                <label class="scelta"><input type="radio" name="interesse" value="Tutto il catalogo" /><span>Tutto il catalogo</span></label>
+                <label class="scelta"><input type="radio" name="interesse" value="Consulenza personalizzata" /><span>Consulenza personalizzata</span></label>
+              </div>
             </div>
             <div class="form-field">
               <label>Messaggio</label><textarea name="messaggio" placeholder="Raccontaci le tue esigenze..."></textarea>
             </div>
             <button type="submit" class="btn-submit">Invia richiesta</button>
-            <p id="form-ok">Messaggio inviato. Ti contatteremo presto.</p>
+            <p id="form-ok"></p>
           </form>
+          <!-- Conferma: prende il posto del modulo invece di comparirgli
+               sotto. Una riga di testo in fondo a un modulo appena
+               compilato si legge come una nota a piè di pagina, e la
+               domanda "è partito davvero?" resta -->
+          <div id="form-esito" hidden>
+            <svg class="esito-segno" viewBox="0 0 52 52" aria-hidden="true">
+              <circle class="esito-cerchio" cx="26" cy="26" r="23" />
+              <path class="esito-spunta" d="M15 26.5 l8 8 l14.5 -15.5" />
+            </svg>
+            <h3 class="esito-titolo">Richiesta inviata</h3>
+            <p class="esito-testo">
+              Ti risponde una persona, non un messaggio automatico: di solito entro
+              mezza giornata lavorativa.
+            </p>
+            <a
+              href="https://wa.me/393936762018?text=Ciao%20DelMar%2C%20ho%20appena%20mandato%20una%20richiesta%20dal%20sito"
+              target="_blank" rel="noopener noreferrer" class="esito-wa"
+            >
+              <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
+              Se hai fretta, scrivici su WhatsApp
+            </a>
+          </div>
         </div>
         <div class="contatti-info">
           <div>
@@ -656,7 +682,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="js/script.js?v=65"></script>
+    <script src="js/script.js?v=66"></script>
   </body>
 </html>
 

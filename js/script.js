@@ -1416,21 +1416,27 @@ window.addEventListener('load', () => {
   const form = document.getElementById('contact-form');
   if (!form) return;
 
-  const ok = document.getElementById('form-ok');
+  const ok    = document.getElementById('form-ok');
+  const esito = document.getElementById('form-esito');
 
-  const dillo = (testo, html) => {
-    ok[html ? 'innerHTML' : 'textContent'] = testo;
+  /* I collegamenti di ripiego li mette SOLO il browser, e il server
+     manda messaggi asciutti. Prima li scrivevano tutti e due e il
+     risultato era "Scrivici su WhatsApp o a info@del-mar.it. Scrivici su
+     WhatsApp o a info@del-mar.it." */
+  const RIPIEGO = ' Scrivici su <a href="https://wa.me/393936762018" target="_blank" ' +
+    'rel="noopener noreferrer">WhatsApp</a> o a <a href="mailto:info@del-mar.it">info@del-mar.it</a>.';
+
+  const errore = (testo) => {
+    ok.innerHTML = testo + RIPIEGO;
     ok.style.display = 'block';
   };
-
-  const RIPIEGO = 'Scrivici su <a href="https://wa.me/393936762018" target="_blank" ' +
-    'rel="noopener noreferrer">WhatsApp</a> o a <a href="mailto:info@del-mar.it">info@del-mar.it</a>.';
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const btn = form.querySelector('.btn-submit');
     const testoBtn = btn.textContent;
 
+    ok.style.display = 'none';
     btn.textContent = 'Invio in corso…';
     btn.disabled = true;
 
@@ -1439,17 +1445,22 @@ window.addEventListener('load', () => {
       const json = await res.json().catch(() => ({}));
 
       if (json.success) {
-        dillo('✓ Messaggio inviato. Ti contatteremo presto.');
-        form.reset();
-        setTimeout(() => { ok.style.display = 'none'; }, 6000);
+        /* Il modulo sparisce e al suo posto arriva la conferma: lasciarlo
+           lì, pieno di quello che si è appena scritto, invita a premere
+           di nuovo */
+        form.hidden = true;
+        esito.hidden = false;
+        /* Portato in vista da solo: su schermo piccolo la conferma
+           nascerebbe sotto la piega e sembrerebbe che non sia successo
+           niente */
+        esito.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else {
-        /* Il messaggio del server è già scritto per chi legge — campo
-           mancante, troppe richieste, guasto — quindi si mostra quello
-           invece di un generico "errore" che non dice cosa fare */
-        dillo((json.message || 'Non siamo riusciti a inviare.') + ' ' + RIPIEGO, true);
+        /* Il messaggio del server dice cosa manca — un campo, troppe
+           richieste, un guasto — ed è più utile di un "errore" generico */
+        errore(json.message || 'Non siamo riusciti a inviare.');
       }
     } catch (_) {
-      dillo('Errore di rete. ' + RIPIEGO, true);
+      errore('Errore di rete.');
     } finally {
       btn.textContent = testoBtn;
       btn.disabled = false;

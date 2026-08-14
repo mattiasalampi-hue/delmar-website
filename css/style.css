@@ -1360,6 +1360,74 @@ html.cur-on select {
   background: #fff;
 }
 
+/* ── Pastiglie di scelta ─────────────────────────
+   Il menu a tendina era l'unico punto del modulo dove bisognava aprire
+   qualcosa per vedere cosa c'era. Le voci sono cinque: stanno tutte in
+   vista. Sotto restano pulsanti radio veri — nascosti alla vista ma non
+   ai lettori di schermo — quindi frecce e tabulazione funzionano da sé */
+.form-label {
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: rgba(21,28,100,.75);
+}
+
+.scelte {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding-top: .2rem;
+}
+
+.scelta {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Non display:none: un radio nascosto così esce dall'ordine di
+   tabulazione e diventa irraggiungibile da tastiera */
+.scelta input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.scelta span {
+  display: inline-block;
+  font-size: .82rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--ink);
+  padding: .62rem 1.05rem;
+  border: 1px solid rgba(21,28,100,.22);
+  border-radius: 999px;
+  background: rgba(255,255,255,.55);
+  transition: border-color .25s, background .25s, color .25s, transform .25s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .scelta:hover span {
+    border-color: rgba(255,107,87,.6);
+  }
+}
+
+/* Selezionata: corallo pieno. È l'unica cosa colorata del modulo, quindi
+   si vede da lontano che una scelta è stata fatta */
+.scelta input:checked + span {
+  background: var(--wa);
+  border-color: var(--wa);
+  color: #fff;
+}
+
+/* Il contorno del fuoco da tastiera è sulla pastiglia, non sul radio
+   invisibile: senza, chi naviga a tabulazioni non vede dov'è */
+.scelta input:focus-visible + span {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 3px;
+}
+
 .btn-submit {
   align-self: flex-start;
   background: var(--ink);
@@ -1382,11 +1450,120 @@ html.cur-on select {
   }
 }
 
+/* Messaggio di errore sotto il pulsante. La conferma di invio NON passa
+   di qui: ha un pannello suo, perché una riga in fondo a un modulo
+   appena compilato si legge come una nota a piè di pagina */
 #form-ok {
   display: none;
-  font-size: .8rem;
-  color: rgba(21,28,100,.6);
-  margin-top: .5rem;
+  font-size: .82rem;
+  line-height: 1.6;
+  color: var(--wa);
+  margin-top: .8rem;
+  padding: .7rem .9rem;
+  border-left: 2px solid var(--wa);
+  background: rgba(255,107,87,.07);
+}
+
+#form-ok a {
+  color: var(--wa);
+  font-weight: 400;
+  border-bottom: 1px solid rgba(201,67,44,.4);
+}
+
+/* ── Conferma di invio ───────────────────────────
+   Prende il posto del modulo. Il segno si DISEGNA — prima il cerchio,
+   poi la spunta — invece di comparire già fatto: è quel mezzo secondo a
+   far capire che è successo qualcosa, e toglie la domanda "sarà partito
+   davvero?" che resta sempre dopo aver premuto invia */
+#form-esito {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.1rem;
+  padding: 2.6rem 0 1rem;
+}
+
+#form-esito[hidden] {
+  display: none;
+}
+
+.esito-segno {
+  width: 74px;
+  height: 74px;
+  overflow: visible;
+}
+
+.esito-cerchio,
+.esito-spunta {
+  fill: none;
+  stroke: var(--wa);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* La lunghezza del tratto è la lunghezza del percorso: partendo con lo
+   stacco pari al totale il segno è invisibile, e portandolo a zero si
+   disegna da sé */
+.esito-cerchio {
+  stroke-dasharray: 145;
+  stroke-dashoffset: 145;
+  animation: esito-cerchio .7s cubic-bezier(.65,0,.35,1) forwards;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.esito-spunta {
+  stroke-width: 3;
+  stroke-dasharray: 36;
+  stroke-dashoffset: 36;
+  animation: esito-spunta .35s cubic-bezier(.65,0,.35,1) .55s forwards;
+}
+
+@keyframes esito-cerchio {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes esito-spunta {
+  to { stroke-dashoffset: 0; }
+}
+
+.esito-titolo {
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 300;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+  color: var(--ink);
+  opacity: 0;
+  animation: esito-entra .6s ease-out .7s forwards;
+}
+
+.esito-testo {
+  font-size: .95rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--text-mid);
+  max-width: 42ch;
+  opacity: 0;
+  animation: esito-entra .6s ease-out .85s forwards;
+}
+
+.esito-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .84rem;
+  font-weight: 400;
+  color: var(--wa);
+  border-bottom: 2px solid rgba(255,107,87,.85);
+  padding-bottom: 5px;
+  opacity: 0;
+  animation: esito-entra .6s ease-out 1s forwards;
+}
+
+@keyframes esito-entra {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .contatti-info {

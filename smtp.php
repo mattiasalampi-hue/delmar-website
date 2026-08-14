@@ -15,7 +15,7 @@
       non ce l'ha, quindi il problema non puo' presentarsi.
 */
 
-function smtp_leggi($sock, &$errore) {
+function smtp_leggi($sock, &$errore, &$testo = null) {
     $risposta = '';
     while (($riga = fgets($sock, 515)) !== false) {
         $risposta .= $riga;
@@ -23,15 +23,20 @@ function smtp_leggi($sock, &$errore) {
            "250-PIPELINING". L'ultima ha uno spazio: "250 OK" */
         if (strlen($riga) < 4 || $riga[3] === ' ') break;
     }
+    $testo = trim($risposta);
     if ($risposta === '') { $errore = 'nessuna risposta dal server'; return 0; }
     return (int) substr($risposta, 0, 3);
 }
 
 function smtp_dice($sock, $comando, $attesi, &$errore, $etichetta = null) {
     if ($comando !== null) fwrite($sock, $comando . "\r\n");
-    $codice = smtp_leggi($sock, $errore);
+    $testo = '';
+    $codice = smtp_leggi($sock, $errore, $testo);
     if (!in_array($codice, (array) $attesi, true)) {
-        $errore = ($etichetta ?: trim(explode(' ', (string) $comando)[0])) . ": codice $codice";
+        /* Il MESSAGGIO del server, non solo il numero: "550" da solo non
+           dice se e' un mittente non autorizzato, un destinatario
+           rifiutato o un contenuto bloccato — e sono tre rimedi diversi */
+        $errore = ($etichetta ?: trim(explode(' ', (string) $comando)[0])) . ": $testo";
         return false;
     }
     return true;

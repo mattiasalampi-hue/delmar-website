@@ -46,7 +46,7 @@ if (!is_file($cfgFile)) {
        un visitatore "manca il file di configurazione" e' un invito a
        provare. */
     error_log('invia.php: config.php mancante');
-    esito(false, 'Modulo non disponibile. Scrivici su WhatsApp o a info@del-mar.it.', 500);
+    esito(false, 'Modulo non disponibile.', 500);
 }
 $cfg = require $cfgFile;
 
@@ -127,7 +127,7 @@ $inviata = smtp_invia(
 
 if (!$inviata['ok']) {
     error_log('invia.php: invio fallito — ' . $inviata['errore']);
-    esito(false, 'Non siamo riusciti a inviare. Scrivici su WhatsApp o a info@del-mar.it.', 502);
+    esito(false, 'Non siamo riusciti a inviare.', 502);
 }
 
 touch($traccia);
