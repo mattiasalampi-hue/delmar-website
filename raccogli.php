@@ -51,6 +51,23 @@ try {
 
     $tipo = isset($d['t']) ? $d['t'] : 'v';
 
+    if ($tipo === 'd') {
+        /* Quanti secondi e' rimasto. Arriva quando la scheda passa in
+           secondo piano o si chiude, e ritrova la sua riga col codice
+           'rif' mandato all'ingresso.
+           Si tiene il valore PIU' ALTO, non l'ultimo: tornando sulla
+           scheda parte un secondo conteggio, e l'ultimo che arriva
+           potrebbe essere piu' corto del primo */
+        $rif = an_taglia(isset($d['rif']) ? $d['rif'] : '', 24);
+        $sec = isset($d['s']) ? (int) $d['s'] : 0;
+        /* Oltre mezz'ora e' una scheda dimenticata aperta, non lettura:
+           falserebbe ogni media */
+        if ($rif === '' || $sec < 1 || $sec > 1800) exit;
+        $q = $db->prepare('UPDATE visite SET durata = ? WHERE rif = ? AND durata < ?');
+        $q->execute(array($sec, $rif, $sec));
+        exit;
+    }
+
     if ($tipo === 'e') {
         /* Un evento: modulo inviato, WhatsApp premuto, e simili. Sono i
            dati che contano davvero su un sito B2B — le visite dicono
@@ -77,8 +94,8 @@ try {
 
     $q = $db->prepare('INSERT INTO visite
         (giorno, istante, impronta, percorso, titolo, provenienza, campagna,
-         dispositivo, browser, sistema, larghezza, lingua)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+         dispositivo, browser, sistema, larghezza, lingua, rif, durata)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)');
     $q->execute(array(
         $giorno, $ora, $imp,
         an_taglia(isset($d['p']) ? $d['p'] : '/', 160),
@@ -89,8 +106,14 @@ try {
         an_browser($ua),
         an_sistema($ua),
         isset($d['w']) ? (int) $d['w'] : 0,
-        an_taglia(substr(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '', 0, 5), 5)
+        an_taglia(substr(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '', 0, 5), 5),
+        an_taglia(isset($d['rif']) ? $d['rif'] : '', 24)
     ));
+
+    /* Ogni tanto, alla chiusura di una visita, si fa pulizia del
+       vecchio. Cosi' non serve un cron sul server, che su questo
+       hosting sarebbe una cosa in piu' da ricordarsi */
+    if (mt_rand(1, 500) === 1) an_pulisci();
 } catch (Exception $e) {
     /* Nel registro del server, mai a schermo: un'analitica che rompe
        una pagina ha fatto piu' danni di quanti ne risolva */

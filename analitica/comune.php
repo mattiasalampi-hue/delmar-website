@@ -72,10 +72,24 @@ function an_db() {
         browser TEXT,
         sistema TEXT,
         larghezza INTEGER,
-        lingua TEXT
+        lingua TEXT,
+        /* rif: un codice a caso creato dal browser per QUELLA pagina
+           vista. Serve solo a ritrovare la riga quando, chiudendo la
+           scheda, arriva il secondo colpo con i secondi passati.
+           Non identifica una persona: cambia a ogni pagina e non e'
+           collegato a niente */
+        rif TEXT,
+        durata INTEGER DEFAULT 0
     )');
     $db->exec('CREATE INDEX IF NOT EXISTS i_visite_giorno ON visite(giorno)');
     $db->exec('CREATE INDEX IF NOT EXISTS i_visite_impronta ON visite(giorno, impronta)');
+    $db->exec('CREATE INDEX IF NOT EXISTS i_visite_rif ON visite(rif)');
+
+    /* Le colonne aggiunte dopo: su un database gia' popolato CREATE
+       TABLE IF NOT EXISTS non le crea, e senza questo il pannello
+       cadrebbe su "no such column" solo in produzione */
+    an_colonna($db, 'visite', 'rif', 'TEXT');
+    an_colonna($db, 'visite', 'durata', 'INTEGER DEFAULT 0');
 
     $db->exec('CREATE TABLE IF NOT EXISTS eventi (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,7 +107,83 @@ function an_db() {
         sale TEXT NOT NULL
     )');
 
+    /* Copia locale di Search Console. Una copia e non interrogazioni al
+       volo: l'API e' lenta, ha quote, e i suoi dati arrivano comunque
+       con due o tre giorni di ritardo — chiamarla a ogni apertura del
+       pannello sarebbe lento e fragile per niente */
+    $db->exec('CREATE TABLE IF NOT EXISTS ricerche (
+        giorno TEXT NOT NULL,
+        chiave TEXT NOT NULL,
+        pagina TEXT NOT NULL DEFAULT \'\',
+        clic INTEGER NOT NULL DEFAULT 0,
+        impressioni INTEGER NOT NULL DEFAULT 0,
+        posizione REAL NOT NULL DEFAULT 0,
+        PRIMARY KEY (giorno, chiave, pagina)
+    )');
+    $db->exec('CREATE INDEX IF NOT EXISTS i_ricerche_giorno ON ricerche(giorno)');
+
+    /* Sacchetto per le cose che il codice deve ricordarsi fra una
+       chiamata e l'altra: quando ha sincronizzato l'ultima volta, e
+       simili */
+    $db->exec('CREATE TABLE IF NOT EXISTS stato (
+        chiave TEXT PRIMARY KEY,
+        valore TEXT
+    )');
+
+    /* I totali dei periodi vecchi, riassunti da an_pulisci(). Creata
+       qui e non solo li' perche' il pannello la legge: se la pulizia
+       non e' ancora mai girata, una tabella mancante farebbe cadere il
+       pannello invece di mostrare zero righe */
+    $db->exec('CREATE TABLE IF NOT EXISTS totali (
+        giorno TEXT PRIMARY KEY,
+        visite INTEGER,
+        visitatori INTEGER,
+        azioni INTEGER
+    )');
+
     return $db;
+}
+
+/* Aggiunge una colonna solo se non c'e' gia'. SQLite non ha
+   ADD COLUMN IF NOT EXISTS, e rieseguirlo darebbe errore: si guarda
+   prima cosa c'e' */
+function an_colonna($db, $tabella, $nome, $tipo) {
+    $c = $db->query('PRAGMA table_info(' . $tabella . ')')->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($c as $r) {
+        if ($r['name'] === $nome) return;
+    }
+    $db->exec('ALTER TABLE ' . $tabella . ' ADD COLUMN ' . $nome . ' ' . $tipo);
+}
+
+function an_stato($chiave, $valore = null) {
+    $db = an_db();
+    if ($valore === null) {
+        $q = $db->prepare('SELECT valore FROM stato WHERE chiave = ?');
+        $q->execute(array($chiave));
+        return $q->fetchColumn();
+    }
+    $q = $db->prepare('INSERT INTO stato (chiave, valore) VALUES (?, ?)
+                       ON CONFLICT(chiave) DO UPDATE SET valore = excluded.valore');
+    $q->execute(array($chiave, $valore));
+    return $valore;
+}
+
+/* Pulizia. Le righe grezze oltre 14 mesi diventano totali giornalieri e
+   poi spariscono: lo storico dei grafici resta, il database non cresce
+   per sempre. 14 mesi perche' e' quello che serve a confrontare un mese
+   con lo stesso mese dell'anno prima */
+function an_pulisci() {
+    $db = an_db();
+    $limite = date('Y-m-d', strtotime('-14 month'));
+
+    $q = $db->prepare('INSERT OR REPLACE INTO totali (giorno, visite, visitatori, azioni)
+        SELECT v.giorno, COUNT(*), COUNT(DISTINCT v.impronta),
+               (SELECT COUNT(*) FROM eventi e WHERE e.giorno = v.giorno)
+        FROM visite v WHERE v.giorno < ? GROUP BY v.giorno');
+    $q->execute(array($limite));
+
+    $db->prepare('DELETE FROM visite WHERE giorno < ?')->execute(array($limite));
+    $db->prepare('DELETE FROM eventi WHERE giorno < ?')->execute(array($limite));
 }
 
 /* Il sale del giorno. Si crea la prima volta che serve e si buttano
