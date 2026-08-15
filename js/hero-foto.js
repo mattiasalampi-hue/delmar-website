@@ -120,45 +120,66 @@
     return { cx, cy, fw: 1 / k };
   }
 
-  function inquadratura(p) {
-    for (let i = 0; i < TAPPE.length - 1; i++) {
-      const a = TAPPE[i], b = TAPPE[i + 1];
-      if (p > b.p && i < TAPPE.length - 2) continue;
-      if (a.f === b.f) return F[a.f];
-      const e = dolce(Math.min(1, Math.max(0, (p - a.p) / (b.p - a.p))));
-      return fra(F[a.f], F[b.f], e, ARCHI[a.f] || 0);
-    }
-    return F[0];
+  /* Le soglie fra un capitolo e l'altro: cadono a meta' delle carrellate
+     definite in TAPPE (.14–.28, .38–.52, .60–.73). Passata la soglia, la
+     camera parte verso l'inquadratura nuova */
+  const SOGLIE = [.21, .45, .665];
+
+  function capitoloDi(p) {
+    let i = 0;
+    while (i < SOGLIE.length && p >= SOGLIE[i]) i++;
+    return i;
   }
 
-  /* L'avanzamento arriva dallo stesso ScrollTrigger che pilota i
-     capitoli, non da un conto per conto nostro: due misure dello stesso
-     scroll possono divergere di un fotogramma, e il testo comparirebbe
-     su un'inquadratura ancora in movimento */
-  let bersaglio = 0, mostrato = 0;
+  /* LA CAMERA NON E' AGGANCIATA ALLO SCROLL, e questo e' il punto.
+     Lo scroll decide SOLO quale capitolo si vuole; quanto dura la
+     carrellata lo decide DURATA, un tempo vero in millisecondi.
+
+     Prima la camera inseguiva la posizione dello scroll con uno
+     smorzamento: con lo scatto alla CTA del sito il bersaglio saltava
+     avanti in un colpo e la carrellata finiva in mezzo secondo — per
+     rallentarla bisognava allungare lo scroll, che era il difetto da cui
+     eravamo partiti. Separandole si ottengono tutte e due le cose: una
+     scrollata porta al capitolo successivo, e la camera ci arriva con
+     calma. E' lo stesso motore del banco di prova in hero-test/, con lo
+     stesso numero. */
+  const DURATA = 1150;
+
+  let capitolo = 0;        /* il capitolo che lo scroll chiede */
+  let daCap = 0;           /* da quale capitolo e' partita la corsa */
+  let daFrame = F[0];      /* e da quale inquadratura, che non e' la
+                              stessa cosa: si puo' ripartire da meta' */
+  let partita = 0;
+  let inCorsa = false;
+  let stato = F[0];
+
   ScrollTrigger.create({
     trigger: '#v-scroller', start: 'top top', end: 'bottom bottom', scrub: true,
-    onUpdate(self) { bersaglio = self.progress; }
+    onUpdate(self) {
+      const c = capitoloDi(self.progress);
+      if (c === capitolo) return;
+      /* Si riparte da DOVE SI E' ORA e non dall'inquadratura teorica del
+         capitolo che si lascia: cambiando idea a meta' carrellata, il
+         salto all'indietro si vedrebbe */
+      daFrame = stato;
+      daCap = capitolo;
+      capitolo = c;
+      partita = performance.now();
+      inCorsa = true;
+    }
   });
 
-  /* LA CAMERA INSEGUE PIU' PIANO DEI CAPITOLI, ed è una scelta.
-     I capitoli di script.js usano 3.6 (costante di tempo ~278 ms): con
-     lo scatto alla CTA la carrellata finiva in mezzo secondo, e di un
-     movimento cinematografico non si vedeva niente. Qui 1.35 fa ~740 ms.
-
-     Non e' una desincronizzazione per sbaglio: il testo arriva PRIMA e
-     l'immagine si assesta subito dopo, che e' l'ordine giusto — la
-     scritta atterra, la fotografia finisce di scivolarci sotto. Il
-     contrario (immagine ferma e testo in ritardo) sembrerebbe un bug.
-     Alzando questo numero si torna svelti, abbassandolo si va verso la
-     melassa: sotto 0,9 l'immagine arriva quando hai gia' letto. */
-  const CHASE = 1.35;
-  gsap.ticker.add((tempo, dt) => {
-    const gap = bersaglio - mostrato;
-    if (Math.abs(gap) > 0.00004) {
-      mostrato += gap * (1 - Math.exp(-CHASE * dt / 1000));
+  gsap.ticker.add(() => {
+    if (inCorsa) {
+      const f = Math.min(1, (performance.now() - partita) / DURATA);
+      /* L'arco appartiene alla coppia di capitoli, ed e' descritto nel
+         verso in avanti: percorso al contrario va specchiato, se no la
+         gobba cade dalla parte sbagliata */
+      const arco = (ARCHI[Math.min(daCap, capitolo)] || 0) * (capitolo >= daCap ? 1 : -1);
+      stato = fra(daFrame, F[capitolo], dolce(f), arco);
+      if (f >= 1) { stato = F[capitolo]; inCorsa = false; }
     }
-    applica(inquadratura(mostrato));
+    applica(stato);
   });
 
   window.addEventListener('resize', () => { misura(); }, { passive: true });
