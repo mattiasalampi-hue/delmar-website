@@ -1264,16 +1264,60 @@ html.cur-on select {
 }
 
 /* ─ §8 CONTATTI ─────────────────────────────── */
+
+/* Due campiture, una per colonna. Il modulo era testo tenue su fondo
+   bianco, con le bolle animate che gli passavano dietro: sembrava la
+   continuazione della pagina e non una cosa da compilare. Il fondo
+   scuro lo trasforma in un oggetto, e le bolle restano solo a destra
+   dove non danno fastidio a niente.
+
+   Lo stacco cade al 50% esatto della sezione, che NON e' un numero a
+   caso: la sezione ha il 6% di margine per lato e le due colonne sono
+   separate da un vuoto di 8vw, quindi la colonna sinistra finisce al
+   46% e la destra comincia al 54%. Il taglio cade in mezzo a quel
+   vuoto, e nessuna delle due colonne ci finisce sopra a cavallo.
+   Se si toccano quei margini o quel vuoto, va rifatto il conto. */
 #contatti {
   position: relative;
   padding: 14vh 6%;
   overflow: hidden;
 }
 
-#contatti-particles {
+/* Le due campiture stanno SOTTO la tela delle bolle, che le attraversa
+   tutte e due cambiando colore a meta' strada (se ne occupa script.js).
+   Nessuna delle due e' una tinta piatta: la luce nasce sul taglio e si
+   spegne verso i bordi, come se di la' dalla parete ci fosse una
+   sorgente. E' quello che regge tutto — due rettangoli pieni, uno blu e
+   uno bianco, sarebbero solo due rettangoli. */
+#contatti::before {
+  content: '';
   position: absolute;
   inset: 0;
   z-index: 0;
+  pointer-events: none;
+  background:
+    /* la luce sul taglio, a cavallo delle due meta': un nucleo stretto e
+       schiacciato dentro un alone largo. Un solo cerchio sfumato faceva
+       una macchia tonda, due sovrapposti fanno un fascio */
+    radial-gradient(34% 15% at 50% 53%, rgba(206,228,255,.42), rgba(206,228,255,0) 72%),
+    radial-gradient(52% 58% at 50% 56%, rgba(150,190,255,.26), rgba(150,190,255,0) 74%),
+    /* velatura: piu' carico in alto e in fondo, cosi' la campitura
+       respira invece di restare uniforme */
+    linear-gradient(to bottom, rgba(8,12,48,.22), rgba(8,12,48,0) 38%, rgba(8,12,48,.14)),
+    /* e sotto a tutto, la divisione vera */
+    linear-gradient(to right, #141b5e 0 50%, #eef0f4 50% 100%);
+}
+
+
+/* Sopra le campiture, sotto il testo: e' il senso di tutto l'effetto,
+   l'acqua e' una sola e attraversa il taglio invece di fermarsi a
+   meta'. Con lo zero stava allo stesso livello della campitura e
+   funzionava solo per l'ordine in cui sono scritte nel documento —
+   un equilibrio che si rompe al primo che ne sposta una */
+#contatti-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -1281,7 +1325,7 @@ html.cur-on select {
 
 .contatti-grid {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8vw;
@@ -1610,6 +1654,123 @@ html.cur-on select {
   .wa-big:hover {
     background: var(--wa-hover);
   }
+}
+
+/* ── Il modulo sulla campitura scura ─────────────
+   Nessun fondo suo su schermo largo: quello che si vede dietro e' la
+   meta' scura della sezione, bolle comprese. Un fondo pieno qui sopra
+   le coprirebbe proprio dove servono. Su mobile invece la divisione non
+   esiste e il pannello se lo mette da solo — vedi in fondo al file. */
+.contatti-modulo {
+  position: relative;
+}
+
+.contatti-modulo .titolo-sezione {
+  color: rgba(255,255,255,.5);
+}
+
+.contatti-modulo .big-title {
+  color: #fff;
+}
+
+/* Le etichette erano al 75% di blu su bianco. Sul fondo scuro lo stesso
+   rapporto si ottiene col bianco smorzato: piu' carico diventa rumore,
+   piu' tenue sparisce */
+.contatti-modulo .form-field label,
+.contatti-modulo .form-label {
+  color: rgba(255,255,255,.6);
+}
+
+.contatti-modulo .form-field input,
+.contatti-modulo .form-field textarea {
+  color: #fff;
+  border-bottom-color: rgba(255,255,255,.26);
+}
+
+.contatti-modulo .form-field input::placeholder,
+.contatti-modulo .form-field textarea::placeholder {
+  color: rgba(255,255,255,.34);
+}
+
+.contatti-modulo .form-field input:focus,
+.contatti-modulo .form-field textarea:focus {
+  border-bottom-color: rgba(255,255,255,.85);
+}
+
+/* Il riempimento automatico del browser dipinge un fondo azzurro chiaro
+   e ci scrive sopra in nero: su questo pannello sarebbero tre campi
+   bianchi in mezzo al blu. L'ombra interna gigante e' l'unico modo per
+   coprirlo, il colore del testo va imposto a parte */
+.contatti-modulo .form-field input:-webkit-autofill,
+.contatti-modulo .form-field input:-webkit-autofill:hover,
+.contatti-modulo .form-field input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 100px var(--ink) inset;
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+}
+
+.contatti-modulo .scelta span {
+  color: rgba(255,255,255,.88);
+  border-color: rgba(255,255,255,.24);
+  background: rgba(255,255,255,.05);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contatti-modulo .scelta:hover span {
+    border-color: rgba(255,107,87,.75);
+    background: rgba(255,255,255,.1);
+  }
+}
+
+/* Corallo CHIARO e scritta blu, non corallo scuro e scritta bianca: sul
+   fondo blu il #c9432c si spegne, e il bianco su corallo e' sotto la
+   soglia di leggibilita' per una scritta piccola e spaziata come questa */
+.contatti-modulo .scelta input:checked + span {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.contatti-modulo .btn-submit {
+  background: var(--accent-bright);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contatti-modulo .btn-submit:hover {
+    background: #ff8a79;
+  }
+}
+
+.contatti-modulo #form-ok {
+  color: #ffc0b5;
+  border-left-color: var(--accent-bright);
+  background: rgba(255,107,87,.14);
+}
+
+.contatti-modulo #form-ok a {
+  color: #fff;
+  border-bottom-color: rgba(255,255,255,.5);
+}
+
+.contatti-modulo .esito-cerchio,
+.contatti-modulo .esito-spunta {
+  stroke: var(--accent-bright);
+}
+
+.contatti-modulo .esito-titolo {
+  color: #fff;
+}
+
+.contatti-modulo .esito-testo {
+  color: rgba(255,255,255,.72);
+}
+
+.contatti-modulo .esito-wa {
+  color: #fff;
+  border-bottom-color: var(--accent-bright);
 }
 
 .wa-big svg {
@@ -2951,8 +3112,37 @@ html.cur-on select {
   }
 
   /* ─── §8 Contatti ────────────────────────── */
+  /* Con una colonna sola la divisione destra/sinistra non esiste piu':
+     la campitura sparisce e il pannello diventa una fascia sua, da un
+     bordo all'altro dello schermo */
   #contatti {
     padding: 10vh 5%;
+  }
+
+  #contatti::before {
+    display: none;
+  }
+
+  /* Fino ai bordi, annullando il margine della sezione con un margine
+     negativo uguale e contrario.
+     In vw e non in %: la percentuale si calcola sulla larghezza del
+     CONTENITORE, che il margine della sezione ce l'ha gia' tolto, e il
+     pannello resterebbe corto di quei pixel lasciando due fettucce
+     chiare ai lati. Il vw invece si misura sulla finestra, come il 5%
+     della sezione, e i conti tornano.
+     Sborda di sotto un pixel quando c'e' la barra di scorrimento — il vw
+     la conta, la percentuale no — ma #contatti ha overflow:hidden e
+     quel filo lo taglia: meglio un pixel di troppo che una riga chiara
+     lungo tutto il bordo. */
+  .contatti-modulo {
+    margin-inline: -5vw;
+    padding: 3.2rem 5vw 3.6rem;
+    /* Qui il fondo serve, ed e' lo stesso impasto della campitura del
+       desktop: la luce invece di stare sul taglio — che non c'e' — si
+       mette in alto, da dove si comincia a leggere */
+    background:
+      radial-gradient(90% 44% at 50% 6%, rgba(168,204,255,.24), rgba(168,204,255,0) 72%),
+      linear-gradient(to bottom, #1a2270, #0f1547);
   }
 
   .contatti-grid {

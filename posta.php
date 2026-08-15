@@ -35,6 +35,12 @@ function posta_intestazioni(array $cfg, $rispondiA, $rispondiNome, $conf) {
         'Auto-Submitted: auto-generated',
         'Content-Type: multipart/alternative; boundary="' . $conf . '"',
     ];
+    /* PHP consegna a sendmail con -t, che ricava i destinatari LEGGENDO le
+       intestazioni: qui, a differenza della strada SMTP, scrivere il Cc
+       basta perche' la copia parta davvero */
+    if (!empty($cfg['copia'])) {
+        $t[] = 'Cc: ' . implode(', ', (array) $cfg['copia']);
+    }
     if ($rispondiA) {
         $t[] = 'Reply-To: ' . ($rispondiNome ? smtp_intestazione($rispondiNome) . ' ' : '')
              . '<' . $rispondiA . '>';

@@ -27,9 +27,13 @@ return [
     'mittente'      => 'sito@del-mar.it',
     'mittente_nome' => 'Sito DelMar',
 
-    /* Dove arrivano le richieste. E' un elenco: per aggiungere una
-       seconda casella basta una riga */
+    /* Dove arrivano le richieste: 'destinatari' e' chi la deve lavorare,
+       'copia' chi la riceve per saperlo. Sono due elenchi, una riga per
+       indirizzo.
+       Cc e non Ccn: chi risponde vede che ce l'hanno anche gli altri, e
+       non si finisce per scrivere in due allo stesso cliente. */
     'destinatari'   => ['info@del-mar.it'],
+    'copia'         => ['mattias.alampi@gmail.com'],
 
     /* Nome con cui il server si presenta. Se SMTP2GO dovesse lamentarsi,
        e' la prima cosa da guardare */

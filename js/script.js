@@ -1423,7 +1423,7 @@ window.addEventListener('load', () => {
      manda messaggi asciutti. Prima li scrivevano tutti e due e il
      risultato era "Scrivici su WhatsApp o a info@del-mar.it. Scrivici su
      WhatsApp o a info@del-mar.it." */
-  const RIPIEGO = ' Scrivici su <a href="https://wa.me/393936762018" target="_blank" ' +
+  const RIPIEGO = ' Scrivici su <a href="https://wa.me/393356654017" target="_blank" ' +
     'rel="noopener noreferrer">WhatsApp</a> o a <a href="mailto:info@del-mar.it">info@del-mar.it</a>.';
 
   const errore = (testo) => {
@@ -1489,9 +1489,28 @@ window.addEventListener('load', () => {
   const REPEL = isMobile() ? 150 : 120;
   const FORCE = 0.85;
 
+  /* Le due campiture della sezione: le bolle le attraversano tutte e
+     due e cambiano colore passando il confine — blu marino sul chiaro,
+     luminose sullo scuro, come una bolla vera che entra in un cono di
+     luce. Sul chiaro un celeste slavato si confonde con la carta, sullo
+     scuro lo stesso celeste sparisce: servono due colori davvero.
+
+     Il taglio sta a meta' della tela e lo dice il CSS, non questo file:
+     sotto i 768px le colonne diventano una sola, la divisione non esiste
+     e le bolle restano tutte del colore chiaro. Se cambia la soglia nel
+     foglio di stile, va cambiata anche qui. */
+  const mqDiviso = matchMedia('(min-width: 769px)');
+  const B_SCURO  = { fill: [150,205,255], bordo: [190,225,255], fa: .26 };
+  const B_CHIARO = { fill: [ 56,178,236], bordo: [  0,145,214], fa: .20 };
+  /* Il colore vira dentro una fascia larga invece che di scatto: una
+     bolla che passa il confine cambia in mezzo secondo, non a fotogramma */
+  const SFUMA = 90;
+  let taglio = -1;   // negativo = nessuna divisione, tutte chiare
+
   function resize() {
     W = cvs.width  = cvs.offsetWidth;
     H = cvs.height = cvs.offsetHeight;
+    taglio = mqDiviso.matches ? W / 2 : -1;
   }
 
   function mkBubble(fromBottom) {
@@ -1548,18 +1567,27 @@ window.addEventListener('load', () => {
       const r    = p.r + prox * 4;
       const a    = Math.min(1, p.a + prox * .35);
 
-      /* Azzurro marino saturo: sul nero bastava una luce tenue, sul
-         bianco un celeste slavato si confonde con la carta */
+      /* k = 0 sulla campitura scura, 1 su quella chiara. Il colore si
+         calcola per ogni bolla e per ogni fotogramma: e' la sua
+         posizione a deciderlo, quindi il passaggio avviene da se' */
+      const k = taglio < 0
+        ? 1
+        : Math.min(1, Math.max(0, (p.x - taglio + SFUMA / 2) / SFUMA));
+      const fra = (c1, c2, i) => Math.round(c1[i] + (c2[i] - c1[i]) * k);
+      const fi = B_SCURO.fill,  fc = B_CHIARO.fill;
+      const bi = B_SCURO.bordo, bc = B_CHIARO.bordo;
+      const fAlfa = B_SCURO.fa + (B_CHIARO.fa - B_SCURO.fa) * k;
+
       // Corpo bolla — fill translucido
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(56,178,236,${a * .2})`;
+      ctx.fillStyle = `rgba(${fra(fi,fc,0)},${fra(fi,fc,1)},${fra(fi,fc,2)},${a * fAlfa})`;
       ctx.fill();
 
       // Bordo bolla
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-      ctx.strokeStyle = `rgba(0,145,214,${a})`;
+      ctx.strokeStyle = `rgba(${fra(bi,bc,0)},${fra(bi,bc,1)},${fra(bi,bc,2)},${a})`;
       ctx.lineWidth = 1;
       ctx.stroke();
 
