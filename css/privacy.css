@@ -1,0 +1,156 @@
+/* Pagina informativa — foglio suo. Carica style.css per le variabili e i
+   caratteri, ma il resto del sito qui non serve: è una pagina che si
+   legge, non che si guarda. */
+
+.pv-pagina {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+}
+
+.pv-testa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem 6%;
+  border-bottom: 1px solid var(--border);
+}
+
+.pv-logo {
+  height: 2.1rem;
+  width: auto;
+}
+
+.pv-indietro {
+  font-size: .74rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  color: var(--text-mid);
+}
+
+.pv-indietro:hover {
+  color: var(--wa);
+}
+
+.pv-corpo {
+  /* 68 caratteri per riga: oltre, l'occhio fatica a ritrovare l'inizio
+     della riga dopo e si rilegge la stessa due volte */
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 7vh 6% 10vh;
+}
+
+.pv-occhiello {
+  margin: 0 0 .8rem;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--wa);
+}
+
+.pv-corpo h1 {
+  margin: 0 0 .6rem;
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -.04em;
+  line-height: 1.1;
+}
+
+.pv-data {
+  margin: 0 0 2.6rem;
+  font-size: .76rem;
+  color: var(--text-dim);
+}
+
+/* Il riassunto in cima: chi apre un'informativa vuole sapere in dieci
+   secondi se deve preoccuparsi. Se la risposta è no, va detta subito */
+.pv-sommario {
+  margin: 0 0 3rem;
+  padding: 1.2rem 1.4rem;
+  border-left: 3px solid var(--accent-bright);
+  background: rgba(255, 107, 87, .06);
+  font-size: .95rem;
+  font-weight: 300;
+  line-height: 1.8;
+}
+
+.pv-corpo h2 {
+  margin: 3rem 0 .9rem;
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: -.02em;
+}
+
+.pv-corpo h3 {
+  margin: 1.8rem 0 .6rem;
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+
+.pv-corpo p,
+.pv-corpo li {
+  font-size: .92rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--text-hi);
+}
+
+.pv-corpo p {
+  margin: 0 0 1rem;
+}
+
+.pv-corpo ul {
+  margin: 0 0 1rem;
+  padding-left: 1.1rem;
+}
+
+.pv-corpo li {
+  margin-bottom: .5rem;
+}
+
+.pv-corpo strong {
+  font-weight: 500;
+}
+
+.pv-corpo a {
+  color: var(--wa);
+  border-bottom: 1px solid rgba(201, 67, 44, .35);
+}
+
+.pv-corpo a:hover {
+  border-bottom-color: var(--wa);
+}
+
+.pv-nota {
+  margin-top: 3.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  font-size: .8rem !important;
+  color: var(--text-dim) !important;
+}
+
+.pv-piede {
+  padding: 2.4rem 6%;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.pv-piede p {
+  margin: .3rem 0;
+  font-size: .74rem;
+  font-weight: 300;
+  color: var(--text-dim);
+}
+
+.pv-piede a {
+  color: var(--text-mid);
+}
+
+.pv-piede a:hover {
+  color: var(--wa);
+}

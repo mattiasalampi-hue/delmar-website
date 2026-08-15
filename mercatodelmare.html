@@ -50,12 +50,12 @@
       }
     }
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Poppins servito dal nostro dominio, non da Google: vedi
+         css/poppins.css. Cosi' a nessun terzo arriva l'indirizzo IP
+         di chi apre la pagina, e non c'e' niente da autorizzare -->
+    <link rel="stylesheet" href="css/poppins.css?v=1" />
     <link rel="stylesheet" href="css/mercatodelmare.css?v=11" />
+    <link rel="stylesheet" href="css/consenso.css?v=1" />
   </head>
   <body>
     <!-- Loading -->
@@ -360,12 +360,17 @@
         </div>
       </div>
       <div class="mdm-map reveal-el">
-        <iframe
-          src="https://maps.google.com/maps?q=Via+Dorsale+13+54100+Massa+MS&output=embed"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="Mappa Il Mercato del Mare"
-        ></iframe>
+          <!-- La mappa la carica GOOGLE, e questo e' l'unico punto di
+               tutto il sito che chiama un terzo e mette cookie. Non
+               parte finche' non c'e' il consenso: al suo posto c'e' un
+               riquadro che spiega cosa succede e un pulsante. Bloccare
+               PRIMA e' il punto — caricarla e "disattivarla dopo" non
+               vale niente, la richiesta e' gia' partita -->
+          <div
+            data-consenso="marketing"
+            data-incorpora="https://maps.google.com/maps?q=Via+Dorsale+13+54100+Massa+MS&amp;output=embed"
+            data-etichetta="La mappa di Google"
+          ></div>
       </div>
     </section>
     <!-- Contatti: la prenotazione ora vive su carrello.html/checkout.html —
@@ -417,9 +422,10 @@
     <!-- CTA sticky mobile: compare dopo l'hero, sparisce sul form -->
     <a href="#box" class="mdm-sticky-cta" id="mdm-sticky-cta">Prenota un box →</a>
     <!-- Scripts (stessa toolchain hero del B2B: GSAP + ScrollTrigger + Lenis) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="js/vendor/gsap.min.js?v=1"></script>
+    <script src="js/vendor/ScrollTrigger.min.js?v=1"></script>
+    <script src="js/vendor/lenis.min.js?v=1"></script>
+    <script src="js/consenso.js?v=1"></script>
     <script src="js/mercatodelmare.js?v=7"></script>
   </body>
 </html>

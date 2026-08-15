@@ -1488,6 +1488,49 @@ html.cur-on select {
 /* Messaggio di errore sotto il pulsante. La conferma di invio NON passa
    di qui: ha un pannello suo, perché una riga in fondo a un modulo
    appena compilato si legge come una nota a piè di pagina */
+/* La riga sotto il pulsante di invio. NON è una casella da spuntare, e
+   la differenza conta: qui la base giuridica è la richiesta stessa di
+   essere ricontattati, non il consenso. Raccogliere un consenso che non
+   serve indebolisce quello vero, il giorno in cui servirà davvero */
+.form-legale {
+  margin: .9rem 0 0;
+  font-size: .72rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(255,255,255,.55);
+}
+
+.form-legale a {
+  color: rgba(255,255,255,.85);
+  border-bottom: 1px solid rgba(255,255,255,.35);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .form-legale a:hover {
+    color: #fff;
+    border-bottom-color: var(--accent-bright);
+  }
+}
+
+/* Nel piede, sotto la ragione sociale. "Preferenze" deve stare accanto
+   all'informativa: il consenso va revocato con la stessa facilità con
+   cui è stato dato, e cercarlo in fondo a una pagina di testo non lo è */
+.footer-legale {
+  display: block;
+  margin-top: .5rem;
+}
+
+.footer-legale a {
+  color: var(--text-mid);
+  margin: 0 .5rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-legale a:hover {
+    color: var(--wa);
+  }
+}
+
 #form-ok {
   display: none;
   font-size: .82rem;

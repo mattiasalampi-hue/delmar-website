@@ -55,12 +55,12 @@
       }
     }
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="css/style.css?v=98" />
+    <!-- Poppins servito dal nostro dominio, non da Google: vedi
+         css/poppins.css. Cosi' a nessun terzo arriva l'indirizzo IP
+         di chi apre la pagina, e non c'e' niente da autorizzare -->
+    <link rel="stylesheet" href="css/poppins.css?v=1" />
+    <link rel="stylesheet" href="css/style.css?v=99" />
+    <link rel="stylesheet" href="css/consenso.css?v=1" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -594,6 +594,10 @@
               <label>Messaggio</label><textarea name="messaggio" placeholder="Raccontaci le tue esigenze..."></textarea>
             </div>
             <button type="submit" class="btn-submit">Invia richiesta</button>
+            <p class="form-legale">
+              I dati servono solo a risponderti. Leggi come li trattiamo
+              nell'<a href="privacy.html">informativa privacy</a>.
+            </p>
             <p id="form-ok"></p>
           </form>
           <!-- Conferma: prende il posto del modulo invece di comparirgli
@@ -682,15 +686,23 @@
       </div>
       <p class="footer-legal">
         &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
+        <span class="footer-legale">
+          <a href="privacy.html">Privacy e cookie</a>
+          <a href="#" data-apri-consenso>Preferenze</a>
+        </span>
       </p>
     </footer>
     </div>
     <!-- Lightbox -->
     <div id="lightbox"><button id="lightbox-close">&times;</button><img id="lb-img" src="" alt="" /></div>
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+    <!-- Per primo: quando si aggiungera' Analytics, il gestore del
+         consenso deve gia' esistere nel momento in cui quel codice
+         chiede il permesso di partire -->
+    <script src="js/consenso.js?v=1"></script>
+    <script src="js/vendor/gsap.min.js?v=1"></script>
+    <script src="js/vendor/ScrollTrigger.min.js?v=1"></script>
+    <script src="js/vendor/lenis.min.js?v=1"></script>
     <!-- Campiture e pesciolini della sezione contatti. PRIMA di
          script.js, non dopo: script.js li accende appena viene letto, e
          se arrivassero dopo troverebbe il posto vuoto e tirerebbe

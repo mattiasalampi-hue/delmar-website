@@ -1,0 +1,114 @@
+/* Banco di prova del consenso — solo locale */
+
+.ck-quadro {
+  margin: 0 0 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.ck-riga {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: .8rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: .82rem;
+}
+
+.ck-riga:last-of-type {
+  border-bottom: none;
+}
+
+/* La spia è la prima cosa a sinistra e ha una larghezza fissa: così le
+   righe si leggono in colonna e si vede a colpo d'occhio cosa è acceso */
+.ck-spia {
+  flex: none;
+  width: 88px;
+  text-align: center;
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  padding: .3rem 0;
+  border-radius: 3px;
+}
+
+.ck-off {
+  background: rgba(21, 28, 100, .1);
+  color: rgba(21, 28, 100, .6);
+}
+
+.ck-on {
+  background: var(--wa);
+  color: #fff;
+}
+
+.ck-nome {
+  flex: 1 1 auto;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.ck-scelta {
+  flex: none;
+  font-size: .74rem;
+  font-weight: 300;
+  color: var(--text-mid);
+}
+
+.ck-data {
+  margin: 0;
+  padding: .7rem 1rem;
+  background: rgba(21, 28, 100, .04);
+  font-size: .72rem !important;
+  color: var(--text-dim) !important;
+}
+
+.ck-comandi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: 2.6rem;
+}
+
+.ck-comandi .cns-btn {
+  flex: 0 1 auto;
+}
+
+.ck-mappa {
+  margin: 1.2rem 0 2rem;
+  min-height: 300px;
+}
+
+.ck-mappa iframe {
+  min-height: 300px;
+  border-radius: 4px;
+}
+
+.ck-lista {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+}
+
+.ck-lista li {
+  margin-bottom: .7rem;
+}
+
+.pv-corpo code {
+  font-family: ui-monospace, monospace;
+  font-size: .85em;
+  background: rgba(21, 28, 100, .07);
+  padding: .12rem .38rem;
+  border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+  .ck-riga {
+    flex-wrap: wrap;
+  }
+
+  .ck-scelta {
+    width: 100%;
+    padding-left: calc(88px + .9rem);
+  }
+}

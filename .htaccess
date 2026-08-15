@@ -53,5 +53,9 @@
   ExpiresByType image/jpeg              "access plus 6 months"
   ExpiresByType image/png               "access plus 6 months"
   ExpiresByType video/mp4               "access plus 6 months"
+  # I caratteri ora li serviamo noi invece di prenderli da Google: sono
+  # immutabili e vanno tenuti a lungo, o si perde il vantaggio di averli
+  # portati dentro
+  ExpiresByType font/woff2              "access plus 1 year"
   ExpiresByType text/html               "access plus 0 seconds"
 </IfModule>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prova — banner dei cookie</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="../assets/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="../css/poppins.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/consenso.css" />
+    <link rel="stylesheet" href="../css/privacy.css" />
+    <link rel="stylesheet" href="cookie.css" />
+  </head>
+  <body class="pv-pagina">
+    <header class="pv-testa">
+      <a href="../index.html"><img src="../assets/logo.png" alt="DelMar" class="pv-logo" /></a>
+      <a href="../index.html" class="pv-indietro">← Torna al sito</a>
+    </header>
+
+    <main class="pv-corpo">
+      <p class="pv-occhiello">Banco di prova</p>
+      <h1>Il banner dei cookie</h1>
+      <p class="pv-data">Questa pagina non fa parte del sito: serve solo a provare il consenso.</p>
+
+      <p class="pv-sommario">
+        Sul sito vero il banner <strong>non compare</strong>, perché non c'è un
+        cookie né una chiamata a un altro sito: non c'è niente da autorizzare.
+        Qui invece ho registrato <strong>due tracciatori finti</strong> e una
+        <strong>mappa vera di Google</strong>, così il banner c'è e si può
+        provare per davvero — è esattamente quello che si vedrà il giorno che
+        colleghiamo Analytics e i pixel.
+      </p>
+
+      <h2>Cosa sta succedendo, in diretta</h2>
+      <div class="ck-quadro" id="ck-quadro"></div>
+
+      <div class="ck-comandi">
+        <button type="button" class="cns-btn cns-btn-no" id="ck-azzera">Azzera la scelta e ricomincia</button>
+        <button type="button" class="cns-btn" data-apri-consenso>Riapri il pannello</button>
+      </div>
+
+      <h2>Il blocco preventivo</h2>
+      <p>
+        Qui sotto c'è una mappa di Google <em>vera</em>. Finché non dai il
+        consenso non parte <strong>nessuna richiesta</strong> verso Google: al
+        suo posto c'è un riquadro che spiega cosa succederebbe. È il punto in
+        cui quasi tutti sbagliano — caricare la mappa e "disattivarla dopo" non
+        vale niente, la richiesta è già partita e l'indirizzo IP è già arrivato.
+      </p>
+      <div
+        class="ck-mappa"
+        data-consenso="marketing"
+        data-incorpora="https://maps.google.com/maps?q=Via+Dorsale+13+54100+Massa+MS&amp;output=embed"
+        data-etichetta="La mappa di Google"
+      ></div>
+
+      <h2>Cosa provare</h2>
+      <ol class="ck-lista">
+        <li><strong>Rifiuta tutto</strong> — i due tracciatori restano spenti, la mappa resta bloccata, e ricaricando la pagina il banner non torna a insistere.</li>
+        <li><strong>Accetta tutto</strong> — partono entrambi e la mappa si carica.</li>
+        <li><strong>Salva le scelte</strong> con solo una casella spuntata — parte solo quella.</li>
+        <li><strong>Carica la mappa</strong> dal riquadro grigio — accende solo il marketing, senza aprire il pannello per una mappa.</li>
+        <li><strong>Riapri il pannello</strong> e cambia idea — il consenso si deve poter revocare con la stessa facilità con cui si dà.</li>
+        <li>Guarda che <strong>Rifiuta e Accetta abbiano lo stesso peso</strong>: un rifiuto grigetto accanto a un accetta colorato è il modello che viene contestato.</li>
+      </ol>
+
+      <p class="pv-nota">
+        La scelta viene ricordata in <code>localStorage</code> e non in un
+        cookie: un cookie per ricordare il rifiuto dei cookie è un cortocircuito
+        che si può evitare. Insieme alla scelta si salva la <strong>data</strong>,
+        perché un consenso senza data non è dimostrabile.
+        L'informativa è <a href="../privacy.html">qui</a>.
+      </p>
+    </main>
+
+    <script src="../js/consenso.js"></script>
+    <script src="cookie.js"></script>
+  </body>
+</html>
