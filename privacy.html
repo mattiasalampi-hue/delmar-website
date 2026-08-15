@@ -9,9 +9,9 @@
     <link rel="canonical" href="https://del-mar.it/privacy.html" />
     <link rel="icon" href="assets/favicon.png?v=1" type="image/png" />
     <link rel="stylesheet" href="css/poppins.css?v=1" />
-    <link rel="stylesheet" href="css/style.css?v=100" />
+    <link rel="stylesheet" href="css/style.css?v=101" />
     <link rel="stylesheet" href="css/consenso.css?v=1" />
-    <link rel="stylesheet" href="css/privacy.css?v=1" />
+    <link rel="stylesheet" href="css/privacy.css?v=2" />
   </head>
   <body class="pv-pagina">
     <header class="pv-testa">
@@ -22,13 +22,13 @@
     <main class="pv-corpo">
       <p class="pv-occhiello">Informativa</p>
       <h1>Privacy e cookie</h1>
-      <p class="pv-data">Ultimo aggiornamento: 15 agosto 2026</p>
+      <p class="pv-data">Ultimo aggiornamento: 16 agosto 2026</p>
 
       <p class="pv-sommario">
-        In breve: questo sito <strong>non usa cookie di profilazione</strong>, non ha
-        strumenti di statistica e non carica contenuti di altri siti. I dati che
-        raccogliamo sono solo quelli che scrivi tu nel modulo contatti, e servono
-        a risponderti.
+        In breve: questo sito usa <strong>solo Google Analytics</strong>, e solo se
+        lo autorizzi — se rifiuti non viene caricato niente, nemmeno il file di
+        Google. Non ci sono pixel pubblicitari. Gli altri dati che raccogliamo
+        sono quelli che scrivi tu nel modulo contatti, e servono a risponderti.
       </p>
 
       <h2>Chi tratta i tuoi dati</h2>
@@ -77,9 +77,31 @@
 
       <h2>Cookie</h2>
       <p>
-        <strong>Questo sito non installa cookie</strong>: né tecnici né di
-        profilazione. Non c'è Google Analytics, non ci sono pixel pubblicitari,
-        non c'è nessuno strumento che ti segua da un sito all'altro.
+        Usiamo <strong>Google Analytics 4</strong> per sapere quante persone
+        visitano il sito e quali pagine leggono. Installa cookie, e
+        <strong>non parte finché non lo autorizzi</strong>: se rifiuti — o se
+        semplicemente non scegli — non viene caricato nulla, nemmeno il file di
+        Google. Non ci sono pixel pubblicitari e non facciamo remarketing.
+      </p>
+      <table class="pv-tabella">
+        <thead>
+          <tr><th>Cookie</th><th>Chi lo mette</th><th>A cosa serve</th><th>Durata</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>_ga</td><td>Google Analytics</td><td>Distingue un visitatore da un altro, senza sapere chi sei</td><td>2 anni</td></tr>
+          <tr><td>_ga_*</td><td>Google Analytics</td><td>Tiene insieme le pagine di una stessa visita</td><td>2 anni</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Abbiamo disattivato i <em>segnali Google</em> e la personalizzazione
+        degli annunci: questi dati non alimentano profili pubblicitari e non ti
+        seguono su altri siti.
+      </p>
+      <p>
+        La tua scelta la ricordiamo nel browser — in <em>localStorage</em>, non
+        in un cookie — insieme alla data. Puoi cambiarla quando vuoi da
+        <a href="#" data-apri-consenso>questo collegamento</a> o dal piede di
+        ogni pagina.
       </p>
       <p>
         Anche i caratteri tipografici e le librerie di animazione sono
@@ -88,12 +110,9 @@
         comunicato a nessun altro.
       </p>
       <p>
-        Se in futuro aggiungeremo strumenti di statistica o contenuti ospitati
-        da terzi, non partiranno prima che tu abbia scelto: comparirà un
-        pannello per accettare o rifiutare, e la scelta sarà modificabile in
-        qualsiasi momento da
-        <a href="#" data-apri-consenso>questo collegamento</a>. Questa pagina
-        verrà aggiornata di conseguenza.
+        Se in futuro aggiungeremo altri strumenti o contenuti ospitati da terzi
+        varrà la stessa regola — niente parte prima della tua scelta — e questa
+        pagina verrà aggiornata.
       </p>
 
       <h2>A chi comunichiamo i dati</h2>
@@ -110,6 +129,10 @@
         <li>
           <strong>SMTP2GO</strong> — il servizio che consegna le email generate
           dal modulo contatti. I dati sono trattati nei centri dati europei.
+        </li>
+        <li>
+          <strong>Google Ireland Ltd.</strong> — Google Analytics, e solo se hai
+          dato il consenso.
         </li>
       </ul>
       <p>
@@ -152,5 +175,8 @@
     </footer>
 
     <script src="js/consenso.js?v=1"></script>
+    <!-- Anche qui: se qualcuno accetta proprio da questa pagina, la
+         raccolta deve partire subito invece che alla pagina dopo -->
+    <script src="js/analytics.js?v=1"></script>
   </body>
 </html>

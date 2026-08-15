@@ -126,6 +126,44 @@
   border-bottom-color: var(--wa);
 }
 
+/* La tabella dei cookie. Ha il suo contenitore che scorre: su telefono
+   quattro colonne non ci stanno, e senza questo la pagina intera
+   scorrerebbe di lato — difetto che si nota solo sul dispositivo vero */
+.pv-tabella {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  margin: 1.2rem 0 1.6rem;
+  border-collapse: collapse;
+  font-size: .82rem;
+}
+
+.pv-tabella th,
+.pv-tabella td {
+  padding: .6rem .8rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.pv-tabella td:nth-child(3) {
+  white-space: normal;
+  min-width: 22ch;
+}
+
+.pv-tabella th {
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+
+.pv-tabella td {
+  font-weight: 300;
+  color: var(--text-hi);
+}
+
 .pv-nota {
   margin-top: 3.4rem;
   padding-top: 1.4rem;

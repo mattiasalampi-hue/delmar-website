@@ -1,0 +1,23 @@
+# DelMar — del-mar.it
+#
+# Tutto aperto tranne quello che non ha senso far indicizzare.
+# I banchi di prova hanno gia' il meta robots noindex nelle pagine, ma
+# quello vale solo se il motore la pagina la SCARICA: qui si dice di non
+# perderci nemmeno una visita.
+
+User-agent: *
+Allow: /
+
+# Banchi di prova e anteprime: non sono il sito
+Disallow: /prove/
+Disallow: /hero-test/
+Disallow: /anteprima.html
+
+# Vecchia installazione WordPress dormiente, gia' chiusa lato server
+Disallow: /_wordpress-2025/
+
+# Lo script che riceve il modulo: risponde solo a POST, ma non c'e'
+# motivo che un motore ci provi
+Disallow: /invia.php
+
+Sitemap: https://del-mar.it/sitemap.xml
