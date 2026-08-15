@@ -141,10 +141,18 @@
     onUpdate(self) { bersaglio = self.progress; }
   });
 
-  /* Stesso inseguimento dei capitoli, stessa costante: se la camera
-     rincorresse con un ritardo diverso, immagine e scritte
-     arriverebbero in due momenti diversi */
-  const CHASE = 3.6;
+  /* LA CAMERA INSEGUE PIU' PIANO DEI CAPITOLI, ed è una scelta.
+     I capitoli di script.js usano 3.6 (costante di tempo ~278 ms): con
+     lo scatto alla CTA la carrellata finiva in mezzo secondo, e di un
+     movimento cinematografico non si vedeva niente. Qui 1.35 fa ~740 ms.
+
+     Non e' una desincronizzazione per sbaglio: il testo arriva PRIMA e
+     l'immagine si assesta subito dopo, che e' l'ordine giusto — la
+     scritta atterra, la fotografia finisce di scivolarci sotto. Il
+     contrario (immagine ferma e testo in ritardo) sembrerebbe un bug.
+     Alzando questo numero si torna svelti, abbassandolo si va verso la
+     melassa: sotto 0,9 l'immagine arriva quando hai gia' letto. */
+  const CHASE = 1.35;
   gsap.ticker.add((tempo, dt) => {
     const gap = bersaglio - mostrato;
     if (Math.abs(gap) > 0.00004) {
