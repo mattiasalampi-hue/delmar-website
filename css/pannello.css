@@ -149,6 +149,16 @@ body {
   color: var(--pn-tenue);
 }
 
+.pn-periodo .pn-scarico {
+  border-style: dashed;
+}
+
+.pn-confronto {
+  margin: 0 0 1.2rem;
+  font-size: .74rem;
+  color: var(--pn-tenue);
+}
+
 /* ── Corpo ────────────────────────────────────── */
 .pn-corpo {
   padding: 1.6rem 5% 4rem;
@@ -183,6 +193,84 @@ body {
   font-size: .68rem;
   line-height: 1.4;
   color: var(--pn-tenue);
+}
+
+/* I due riquadri delle conversioni. Sono i numeri per cui si apre
+   questa pagina: se hanno lo stesso peso visivo degli altri, l'occhio
+   parte da sinistra e legge le visite per prime — cioè il contrario */
+.pn-numero-vivo {
+  background: var(--pn-ink);
+  color: #fff;
+}
+
+.pn-numero-vivo .pn-e {
+  color: rgba(255, 255, 255, .62);
+}
+
+/* ── La variazione rispetto al periodo prima ───
+   Un numero da solo non dice niente: 287 visitatori è buono o brutto
+   solo rispetto a prima */
+.pn-d {
+  display: inline-block;
+  margin-left: .3rem;
+  padding: .05rem .35rem;
+  border-radius: 999px;
+  font-size: .92em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pn-d-su {
+  background: rgba(34, 128, 86, .14);
+  color: #1c7a52;
+}
+
+.pn-d-giu {
+  background: rgba(201, 67, 44, .14);
+  color: var(--pn-cor);
+}
+
+.pn-d-muto {
+  background: rgba(21, 28, 100, .07);
+  color: var(--pn-tenue);
+}
+
+.pn-numero-vivo .pn-d-su {
+  background: rgba(126, 232, 184, .18);
+  color: #7ee8b8;
+}
+
+.pn-numero-vivo .pn-d-giu {
+  background: rgba(255, 150, 130, .18);
+  color: #ff9682;
+}
+
+.pn-numero-vivo .pn-d-muto {
+  background: rgba(255, 255, 255, .12);
+  color: rgba(255, 255, 255, .7);
+}
+
+/* La riga dei numeri di contorno: ci sono, ma non rubano l'occhio ai
+   quattro riquadri sopra */
+.pn-secondari {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.6rem;
+  margin: 0 0 1.6rem;
+  font-size: .78rem;
+  color: var(--pn-tenue);
+}
+
+.pn-secondari strong {
+  font-weight: 500;
+  color: var(--pn-ink);
+}
+
+.pn-secondari small {
+  display: block;
+  font-size: .82em;
+  opacity: .8;
 }
 
 .pn-riquadro {
@@ -289,6 +377,68 @@ body {
   color: var(--pn-tenue);
 }
 
+.pn-avviso {
+  margin: .8rem 0 0;
+  padding: .5rem .6rem;
+  background: rgba(201, 67, 44, .07);
+  border-left: 2px solid var(--pn-cor);
+  font-size: .72rem;
+  color: var(--pn-cor);
+}
+
+/* ── Imbuto ───────────────────────────────────
+   Barre orizzontali che si accorciano: il restringimento È il dato.
+   Un elenco di quattro numeri lo stesso calo non lo fa vedere */
+.pn-imbuto {
+  margin-top: .9rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.pn-gradino {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .6rem .6rem;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.pn-gradino-barra {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: rgba(21, 28, 100, .1);
+  border-radius: 3px;
+}
+
+.pn-gradino-et,
+.pn-gradino-val {
+  position: relative;
+  z-index: 1;
+  font-size: .82rem;
+}
+
+.pn-gradino-et {
+  color: var(--pn-medio);
+}
+
+.pn-gradino-val {
+  flex: none;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.pn-gradino-val small {
+  display: block;
+  font-weight: 300;
+  font-size: .68rem;
+  color: var(--pn-tenue);
+}
+
 /* ── Grafico ──────────────────────────────────
    Barre in CSS puro: nessuna libreria da caricare per disegnare
    trenta rettangoli */
@@ -300,10 +450,24 @@ body {
 }
 
 .pn-colonna {
+  position: relative;
   flex: 1;
   height: 100%;
   display: flex;
   align-items: flex-end;
+}
+
+/* L'eco del periodo prima: una tacca all'altezza che aveva lo stesso
+   giorno del periodo precedente. Una seconda serie di barre
+   raddoppierebbe l'inchiostro per un confronto che si legge in un
+   colpo d'occhio con una riga */
+.pn-eco {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(21, 28, 100, .3);
+  pointer-events: none;
 }
 
 .pn-barra {
@@ -324,6 +488,46 @@ body {
   color: var(--pn-tenue);
 }
 
+/* ── Griglia giorno × ora ──────────────────────
+   Sette righe per ventiquattro colonne, con l'intensità del colore al
+   posto del numero: serve vedere DOVE si addensa, non quanto vale la
+   singola casella */
+.pn-orari {
+  margin-top: .9rem;
+  overflow-x: auto;
+}
+
+.pn-orari-testa,
+.pn-orari-riga {
+  display: grid;
+  grid-template-columns: 2.2rem repeat(24, minmax(9px, 1fr));
+  gap: 2px;
+  align-items: center;
+  min-width: 340px;
+}
+
+.pn-orari-riga {
+  margin-top: 2px;
+}
+
+.pn-ora,
+.pn-orari-et {
+  font-size: .58rem;
+  color: var(--pn-tenue);
+}
+
+.pn-ora {
+  text-align: center;
+}
+
+.pn-cella {
+  aspect-ratio: 1;
+  min-height: 11px;
+  border-radius: 2px;
+  background: rgba(201, 67, 44, var(--i, 0));
+  box-shadow: inset 0 0 0 1px rgba(21, 28, 100, .05);
+}
+
 .pn-nota {
   margin: 1.6rem 0 0;
   font-size: .74rem;
@@ -331,7 +535,41 @@ body {
   color: var(--pn-tenue);
 }
 
+.pn-esclusione {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  align-items: center;
+}
+
+.pn-interruttore {
+  padding: .3rem .7rem;
+  background: none;
+  border: 1px solid var(--pn-bordo);
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: .7rem;
+  color: var(--pn-medio);
+  cursor: pointer;
+}
+
+.pn-interruttore:hover {
+  border-color: var(--pn-cor);
+  color: var(--pn-cor);
+}
+
+.pn-vivo-t {
+  color: var(--pn-cor);
+  font-weight: 500;
+}
+
+.pn-sotto a {
+  color: inherit;
+}
+
 @media (max-width: 640px) {
   .pn-testa { padding: 1.2rem 5% 1rem; }
   .pn-n { font-size: 1.7rem; }
+  .pn-numeri { grid-template-columns: repeat(2, 1fr); }
+  .pn-corpo { padding: 1.2rem 4% 3rem; }
 }

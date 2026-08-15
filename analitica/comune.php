@@ -30,6 +30,11 @@
   PHP 7.4: niente match(), niente argomenti con nome, niente ?->
 */
 
+/* L'ora italiana, non quella del server. Senza questa riga "oggi" nel
+   pannello finisce a mezzanotte UTC, cioe' alle due del mattino d'estate:
+   le visite serali di ieri comparirebbero in "oggi" */
+date_default_timezone_set('Europe/Rome');
+
 define('AN_DIR', dirname(__DIR__) . '/_dati');
 define('AN_DB', AN_DIR . '/analitica.sqlite');
 
