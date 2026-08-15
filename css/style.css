@@ -460,7 +460,15 @@ html.cur-on select {
 #cur-cvs {
   position: fixed;
   inset: 0;
-  z-index: 9998;
+  /* SOPRA TUTTO, e non è un numero scelto a caso: questa tela E' il
+     puntatore, perché sotto `.cur-on` quello di sistema è nascosto.
+     Qualunque cosa le passi sopra lo fa sparire — non lo copre e basta:
+     lo fa sparire, perché l'altro non c'è. È successo con la striscia
+     dei cookie, che sta a 10000: passandoci sopra non si vedeva più
+     niente e non si capiva dove si stesse puntando.
+     Regola: se si aggiunge qualcosa di fisso in cima alla pila, deve
+     stare SOTTO questo numero. */
+  z-index: 10050;
   pointer-events: none;
   opacity: 0;
   transition: opacity .25s;
