@@ -1,0 +1,113 @@
+/* Banco di prova — solo locale, non va in produzione.
+   Carica il foglio vero del sito e ci mette sopra le varianti di
+   campitura da confrontare. */
+
+.pv-corpo {
+  margin: 0;
+  padding-top: 96px;   /* sotto la barra, che e' fissa e su due righe */
+}
+
+/* ── Barra del banco (non fa parte del sito) ───── */
+.pv-barra {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #0b1030;
+  font-family: var(--font);
+  font-size: .72rem;
+}
+
+/* Due assi, due righe: si cambia una cosa per volta e si capisce quale
+   ha fatto la differenza */
+.pv-riga {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  height: 48px;
+  padding: 0 1rem;
+  overflow-x: auto;
+}
+
+.pv-riga + .pv-riga {
+  height: 44px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.pv-eco {
+  margin-left: auto;
+  flex: none;
+  padding-left: 1rem;
+  color: rgba(255,255,255,.45);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-size: .6rem;
+}
+
+.pv-marca {
+  color: rgba(255,255,255,.42);
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  font-size: .58rem;
+  margin-right: .6rem;
+  flex: none;
+  width: 78px;
+}
+
+.pv-tasto {
+  flex: none;
+  color: rgba(255,255,255,.72);
+  padding: .42rem .8rem;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: background .2s, color .2s, border-color .2s;
+}
+
+.pv-tasto:hover {
+  border-color: rgba(255,107,87,.7);
+  color: #fff;
+}
+
+.pv-tasto.pv-attivo {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.pv-conta {
+  margin-left: auto;
+  flex: none;
+  color: rgba(255,255,255,.6);
+  padding-left: 1rem;
+}
+
+.pv-conta b {
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+
+/* ── La sezione in prova ───────────────────────── */
+/* Alta come nel sito vero: e' proprio l'altezza il motivo per cui la
+   sfumatura sottile non reggeva, quindi provarla in una sezione bassa
+   non direbbe niente */
+.pv-lab {
+  min-height: 92vh;
+}
+
+#pv-sfondo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Tutte le varianti dipingono lo sfondo sulla tela: la campitura del
+   foglio di stile va tolta di mezzo, o si sovrappongono */
+.pv-lab::before {
+  display: none;
+}

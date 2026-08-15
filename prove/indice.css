@@ -1,0 +1,88 @@
+/* Pagina indice del banco di prova — solo locale */
+
+.pv-indice {
+  padding: 8vh 8%;
+  max-width: 900px;
+  font-family: var(--font);
+}
+
+.pv-indice h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  margin: 0 0 1.2rem;
+}
+
+.pv-intro {
+  font-size: .95rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--text-mid);
+  max-width: 60ch;
+  margin: 0 0 3rem;
+}
+
+.pv-gruppo {
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--wa);
+  margin: 3.2rem 0 1.4rem;
+}
+
+.pv-elenco {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.pv-intro b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.pv-nota code {
+  font-family: ui-monospace, monospace;
+  background: rgba(21,28,100,.07);
+  padding: .12rem .38rem;
+  border-radius: 3px;
+}
+
+.pv-elenco li {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--accent-bright);
+}
+
+.pv-elenco a {
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--ink);
+  width: fit-content;
+  border-bottom: 2px solid rgba(255,107,87,.85);
+  padding-bottom: 3px;
+}
+
+.pv-elenco a:hover {
+  color: var(--wa);
+}
+
+.pv-elenco span {
+  font-size: .86rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.pv-nota {
+  margin-top: 3rem;
+  font-size: .78rem;
+  color: var(--text-dim);
+}

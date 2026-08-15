@@ -60,7 +60,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css?v=97" />
+    <link rel="stylesheet" href="css/style.css?v=98" />
   </head>
   <body>
     <!-- SVG sprite -->
@@ -534,6 +534,11 @@
     </section>
     <!-- ════════════════════ §8 CONTATTI ══════════ -->
     <section class="section sec-pad" id="contatti">
+      <!-- Le due campiture con le caustiche. È una tela e non uno sfondo
+           CSS perché deve muoversi ed essere viva per tutta l'altezza:
+           su schermo piccolo la divisione non esiste e questa sparisce -->
+      <canvas id="contatti-sfondo"></canvas>
+      <!-- Il banco di pesciolini, che passa sopra le campiture -->
       <canvas id="contatti-particles"></canvas>
       <div class="contatti-grid">
         <!-- Il modulo sta su una campitura scura che occupa la metà
@@ -686,7 +691,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="js/script.js?v=68"></script>
+    <!-- Campiture e pesciolini della sezione contatti. PRIMA di
+         script.js, non dopo: script.js li accende appena viene letto, e
+         se arrivassero dopo troverebbe il posto vuoto e tirerebbe
+         dritto in silenzio — nessun errore, semplicemente niente mare.
+         Stanno in file separati perché li carica anche il banco di
+         prova in prove/, e un pezzo usato da due pagine non si copia. -->
+    <script src="js/caustiche.js?v=1"></script>
+    <script src="js/pesci.js?v=1"></script>
+    <script src="js/script.js?v=69"></script>
+    <!-- Il cursore calamaro: indipendente da tutto il resto, si accende
+         al primo movimento vero di un mouse -->
+    <script src="js/cursore.js?v=2"></script>
   </body>
 </html>
 

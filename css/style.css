@@ -1283,37 +1283,28 @@ html.cur-on select {
   overflow: hidden;
 }
 
-/* Le due campiture stanno SOTTO la tela delle bolle, che le attraversa
-   tutte e due cambiando colore a meta' strada (se ne occupa script.js).
-   Nessuna delle due e' una tinta piatta: la luce nasce sul taglio e si
-   spegne verso i bordi, come se di la' dalla parete ci fosse una
-   sorgente. E' quello che regge tutto — due rettangoli pieni, uno blu e
-   uno bianco, sarebbero solo due rettangoli. */
-#contatti::before {
-  content: '';
+/* Le due campiture le dipinge js/caustiche.js su questa tela, non il
+   foglio di stile. Prima erano sfumature CSS e non reggevano: su una
+   sezione alta settecento pixel la luce restava una macchia schiacciata
+   a meta' altezza, con sopra e sotto spenti. Una campitura viva per
+   tutta l'altezza, che si muove, in CSS non si fa.
+   Sotto i 769px sparisce: li' la sezione ha una colonna sola, il taglio
+   non esiste e il modulo si porta il suo fondo. Lo script chiede
+   proprio a questa regola se il taglio c'e' — guarda se la tela e'
+   visibile — invece di riscrivere la soglia in JavaScript. */
+#contatti-sfondo {
   position: absolute;
   inset: 0;
   z-index: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  background:
-    /* la luce sul taglio, a cavallo delle due meta': un nucleo stretto e
-       schiacciato dentro un alone largo. Un solo cerchio sfumato faceva
-       una macchia tonda, due sovrapposti fanno un fascio */
-    radial-gradient(34% 15% at 50% 53%, rgba(206,228,255,.42), rgba(206,228,255,0) 72%),
-    radial-gradient(52% 58% at 50% 56%, rgba(150,190,255,.26), rgba(150,190,255,0) 74%),
-    /* velatura: piu' carico in alto e in fondo, cosi' la campitura
-       respira invece di restare uniforme */
-    linear-gradient(to bottom, rgba(8,12,48,.22), rgba(8,12,48,0) 38%, rgba(8,12,48,.14)),
-    /* e sotto a tutto, la divisione vera */
-    linear-gradient(to right, #141b5e 0 50%, #eef0f4 50% 100%);
 }
 
 
 /* Sopra le campiture, sotto il testo: e' il senso di tutto l'effetto,
-   l'acqua e' una sola e attraversa il taglio invece di fermarsi a
-   meta'. Con lo zero stava allo stesso livello della campitura e
-   funzionava solo per l'ordine in cui sono scritte nel documento —
-   un equilibrio che si rompe al primo che ne sposta una */
+   il banco e' uno solo e attraversa il taglio invece di fermarsi a
+   meta' */
 #contatti-particles {
   position: absolute;
   inset: 0;
@@ -3119,7 +3110,7 @@ html.cur-on select {
     padding: 10vh 5%;
   }
 
-  #contatti::before {
+  #contatti-sfondo {
     display: none;
   }
 
