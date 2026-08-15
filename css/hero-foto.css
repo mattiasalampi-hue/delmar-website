@@ -1,0 +1,38 @@
+/* Hero a fotografia unica — foglio aggiuntivo, si carica solo nella
+   variante con la panoramica. Il sito col video non lo vede nemmeno. */
+
+#hero-pano {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* La larghezza la scrive lo script: e' quella NATURALE della foto, e
+     da li' in poi tutto e' scala.
+     max-width: none non e' pignoleria. Il foglio principale impone a
+     ogni immagine max-width: 100%, e qui il 100% e' la finestra: la
+     fotografia verrebbe disegnata piu' stretta di quanto i conti della
+     camera la credono, e il bordo destro cadrebbe centinaia di pixel
+     prima di dove deve — con una banda nera sull'ultima inquadratura. */
+  max-width: none;
+  height: auto;
+  transform-origin: 0 0;
+  /* Promossa a livello suo: da qui in poi spostarla e ingrandirla e'
+     lavoro della scheda grafica e la pagina non viene ridisegnata.
+     Senza, ogni fotogramma e' un ridisegno dell'immagine ingrandita, ed
+     e' quello — non la velocita' — che si vede come scatto */
+  will-change: transform;
+  backface-visibility: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Il velo: il testo bianco deve reggere sia sul tramonto chiaro della
+   prima inquadratura sia sul capannone illuminato della seconda. Il
+   #hero-scrim del sito e' tarato sul video e schiarisce troppo poco al
+   centro, dove qui stanno i titoli */
+#hero-bg.hero-foto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(78% 66% at 50% 52%, rgba(3,8,26,.52), rgba(3,8,26,.12) 78%);
+}

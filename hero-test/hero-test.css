@@ -1,0 +1,311 @@
+/* Prova dell'hero a immagine unica — solo locale, non va in produzione.
+   Carica il foglio vero del sito per titoli e CTA e ci aggiunge sopra
+   soltanto quello che serve alla camera e al pannello di taratura. */
+
+.ht-corpo {
+  margin: 0;
+  background: #05070f;
+}
+
+/* ── Il binario e la finestra fissa ───────────── */
+/* L'altezza la scrive lo script: dipende da soste e transizioni */
+#ht-scroller {
+  position: relative;
+}
+
+#ht-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #05070f;
+  /* Quello che succede qui dentro non puo' influenzare il resto della
+     pagina: il browser smette di controllare a ogni fotogramma se la
+     fotografia che si muove abbia spostato qualcos'altro */
+  contain: paint;
+}
+
+/* La camera e' l'immagine stessa che si sposta e si ingrandisce.
+   L'origine in alto a sinistra NON e' un dettaglio: con
+   transform: translate(t) scale(k) e origine 0 0, un punto p
+   dell'immagine finisce esattamente in t + k·p. Con l'origine al centro
+   la formula avrebbe un termine in piu' che dipende dalla misura
+   dell'immagine, e ogni conto diventerebbe piu' fragile. */
+#ht-camera {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  /* will-change promuove la fotografia a livello suo: da li' in poi
+     spostarla e ingrandirla e' lavoro della scheda grafica, e la pagina
+     non viene ridisegnata. Senza, ogni fotogramma e' un ridisegno */
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+#ht-foto {
+  display: block;
+  /* La larghezza la scrive lo script: e' quella NATURALE della foto, e
+     da li' in poi tutto e' scala.
+     max-width: none NON e' pignoleria. Il foglio del sito impone a ogni
+     immagine max-width: 100%, e qui il 100% e' la finestra: la foto
+     veniva strozzata da 1672 a 1425 pixel mentre i conti della camera la
+     credevano larga 1672. Risultato, l'ultima inquadratura mostrava
+     mezzo schermo nero — il bordo destro della fotografia cadeva 590
+     pixel prima di dove doveva. */
+  max-width: none;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Velo scuro: il testo bianco deve reggere su un tramonto chiaro come
+   su un capannone illuminato. Piu' carico in basso, dove stanno le CTA */
+#ht-velo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(3,6,20,.42), rgba(3,6,20,.12) 38%, rgba(3,6,20,.58)),
+    radial-gradient(70% 60% at 50% 55%, rgba(3,6,20,0), rgba(3,6,20,.35));
+}
+
+/* ── I capitoli ───────────────────────────────── */
+.ht-ch {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 88%;
+  max-width: 900px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+/* Solo quello acceso riceve i clic: sono tutti impilati nello stesso
+   punto, e a opacita' zero resterebbero comunque bersaglio del mouse */
+.ht-ch.ht-on {
+  pointer-events: auto;
+}
+
+.ht-occhiello {
+  margin: 0;
+  font-family: var(--font);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.62);
+}
+
+.ht-ch .ch-title {
+  margin: 0;
+  font-size: clamp(2.1rem, 5vw, 4.4rem);
+  text-shadow: 0 2px 30px rgba(0,0,0,.6);
+}
+
+/* ── Tacche delle soste ───────────────────────── */
+#ht-tacche {
+  position: absolute;
+  left: 50%;
+  bottom: 3.2vh;
+  transform: translateX(-50%);
+  display: flex;
+  gap: .55rem;
+  pointer-events: none;
+}
+
+.ht-tacca {
+  width: 26px;
+  height: 2px;
+  background: rgba(255,255,255,.26);
+  transition: background .35s, transform .35s;
+}
+
+.ht-tacca.ht-viva {
+  background: var(--accent-bright);
+  transform: scaleY(2);
+}
+
+/* ── Pannello di taratura ─────────────────────── */
+#ht-pannello {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  width: 316px;
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(8,12,32,.93);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 6px;
+  font-family: var(--font);
+  color: rgba(255,255,255,.9);
+  font-size: .72rem;
+  backdrop-filter: blur(8px);
+}
+
+#ht-pannello[hidden] {
+  display: none;
+}
+
+.ht-testa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .6rem .8rem;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  font-size: .58rem;
+  color: rgba(255,255,255,.55);
+}
+
+.ht-testa button,
+#ht-apri {
+  background: none;
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.8);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: .7rem;
+  padding: .1rem .45rem;
+  line-height: 1.4;
+}
+
+#ht-apri {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  padding: .5rem .9rem;
+  background: rgba(8,12,32,.9);
+}
+
+#ht-apri[hidden] {
+  display: none;
+}
+
+.ht-corpo-pannello {
+  overflow-y: auto;
+  padding: .5rem .8rem .8rem;
+}
+
+.ht-gruppo {
+  padding: .55rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.ht-gruppo:last-child {
+  border-bottom: none;
+}
+
+.ht-gruppo-titolo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin: 0 0 .45rem;
+  font-size: .62rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.ht-gruppo-titolo button {
+  background: none;
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.75);
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: .56rem;
+  letter-spacing: .1em;
+  padding: .12rem .5rem;
+}
+
+.ht-riga {
+  display: grid;
+  grid-template-columns: 74px 1fr 46px;
+  align-items: center;
+  gap: .45rem;
+  margin-bottom: .28rem;
+}
+
+.ht-riga label {
+  color: rgba(255,255,255,.55);
+  font-size: .64rem;
+}
+
+.ht-riga input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-bright);
+}
+
+.ht-riga output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255,255,255,.85);
+}
+
+.ht-riga select {
+  grid-column: 2 / 4;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  color: #fff;
+  border-radius: 4px;
+  font-family: var(--font);
+  font-size: .66rem;
+  padding: .18rem .3rem;
+}
+
+.ht-piede {
+  display: flex;
+  gap: .4rem;
+  padding: .6rem .8rem;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.ht-piede button {
+  flex: 1;
+  background: var(--accent-bright);
+  border: none;
+  color: #0b1030;
+  font-family: var(--font);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  padding: .45rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ht-piede button#ht-reset {
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.8);
+  flex: 0 0 88px;
+}
+
+.ht-nota {
+  margin: 0;
+  padding: 0 .8rem .7rem;
+  font-size: .6rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,.5);
+}
+
+/* Quanto l'immagine viene tirata: sotto 1 e' nitida, sopra 1 si sta
+   ingrandendo un originale piu' piccolo dello schermo. E' il numero che
+   decide se questo hero si puo' fare o no */
+.ht-nota b {
+  color: var(--accent-bright);
+  font-weight: 600;
+}

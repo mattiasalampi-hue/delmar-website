@@ -1,0 +1,683 @@
+﻿<!doctype html>
+<!-- ANTEPRIMA — generata da index.html, non modificare a mano.
+     E' il sito intero con l'hero a fotografia unica al posto del
+     video: serve a farlo vedere, non a essere indicizzata. -->
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DelMar — anteprima hero fotografico</title>
+    <!-- SEO -->
+    <meta name="description" content="DelMar fornisce pesce fresco, crostacei, molluschi e surgelati premium all'alta ristorazione italiana. Selezione giornaliera, filiera tracciata, consegna in tutta Italia entro 24 ore." />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- Solo il pesce, non il marchio intero: a 32 pixel la scritta
+         diventa una macchia grigia, il pesce invece si riconosce -->
+    <link rel="icon" href="assets/favicon.png?v=1" type="image/png" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://del-mar.it/" />
+    <meta property="og:title" content="DelMar — Fornitore Ittico Premium" />
+    <meta property="og:description" content="Pesce fresco selezionato ogni mattina, crostacei e surgelati premium. Filiera certificata e consegna in tutta Italia entro 24 ore." />
+    <meta property="og:image" content="https://del-mar.it/assets/facade-day.jpg?v=2" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:site_name" content="DelMar" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DelMar — Fornitore Ittico Premium" />
+    <meta name="twitter:description" content="Pesce fresco selezionato ogni mattina, crostacei e surgelati premium. Consegna in tutta Italia entro 24 ore." />
+    <meta name="twitter:image" content="https://del-mar.it/assets/facade-day.jpg?v=2" />
+    <!-- JSON-LD LocalBusiness -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css?v=98" />
+    <link rel="stylesheet" href="css/hero-foto.css?v=1" />
+  </head>
+  <body>
+    <!-- SVG sprite -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+      <symbol id="ico-wa" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </symbol>
+      <!-- Outfit non ha il glifo → (copre solo ↑ e ↓): scritta a mano
+           la freccia ricadeva su un carattere di sistema, con spessore
+           e proporzioni diversi dal resto. Disegnata, invece, eredita
+           colore e peso dal testo accanto -->
+      <symbol id="ico-arr" viewBox="0 0 24 24">
+        <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+    </svg>
+    <!-- Loading -->
+    <div id="loading">
+      <p>DelMar</p>
+      <div id="bar-wrap"><div id="bar"></div></div>
+    </div>
+    <!-- Sfondo hero: video a tutto schermo in riproduzione continua -->
+    <div id="hero-bg" class="hero-foto">
+      <img id="hero-pano" src="assets/hero-pano.jpg" alt="" />
+      <div id="hero-scrim"></div>
+    </div>
+    <div id="vig"></div>
+    <!-- Header -->
+    <header id="hdr">
+      <a href="#"><img src="assets/logo.png" alt="DelMar" class="logo" /></a>
+      <nav id="main-nav">
+        <a href="#prodotti">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
+        <a href="#gallery">Gallery</a> <a href="#marina">Marina AI</a> <a href="#contatti">Contatti</a>
+        <a href="https://wa.me/393356654017?text=Ciao%20Marina!" target="_blank" rel="noopener noreferrer" class="nav-wa">Ordina ora</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
+    </header>
+    <!-- ════════════════════ HERO VIDEO ════════════ -->
+    <div id="v-scroller">
+      <div id="v-sticky">
+        <div class="ch" id="c1">
+          <h1 class="ch-title">Un mare<br />di qualità</h1>
+          <div class="cue">
+            <span>Scroll</span>
+            <div class="cue-line"></div>
+          </div>
+        </div>
+        <div class="ch" id="c2">
+          <h2 class="ch-title">Un solo fornitore<br />Tutto il pesce che ti serve</h2>
+          <a href="#prodotti" class="ch-cta">Scopri i prodotti<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
+        </div>
+        <div class="ch" id="c3">
+          <h2 class="ch-title">Ordina fino alle 2 di notte<br />Ricevi entro le 11 di mattina</h2>
+          <a href="#processo" class="ch-cta">Come lavoriamo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
+        </div>
+        <div class="ch" id="c4">
+          <h2 class="ch-title">Sali a bordo</h2>
+          <a
+            href="https://wa.me/393356654017?text=Ciao%20DelMar%2C%20vorrei%20informazioni%20per%20un%20primo%20ordine"
+            target="_blank" rel="noopener noreferrer"
+            class="ch-cta wa"
+          >
+            <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
+            Scrivici su WhatsApp
+          </a>
+        </div>
+        <div class="ch" id="c5">
+          <img src="assets/logo.png" alt="DelMar" class="ch-logo" />
+        </div>
+      </div>
+    </div>
+    <!-- La pagina scorre SOPRA l'hero, che resta fisso dietro: è il
+         video a essere coperto, non a scorrere via -->
+    <div id="dopo-hero">
+    <!-- ════════════════════ §1 NUMERI ════════════ -->
+    <section class="section" id="stats">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-n" data-count="2000" data-suffix="+">0</div>
+          <div class="stat-l">Ristoranti e attività serviti in Toscana, Liguria ed Emilia-Romagna</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" data-count="30" data-suffix="+">0</div>
+          <div class="stat-l">Anni di esperienza nella distribuzione del pesce</div>
+        </div>
+        <div class="stat-box stat-live">
+          <div class="stat-n" id="live-kg">0</div>
+          <div class="stat-l">Kg di pesce venduti oggi</div>
+          <p class="stat-live-badge" id="live-badge">
+            <span class="live-dot"></span><span id="live-state">in tempo reale</span> ·
+            <time id="live-time">00:00:00</time>
+          </p>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n" data-count="35" data-suffix="">0</div>
+          <div class="stat-l">Porti nel Mediterraneo con approvvigionamento diretto</div>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ §2 PRODOTTI ══════════ -->
+    <section class="section" id="prodotti">
+      <div class="prod-strip">
+        <div class="prod-img par-img"><img src="assets/alici-cassa.jpg" alt="Alici appena selezionate in una cassa DelMar" loading="lazy" /></div>
+        <div class="prod-text">
+          <h3 class="big-title">Dal mare di casa<br />ai mari del mondo.</h3>
+          <p class="body-text">
+            Ogni notte selezioniamo solo il meglio: dai pescherecci dell'Alto Tirreno, dai mercati del Mediterraneo e
+            del Nord Europa e, via aerea, dai mari di tutto il mondo. Tutto in un'unica consegna.
+          </p>
+          <a href="#contatti" class="prod-link">Richiedi il listino prezzi<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
+        </div>
+      </div>
+      <div class="prod-strip rev">
+        <div class="prod-img par-img"><img src="assets/fish-tanks.jpg?v=2" alt="Il vivaio DelMar: vasche con crostacei vivi e operatori al lavoro" loading="lazy" /></div>
+        <div class="prod-text">
+          <h3 class="big-title">Vivi in vasca,<br />non su ordinazione.</h3>
+          <p class="body-text">
+            Il nostro vivaio mantiene oltre 2.000 kg di crostacei vivi da ogni mare: astici, aragoste, granchi, king
+            crab. Ogni giorno partono dalle vasche e arrivano vivi nella tua cucina, senza giorni di anticipo: quello
+            che ti serve domani, da noi c'è già.
+          </p>
+          <a href="#contatti" class="prod-link">Richiedi disponibilità<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
+        </div>
+      </div>
+      <div class="prod-strip">
+        <div class="prod-img par-img"><img src="assets/shelves.jpg?v=2" alt="Corsia del magazzino refrigerato DelMar, pallet e cartoni marchiati su entrambi i lati" loading="lazy" /></div>
+        <div class="prod-text">
+          <h3 class="big-title">
+            La scorta<br />la teniamo noi.
+          </h3>
+          <p class="body-text">
+            Pesce, verdure, pasta e prodotti da forno: oltre 1.000 pallet di prodotti congelati sempre pronti nel
+            nostro stabilimento.<br />Niente cella piena e capitale fermo: ordini ogni giorno il quantitativo esatto
+            che ti serve, e lo trovi sempre.
+          </p>
+          <a href="#contatti" class="prod-link">Scopri il catalogo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ §3 PROCESSO (timeline) ═ -->
+    <!-- Le quattro fasi scorrono di lato mentre si scrolla in verticale:
+         la sezione resta ferma a schermo e il nastro trasla. Le foto
+         seguono l'ora del giorno, non il tipo di lavoro — sera, notte in
+         laboratorio, buio prima della partenza, luce piena all'arrivo -->
+    <section class="section sec-soft" id="processo">
+      <p class="titolo-sezione proc-tl-label">Come Lavoriamo</p>
+      <!-- Filo conduttore: resta fermo mentre le fasi gli scorrono
+           sopra, così il movimento laterale si legge come un percorso
+           e non come quattro schermate scollegate -->
+      <div id="fasi-linea"></div>
+      <div id="fasi-nastro">
+        <div class="fase">
+          <div class="fase-tondo"><img src="assets/chef-ordina.jpg" alt="Uno chef ordina dal telefono a fine servizio" loading="lazy" /></div>
+          <div class="fase-testo">
+            <p class="fase-ora">01 · La sera</p>
+            <h3 class="fase-titolo">Ci scrivi su WhatsApp</h3>
+            <p class="fase-clou">Ordini aperti fino alle <strong>2 di notte</strong></p>
+            <p class="fase-desc">
+              Un messaggio quando hai chiuso il servizio: scrivi la lista, mandala a voce o fotografa quello che ti
+              manca.
+            </p>
+          </div>
+        </div>
+        <div class="fase">
+          <div class="fase-tondo"><img src="assets/processing-2.jpg" alt="Lavorazione del pesce in laboratorio" loading="lazy" /></div>
+          <div class="fase-testo">
+            <p class="fase-ora">02 · La notte</p>
+            <h3 class="fase-titolo">Selezioniamo e lavoriamo</h3>
+            <p class="fase-desc">
+              Scegliamo il pescato per il tuo ordine e lo prepariamo nei nostri laboratori certificati HACCP secondo
+              le richieste della tua cucina: pulito, eviscerato, sfilettato, porzionato.
+            </p>
+          </div>
+        </div>
+        <div class="fase">
+          <div class="fase-tondo"><img src="assets/furgoni-giorno.jpg" alt="La flotta refrigerata DelMar schierata alla banchina di carico" loading="lazy" /></div>
+          <div class="fase-testo">
+            <p class="fase-ora">03 · Prima dell'alba</p>
+            <h3 class="fase-titolo">Partono i nostri furgoni</h3>
+            <p class="fase-desc">
+              La merce viaggia sulla nostra flotta refrigerata, non su corrieri terzi. La catena del freddo non si
+              interrompe mai, dal laboratorio alla tua porta.
+            </p>
+          </div>
+        </div>
+        <div class="fase">
+          <div class="fase-tondo"><img src="assets/consegna-cella.jpg" alt="Cassa di branzini consegnata nella cella del ristorante" loading="lazy" /></div>
+          <div class="fase-testo">
+            <p class="fase-ora">04 · Entro le 11</p>
+            <h3 class="fase-titolo">Scarichiamo nel tuo frigorifero</h3>
+            <p class="fase-clou">Ogni consegna entro le <strong>11 di mattina</strong></p>
+            <p class="fase-desc">
+              I nostri autisti sistemano il pesce direttamente nel tuo frigorifero. Tu apri la cucina e trovi tutto
+              pronto, in tempo per il pranzo.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div id="fasi-barra">
+        <div id="fasi-barra-fill"></div>
+      </div>
+    </section>
+    <!-- ════════════════════ IL RACCONTO ══════════ -->
+    <!-- Nessun testo sopra: il filmato ha già i suoi, e sovrapporne
+         altri metterebbe due voci a contendersi la stessa immagine.
+         Su desktop riusa il file che gira già nell'hero del B2C invece
+         di aggiungerne una seconda copia da 17 MB; su mobile serve una
+         versione dedicata, perché quella del B2C è larga 640px — nata
+         per essere vista dentro il varco del tunnel, non a schermo
+         pieno.
+         preload="none": sta sotto la piega, lo scarica solo chi
+         arriva davvero fin qui -->
+    <div class="section" id="cta-full">
+      <video
+        id="racconto"
+        data-src="assets/video/hero-final.mp4?v=3"
+        data-src-m="assets/video/racconto-m.mp4?v=1"
+        muted
+        loop
+        playsinline
+        preload="none"
+      ></video>
+    </div>
+    <!-- ════════════════════ BEAM TRANSITION ══════ -->
+    <section id="marina-beam">
+      <div id="mb-pin">
+        <div id="mb-sticky">
+          <div id="mb-intro">
+            <h2 id="mb-title">Un'azienda che evolve<br />con il mercato.</h2>
+            <p id="mb-desc">
+              Da 30 anni anticipiamo le esigenze del settore. Oggi l'intelligenza artificiale incontra la tradizione:
+              ordina in pochi secondi, ricevi il meglio del mare.
+            </p>
+          </div>
+          <canvas id="mb-canvas"></canvas>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ MARINA AI ════════════ -->
+    <section class="section" id="marina">
+      <div id="marina-pin">
+        <div id="marina-sticky">
+          <canvas id="marina-canvas"></canvas> <canvas id="marina-line-cvs"></canvas>
+          <div class="marina-container">
+            <!-- Left: info -->
+            <div class="marina-info" id="marina-info">
+              <div class="marina-badge">
+                <div class="marina-badge-dot"></div>
+                AI · Live
+              </div>
+              <div class="marina-name-row">
+                <img src="assets/marina.jpg" alt="Marina" class="marina-avatar-sm" />
+                <div>
+                  <h2 class="marina-title">Marina</h2>
+                  <p class="marina-sub">Assistente AI · DelMar</p>
+                </div>
+              </div>
+              <p class="marina-desc">
+                Marina è la tua assistente AI su WhatsApp per ordinare i prodotti DelMar. Chatta con lei, registra la
+                tua attività in pochi minuti e fai il primo ordine: se arriva entro le 2 di notte, lo consegniamo
+                entro le 11 del mattino. E fa molto di più — conosce il catalogo completo, ti aggiorna su
+                disponibilità e prezzi in tempo reale, e suggerisce i prodotti giusti per il tuo menù.
+              </p>
+              <div class="marina-chips" id="marina-chips">
+                <div class="marina-chip">
+                  <div class="chip-dot"></div>
+                  <div class="chip-label">
+                    <strong>Ordina su WhatsApp, 24 ore su 24.</strong> Scrivi a Marina dal tuo telefono: un messaggio,
+                    un vocale o una foto, e l'ordine è fatto.
+                  </div>
+                </div>
+                <div class="marina-chip">
+                  <div class="chip-dot"></div>
+                  <div class="chip-label">
+                    <strong>Catalogo e prezzi sempre aggiornati.</strong> Disponibilità in tempo reale, nuovi arrivi e
+                    le migliori referenze del momento — tutto in un messaggio.
+                  </div>
+                </div>
+                <div class="marina-chip">
+                  <div class="chip-dot"></div>
+                  <div class="chip-label">
+                    <strong>Registrati in un messaggio. Primo ordine già domani mattina.</strong> Scrivi a Marina:
+                    attiva il tuo account in pochi minuti e ricevi subito la prima consegna.
+                  </div>
+                </div>
+              </div>
+              <a
+                href="https://wa.me/393356654017?text=Ciao%20Marina%2C%20vorrei%20ordinare"
+                target="_blank" rel="noopener noreferrer"
+                class="marina-cta-btn"
+                id="marina-cta"
+              >
+                <svg width="17" height="17" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
+                Ordina con Marina · +39 335 665 4017
+              </a>
+            </div>
+            <!-- Right: phone mockup -->
+            <div class="marina-phone-col">
+              <div id="marina-phone">
+                <div class="phone-status-bar">
+                  <span class="phone-st-time">01:13</span> <span class="phone-st-icons">▲ ▼ ● ■</span>
+                </div>
+                <div class="phone-wa-hdr">
+                  <img src="assets/marina.jpg" alt="Marina" class="phone-wa-ava" />
+                  <div>
+                    <div class="phone-wa-name">Marina · DelMar</div>
+                    <div class="phone-wa-online">online</div>
+                  </div>
+                </div>
+                <div class="phone-chat-body">
+                  <div class="phone-date-badge">Oggi</div>
+                  <div class="phone-bubble user" id="pb1">
+                    Ciao Marina! Mi servono branzino, salmone e gamberi rossi per domani. Siamo 60 coperti.
+                    <div class="pb-time">01:12 <span class="pb-ticks read">✓✓</span></div>
+                  </div>
+                  <div class="phone-typing" id="pt1"><span></span><span></span><span></span></div>
+                  <div class="phone-bubble ai" id="pb2">
+                    Ecco disponibilità e prezzi:<br />
+                    🐟 Branzino selvaggio · 16 kg · €18,50/kg<br />
+                    🍣 Salmone atlantico · 8 kg · €12,90/kg<br />
+                    🦐 Gamberi rossi Mazara · 5 kg · €38/kg<br />
+                    Totale: <strong>€723</strong>. Confermo?
+                    <div class="pb-time">01:12 <span class="pb-ticks read">✓✓</span></div>
+                  </div>
+                  <div class="phone-bubble user" id="pb3">
+                    Sì, confermato! 🙌
+                    <div class="pb-time">01:13 <span class="pb-ticks read">✓✓</span></div>
+                  </div>
+                  <div class="phone-typing" id="pt2"><span></span><span></span><span></span></div>
+                  <div class="phone-bubble ai" id="pb4">
+                    ✅ Ordine confermato, consegna entro le 11:00. Buon servizio! 🐟
+                    <div class="pb-time">01:13 <span class="pb-ticks read">✓✓</span></div>
+                  </div>
+                </div>
+                <div class="phone-input">
+                  <span class="phone-input-field">Messaggio</span>
+                  <span class="phone-input-send" aria-hidden="true">➤</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ §4 AZIENDA ══════════ -->
+    <section class="section sec-soft" id="azienda">
+      <!-- Facciata — panoramica full width, proporzione naturale -->
+      <div class="azienda-facade par-img">
+        <img src="assets/facade-day.jpg?v=2" alt="La sede DelMar a Massa al tramonto, con un furgone refrigerato della flotta" loading="eager" />
+        <div class="azienda-facade-caption">
+          <p class="label">Sede · Via Dorsale 13, Massa (MS)</p>
+        </div>
+      </div>
+      <!-- Testo + foto -->
+      <div class="azienda-body">
+        <p class="titolo-sezione titolo-sinistra">Chi Siamo</p>
+        <div class="azienda-inner">
+          <div class="azienda-col-text">
+            <h2 class="big-title">
+              <span class="clip-wrap"
+                ><span class="clip-inner">Trent'anni<br />di mare.</span></span
+              >
+            </h2>
+            <p class="body-text reveal-text">
+              DelMar nasce nel 1996 con un obiettivo preciso: portare il meglio del mare direttamente nelle cucine dei
+              professionisti. Da oltre 30 anni serviamo ristoranti, hotel, stabilimenti balneari e i migliori banchi
+              della distribuzione organizzata con la stessa ossessione per la qualità e il servizio del primo giorno.
+            </p>
+            <p class="body-text reveal-text">
+              Con sede a Massa Carrara, in una posizione strategica per la logistica nazionale, contiamo su un magazzino
+              all'avanguardia, una flotta refrigerata moderna e più di 70 collaboratori che ogni giorno rendono
+              possibile la promessa DelMar: fresco, preciso, puntuale.
+            </p>
+          </div>
+          <div class="azienda-side-imgs reveal-img">
+            <img src="assets/meeting-1.jpg" alt="Team in riunione" loading="lazy" />
+            <img src="assets/facade-night.jpg?v=2" alt="La sede DelMar all'imbrunire, un furgone in partenza e le scie dei fari" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ §5 GALLERY ══════════ -->
+    <section class="section" id="gallery">
+      <div class="gallery-intro">
+        <p class="titolo-sezione titolo-sinistra reveal-label">Gallery</p>
+        <h2 class="big-title">
+          <span class="clip-wrap"><span class="clip-inner">La nostra realtà.</span></span>
+        </h2>
+      </div>
+      <div id="gallery-track">
+        <div class="gallery-item">
+          <img src="assets/processing-1.jpg" alt="Laboratorio" loading="eager" />
+          <div class="gallery-cap">Lavorazioni · Laboratorio</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/processing-2.jpg" alt="Lavorazioni 2" loading="eager" />
+          <div class="gallery-cap">Lavorazioni · Linea produzione</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/alici-1.jpg" alt="Alici" loading="eager" />
+          <div class="gallery-cap">Prodotto · Alici selezionate</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/processing-3.jpg" alt="Lavorazioni 3" loading="eager" />
+          <div class="gallery-cap">Lavorazioni · Filettatura</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/shop-1.jpg" alt="Negozio 1" loading="eager" />
+          <div class="gallery-cap">Punto vendita · Banco pesce</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/truck-night-lights.jpg" alt="Baie di carico" loading="eager" />
+          <div class="gallery-cap">Logistica · Baie di carico</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/shop-2.jpg" alt="Negozio 2" loading="eager" />
+          <div class="gallery-cap">Punto vendita · Negozio</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/truck-night2.jpg" alt="Flotta notturna" loading="eager" />
+          <div class="gallery-cap">Logistica · Flotta refrigerata</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/portrait.jpg" alt="Ritratto" loading="eager" />
+          <div class="gallery-cap">Team · Responsabile acquisti</div>
+        </div>
+        <div class="gallery-item">
+          <img src="assets/meeting-2.jpg" alt="Riunione" loading="eager" />
+          <div class="gallery-cap">Team · Briefing quotidiano</div>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ §6 TEAM ══════════════ -->
+    <section class="section sec-pad sec-soft" id="team">
+      <p class="titolo-sezione titolo-sinistra reveal-label">Il Nostro Team</p>
+      <div class="team-grid">
+        <div class="team-photo-wrap reveal-img"><img src="assets/team-stairs.jpg?v=2" alt="Il team DelMar sulla scala della sede" loading="lazy" /></div>
+        <div class="team-copy">
+          <h2 class="big-title">
+            <span class="clip-wrap"
+              ><span class="clip-inner">Persone<br />appassionate.</span></span
+            >
+          </h2>
+          <p class="body-text reveal-text">
+            Siamo un team di professionisti con anni di esperienza nel settore ittico. Dalla selezione alla consegna,
+            ogni persona in DelMar condivide la stessa ossessione per la qualità.
+          </p>
+          <div class="team-stats">
+            <div>
+              <div class="team-stat-n" data-count="70">0</div>
+              <div class="team-stat-l">Collaboratori<br />nel 2026</div>
+            </div>
+            <div>
+              <div class="team-stat-n" data-count="30">0</div>
+              <div class="team-stat-l">Anni di storia<br />dal 1996</div>
+            </div>
+            <div>
+              <div class="team-stat-n" data-count="2000" data-suffix="+">0</div>
+              <div class="team-stat-l">Ristoranti e attività<br />serviti ogni giorno</div>
+            </div>
+            <div>
+              <div class="team-stat-n" data-count="35" data-suffix="">0</div>
+              <div class="team-stat-l">Porti nel Mediterraneo<br />di approvvigionamento</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ════════════════════ §8 CONTATTI ══════════ -->
+    <section class="section sec-pad" id="contatti">
+      <!-- Le due campiture con le caustiche. È una tela e non uno sfondo
+           CSS perché deve muoversi ed essere viva per tutta l'altezza:
+           su schermo piccolo la divisione non esiste e questa sparisce -->
+      <canvas id="contatti-sfondo"></canvas>
+      <!-- Il banco di pesciolini, che passa sopra le campiture -->
+      <canvas id="contatti-particles"></canvas>
+      <div class="contatti-grid">
+        <!-- Il modulo sta su una campitura scura che occupa la metà
+             sinistra della sezione: prima era testo chiaro su fondo
+             bianco in mezzo alle bolle animate, e non si capiva che
+             fosse un modulo da compilare -->
+        <div class="contatti-modulo">
+          <p class="titolo-sezione titolo-sinistra reveal-label">Contatti</p>
+          <h2 class="big-title">
+            <span class="clip-wrap"><span class="clip-inner">Parliamo.</span></span>
+          </h2>
+          <!-- Il modulo parla con invia.php sullo stesso dominio, che
+               spedisce via SMTP2GO — lo stesso servizio del progetto
+               listini. Serve PHP: su GitHub Pages, che è statico, il
+               modulo non può funzionare ed è normale -->
+          <form class="contatti-form" id="contact-form" action="invia.php" method="post">
+            <!-- Trappola per i robot: un campo che una persona non vede e
+                 non compila mai. Se arriva pieno, il server finge di aver
+                 inviato e non manda niente. Fuori dal flusso di
+                 tabulazione e invisibile ai lettori di schermo -->
+            <div class="campo-esca" aria-hidden="true">
+              <label for="sito_web">Non compilare</label>
+              <input type="text" id="sito_web" name="sito_web" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Nome</label><input type="text" name="nome" placeholder="Mario Rossi" required /></div>
+              <div class="form-field">
+                <label>Ristorante / Azienda</label><input type="text" name="azienda" placeholder="Ristorante Da Mario" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Email</label><input type="email" name="email" placeholder="mario@ristorante.it" required />
+              </div>
+              <div class="form-field"><label>Telefono</label><input type="tel" name="telefono" placeholder="+39 333 1234567" /></div>
+            </div>
+            <!-- Pastiglie invece del menu a tendina: le voci sono cinque e
+                 stanno tutte in vista, quindi si sceglie con un colpo
+                 d'occhio invece di aprire un elenco e scorrerlo. Sotto
+                 restano pulsanti radio veri, quindi tastiera e lettori di
+                 schermo funzionano senza che serva scrivere niente -->
+            <div class="form-field">
+              <span class="form-label" id="et-interesse">Cosa ti interessa</span>
+              <div class="scelte" role="radiogroup" aria-labelledby="et-interesse">
+                <label class="scelta"><input type="radio" name="interesse" value="Pesce fresco" /><span>Pesce fresco</span></label>
+                <label class="scelta"><input type="radio" name="interesse" value="Crostacei e molluschi" /><span>Crostacei e molluschi</span></label>
+                <label class="scelta"><input type="radio" name="interesse" value="Linea surgelati" /><span>Linea surgelati</span></label>
+                <label class="scelta"><input type="radio" name="interesse" value="Tutto il catalogo" /><span>Tutto il catalogo</span></label>
+                <label class="scelta"><input type="radio" name="interesse" value="Consulenza personalizzata" /><span>Consulenza personalizzata</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Messaggio</label><textarea name="messaggio" placeholder="Raccontaci le tue esigenze..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Invia richiesta</button>
+            <p id="form-ok"></p>
+          </form>
+          <!-- Conferma: prende il posto del modulo invece di comparirgli
+               sotto. Una riga di testo in fondo a un modulo appena
+               compilato si legge come una nota a piè di pagina, e la
+               domanda "è partito davvero?" resta -->
+          <div id="form-esito" hidden>
+            <svg class="esito-segno" viewBox="0 0 52 52" aria-hidden="true">
+              <circle class="esito-cerchio" cx="26" cy="26" r="23" />
+              <path class="esito-spunta" d="M15 26.5 l8 8 l14.5 -15.5" />
+            </svg>
+            <h3 class="esito-titolo">Richiesta inviata</h3>
+            <p class="esito-testo">
+              Ti risponde una persona, non un messaggio automatico: di solito entro
+              mezza giornata lavorativa.
+            </p>
+            <a
+              href="https://wa.me/393356654017?text=Ciao%20DelMar%2C%20ho%20appena%20mandato%20una%20richiesta%20dal%20sito"
+              target="_blank" rel="noopener noreferrer" class="esito-wa"
+            >
+              <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
+              Se hai fretta, scrivici su WhatsApp
+            </a>
+          </div>
+        </div>
+        <div class="contatti-info">
+          <div>
+            <p class="label">Risposta rapida</p>
+            <a href="https://wa.me/393356654017?text=Ciao%20DelMar!" target="_blank" rel="noopener noreferrer" class="wa-big">
+              <svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
+              Ordina con Marina su WhatsApp
+            </a>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Telefono</div>
+            <div class="info-val">+39 0585 834572</div>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Email</div>
+            <div class="info-val">info@del-mar.it</div>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Indirizzo</div>
+            <div class="info-val">Via Dorsale 13<br />54100 Massa (MS)</div>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Consegne</div>
+            <div class="info-val">Tutta Italia entro 24h<br />Ordini entro le 18:00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer id="footer" class="section sec-soft">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="assets/logo.png" alt="DelMar" class="footer-logo" />
+          <p class="footer-claim">
+            Forniture ittiche premium per l'alta ristorazione. Un solo fornitore, tutto il pesce che ti serve.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram">Instagram</a>
+            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://wa.me/393356654017" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col-title">Naviga</p>
+          <a href="#prodotti">Prodotti</a>
+          <a href="#processo">Come Lavoriamo</a>
+          <a href="#azienda">Azienda</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#marina">Marina AI</a>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col-title">Contatti</p>
+          <a href="tel:+390585834572">+39 0585 834572</a>
+          <a href="mailto:info@del-mar.it">info@del-mar.it</a>
+          <p class="footer-note">Via Dorsale 13<br />54100 Massa (MS)</p>
+        </div>
+        <!-- La colonna "Vendita al dettaglio" e' stata tolta il
+             15/08/2026: portava a mercatodelmare.html, che sul server non
+             c'e' — online e' pubblicato solo il sito B2B — e quindi dava
+             404. Quando la pagina del Mercato del Mare va online con i
+             prezzi veri, questa colonna si rimette com'era. -->
+      </div>
+      <p class="footer-legal">
+        &copy; 2026 LE DELIZIE DEL MARE S.R.L. — P.IVA 01081190454 — REA MS 111565 — Tutti i diritti riservati
+      </p>
+    </footer>
+    </div>
+    <!-- Lightbox -->
+    <div id="lightbox"><button id="lightbox-close">&times;</button><img id="lb-img" src="" alt="" /></div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+    <!-- Campiture e pesciolini della sezione contatti. PRIMA di
+         script.js, non dopo: script.js li accende appena viene letto, e
+         se arrivassero dopo troverebbe il posto vuoto e tirerebbe
+         dritto in silenzio — nessun errore, semplicemente niente mare.
+         Stanno in file separati perché li carica anche il banco di
+         prova in prove/, e un pezzo usato da due pagine non si copia. -->
+    <script src="js/caustiche.js?v=1"></script>
+    <script src="js/pesci.js?v=1"></script>
+    <script src="js/script.js?v=69"></script>
+    <!-- Il cursore calamaro: indipendente da tutto il resto, si accende
+         al primo movimento vero di un mouse -->
+    <script src="js/cursore.js?v=2"></script>
+    <!-- La camera dentro la fotografia. DOPO script.js: si appoggia a
+         initHeroScroll e hideLoader, che sono definite li dentro -->
+    <script src="js/hero-foto.js?v=1"></script>
+  </body>
+</html>
+
+
+
+
