@@ -1,0 +1,337 @@
+/* Pannello dell'analitica. Foglio suo: non carica il sito, deve aprirsi
+   in un lampo anche da telefono in mezzo al mercato. */
+
+:root {
+  --pn-ink: #151c64;
+  --pn-cor: #c9432c;
+  --pn-bordo: rgba(21, 28, 100, .12);
+  --pn-tenue: rgba(21, 28, 100, .5);
+  --pn-medio: rgba(21, 28, 100, .68);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #f6f7fa;
+  color: var(--pn-ink);
+  font-family: 'Poppins', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Accesso ──────────────────────────────────── */
+.pn-porta {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.pn-accesso {
+  width: 100%;
+  max-width: 340px;
+  background: #fff;
+  padding: 2.2rem 1.8rem;
+  border-radius: 6px;
+  box-shadow: 0 20px 50px rgba(21, 28, 100, .1);
+}
+
+.pn-accesso h1 {
+  margin: 0 0 1.6rem;
+  font-size: 1.7rem;
+  font-weight: 300;
+  letter-spacing: -.03em;
+}
+
+.pn-accesso label {
+  display: block;
+  margin-bottom: .4rem;
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--pn-tenue);
+}
+
+.pn-accesso input {
+  width: 100%;
+  padding: .8rem .9rem;
+  border: 1px solid var(--pn-bordo);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: .95rem;
+  color: var(--pn-ink);
+}
+
+.pn-accesso input:focus {
+  outline: 2px solid var(--pn-cor);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.pn-accesso button {
+  width: 100%;
+  margin-top: 1rem;
+  padding: .85rem;
+  background: var(--pn-cor);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-family: inherit;
+  font-size: .8rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.pn-errore {
+  margin: 0 0 1rem;
+  padding: .7rem .8rem;
+  background: rgba(201, 67, 44, .08);
+  border-left: 2px solid var(--pn-cor);
+  font-size: .8rem;
+  color: var(--pn-cor);
+}
+
+/* ── Testa ────────────────────────────────────── */
+.pn-occhiello {
+  margin: 0 0 .3rem;
+  font-size: .56rem;
+  font-weight: 600;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--pn-cor);
+}
+
+.pn-testa {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 1.8rem 5% 1.4rem;
+  background: #fff;
+  border-bottom: 1px solid var(--pn-bordo);
+}
+
+.pn-testa h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 300;
+  letter-spacing: -.035em;
+}
+
+.pn-periodo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+}
+
+.pn-periodo a {
+  padding: .4rem .85rem;
+  border: 1px solid var(--pn-bordo);
+  border-radius: 999px;
+  font-size: .72rem;
+  color: var(--pn-medio);
+  text-decoration: none;
+}
+
+.pn-periodo a.pn-vivo {
+  background: var(--pn-ink);
+  border-color: var(--pn-ink);
+  color: #fff;
+}
+
+.pn-periodo .pn-esci {
+  border-color: transparent;
+  color: var(--pn-tenue);
+}
+
+/* ── Corpo ────────────────────────────────────── */
+.pn-corpo {
+  padding: 1.6rem 5% 4rem;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.pn-numeri {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .8rem;
+  margin-bottom: 1.6rem;
+}
+
+.pn-numero {
+  background: #fff;
+  border-radius: 6px;
+  padding: 1.2rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+.pn-n {
+  font-size: 2.1rem;
+  font-weight: 300;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+
+.pn-e {
+  font-size: .68rem;
+  line-height: 1.4;
+  color: var(--pn-tenue);
+}
+
+.pn-riquadro {
+  background: #fff;
+  border-radius: 6px;
+  padding: 1.2rem 1.3rem 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.pn-riquadro h2 {
+  margin: 0 0 .2rem;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--pn-tenue);
+}
+
+.pn-sotto {
+  margin: 0 0 .9rem;
+  font-size: .72rem;
+  color: var(--pn-tenue);
+}
+
+.pn-riquadro h2 + .pn-riga,
+.pn-riquadro h2 + .pn-grafico {
+  margin-top: .9rem;
+}
+
+/* Il riquadro delle azioni è quello che conta di più su un sito B2B:
+   le visite dicono quanti passano, le azioni quanti fanno qualcosa.
+   Ha un bordo colorato perché sia il primo dove cade l'occhio */
+.pn-importante {
+  border-left: 3px solid var(--pn-cor);
+}
+
+.pn-griglia {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.pn-griglia .pn-riquadro { margin-bottom: 0; }
+
+/* ── Righe con barra di fondo ──────────────────
+   La barra è dentro la riga come sfondo, non un elemento a parte: si
+   legge il valore E la proporzione senza aggiungere nodi */
+.pn-riga {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .5rem .55rem;
+  border-radius: 3px;
+  font-size: .82rem;
+  overflow: hidden;
+}
+
+.pn-riga::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--q, 0%);
+  background: rgba(201, 67, 44, .1);
+  border-radius: 3px;
+}
+
+.pn-riga-piatta::before { display: none; }
+
+.pn-et,
+.pn-val {
+  position: relative;
+  z-index: 1;
+}
+
+.pn-et {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--pn-medio);
+}
+
+.pn-et small {
+  color: var(--pn-tenue);
+  font-size: .85em;
+}
+
+.pn-val {
+  flex: none;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.pn-val small {
+  font-weight: 300;
+  color: var(--pn-tenue);
+}
+
+.pn-vuoto {
+  margin: .6rem 0 0;
+  font-size: .8rem;
+  color: var(--pn-tenue);
+}
+
+/* ── Grafico ──────────────────────────────────
+   Barre in CSS puro: nessuna libreria da caricare per disegnare
+   trenta rettangoli */
+.pn-grafico {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 150px;
+}
+
+.pn-colonna {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.pn-barra {
+  width: 100%;
+  background: var(--pn-cor);
+  border-radius: 2px 2px 0 0;
+  opacity: .82;
+  transition: opacity .2s;
+}
+
+.pn-colonna:hover .pn-barra { opacity: 1; }
+
+.pn-asse {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .5rem;
+  font-size: .65rem;
+  color: var(--pn-tenue);
+}
+
+.pn-nota {
+  margin: 1.6rem 0 0;
+  font-size: .74rem;
+  line-height: 1.75;
+  color: var(--pn-tenue);
+}
+
+@media (max-width: 640px) {
+  .pn-testa { padding: 1.2rem 5% 1rem; }
+  .pn-n { font-size: 1.7rem; }
+}

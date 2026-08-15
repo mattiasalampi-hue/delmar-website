@@ -19,3 +19,8 @@ npm-debug.log*
 
 # Credenziali SMTP del form contatti: il repository e pubblico
 config.php
+
+# Il database dell'analitica: dati di visita reali, mai in un repo pubblico
+_dati/
+_sonda.php
+_genera-pw.php

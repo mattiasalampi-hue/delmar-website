@@ -25,10 +25,11 @@
       <p class="pv-data">Ultimo aggiornamento: 16 agosto 2026</p>
 
       <p class="pv-sommario">
-        In breve: questo sito usa <strong>solo Google Analytics</strong>, e solo se
-        lo autorizzi — se rifiuti non viene caricato niente, nemmeno il file di
-        Google. Non ci sono pixel pubblicitari. Gli altri dati che raccogliamo
-        sono quelli che scrivi tu nel modulo contatti, e servono a risponderti.
+        In breve: questo sito <strong>non usa cookie</strong> e non manda i tuoi
+        dati a nessuno. Contiamo le visite con uno strumento nostro, che gira
+        sul nostro server e non conserva il tuo indirizzo IP. Gli altri dati che
+        raccogliamo sono quelli che scrivi tu nel modulo contatti, e servono a
+        risponderti.
       </p>
 
       <h2>Chi tratta i tuoi dati</h2>
@@ -77,31 +78,38 @@
 
       <h2>Cookie</h2>
       <p>
-        Usiamo <strong>Google Analytics 4</strong> per sapere quante persone
-        visitano il sito e quali pagine leggono. Installa cookie, e
-        <strong>non parte finché non lo autorizzi</strong>: se rifiuti — o se
-        semplicemente non scegli — non viene caricato nulla, nemmeno il file di
-        Google. Non ci sono pixel pubblicitari e non facciamo remarketing.
+        <strong>Questo sito non installa cookie</strong>: né tecnici né di
+        profilazione. Non c'è Google Analytics, non ci sono pixel pubblicitari,
+        non c'è nessuno strumento che ti segua da un sito all'altro.
       </p>
-      <table class="pv-tabella">
-        <thead>
-          <tr><th>Cookie</th><th>Chi lo mette</th><th>A cosa serve</th><th>Durata</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>_ga</td><td>Google Analytics</td><td>Distingue un visitatore da un altro, senza sapere chi sei</td><td>2 anni</td></tr>
-          <tr><td>_ga_*</td><td>Google Analytics</td><td>Tiene insieme le pagine di una stessa visita</td><td>2 anni</td></tr>
-        </tbody>
-      </table>
+      <h3>Come contiamo le visite</h3>
       <p>
-        Abbiamo disattivato i <em>segnali Google</em> e la personalizzazione
-        degli annunci: questi dati non alimentano profili pubblicitari e non ti
-        seguono su altri siti.
+        Per sapere quante persone leggono il sito e quali pagine funzionano
+        usiamo uno strumento <strong>scritto da noi, che gira sul nostro
+        server</strong>. Non mette cookie, non salva niente sul tuo dispositivo
+        e non manda dati a nessun'altra azienda.
       </p>
       <p>
-        La tua scelta la ricordiamo nel browser — in <em>localStorage</em>, non
-        in un cookie — insieme alla data. Puoi cambiarla quando vuoi da
-        <a href="#" data-apri-consenso>questo collegamento</a> o dal piede di
-        ogni pagina.
+        <strong>Il tuo indirizzo IP non viene conservato.</strong> Al suo posto
+        salviamo un'impronta calcolata con una chiave che cambia ogni notte e
+        che viene distrutta dopo due giorni: serve a non contare due volte la
+        stessa persona nella stessa giornata, e da quel momento non è più
+        riconducibile a nessuno — nemmeno da noi. Per questo non sappiamo, e non
+        possiamo sapere, se sei già stato qui la settimana scorsa.
+      </p>
+      <p>
+        Registriamo la pagina vista, da quale sito arrivi, il tipo di
+        dispositivo e alcune azioni come l'invio del modulo o il clic su
+        WhatsApp. È un nostro interesse legittimo capire se il sito funziona
+        (art. 6.1.f GDPR), e non comporta profilazione.
+      </p>
+      <p>
+        L'avviso che vedi in fondo alla pagina la prima volta è solo
+        un'informazione, non una richiesta di consenso: non c'è niente da
+        autorizzare. Che tu l'abbia chiuso ce lo ricordiamo nel browser (in
+        <em>localStorage</em>, non in un cookie) per non riproportelo a ogni
+        pagina, e puoi rivederlo da
+        <a href="#" data-apri-consenso>questo collegamento</a>.
       </p>
       <p>
         Anche i caratteri tipografici e le librerie di animazione sono
@@ -130,10 +138,7 @@
           <strong>SMTP2GO</strong> — il servizio che consegna le email generate
           dal modulo contatti. I dati sono trattati nei centri dati europei.
         </li>
-        <li>
-          <strong>Google Ireland Ltd.</strong> — Google Analytics, e solo se hai
-          dato il consenso.
-        </li>
+
       </ul>
       <p>
         Le richieste che arrivano dal modulo sono lette dalle persone
@@ -175,8 +180,6 @@
     </footer>
 
     <script src="js/consenso.js?v=1"></script>
-    <!-- Anche qui: se qualcuno accetta proprio da questa pagina, la
-         raccolta deve partire subito invece che alla pagina dopo -->
-    <script src="js/analytics.js?v=1"></script>
+    <script src="js/analitica.js?v=1" defer></script>
   </body>
 </html>
