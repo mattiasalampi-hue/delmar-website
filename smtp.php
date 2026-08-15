@@ -51,7 +51,7 @@ function smtp_intestazione($testo) {
         : $testo;
 }
 
-function smtp_invia(array $cfg, $oggetto, $corpo, $rispondiA = null, $rispondiNome = null) {
+function smtp_invia(array $cfg, $oggetto, $corpo, $rispondiA = null, $rispondiNome = null, $html = null) {
     $errore = '';
     $contesto = stream_context_create(['ssl' => ['verify_peer' => true, 'verify_peer_name' => true]]);
 
@@ -98,15 +98,39 @@ function smtp_invia(array $cfg, $oggetto, $corpo, $rispondiA = null, $rispondiNo
             'Date: ' . date('r'),
             'Message-ID: <' . bin2hex(random_bytes(12)) . '@del-mar.it>',
             'MIME-Version: 1.0',
-            'Content-Type: text/plain; charset=UTF-8',
-            'Content-Transfer-Encoding: base64',
         ];
         if ($rispondiA) {
             $testa[] = 'Reply-To: ' . ($rispondiNome ? smtp_intestazione($rispondiNome) . ' ' : '')
                      . '<' . $rispondiA . '>';
         }
-        $messaggio = implode("\r\n", $testa) . "\r\n\r\n"
-                   . chunk_split(base64_encode($corpo), 76, "\r\n");
+
+        if ($html === null) {
+            $testa[] = 'Content-Type: text/plain; charset=UTF-8';
+            $testa[] = 'Content-Transfer-Encoding: base64';
+            $parti = chunk_split(base64_encode($corpo), 76, "\r\n");
+        } else {
+            /* Le due versioni viaggiano INSIEME, non una al posto
+               dell'altra: "alternative" significa che il programma di
+               posta sceglie quella che sa mostrare. Chi legge da un
+               orologio, da un terminale o con le immagini spente vede il
+               testo; tutti gli altri vedono l'impaginato.
+               Serve anche alla consegna: un messaggio di solo HTML e'
+               uno degli indizi che i filtri antispam contano. */
+            $conf = 'dm_' . bin2hex(random_bytes(10));
+            $testa[] = 'Content-Type: multipart/alternative; boundary="' . $conf . '"';
+            $parti =
+                "--$conf\r\n"
+                . "Content-Type: text/plain; charset=UTF-8\r\n"
+                . "Content-Transfer-Encoding: base64\r\n\r\n"
+                . chunk_split(base64_encode($corpo), 76, "\r\n")
+                . "--$conf\r\n"
+                . "Content-Type: text/html; charset=UTF-8\r\n"
+                . "Content-Transfer-Encoding: base64\r\n\r\n"
+                . chunk_split(base64_encode($html), 76, "\r\n")
+                . "--$conf--\r\n";
+        }
+
+        $messaggio = implode("\r\n", $testa) . "\r\n\r\n" . $parti;
 
         fwrite($sock, $messaggio . "\r\n.\r\n");
         $passi = smtp_dice($sock, null, 250, $errore, 'consegna');

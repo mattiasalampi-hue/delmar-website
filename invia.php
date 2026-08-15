@@ -113,20 +113,32 @@ $corpo = "Nuova richiesta dal sito del-mar.it\n"
 
 $oggetto = "Richiesta dal sito — $azienda";
 
-require __DIR__ . '/smtp.php';
+require __DIR__ . '/posta.php';
+require __DIR__ . '/email.php';
 
-$inviata = smtp_invia(
+$html = email_html([
+    'nome'      => $nome,
+    'azienda'   => $azienda,
+    'email'     => $email,
+    'telefono'  => $telefono,
+    'interesse' => $interesse,
+    'messaggio' => $messaggio,
+    'quando'    => date('d/m/Y \a\l\l\e H:i'),
+]);
+
+$inviata = posta_invia(
     $cfg,
     $oggetto,
     $corpo,
     /* Rispondi-a su chi ha compilato: si risponde dalla casella con un
        tasto, senza ricopiare l'indirizzo a mano */
     $email,
-    $nome
+    $nome,
+    $html
 );
 
 if (!$inviata['ok']) {
-    error_log('invia.php: invio fallito — ' . $inviata['errore']);
+    error_log('invia.php: invio fallito (' . $inviata['via'] . ') — ' . $inviata['errore']);
     esito(false, 'Non siamo riusciti a inviare.', 502);
 }
 

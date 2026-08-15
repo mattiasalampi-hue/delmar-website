@@ -18,9 +18,14 @@
   </IfModule>
 </Files>
 
-# Stessa protezione per il pezzo che dialoga col server di posta: non
-# contiene credenziali, ma non c'e' motivo di poterlo scaricare
-<Files "smtp.php">
+# Stessa protezione per i pezzi interni della spedizione. Non contengono
+# credenziali, ma nessuno deve poterli chiamare da fuori: chiamati da
+# soli non fanno niente (definiscono solo funzioni), e questa regola non
+# tocca le require di invia.php — quelle sono letture di file sul disco,
+# non richieste HTTP, e passano comunque.
+# config.esempio.php e' il modello con le istruzioni su dove stanno le
+# credenziali vere: e' pubblico su GitHub, ma qui non serve a nessuno.
+<FilesMatch "^(smtp|posta|email|config\.esempio)\.php$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -28,7 +33,7 @@
     Order deny,allow
     Deny from all
   </IfModule>
-</Files>
+</FilesMatch>
 
 # Compressione: il sito e' fatto di testo pesante — 74 KB di script e
 # 69 di stile — che compresso scende a circa un quinto
