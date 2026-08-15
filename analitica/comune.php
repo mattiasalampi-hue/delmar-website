@@ -189,6 +189,7 @@ function an_pulisci() {
 
     $db->prepare('DELETE FROM visite WHERE giorno < ?')->execute(array($limite));
     $db->prepare('DELETE FROM eventi WHERE giorno < ?')->execute(array($limite));
+    $db->prepare('DELETE FROM ricerche WHERE giorno < ?')->execute(array($limite));
 }
 
 /* Il sale del giorno. Si crea la prima volta che serve e si buttano

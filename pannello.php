@@ -263,8 +263,10 @@ if ($dentro) {
           <p class="pn-sotto">
             <?php if ($D['sc_quando']): ?>
               Da Search Console, aggiornate il <?= e(date('d/m alle H:i', (int) $D['sc_quando'])) ?>
+              · <a href="?g=<?= $giorni ?>&amp;risincronizza=1">riscarica adesso</a>
             <?php else: ?>
-              Search Console non è ancora collegata
+              Search Console non è ancora collegata: manca la chiave dell'account
+              di servizio in <code>config.php</code>.
             <?php endif; ?>
           </p>
           <?php foreach ($D['ricerche'] as $r): ?>
@@ -420,3 +422,15 @@ if ($dentro) {
 <?php endif; ?>
   </body>
 </html>
+<?php
+/* La sincronizzazione con Search Console va QUI, dopo l'ultimo byte
+   della pagina e con la connessione gia' chiusa: chiamare l'API prima
+   significherebbe far aspettare due secondi a chi apre il pannello per
+   dei dati che comunque arrivano da Google con due giorni di ritardo.
+   Cosi' la pagina mostra sempre subito la copia locale, e quella nuova
+   si vede al giro dopo. */
+if ($dentro) {
+    if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+    require_once __DIR__ . '/analitica/ricerche.php';
+    sc_sincronizza(isset($_GET['risincronizza']));
+}
