@@ -33,6 +33,40 @@ window.DelMarDito = (function () {
   let ora = null;     /* dov'e' adesso, in coordinate di finestra */
   let prima = null;   /* dov'era al tocco precedente */
 
+  /* ── SCORRERE O GIOCARE ────────────────────────
+     Il dito serve a due cose che si escludono: far scendere la pagina e
+     tagliare i pesci. Finche' vinceva lo scorrimento, il gioco era
+     ingiocabile — appena si provava a sciabolare, la pagina scappava via.
+
+     La soluzione ovvia — bloccare lo scorrimento sopra la tela — e' una
+     trappola: l'apertura e' alta mezzo schermo ed e' la PRIMA cosa che si
+     vede, quindi chi arriva col telefono resterebbe incastrato senza poter
+     scendere. Un gioco non puo' costare la navigazione del sito.
+
+     Quindi si decide dalla direzione, come fanno le giostre di immagini che
+     convivono con lo scorrimento: dopo i primi dieci pixel di movimento, se
+     il dito va piu' in orizzontale che in verticale e' una sciabolata e la
+     pagina resta ferma; se va piu' in verticale e' uno scorrimento e non lo
+     tocchiamo. A parita' vince lo scorrimento, perche' sbagliare da quella
+     parte costa una passata a vuoto, dall'altra costa il sito.
+
+     Ai pesci il dito arriva comunque, anche mentre si scorre: si vedono
+     scattare via mentre la pagina scende, e ogni tanto ne resta uno preso.
+     (Mattias, 2026-08-17) */
+  const zone = [];        /* le tele su cui si gioca */
+  let inZona = false;     /* il tocco e' partito sopra una tela? */
+  let deciso = false;
+  let gioca = false;
+  let partX = 0, partY = 0;
+
+  function sopraUnaTela(x, y) {
+    for (const c of zone) {
+      const r = c.getBoundingClientRect();
+      if (r.width && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
+    }
+    return false;
+  }
+
   /* IL TRATTO SI MISURA FRA DUE TOCCHI, NON FRA DUE FOTOGRAMMI.
      La prima versione faceva avanzare "prima" a fine fotogramma, ed era
      sbagliata appena in pagina c'e' piu' di una tela: la prima a disegnare
@@ -47,13 +81,56 @@ window.DelMarDito = (function () {
     ora = { x: t.clientX, y: t.clientY };
   }
 
+  function inizio(e) {
+    const t = e.touches && e.touches[0];
+    if (!t) return;
+    inZona = sopraUnaTela(t.clientX, t.clientY);
+    deciso = false;
+    gioca = false;
+    partX = t.clientX;
+    partY = t.clientY;
+    segna(e);
+  }
+
+  function muove(e) {
+    segna(e);
+    if (!inZona) return;
+
+    const t = e.touches[0];
+    if (!deciso) {
+      const dx = Math.abs(t.clientX - partX);
+      const dy = Math.abs(t.clientY - partY);
+      /* Dieci pixel: sotto, la direzione e' rumore del dito che si appoggia */
+      if (dx + dy < 10) return;
+      deciso = true;
+      /* La soglia non e' a 45 gradi ma un po' piu' aperta verso il gioco: a
+         45 esatti — dx uguale a dy — la sciabolata in diagonale, che e' il
+         gesto piu' naturale per tagliare, finiva nello scorrimento. Con .8
+         gioca tutto quello che sta entro una cinquantina di gradi
+         dall'orizzontale, mentre uno scorrimento anche storto resta molto
+         piu' verticale di cosi' e passa alla pagina */
+      gioca = dx > dy * .8;
+    }
+
+    /* Una volta deciso non si cambia idea a meta' gesto: un gioco che ogni
+       tanto lascia scappare la pagina e' peggio di uno che non c'e' */
+    if (gioca && e.cancelable) e.preventDefault();
+  }
+
   function stacca() {
     ora = null;
     prima = null;
+    inZona = false;
+    deciso = false;
+    gioca = false;
   }
 
-  addEventListener('touchstart', segna, { passive: true });
-  addEventListener('touchmove', segna, { passive: true });
+  addEventListener('touchstart', inizio, { passive: true });
+  /* NON passivo, se no preventDefault viene ignorato ed e' tutto inutile.
+     Costa un pelo di prestazioni su ogni scorrimento della pagina, e per
+     questo la funzione esce subito quando il tocco non e' partito su una
+     tela — che e' il caso di quasi tutti gli scorrimenti */
+  addEventListener('touchmove', muove, { passive: false });
   addEventListener('touchend', stacca, { passive: true });
   addEventListener('touchcancel', stacca, { passive: true });
 
@@ -61,6 +138,11 @@ window.DelMarDito = (function () {
     posizione: function () {
       if (!ora) return null;
       return { x: ora.x, y: ora.y, px: prima.x, py: prima.y, attivo: true };
+    },
+    /* Ogni banco dichiara la sua tela: e' cosi' che si sa se un tocco e'
+       partito su un'area di gioco o sul resto della pagina */
+    zona: function (cvs) {
+      if (zone.indexOf(cvs) < 0) zone.push(cvs);
     }
   };
 })();
@@ -770,6 +852,13 @@ window.DelMarPesci = function (cvs, opzioni) {
     else { cancelAnimationFrame(raf); raf = null; }
   }, { threshold: 0.01 });
   occhio.observe(cvs);
+
+  /* Dichiara l'area di gioco: serve a DelMarDito per distinguere una
+     sciabolata sui pesci da uno scorrimento della pagina. La tela resta
+     trasparente ai tocchi (pointer-events: none nel CSS) — gli eventi si
+     ascoltano sulla finestra e il confine si calcola qui, cosi' niente
+     copre i collegamenti che stanno sotto */
+  if (window.DelMarDito) window.DelMarDito.zona(cvs);
 
   popola();
 
