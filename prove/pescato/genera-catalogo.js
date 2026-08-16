@@ -12,7 +12,7 @@ const qui = __dirname;
 const dati = JSON.parse(fs.readFileSync(path.join(qui, 'catalogo.json'), 'utf8'));
 const cataloghi = dati.cataloghi;
 
-const { WA, testa, piede, altriCataloghi } = require('./comune');
+const { WA, testa, piede, altriCataloghi, primaFrase } = require('./comune');
 
 /* Il pescato non sta in catalogo.json perche' non e' un catalogo di linea: e'
    la pagina che cambia ogni notte. Ma nell'indice deve stare per primo, ed e'
@@ -89,7 +89,7 @@ function voce(v) {
   return `          <article class="ct-voce${v.foto ? '' : ' ct-voce-nuda'}">
 ${foto}            <div class="ct-voce-testo">
               <h3>${v.nome}</h3>
-              <p class="ct-voce-sotto">${v.sotto}</p>
+              <p class="ct-voce-sotto">${primaFrase(v.sotto)}</p>
 ${righe.join('\n')}
               <a class="ct-chiedi" href="https://wa.me/${WA}?text=${msg}" target="_blank" rel="noopener noreferrer">
                 <svg aria-hidden="true"><use href="#ico-wa"/></svg>
@@ -108,7 +108,7 @@ function famiglia(f, i) {
         <div class="ct-fam-testa">
           <span class="fq-arg-n">${String(i + 1).padStart(2, '0')}</span>
           <h2>${f.nome}</h2>
-          <p class="ct-fam-sotto">${f.sotto}</p>
+          <p class="ct-fam-sotto">${primaFrase(f.sotto)}</p>
           <p class="ct-fam-conta">${n} ${n === 1 ? 'voce' : 'voci'}</p>
         </div>
 
@@ -163,8 +163,12 @@ ${c.famiglie.map((f) => `          <a href="#${idFam(f.nome)}">${f.nome}</a>`).j
 
   const scelta = `      <div class="fq-argomenti">
 ${c.famiglie.map((f, i) => {
+    /* Due nomi sul telefono, quattro sul largo: in una colonna da 390 px
+       quattro nomi di prodotto sono tre righe per ognuna delle sei famiglie,
+       e il selettore smette di essere un colpo d'occhio */
     const nomi = f.voci.map((v) => v.nome);
-    const dentro = nomi.slice(0, 4).join(', ') + (nomi.length > 4 ? '…' : '');
+    const dentro = nomi.slice(0, 2).join(', ')
+      + (nomi.length > 2 ? `<span class="solo-largo">, ${nomi.slice(2, 4).join(', ')}${nomi.length > 4 ? '…' : ''}</span>` : '');
     const n = f.voci.length;
     return `        <a class="fq-arg" href="#${idFam(f.nome)}">
           <span class="fq-arg-n">${String(i + 1).padStart(2, '0')}</span>
@@ -195,9 +199,13 @@ ${hero}
 ${barra}
 
     <main class="pr-corpo">
+      <!-- Sul telefono resta il primo paragrafo. Il secondo elabora — come
+           lavoriamo, cosa e' incluso — ed e' roba che si legge da fermi, non
+           scorrendo col pollice per arrivare ai prodotti. Resta nel
+           documento, quindi Google lo legge lo stesso. -->
       <div class="pr-intro">
         <h2>${c.intro_titolo}</h2>
-${c.intro.map((p) => `        <p>${p}</p>`).join('\n')}
+${c.intro.map((p, i) => `        <p${i > 0 ? ' class="solo-largo"' : ''}>${p}</p>`).join('\n')}
       </div>
 
 ${scelta}
@@ -295,7 +303,12 @@ function indice() {
           nessuna vetrina. Se cercate qualcosa che qui non c'è, è quasi sempre una
           domanda su WhatsApp, non un problema.
         </p>
-        <p>
+        <!-- Sul telefono resta fuori: chi arriva qui vuole vedere i prodotti,
+             e orari e modalita' d'ordine li ritrova identici nella chiusura in
+             fondo a questa stessa pagina. Il paragrafo sopra invece resta,
+             perche' dice che questa e' una selezione — che e' l'unica cosa che
+             se non si legge fa perdere un cliente. -->
+        <p class="solo-largo">
           Si ordina <strong>su WhatsApp fino alle 2 di notte</strong> e si riceve entro
           le 11 del mattino, in ghiaccio e con l'etichetta di tracciabilità. I
           <strong>prezzi non stanno online</strong> perché cambiano ogni giorno e

@@ -12,6 +12,29 @@
 /* Saltando a una famiglia, il titolo deve fermarsi SOTTO l'intestazione e la
    barra, non dietro: senza questo si atterra sulla prima voce e il nome della
    famiglia resta nascosto sopra */
+/* ─ QUELLO CHE SUL TELEFONO NON CI STA ──────
+   Non e' testo di serie B: e' la seconda frase di descrizioni scritte tutte
+   come "fatto principale, poi elaborazione". Su uno schermo largo si legge
+   insieme al resto; su uno stretto sono quaranta righe in piu' fra chi scorre
+   e i prodotti.
+   Resta nel documento e non e' duplicato da nessuna parte: sparisce e basta.
+   Google indicizza col motore mobile ma legge il markup, non quello che lo
+   schermo mostra — ed e' il motivo per cui questa via e' preferibile a
+   scrivere e mantenere due versioni di ogni testo. */
+.solo-largo {
+  display: inline;
+}
+
+p.solo-largo {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .solo-largo {
+    display: none;
+  }
+}
+
 html:has(.ct-famiglia) {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--h-hdr, 4.1rem) + 4.4rem);

@@ -134,4 +134,30 @@ ${tutti.map((c) => `        <a href="${c.slug}.html">${c.nome}</a>`).join('\n')}
     </section>`;
 }
 
-module.exports = { WA, SIMBOLI, testa, piede, altriCataloghi };
+/* SUL TELEFONO RESTA LA PRIMA FRASE.
+
+   Una pagina di catalogo su schermo stretto sono una settantina di righe di
+   testo prima ancora dei titoli, e quaranta se ne vanno nelle descrizioni dei
+   prodotti. Ma quei testi sono scritti tutti allo stesso modo — il fatto che
+   identifica il prodotto, poi l'elaborazione — perche' e' cosi' che si
+   scrivono le schede:
+
+     "Arborea e Scardovari le italiane di riferimento, La Spezia la locale.
+      Le sbissate arrivano gia' pulite: sono venti minuti di cucina in meno."
+
+   La prima frase regge da sola. Quindi non si riscrive niente e non si
+   duplica niente: si spezza dove finisce la prima frase e il resto va in uno
+   <span> che sotto i 768 px sparisce. Il testo resta nel documento — Google
+   lo legge, chi ingrandisce lo trova — semplicemente non occupa lo schermo di
+   chi sta scorrendo un elenco col pollice. (Mattias, 2026-08-17)
+
+   Il taglio e' su ". " seguito da una maiuscola: cosi' "0,9/1,3 kg" e
+   "n. 3" non vengono scambiati per fine frase. Se la coda e' cortissima non
+   si taglia — nascondere quattro parole non vale un tag in piu'. */
+function primaFrase(testo) {
+  const m = testo.match(/^(.+?[.:!?])\s+(?=[A-ZÈÉÀÌÒÙ])(.+)$/s);
+  if (!m || m[2].length < 25) return testo;
+  return `${m[1]} <span class="solo-largo">${m[2]}</span>`;
+}
+
+module.exports = { WA, SIMBOLI, testa, piede, altriCataloghi, primaFrase };
