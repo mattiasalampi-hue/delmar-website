@@ -15,6 +15,56 @@
 
    window.DelMarPesci(tela, opzioni) -> { ferma(), presi() }
 */
+/* ── IL DITO ─────────────────────────────────────
+   Sul telefono il gioco non esisteva, e la ragione era che i pesci non
+   guardano il puntatore: guardano il CALAMARO. E il calamaro, giustamente,
+   sul telefono non si accende mai — sostituisce il cursore di sistema, e su
+   uno schermo tattile un cursore non c'e'. Quindi i pesci non avevano da
+   cosa scappare e nuotavano beati.
+
+   Qui il dito prende il posto del calamaro. Vive solo mentre tocca: appena
+   si stacca, sparisce. Un puntatore fermo dove il dito ha lasciato l'ultima
+   volta terrebbe i pesci in fuga da un fantasma.
+
+   Sta fuori dalla fabbrica perche' di dita ce n'e' uno solo anche quando in
+   pagina ci sono due banchi di pesci: tre ascoltatori in tutto, non tre per
+   ogni tela. */
+window.DelMarDito = (function () {
+  let ora = null;     /* dov'e' adesso, in coordinate di finestra */
+  let prima = null;   /* dov'era al tocco precedente */
+
+  /* IL TRATTO SI MISURA FRA DUE TOCCHI, NON FRA DUE FOTOGRAMMI.
+     La prima versione faceva avanzare "prima" a fine fotogramma, ed era
+     sbagliata appena in pagina c'e' piu' di una tela: la prima a disegnare
+     consumava il tratto, e tutte le altre vedevano un dito fermo. Nel banco
+     di prova ce ne sono quattro. Qui non c'e' niente da consumare — chiunque
+     legga trova lo stesso segmento — e non conta chi disegna per primo.
+     (Mattias, 2026-08-17) */
+  function segna(e) {
+    const t = e.touches && e.touches[0];
+    if (!t) return;
+    prima = ora || { x: t.clientX, y: t.clientY };
+    ora = { x: t.clientX, y: t.clientY };
+  }
+
+  function stacca() {
+    ora = null;
+    prima = null;
+  }
+
+  addEventListener('touchstart', segna, { passive: true });
+  addEventListener('touchmove', segna, { passive: true });
+  addEventListener('touchend', stacca, { passive: true });
+  addEventListener('touchcancel', stacca, { passive: true });
+
+  return {
+    posizione: function () {
+      if (!ora) return null;
+      return { x: ora.x, y: ora.y, px: prima.x, py: prima.y, attivo: true };
+    }
+  };
+})();
+
 window.DelMarPesci = function (cvs, opzioni) {
   const o = Object.assign({
     /* Pochi e grossi, non tanti e minuti: a questa taglia cinquanta
@@ -291,12 +341,51 @@ window.DelMarPesci = function (cvs, opzioni) {
            Il ribaltamento verticale del disegno (quando nuota a
            sinistra) qui non conta: l'ellisse e' simmetrica */
         const co = Math.cos(p.ang), si = Math.sin(p.ang);
-        const rx = -dx * co - dy * si;
-        const ry =  dx * si - dy * co;
         const ax = p.lung * .5 * o.presa;
         const ay = p.lung * .3 * o.presa;
 
-        if ((rx * rx) / (ax * ax) + (ry * ry) / (ay * ay) <= 1 && p.lampo === 0) {
+        const dentro = (qx, qy) => {
+          const ex = p.x - qx, ey = p.y - qy;
+          const rx = -ex * co - ey * si;
+          const ry =  ex * si - ey * co;
+          return (rx * rx) / (ax * ax) + (ry * ry) / (ay * ay) <= 1;
+        };
+
+        /* SI TAGLIA LUNGO IL TRATTO, non solo dove il dito e' arrivato.
+           Col mouse non serviva: si insegue un pesce e ci si arriva sopra
+           piano. Un dito che sciabola percorre anche ottanta pixel fra due
+           fotogrammi, e un pesce lungo trenta ci sta dentro per intero: col
+           solo punto finale la passata veloce — cioe' l'unico modo di
+           prenderli, visto che da fermi scappano — non prendeva NIENTE, e
+           il gioco sembrava rotto invece che difficile.
+           Si campiona il segmento a passi di mezzo pesce: piu' fitto non
+           cambia l'esito, piu' rado ricomincia a saltarli.
+           (Mattias, 2026-08-17) */
+        let colpito = dentro(cur.x, cur.y);
+
+        if (!colpito && cur.px !== undefined) {
+          const tx = cur.x - cur.px, ty = cur.y - cur.py;
+          const tratto = Math.hypot(tx, ty);
+
+          /* IL PASSO DEVE STARE SOTTO LA MEZZA ALTEZZA DEL PESCE, se no il
+             campionamento non serve a niente: la prima versione aveva un
+             tetto di 24 campioni, che su un salto da settecento pixel fa
+             ventinove pixel di passo — e un pesce alto diciotto ci passa in
+             mezzo indenne. Provato: zero prese su quaranta pesci.
+             Il tetto ora e' largo abbastanza da non entrare mai in gioco su
+             una sciabolata vera, e costa comunque poco: sono quattro
+             moltiplicazioni per campione, e il ciclo si ferma al primo
+             pesce colpito. */
+          const passo = Math.max(3, ay * .8);
+          const passi = Math.min(200, Math.ceil(tratto / passo));
+
+          for (let k = 1; k < passi && !colpito; k++) {
+            const q = k / passi;
+            colpito = dentro(cur.px + tx * q, cur.py + ty * q);
+          }
+        }
+
+        if (colpito && p.lampo === 0) {
           boccone(p.x, p.y, p.ang);
           Object.assign(p, nuovo(true));
           continue;
@@ -630,7 +719,13 @@ window.DelMarPesci = function (cvs, opzioni) {
   }
 
   function giro() {
-    const c = window.DelMarCursore ? window.DelMarCursore.posizione() : null;
+    /* Il calamaro se c'e' un mouse, il dito se si sta toccando. Mai
+       tutti e due: sui portatili con schermo tattile il calamaro si
+       ritira da solo al primo tocco */
+    const cal = window.DelMarCursore ? window.DelMarCursore.posizione() : null;
+    const c = (cal && cal.attivo) ? cal
+            : (window.DelMarDito ? window.DelMarDito.posizione() : null);
+
     let cur = null;
     if (c && c.attivo) {
       /* Il puntatore arriva in coordinate di finestra, i pesci vivono in
@@ -638,6 +733,12 @@ window.DelMarPesci = function (cvs, opzioni) {
          punto che non e' quello dove sta il calamaro */
       const r = cvs.getBoundingClientRect();
       cur = { x: c.x - r.left, y: c.y - r.top, attivo: true };
+      /* Il tratto percorso dall'ultimo fotogramma. Col mouse non serve —
+         si insegue un pesce, non si taglia — quindi resta il solo punto */
+      if (c.px !== undefined) {
+        cur.px = c.px - r.left;
+        cur.py = c.py - r.top;
+      }
     }
     passo(cur);
     disegna();
