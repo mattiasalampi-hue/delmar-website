@@ -305,7 +305,12 @@ function statoIndice($verdetto) {
         <h2>Google</h2>
         <p class="pn-sotto">
           <?php if ($D['sc_quando']): ?>
-            Da Search Console, scaricate il <?= e(date('d/m alle H:i', (int) $D['sc_quando'])) ?>
+            <?php /* Le lettere di una parola dentro il formato di date() sono
+                     codici, non testo: "alle" diventa am/pm + nome del giorno
+                     due volte + fuso orario, e usciva
+                     "16/08 amSundaySundayEurope/Rome 02:22". Vanno protette
+                     una per una con la barra rovesciata. */ ?>
+            Da Search Console, scaricate il <?= e(date('d/m \a\l\l\e H:i', (int) $D['sc_quando'])) ?>
             · <a href="?g=<?= $giorni ?>&amp;risincronizza=1">riscarica adesso</a>
             · i dati di Google arrivano con due o tre giorni di ritardo
           <?php else: ?>
