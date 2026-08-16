@@ -3,9 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DelMar — Fornitore Ittico Premium | Fornitura Ittica per Ristoranti</title>
+    <!-- Il titolo dice DOVE. Nessuno cerca "fornitura ittica": si cerca
+         "ingrosso pesce per ristoranti" e il nome del proprio posto. Un
+         titolo senza geografia compete con tutta Italia per una parola
+         che nessuno digita, e perde due volte -->
+    <title>Ingrosso pesce per ristoranti in Toscana e Liguria | DelMar Massa</title>
     <!-- SEO -->
-    <meta name="description" content="DelMar fornisce pesce fresco, crostacei, molluschi e surgelati premium all'alta ristorazione italiana. Selezione giornaliera, filiera tracciata, consegna in tutta Italia entro 24 ore." />
+    <meta name="description" content="Fornitore ittico per ristoranti: pesce fresco, crostacei vivi e surgelati. Ordini su WhatsApp, consegna entro le 11 in Toscana, Liguria ed Emilia-Romagna." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://del-mar.it/" />
     <!-- Solo il pesce, non il marchio intero: a 32 pixel la scritta
@@ -14,23 +18,27 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://del-mar.it/" />
-    <meta property="og:title" content="DelMar — Fornitore Ittico Premium" />
-    <meta property="og:description" content="Pesce fresco selezionato ogni mattina, crostacei e surgelati premium. Filiera certificata e consegna in tutta Italia entro 24 ore." />
+    <meta property="og:title" content="Ingrosso pesce per ristoranti in Toscana e Liguria — DelMar, Massa" />
+    <meta property="og:description" content="Pesce fresco selezionato ogni notte, crostacei vivi in vasca, surgelati. Consegna entro le 11 in Toscana, Liguria ed Emilia-Romagna." />
     <meta property="og:image" content="https://del-mar.it/assets/facade-day.jpg?v=2" />
     <meta property="og:locale" content="it_IT" />
     <meta property="og:site_name" content="DelMar" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DelMar — Fornitore Ittico Premium" />
-    <meta name="twitter:description" content="Pesce fresco selezionato ogni mattina, crostacei e surgelati premium. Consegna in tutta Italia entro 24 ore." />
+    <meta name="twitter:title" content="Ingrosso pesce per ristoranti in Toscana e Liguria — DelMar, Massa" />
+    <meta name="twitter:description" content="Pesce fresco selezionato ogni notte, crostacei vivi in vasca, surgelati. Consegna entro le 11 in Toscana, Liguria ed Emilia-Romagna." />
     <meta name="twitter:image" content="https://del-mar.it/assets/facade-day.jpg?v=2" />
-    <!-- JSON-LD LocalBusiness -->
+    <!-- JSON-LD WholesaleStore
+         "LocalBusiness" e' la categoria generica: ci sta dentro anche il
+         parrucchiere. "WholesaleStore" dice che si vende all'ingrosso, ed
+         e' la differenza fra comparire per "pescheria" e comparire per
+         "grossista di pesce" — che sono due mestieri e due clienti -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
+      "@type": "WholesaleStore",
       "name": "DelMar — LE DELIZIE DEL MARE S.R.L.",
-      "description": "Fornitore ittico premium per l'alta ristorazione. Pesce fresco, crostacei, molluschi e surgelati con consegna in tutta Italia entro 24 ore.",
+      "description": "Ingrosso ittico per la ristorazione. Pesce fresco selezionato ogni notte, crostacei vivi in vasca, surgelati e prodotti da magazzino, con consegna entro le 11 di mattina.",
       "url": "https://del-mar.it",
       "logo": "https://del-mar.it/assets/logo.png",
       "image": "https://del-mar.it/assets/facade-day.jpg?v=2",
@@ -46,12 +54,37 @@
         "addressCountry": "IT"
       },
       "priceRange": "€€€",
-      "areaServed": { "@type": "Country", "name": "Italy" },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
         "opens": "05:00",
         "closes": "18:00"
+      },
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Toscana" },
+        { "@type": "AdministrativeArea", "name": "Liguria" },
+        { "@type": "AdministrativeArea", "name": "Emilia-Romagna" }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Forniture ittiche per la ristorazione",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Pesce fresco",
+            "description": "Selezione notturna dai pescherecci dell'Alto Tirreno, dai mercati del Mediterraneo e del Nord Europa e, via aerea, dai mari di tutto il mondo."
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Crostacei vivi",
+            "description": "Oltre 2.000 kg in vasca: astici, aragoste, granchi, king crab. Partono vivi dal vivaio senza giorni di anticipo."
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Surgelati e prodotti da magazzino",
+            "description": "Oltre 1.000 pallet fra pesce, verdure, pasta e prodotti da forno congelati, disponibili ogni giorno nel quantitativo esatto."
+          }
+        ]
       }
     }
     </script>
