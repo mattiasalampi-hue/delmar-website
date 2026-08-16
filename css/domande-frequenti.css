@@ -1,0 +1,952 @@
+/* ════════════════════════════════════════
+   DelMar — Domande frequenti
+   Carica style.css per i colori, i caratteri e l'header: qui dentro
+   c'e' solo cio' che esiste unicamente in questa pagina.
+   ════════════════════════════════════════ */
+
+/* L'header del sito nasce a opacita' zero e lo accende GSAP quando il
+   loader esce. Qui il loader non c'e', quindi va acceso a mano:
+   senza questa riga la pagina si apre con una fascia bianca vuota in
+   cima e il logo invisibile */
+.fq-pagina #hdr {
+  opacity: 1;
+}
+
+/* La voce del menu che indica la pagina corrente. Non e' un <a>, quindi
+   non eredita niente da 'nav a': i valori vanno ripetuti o si vedrebbe
+   una parola nera fuori scala in mezzo alle altre */
+.nav-qui {
+  font-size: .65rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--wa);
+  cursor: default;
+}
+
+/* Le ancore dell'indice devono fermarsi SOTTO header e barra, non
+   dietro: 8.5rem e' l'altezza dei due sommati */
+html:has(.fq-pagina) {
+  scroll-behavior: smooth;
+  scroll-padding-top: 8.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.fq-pagina) {
+    scroll-behavior: auto;
+  }
+}
+
+/* ─ Apertura ────────────────────────────────
+   Le due campiture della sezione contatti, in verticale: a sinistra il
+   mare profondo dove sta il titolo, a destra la luce. Il taglio non e'
+   una scelta grafica libera — caustiche.js dipinge lo scuro a sinistra
+   e i pesci cambiano livrea li', quindi il testo DEVE stare a sinistra
+   o finirebbe chiaro su chiaro */
+.fq-hero {
+  position: relative;
+  min-height: 82vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #0e1445;
+  padding: 9rem 6% 6rem;
+}
+
+#fq-sfondo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#fq-pesci {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.fq-hero-in {
+  position: relative;
+  z-index: 2;
+  width: min(46%, 40rem);
+}
+
+.fq-occhiello {
+  margin: 0 0 1.4rem;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.fq-titolo {
+  margin: 0 0 1.6rem;
+  font-size: clamp(2.2rem, 5.2vw, 4.3rem);
+  font-weight: 200;
+  line-height: 1.02;
+  letter-spacing: -.045em;
+  color: #fff;
+}
+
+/* La seconda riga porta le parole che si cercano, ma non deve gridare
+   quanto la prima: piu' piccola e velata sta al titolo come un
+   sottotitolo, e insieme restano una frase sola invece di sembrare due
+   titoli impilati */
+.fq-titolo em {
+  display: block;
+  margin-top: .2em;
+  font-style: normal;
+  font-size: .52em;
+  font-weight: 300;
+  letter-spacing: -.02em;
+  color: rgba(255, 255, 255, .62);
+}
+
+.fq-sotto {
+  margin: 0;
+  max-width: 34ch;
+  font-size: .95rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, .74);
+}
+
+/* La freccia in basso: sta sul taglio fra le due campiture, dove non
+   disturba ne' il titolo ne' i pesci */
+.fq-giu {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 2.6rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-left: -1.3rem;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(14, 20, 69, .35);
+  backdrop-filter: blur(3px);
+  transition: border-color .3s, background .3s;
+}
+
+.fq-giu span {
+  display: block;
+  width: .5rem;
+  height: .5rem;
+  border-right: 1px solid rgba(255, 255, 255, .8);
+  border-bottom: 1px solid rgba(255, 255, 255, .8);
+  transform: rotate(45deg) translate(-2px, -2px);
+  animation: fq-scendi 2.2s ease-in-out infinite;
+}
+
+@keyframes fq-scendi {
+  0%, 100% {
+    transform: rotate(45deg) translate(-2px, -2px);
+    opacity: .55;
+  }
+  50% {
+    transform: rotate(45deg) translate(1px, 1px);
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-giu:hover {
+    border-color: var(--accent-bright);
+    background: rgba(201, 67, 44, .3);
+  }
+}
+
+/* ─ Indice appeso ───────────────────────────
+   Resta sotto l'header mentre si scorre. Con ventidue domande, tornare
+   in cima per cambiare argomento e' il motivo per cui una FAQ lunga
+   non viene letta */
+.fq-barra {
+  position: sticky;
+  top: 4.1rem;
+  z-index: 90;
+  background: rgba(255, 255, 255, .93);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Il filo dell'avanzamento sta SOPRA il bordo della barra, non sotto:
+   cosi' e' il bordo stesso che si colora, e non c'e' una riga in piu'
+   che schiaccia l'altezza gia' contesa dall'header */
+.fq-avanzamento {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  pointer-events: none;
+}
+
+.fq-avanzamento span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--wa), var(--accent-bright));
+  transition: width .12s linear;
+}
+
+.fq-barra-in {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  padding: .8rem 6%;
+}
+
+.fq-indice {
+  display: flex;
+  gap: .4rem;
+  overflow-x: auto;
+  flex: 1 1 auto;
+  min-width: 0;
+  scrollbar-width: none;
+}
+
+.fq-indice::-webkit-scrollbar {
+  display: none;
+}
+
+.fq-indice a {
+  flex-shrink: 0;
+  padding: .5rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: .66rem;
+  font-weight: 400;
+  letter-spacing: .04em;
+  color: var(--text-mid);
+  white-space: nowrap;
+  transition: color .3s, border-color .3s, background .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-indice a:hover {
+    color: var(--wa);
+    border-color: var(--wa);
+    background: rgba(201, 67, 44, .05);
+  }
+}
+
+/* Il gruppo in cui ci si trova. Riempita e non solo colorata: fra
+   cinque pillole tutte uguali una tinta appena diversa non si trova,
+   e l'indice serve proprio a chi si e' perso */
+.fq-indice a.attivo {
+  color: #fff;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+/* ─ Ricerca ─────────────────────────────────*/
+.fq-cerca {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  width: clamp(12rem, 22vw, 17rem);
+}
+
+.fq-cerca-ico {
+  position: absolute;
+  left: .8rem;
+  width: .85rem;
+  height: .85rem;
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
+.fq-cerca input {
+  width: 100%;
+  padding: .58rem 2rem .58rem 2.2rem;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  background: transparent;
+  font-family: var(--font);
+  font-size: .72rem;
+  font-weight: 300;
+  color: var(--ink);
+  transition: border-color .3s, background .3s;
+}
+
+.fq-cerca input::placeholder {
+  color: var(--text-dim);
+}
+
+.fq-cerca input:focus {
+  outline: none;
+  border-color: var(--wa);
+  background: rgba(201, 67, 44, .04);
+}
+
+/* La croce nativa di Safari e Chrome si somma alla nostra: due modi di
+   cancellare a mezzo centimetro uno dall'altro */
+.fq-cerca input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.fq-cerca-x {
+  position: absolute;
+  right: .5rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color .3s, background .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-cerca-x:hover {
+    color: var(--wa);
+    background: rgba(201, 67, 44, .08);
+  }
+}
+
+/* ─ Le porte degli argomenti ────────────────
+   CINQUE RIGHE, non cinque colonne. In colonna le descrizioni stavano
+   in centosettanta pixel e andavano a capo tre volte l'una, e cinque
+   riquadri non entrano in una griglia che si riassesta da sola: alla
+   prima larghezza sbagliata ne restava uno orfano con mezza fila
+   vuota accanto. In riga il numero e' sempre cinque, la descrizione ha
+   tutta la larghezza della pagina e non c'e' nessuna fila da
+   riempire. */
+.fq-argomenti {
+  margin-bottom: 4.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.fq-arg {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(9rem, 13rem) 1fr auto;
+  align-items: center;
+  gap: 0 1.4rem;
+  padding: 1.15rem 1.2rem 1.15rem .2rem;
+  border-bottom: 1px solid var(--border);
+  transition: background .35s, padding-left .35s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* La stecca che si accende a sinistra: la stessa delle domande aperte
+   piu' in basso, cosi' passare col mouse qui e aprire una domanda li'
+   parlano la stessa lingua */
+.fq-arg::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: 0;
+  width: 2px;
+  background: linear-gradient(var(--wa), var(--accent-bright));
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform .35s cubic-bezier(.4, 0, .2, 1);
+}
+
+.fq-arg-n {
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  transition: color .35s;
+}
+
+.fq-arg-t {
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.fq-arg-d {
+  font-size: .8rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--text-mid);
+}
+
+.fq-arg-c {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .5rem;
+  font-size: .64rem;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-dim);
+  transition: color .35s;
+}
+
+.fq-arg-c svg {
+  width: .9rem;
+  height: .9rem;
+  fill: none;
+  stroke: currentColor;
+  transform: translateX(-4px);
+  opacity: 0;
+  transition: transform .35s cubic-bezier(.4, 0, .2, 1), opacity .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-arg:hover {
+    background: var(--bg-soft);
+    padding-left: 1rem;
+  }
+
+  .fq-arg:hover::before {
+    transform: scaleY(1);
+  }
+
+  .fq-arg:hover .fq-arg-n,
+  .fq-arg:hover .fq-arg-c {
+    color: var(--wa);
+  }
+
+  .fq-arg:hover .fq-arg-t {
+    color: var(--wa);
+  }
+
+  .fq-arg:hover .fq-arg-c svg {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.fq-arg:focus-visible {
+  outline: 2px solid var(--wa);
+  outline-offset: -2px;
+}
+
+/* Sotto i 900 px la descrizione scende sotto il titolo invece di
+   stringersi: a meno di dodici parole per riga si legge peggio di
+   quanto aiuti */
+@media (max-width: 900px) {
+  .fq-arg {
+    grid-template-columns: 2.4rem 1fr auto;
+    gap: .15rem 1rem;
+    padding: 1rem 1rem 1rem .2rem;
+  }
+
+  .fq-arg-n {
+    grid-row: 1 / 3;
+    align-self: start;
+    padding-top: .15rem;
+  }
+
+  .fq-arg-c {
+    grid-row: 1 / 3;
+    align-self: center;
+  }
+}
+
+/* ─ Nessun risultato ────────────────────────*/
+.fq-vuoto {
+  margin: 0 0 3rem;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: .92rem;
+  font-weight: 300;
+  color: var(--text-mid);
+}
+
+.fq-vuoto a {
+  color: var(--wa);
+  border-bottom: 1px solid rgba(201, 67, 44, .35);
+}
+
+/* Nascosti dalla ricerca. Sta qui e non nell'attributo hidden perche'
+   un <details> ha display:block per conto suo e vincerebbe */
+.fq-d[data-fuori],
+.fq-gruppo[data-fuori] {
+  display: none;
+}
+
+/* ─ Corpo ───────────────────────────────────*/
+.fq-corpo {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 5rem 6% 2rem;
+}
+
+.fq-gruppo {
+  margin-bottom: 5.5rem;
+}
+
+.fq-gruppo-testa {
+  position: relative;
+  margin-bottom: 2.2rem;
+  padding-top: 1.2rem;
+}
+
+/* Il numero grande in filigrana: da' il ritmo dei capitoli della home
+   senza rubare attenzione alla domanda, che e' quello che si legge */
+.fq-num {
+  position: absolute;
+  top: -.4rem;
+  left: -.2rem;
+  font-size: 4.6rem;
+  font-weight: 200;
+  letter-spacing: -.05em;
+  line-height: 1;
+  color: rgba(21, 28, 100, .06);
+  pointer-events: none;
+  user-select: none;
+}
+
+.fq-gruppo-testa h2 {
+  position: relative;
+  margin: 0 0 .5rem;
+  font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+  font-weight: 300;
+  letter-spacing: -.035em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.fq-gruppo-nota {
+  position: relative;
+  margin: 0;
+  font-size: .82rem;
+  font-weight: 300;
+  color: var(--text-dim);
+}
+
+/* ─ La singola domanda ──────────────────────
+   <details> nativo: si apre anche se il JavaScript non parte, e il
+   testo della risposta resta nel documento pure da chiuso — che e' la
+   ragione per cui un motore di ricerca lo legge lo stesso */
+.fq-d {
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  transition: background .35s;
+}
+
+.fq-d:first-of-type {
+  border-top: 1px solid var(--border);
+}
+
+/* La stecca che si accende a sinistra quando la domanda si apre. Cresce
+   dall'alto verso il basso, nella stessa direzione in cui si apre la
+   risposta: se crescesse dal centro sarebbero due movimenti diversi
+   nello stesso istante e l'occhio non saprebbe quale seguire */
+.fq-d::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1.4rem;
+  width: 2px;
+  background: linear-gradient(var(--wa), var(--accent-bright));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.fq-d[open]::before {
+  transform: scaleY(1);
+}
+
+.fq-d[open] {
+  background: linear-gradient(90deg, rgba(201, 67, 44, .035), transparent 55%);
+}
+
+.fq-d summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+  padding: 1.35rem .2rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+  transition: color .3s;
+}
+
+/* La domanda e' un h3 e non uno span: e' la sostanza della pagina, ed
+   e' come Google capisce che qui dentro ci sono ventitre' argomenti
+   distinti invece di un muro di testo. Cambia il tag, non l'aspetto —
+   quindi il corpo del titolo torna quello del testo intorno */
+.fq-q {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  color: inherit;
+}
+
+/* Il triangolino di sistema va tolto in due modi: Safari usa ancora lo
+   pseudo-elemento suo, gli altri list-style */
+.fq-d summary::-webkit-details-marker {
+  display: none;
+}
+
+.fq-d summary::after {
+  content: '';
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  background:
+    linear-gradient(var(--text-dim), var(--text-dim)) center/.7rem 1px no-repeat,
+    linear-gradient(var(--text-dim), var(--text-dim)) center/1px .7rem no-repeat;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  transition: transform .35s cubic-bezier(.4, 0, .2, 1), border-color .3s, background-color .3s;
+}
+
+.fq-d[open] summary {
+  color: var(--wa);
+}
+
+/* Il piu' diventa meno ruotando: la barra verticale sparisce sotto
+   quella orizzontale a fine giro */
+.fq-d[open] summary::after {
+  transform: rotate(135deg);
+  border-color: var(--wa);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-d summary:hover {
+    color: var(--wa);
+  }
+
+  .fq-d summary:hover::after {
+    border-color: var(--wa);
+  }
+}
+
+.fq-d summary:focus-visible {
+  outline: 2px solid var(--wa);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.fq-r {
+  padding: 0 3rem 1.6rem .2rem;
+}
+
+.fq-r-in {
+  animation: fq-apri .4s cubic-bezier(.2, .7, .3, 1) both;
+}
+
+@keyframes fq-apri {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fq-r-in {
+    animation: none;
+  }
+
+  .fq-giu span {
+    animation: none;
+  }
+}
+
+.fq-r p {
+  margin: 0 0 .9rem;
+  font-size: .92rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--text-hi);
+}
+
+.fq-r p:last-child {
+  margin-bottom: 0;
+}
+
+.fq-r strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Le cifre che decidono. Un ristoratore non legge la risposta: la
+   scorre cercando il numero, e se il numero ha lo stesso peso del
+   testo intorno deve leggere tutto per trovarlo.
+   Le lettere in cifre tabellari perche' l'1 stretto in mezzo a numeri
+   larghi fa ballare la riga */
+.fq-dato {
+  font-size: 1.02em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--wa);
+  white-space: nowrap;
+}
+
+/* ─ Chiusura ────────────────────────────────*/
+.fq-chiusura {
+  margin: 2rem 0 0;
+  padding: 4.5rem 8% 4.2rem;
+  text-align: center;
+  background: var(--ink);
+  border-radius: 3px;
+}
+
+.fq-chiusura-occhiello {
+  margin: 0 0 1.1rem;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.fq-chiusura h2 {
+  margin: 0 0 1.2rem;
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  font-weight: 200;
+  letter-spacing: -.04em;
+  line-height: 1.12;
+  color: #fff;
+}
+
+.fq-chiusura-testo {
+  max-width: 42ch;
+  margin: 0 auto 2.2rem;
+  font-size: .92rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, .68);
+}
+
+.fq-chiusura-azioni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  justify-content: center;
+  margin-bottom: 1.8rem;
+}
+
+.fq-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .95rem 1.9rem;
+  border-radius: 2px;
+  font-size: .72rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  transition: background .3s, border-color .3s, color .3s;
+}
+
+.fq-btn svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+.fq-btn .arr {
+  fill: none;
+  stroke: currentColor;
+}
+
+.fq-btn-wa {
+  background: var(--accent-bright);
+  color: #fff;
+  border: 1px solid var(--accent-bright);
+}
+
+.fq-btn-ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, .82);
+  border: 1px solid rgba(255, 255, 255, .28);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-btn-wa:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--ink);
+  }
+
+  .fq-btn-ghost:hover {
+    border-color: #fff;
+    color: #fff;
+  }
+}
+
+.fq-chiusura-tel {
+  margin: 0;
+  font-size: .78rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, .5);
+}
+
+.fq-chiusura-tel a {
+  color: rgba(255, 255, 255, .85);
+  border-bottom: 1px solid rgba(255, 255, 255, .3);
+}
+
+/* ─ Piede ───────────────────────────────────*/
+.fq-piede {
+  padding: 3.5rem 6%;
+  margin-top: 4rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+
+.fq-piede-in {
+  max-width: 62rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.fq-piede-logo {
+  height: 2rem;
+  width: auto;
+  margin: 0 auto 1.4rem;
+  opacity: .8;
+}
+
+.fq-piede-dati {
+  margin: 0 0 .9rem;
+  font-size: .74rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--text-dim);
+}
+
+.fq-piede-link {
+  margin: 0;
+  font-size: .74rem;
+  font-weight: 300;
+  color: var(--text-dim);
+}
+
+.fq-piede a {
+  color: var(--text-mid);
+  transition: color .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-piede a:hover {
+    color: var(--wa);
+  }
+}
+
+/* ─ Telefono ────────────────────────────────
+   Il taglio verticale su schermo stretto non ha senso: meta' schermo
+   scuro e meta' chiaro lascerebbe il titolo in una colonna larga
+   quanto una parola. Le caustiche si spengono (come nella sezione
+   contatti della home) e resta il fondo profondo, con i pesci sopra */
+@media (max-width: 900px) {
+  .fq-hero {
+    min-height: 74vh;
+    padding: 7.5rem 6% 5rem;
+  }
+
+  .fq-hero-in {
+    width: 100%;
+  }
+
+  .fq-sotto {
+    max-width: 40ch;
+  }
+
+  #fq-sfondo {
+    display: none;
+  }
+
+  .fq-giu {
+    left: 6%;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  html:has(.fq-pagina) {
+    scroll-padding-top: 7.5rem;
+  }
+
+  .fq-barra {
+    top: 3.6rem;
+  }
+
+  /* Ricerca sopra, indice sotto: invertiti rispetto al desktop. In
+     colonna il campo largo quanto lo schermo e' piu' facile da
+     centrare col pollice della fila di pillole, che va scorsa */
+  .fq-barra-in {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: .7rem;
+    padding: .7rem 6%;
+  }
+
+  .fq-cerca {
+    width: 100%;
+  }
+
+  .fq-argomenti {
+    margin-bottom: 3rem;
+  }
+
+  .fq-arg {
+    padding: 1.2rem 1rem 1.1rem;
+  }
+
+  .fq-d::before {
+    left: -1rem;
+  }
+
+  .fq-corpo {
+    padding: 3.5rem 6% 1rem;
+  }
+
+  .fq-gruppo {
+    margin-bottom: 4rem;
+  }
+
+  .fq-num {
+    font-size: 3.4rem;
+  }
+
+  .fq-d summary {
+    gap: 1rem;
+    padding: 1.15rem 0;
+    font-size: .92rem;
+  }
+
+  .fq-r {
+    padding: 0 1.4rem 1.4rem 0;
+  }
+
+  .fq-chiusura {
+    padding: 3.5rem 7% 3.2rem;
+  }
+
+  .fq-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -20,6 +20,15 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://del-mar.it/domande-frequenti.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <!-- Alta come la home meno un soffio: e' la seconda pagina vera del
+         sito, e risponde alle domande che il cliente scrive nel motore
+         di ricerca parola per parola -->
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://del-mar.it/privacy.html</loc>
     <lastmod>2026-08-16</lastmod>
     <changefreq>yearly</changefreq>
