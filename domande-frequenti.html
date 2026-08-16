@@ -822,6 +822,11 @@
     </footer>
 
     <script src="js/consenso.js?v=1"></script>
+    <!-- I tag pubblicitari stanno DOPO il gestore del consenso perche' si
+         registrano dentro di lui. Finche' gli identificativi in tag.js
+         sono vuoti non carica e non manda niente: il sito resta senza
+         cookie e senza banner, esattamente com'e' adesso -->
+    <script src="js/tag.js?v=1"></script>
     <script src="js/analitica.js?v=2" defer></script>
     <script src="js/caustiche.js?v=1"></script>
     <script src="js/pesci.js?v=4"></script>

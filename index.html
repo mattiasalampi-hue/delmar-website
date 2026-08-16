@@ -752,6 +752,11 @@
          consenso deve gia' esistere nel momento in cui quel codice
          chiede il permesso di partire -->
     <script src="js/consenso.js?v=1"></script>
+    <!-- I tag pubblicitari stanno DOPO il gestore del consenso perche' si
+         registrano dentro di lui. Finche' gli identificativi in tag.js
+         sono vuoti non carica e non manda niente: il sito resta senza
+         cookie e senza banner, esattamente com'e' adesso -->
+    <script src="js/tag.js?v=1"></script>
     <!-- Analitica di casa: nessun cookie, nessun terzo, nessun IP
          conservato. Per questo NON passa dal consenso — non c'e' niente
          da autorizzare. Vedi analitica/comune.php -->

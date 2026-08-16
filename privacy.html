@@ -76,6 +76,56 @@
         da solo. Non è un cookie e non lascia niente sul tuo dispositivo.
       </p>
 
+      <!-- ══ QUANDO SI ACCENDONO I PIXEL, SI RISCRIVE DA QUI ══
+           Il paragrafo qui sotto e' vero finche' gli identificativi in
+           js/tag.js restano vuoti. Il giorno che se ne incolla uno
+           diventa FALSO, e una informativa che dichiara il contrario di
+           quello che il sito fa e' esattamente cio' che costa una
+           segnalazione al Garante — e la si scopre tardi, perche'
+           nessuno rilegge la privacy dopo averla scritta.
+
+           Testo pronto da mettere al posto del paragrafo "Questo sito
+           non installa cookie", adattandolo a quali tag sono davvero
+           accesi:
+
+           <p>
+             Questo sito usa cookie di <strong>terze parti a scopo
+             statistico e pubblicitario</strong>, e non ne installa
+             nessuno prima della tua scelta. Finche' non accetti, nessuna
+             richiesta parte verso quei servizi: il blocco e' preventivo,
+             non un avviso.
+           </p>
+           <h3>Quali, e di chi</h3>
+           <ul>
+             <li><strong>Google Ads</strong> (Google Ireland Ltd) — misura
+             quali annunci portano richieste e permette di ripresentare
+             il sito a chi lo ha gia' visitato. Consenso "Marketing".</li>
+             <li><strong>Meta Pixel</strong> (Meta Platforms Ireland Ltd)
+             — stessa funzione per Instagram e Facebook. Consenso
+             "Marketing".</li>
+             <li><strong>Google Analytics 4</strong> (Google Ireland Ltd)
+             — statistiche di navigazione. Consenso "Statistiche".</li>
+           </ul>
+           <p>
+             Questi servizi possono trasferire dati <strong>fuori
+             dall'Unione europea</strong>, negli Stati Uniti, sulla base
+             delle clausole contrattuali standard e del quadro
+             UE-USA sulla privacy dei dati. Puoi cambiare idea in
+             qualsiasi momento da <a href="#" data-apri-consenso>questo
+             collegamento</a>: la revoca vale per il futuro.
+           </p>
+
+           SE la modalita' in tag.js viene portata su 'avanzata', va
+           aggiunto anche questo, ed e' obbligatorio:
+           <p>
+             Anche se rifiuti, il sito comunica a Google un segnale
+             tecnico privo di cookie e non riconducibile a te, che serve
+             a stimare l'efficacia degli annunci in forma aggregata.
+           </p>
+           e va CORRETTA piu' sotto la frase "aprendo questa pagina il
+           tuo indirizzo IP non viene comunicato a nessun altro", che in
+           quella modalita' non e' piu' vera.
+           ══════════════════════════════════════════════════ -->
       <h2>Cookie</h2>
       <p>
         <strong>Questo sito non installa cookie</strong>: né tecnici né di
@@ -189,6 +239,11 @@
     </footer>
 
     <script src="js/consenso.js?v=1"></script>
+    <!-- I tag pubblicitari stanno DOPO il gestore del consenso perche' si
+         registrano dentro di lui. Finche' gli identificativi in tag.js
+         sono vuoti non carica e non manda niente: il sito resta senza
+         cookie e senza banner, esattamente com'e' adesso -->
+    <script src="js/tag.js?v=1"></script>
     <script src="js/analitica.js?v=2" defer></script>
   </body>
 </html>
