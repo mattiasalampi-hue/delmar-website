@@ -17,7 +17,9 @@
 */
 window.DelMarPesci = function (cvs, opzioni) {
   const o = Object.assign({
-    quanti:   () => (window.matchMedia('(max-width: 768px)').matches ? 24 : 52),
+    /* Pochi e grossi, non tanti e minuti: a questa taglia cinquanta
+       pesci coprono il fondo e sembrano un acquario sovraffollato */
+    quanti:   () => (window.matchMedia('(max-width: 768px)').matches ? 9 : 20),
     /* Negativo = nessuna divisione, tutti del colore chiaro */
     confine:  () => -1,
     /* DUE SPECIE, non una. Con un colore solo il banco sembrava una
@@ -42,7 +44,45 @@ window.DelMarPesci = function (cvs, opzioni) {
     ],
     sfuma:    90,     /* larghezza della fascia in cui il colore vira */
     fuga:     190,    /* da quanto lontano si accorgono del calamaro */
-    presa:    17,     /* da quanto vicino si riesce a prenderli */
+    /* Quanto largo e' il bersaglio, in multipli del CORPO del pesce.
+       1 = bisogna toccarlo davvero. Non e' piu' una distanza in pixel:
+       lo era, ed era sbagliato in due modi. Fissa, non teneva conto di
+       quanto e' grande il pesce che stai prendendo; e misurata dal
+       centro, con pesci lunghi trenta pixel e un raggio di
+       cinquantaquattro si prendevano restando a un corpo di distanza —
+       il calamaro passava ACCANTO e il punto veniva assegnato lo
+       stesso. Sopra 1.4 torna quel difetto, sotto .8 diventa un gioco
+       di precisione al pixel */
+    presa:    1,
+    /* Quanto sono grandi, e quanto si vedono.
+
+       'velo' moltiplica l'opacita' di TUTTO il disegno — corpo, pinne,
+       ombra, occhio — invece di scolorire le tinte. La differenza si
+       vede: schiarendo i colori il pesce resta un adesivo pallido
+       appoggiato sopra, mentre abbassando l'opacita' l'acqua gli passa
+       attraverso e sta DENTRO la scena. Sotto .45 pero' spariscono
+       contro la campitura chiara, e sopra 1 non succede niente.
+
+       QUESTI DEFAULT SONO I PESCI DEL SITO, non valori neutri: sono
+       stati scelti guardandoli. Stanno qui e non nelle due chiamate che
+       li accendono perche' i pesci sono UNO SOLO in tutto il sito —
+       scritti in due posti, il giorno che si ritoccano se ne aggiorna
+       uno e l'altro resta indietro, e che la home abbia pesci diversi
+       dalle altre pagine non lo nota nessuno finche' non e' online da
+       un mese. Il banco di prova in prove/ li sovrascrive quando vuole
+       confrontare le rese. */
+    taglia:   3.2,
+    velo:     .62,
+    /* Quanto sono bravi a scappare. UNA manopola invece dei sei numeri
+       che la difficolta' era prima: raggio di percezione, prontezza
+       della virata, punta di velocita', consumo e recupero del fiato,
+       calo da stanchi. Erano sparsi dentro il ciclo e alzarne uno solo
+       non serviva a niente — un pesce che scatta forte ma si accorge
+       tardi si prende lo stesso, uno che vede da lontano ma accelera
+       piano pure.
+       1 = il banco di sempre. Sopra 2,2 diventano imprendibili, e un
+       gioco che non si vince smette di essere un gioco. */
+    bravura:  1.85,
     /* Come sono disegnati: 1 piatti, 2 con volume, 3 su piu' profondita',
        4 con pinne e ombra. Cambia SOLO il disegno, il comportamento e' lo
        stesso — cosi' si confrontano le rese senza cambiare il gioco */
@@ -58,6 +98,57 @@ window.DelMarPesci = function (cvs, opzioni) {
   const ctx = cvs.getContext('2d');
   let W = 0, H = 0, t = 0, raf = null, presi = 0;
   const pesci = [];
+
+  /* I sei numeri che 'bravura' governa, calcolati una volta sola: sono
+     uguali per tutti i pesci a ogni fotogramma, e rifarli cinquanta
+     volte per sessanta fotogrammi al secondo e' lavoro buttato */
+  const BRA = Math.max(.2, o.bravura);
+  /* Se ne accorgono da piu' lontano */
+  const RAGGIO = o.fuga * (1 + (BRA - 1) * .35);
+  /* E girano prima verso il largo invece di continuare dritti un
+     istante di troppo — che e' l'istante in cui li si prende */
+  const VIRATA = Math.min(.62, .35 * (1 + (BRA - 1) * .5));
+  /* Quando il puntatore e' ancora lontano non scattano: accelerano
+     appena, come un pesce che ha notato qualcosa e si allontana senza
+     agitarsi */
+  const ALLERTA = 1.5 * BRA;
+  /* Oltre .45 l'inseguimento della velocita' obiettivo la scavalca e il
+     pesce vibra sul posto invece di accelerare */
+  const PRONTI = Math.min(.45, .12 * BRA);
+  /* Piu' sono bravi, piu' tardi si stancano e prima si riprendono */
+  const STANCA = .012 / BRA;
+  const RIFIATA = .006 * BRA;
+  const CALO = .34 / BRA;
+
+  /* ── Lo scatto ──────────────────────────────
+     Un pesce vero non accelera: fa una C con il corpo e SPARISCE, in
+     un ventesimo di secondo, poi plana. E' la ragione per cui prenderne
+     uno a mano e' quasi impossibile — non e' che nuoti veloce, e' che
+     la sua reazione dura meno del tuo movimento.
+     Prima qui c'era una sola velocita' che saliva col vicinarsi del
+     puntatore: dava un pesce che scivolava via sempre uguale, e a
+     inseguirlo lo si prendeva perche' la sua fuga era prevedibile. */
+  /* Da qui in dentro scatta. Piu' stretto del raggio in cui si
+     insospettisce: fuori resta l'allerta, che e' quello che rende
+     leggibile lo scatto quando poi arriva */
+  const VICINO = RAGGIO * .46;
+  /* Velocita' di punta, in multipli dell'andatura di crociera */
+  const PUNTA = 9 * BRA;
+  /* Quanto dura, in fotogrammi: un soffio. Piu' lungo diventa una
+     corsa, e una corsa si insegue */
+  const DURATA = 11;
+  /* Quanto si riposa prima di poterne fare un altro. I bravi ne
+     incatenano di piu' */
+  const RICARICA = Math.round(52 / BRA);
+  /* La planata dopo lo scatto. Con .93 la velocita' si dimezza in circa
+     dieci fotogrammi: si vede partire come una fucilata e spegnersi,
+     che e' esattamente il profilo di una fuga vera */
+  const PLANA = .93;
+  /* Di quanto la direzione di fuga si scosta da "esattamente opposto al
+     predatore". Serve a NON farli prevedibili: un pesce che scappa
+     sempre in linea retta lontano dal dito si prende anticipandolo, e
+     in natura infatti scattano di lato con un angolo che non si sa */
+  const OBLIQUO = .95;
 
   /* Tutto quello che succede DOPO il boccone e non e' un pesce: anelli,
      schizzo, numero che sale. Una lista sola con dentro cose diverse,
@@ -83,7 +174,13 @@ window.DelMarPesci = function (cvs, opzioni) {
        fare la profondita', una sola non basta e sembra solo un pesce
        piccolo */
     const z = caso(.35, 1);
-    const v = caso(.55, 1.25) * (.55 + z * .45);
+    /* Andatura di crociera BASSA. Un pesce indisturbato non corre: sta
+       quasi fermo a mangiare e si sposta piano. Tutta la velocita' che
+       ha in corpo se la tiene per lo scatto, ed e' il contrasto fra le
+       due andature a farlo sembrare vivo — se nuota gia' svelto, lo
+       scatto non si legge come una reazione ma come un aumento di
+       giri */
+    const v = caso(.34, .72) * (.55 + z * .45);
     /* La specie si tira a sorte una volta sola: un pesce che cambia
        livrea mentre nuota non e' un pesce */
     let q = Math.random(), sp = 0;
@@ -99,7 +196,7 @@ window.DelMarPesci = function (cvs, opzioni) {
       v,
       vBase: v,
       z,
-      lung: caso(7, 13) * (.5 + z * .6),
+      lung: caso(7, 13) * (.5 + z * .6) * o.taglia,
       fase: caso(0, Math.PI * 2),
       /* Ognuno vira per conto suo, se no il banco sembra una griglia */
       giro: caso(-.006, .006),
@@ -108,7 +205,16 @@ window.DelMarPesci = function (cvs, opzioni) {
          PRENDIBILI — a fondo scala scattano sempre e non ne prendi mai
          uno, e un gioco che non si vince smette di essere un gioco */
       fiato: 0,
-      lampo: 0
+      lampo: 0,
+      /* Fotogrammi che restano allo scatto in corso, e in che direzione
+         va. Zero = sta nuotando normalmente */
+      scatto: 0,
+      scattoAng: 0,
+      /* Quanto deve aspettare prima di poterne fare un altro. Senza
+         questa pausa il pesce scatterebbe a ogni fotogramma finche' il
+         puntatore gli sta vicino, e uno scatto continuo non e' uno
+         scatto: e' una fuga a velocita' costante */
+      ricarica: 0
     };
   }
 
@@ -176,31 +282,84 @@ window.DelMarPesci = function (cvs, opzioni) {
         const dx = p.x - cur.x, dy = p.y - cur.y;
         const d = Math.hypot(dx, dy);
 
-        if (d < o.presa && p.lampo === 0) {
+        /* Si prende SOLO toccandolo. Il bersaglio e' un'ellisse grande
+           quanto il corpo, e sta nel verso in cui il pesce nuota: e'
+           lungo il triplo di quanto e' alto, quindi un cerchio o lo
+           taglia sui fianchi o straborda davanti e dietro. Il cursore
+           si porta nel sistema di riferimento del pesce — ruotato del
+           suo angolo — e li' il test e' quello di un'ellisse dritta.
+           Il ribaltamento verticale del disegno (quando nuota a
+           sinistra) qui non conta: l'ellisse e' simmetrica */
+        const co = Math.cos(p.ang), si = Math.sin(p.ang);
+        const rx = -dx * co - dy * si;
+        const ry =  dx * si - dy * co;
+        const ax = p.lung * .5 * o.presa;
+        const ay = p.lung * .3 * o.presa;
+
+        if ((rx * rx) / (ax * ax) + (ry * ry) / (ay * ay) <= 1 && p.lampo === 0) {
           boccone(p.x, p.y, p.ang);
           Object.assign(p, nuovo(true));
           continue;
         }
 
-        if (d < o.fuga && d > .01) {
+        if (d < RAGGIO && d > .01) {
           /* La paura cresce col quadrato della vicinanza: da lontano
              un'occhiata, da vicino uno scatto */
-          scappa = Math.pow(1 - d / o.fuga, 2);
+          scappa = Math.pow(1 - d / RAGGIO, 2);
           const via = Math.atan2(dy, dx);
-          /* Non gira di scatto verso la fuga: si orienta, come un pesce
-             vero che deve prima curvare */
-          let diff = via - p.ang;
-          while (diff >  Math.PI) diff -= Math.PI * 2;
-          while (diff < -Math.PI) diff += Math.PI * 2;
-          p.ang += diff * Math.min(.35, .12 + scappa * .3);
+
+          if (d < VICINO && p.scatto === 0 && p.ricarica === 0) {
+            /* Parte lo scatto. La direzione NON e' esattamente l'opposto
+               del puntatore: e' obliqua, e da che parte non si sa
+               nemmeno un fotogramma prima. E' quello che rende
+               impossibile anticiparli */
+            p.scatto = DURATA;
+            p.scattoAng = via + caso(-OBLIQUO, OBLIQUO);
+            /* La velocita' si IMPONE, non si insegue: un'accelerazione
+               graduale, per quanto ripida, resta un'accelerazione. Qui
+               il fotogramma dopo e' gia' partito */
+            p.v = p.vBase * PUNTA * (1 - p.fiato * CALO);
+            p.ricarica = RICARICA + Math.round(caso(0, 16));
+            /* Uno scatto costa fiato molto piu' di una nuotata nervosa:
+               e' cosi' che restano prendibili, stancandoli */
+            p.fiato = Math.min(1, p.fiato + .2);
+          } else if (p.scatto === 0) {
+            /* Fuori dallo scatto si orienta e basta, come un pesce vero
+               che deve prima curvare */
+            let diff = via - p.ang;
+            while (diff >  Math.PI) diff -= Math.PI * 2;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            p.ang += diff * Math.min(VIRATA, .12 + scappa * .3 * BRA);
+          }
         }
       }
 
       /* Il fiato si consuma scappando e si riprende in pace. Da stanchi
          la punta di velocita' cala di un terzo: e' li' che si acchiappano */
-      p.fiato = Math.max(0, Math.min(1, p.fiato + (scappa > .2 ? .012 : -.006)));
-      const tetto = p.vBase * (1 + scappa * 3.4) * (1 - p.fiato * .34);
-      p.v += (tetto - p.v) * .12;
+      p.fiato = Math.max(0, Math.min(1, p.fiato + (scappa > .2 ? STANCA : -RIFIATA)));
+      if (p.ricarica > 0) p.ricarica--;
+
+      if (p.scatto > 0) {
+        p.scatto--;
+        /* Durante lo scatto il corpo e' gia' girato: la virata e' quasi
+           istantanea perche' in natura lo e' — la piega a C dura
+           trenta millisecondi. Non del tutto istantanea pero', se no il
+           pesce non ruota: si teletrasporta di traverso */
+        let diff = p.scattoAng - p.ang;
+        while (diff >  Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        p.ang += diff * .55;
+        /* E gia' mentre scatta comincia a spegnersi */
+        p.v *= PLANA;
+      } else {
+        /* Nuoto normale: crociera lenta, appena piu' svelta se ha visto
+           qualcosa ma non abbastanza vicino da scattare. Il 'max' fa in
+           modo che la velocita' residua dello scatto scenda planando
+           invece di essere riportata di colpo a quella di crociera —
+           altrimenti alla fine dello scatto il pesce inchioderebbe */
+        const tetto = p.vBase * (1 + scappa * ALLERTA) * (1 - p.fiato * CALO);
+        p.v = p.v > tetto ? Math.max(tetto, p.v * PLANA) : p.v + (tetto - p.v) * PRONTI;
+      }
 
       p.x += Math.cos(p.ang) * p.v;
       p.y += Math.sin(p.ang) * p.v;
@@ -307,8 +466,12 @@ window.DelMarPesci = function (cvs, opzioni) {
     if (Math.cos(p.ang) < 0) ctx.scale(1, -1);
 
     /* 3 e 4 sfumano quello che sta lontano: e' il modo piu' onesto di
-       dare profondita' su una tela piatta */
-    const op = st >= 3 ? (.34 + p.z * .66) : 1;
+       dare profondita' su una tela piatta.
+       'velo' entra QUI e non sui singoli riempimenti: cosi' i rapporti
+       fra le parti restano quelli studiati — l'occhio piu' fitto della
+       pancia, l'ombra piu' tenue di tutto — e si abbassa il volume
+       dell'insieme invece di appiattirlo */
+    const op = (st >= 3 ? (.34 + p.z * .66) : 1) * o.velo;
 
     if (st === 4) {
       /* Ombra portata: un pesce senza ombra galleggia sopra il disegno,
