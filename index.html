@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
@@ -77,7 +77,7 @@
           {
             "@type": "OfferCatalog",
             "name": "Crostacei vivi",
-            "description": "Oltre 2.000 kg in vasca: astici, aragoste, granchi, king crab. Partono vivi dal vivaio senza giorni di anticipo."
+            "description": "Oltre 2.000 kg di crostacei vivi in vasca. Astici e aragoste sempre disponibili per il giorno dopo, le altre specie su ordinazione."
           },
           {
             "@type": "OfferCatalog",
@@ -128,8 +128,15 @@
     <header id="hdr">
       <a href="#"><img src="assets/logo.png" alt="DelMar" class="logo" /></a>
       <nav id="main-nav">
+        <!-- "Domande" e non "FAQ": e' l'unica voce del menu che porta
+             fuori dalla home, e una sigla inglese in mezzo a parole
+             italiane si legge come un'etichetta di servizio invece che
+             come una parte del sito. Sta dopo Marina AI perche' li'
+             chiude il gruppo di chi sta ancora decidendo, prima di
+             Contatti che e' l'ultimo passo -->
         <a href="#prodotti">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
-        <a href="#gallery">Gallery</a> <a href="#marina">Marina AI</a> <a href="#contatti">Contatti</a>
+        <a href="#gallery">Gallery</a> <a href="#marina">Marina AI</a>
+        <a href="domande-frequenti.html">Domande</a> <a href="#contatti">Contatti</a>
         <a href="https://wa.me/393356654017?text=Ciao%20Marina!" target="_blank" rel="noopener noreferrer" class="nav-wa">Ordina ora</a>
       </nav>
       <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
@@ -212,11 +219,11 @@
       <div class="prod-strip rev">
         <div class="prod-img par-img"><img src="assets/fish-tanks.jpg?v=2" alt="Il vivaio DelMar: vasche con crostacei vivi e operatori al lavoro" loading="lazy" /></div>
         <div class="prod-text">
-          <h3 class="big-title">Vivi in vasca,<br />non su ordinazione.</h3>
+          <h3 class="big-title">Vivi in vasca,<br />pronti domani.</h3>
           <p class="body-text">
-            Il nostro vivaio mantiene oltre 2.000 kg di crostacei vivi da ogni mare: astici, aragoste, granchi, king
-            crab. Ogni giorno partono dalle vasche e arrivano vivi nella tua cucina, senza giorni di anticipo: quello
-            che ti serve domani, da noi c'è già.
+            Il nostro vivaio mantiene oltre 2.000 kg di crostacei vivi da ogni mare. Astici e aragoste partono dalle
+            vasche e arrivano vivi nella tua cucina senza giorni di anticipo; tutto il resto lo prendiamo su
+            ordinazione, qualunque sia la richiesta.
           </p>
           <a href="#contatti" class="prod-link">Richiedi disponibilità<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
@@ -678,7 +685,14 @@
           </div>
           <div class="info-block">
             <div class="info-label">Consegne</div>
-            <div class="info-val">Tutta Italia entro 24h<br />Ordini entro le 18:00</div>
+            <!-- Diceva "Tutta Italia entro 24h" e "Ordini entro le
+                 18:00", e nessuna delle due era vera: si consegna in tre
+                 regioni, e gli ordini su WhatsApp si prendono fino alle
+                 2 di notte. La seconda in particolare regalava il
+                 vantaggio piu' grosso che abbiamo — chi legge "entro le
+                 18" pensa di dover ordinare mentre e' ancora in
+                 servizio -->
+            <div class="info-val">Toscana, Liguria ed Emilia-Romagna<br />Ogni giorno, entro le 11</div>
           </div>
         </div>
       </div>
@@ -704,6 +718,11 @@
           <a href="#azienda">Azienda</a>
           <a href="#gallery">Gallery</a>
           <a href="#marina">Marina AI</a>
+          <!-- Il collegamento alla pagina delle domande e' l'UNICO modo
+               che Google ha di arrivarci: una pagina che nessuno linka
+               resta fuori dall'indice anche se sta in mappa, perche' la
+               mappa dice che esiste e i collegamenti dicono che conta -->
+          <a href="domande-frequenti.html">Domande frequenti</a>
         </div>
         <div class="footer-col">
           <p class="footer-col-title">Contatti</p>
@@ -747,7 +766,7 @@
          Stanno in file separati perché li carica anche il banco di
          prova in prove/, e un pezzo usato da due pagine non si copia. -->
     <script src="js/caustiche.js?v=1"></script>
-    <script src="js/pesci.js?v=1"></script>
+    <script src="js/pesci.js?v=4"></script>
     <script src="js/script.js?v=69"></script>
     <!-- Il cursore calamaro: indipendente da tutto il resto, si accende
          al primo movimento vero di un mouse -->
