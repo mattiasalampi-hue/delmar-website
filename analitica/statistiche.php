@@ -364,6 +364,78 @@ function st_occasioni($da, $a, $quante = 12) {
         array($da, $a));
 }
 
+/* I totali di Google del periodo: clic, quante volte siamo comparsi,
+   ogni quante volte ci cliccano, in che posizione stiamo.
+
+   Vengono dalla riga 'totale', non dalla somma delle parole cercate:
+   Google nasconde le ricerche fatte da pochissime persone, quindi
+   sommare le parole darebbe sempre meno clic del vero */
+function st_google($da, $a) {
+    $r = st_uno("SELECT SUM(clic) clic, SUM(impressioni) impressioni,
+                        SUM(posizione * impressioni) / NULLIF(SUM(impressioni), 0) posizione
+                 FROM ricerche_dim WHERE tipo = 'totale' AND giorno BETWEEN ? AND ?",
+                array($da, $a));
+
+    $clic = (int) (isset($r['clic']) ? $r['clic'] : 0);
+    $imp  = (int) (isset($r['impressioni']) ? $r['impressioni'] : 0);
+    return array(
+        'clic' => $clic,
+        'impressioni' => $imp,
+        'posizione' => (float) (isset($r['posizione']) ? $r['posizione'] : 0),
+        'ctr' => $imp ? $clic / $imp * 100 : 0
+    );
+}
+
+/* Serie giornaliera di Google, coi buchi riempiti a zero come
+   st_serie: i giorni mancanti farebbero sembrare continua una curva
+   che non lo e' */
+function st_google_serie($da, $a) {
+    $righe = st_q("SELECT giorno, clic, impressioni FROM ricerche_dim
+                   WHERE tipo = 'totale' AND giorno BETWEEN ? AND ?", array($da, $a));
+    $per = array();
+    foreach ($righe as $r) $per[$r['giorno']] = $r;
+
+    $serie = array();
+    for ($g = $da; $g <= $a; $g = date('Y-m-d', strtotime($g . ' +1 day'))) {
+        $serie[] = array(
+            'giorno' => $g,
+            'clic' => isset($per[$g]) ? (int) $per[$g]['clic'] : 0,
+            'impressioni' => isset($per[$g]) ? (int) $per[$g]['impressioni'] : 0
+        );
+    }
+    return $serie;
+}
+
+function st_google_dim($tipo, $da, $a, $quante = 8) {
+    return st_q('SELECT valore, SUM(clic) clic, SUM(impressioni) impressioni,
+                        SUM(posizione * impressioni) / NULLIF(SUM(impressioni), 0) posizione
+                 FROM ricerche_dim WHERE tipo = ? AND giorno BETWEEN ? AND ? AND valore <> \'\'
+                 GROUP BY valore ORDER BY impressioni DESC LIMIT ' . (int) $quante,
+                array($tipo, $da, $a));
+}
+
+/* Le pagine viste da Google, non dal nostro contatore: sono due cose
+   diverse e vale la pena confrontarle — una pagina con tante
+   impressioni e poche visite ha un titolo che non convince */
+function st_google_pagine($da, $a, $quante = 10) {
+    return st_q('SELECT pagina, SUM(clic) clic, SUM(impressioni) impressioni,
+                        SUM(posizione * impressioni) / NULLIF(SUM(impressioni), 0) posizione
+                 FROM ricerche WHERE giorno BETWEEN ? AND ? AND pagina <> \'\'
+                 GROUP BY pagina ORDER BY clic DESC, impressioni DESC LIMIT ' . (int) $quante,
+                array($da, $a));
+}
+
+function st_sitemap() {
+    $j = an_stato('sitemap');
+    $v = $j ? json_decode($j, true) : array();
+    return is_array($v) ? $v : array();
+}
+
+function st_indicizzazione() {
+    return st_q('SELECT url, stato, motivo, scansione, robots, aggiornato, verdetto
+                 FROM pagine_google ORDER BY url');
+}
+
 /* ── Compattini in fondo ─────────────────────────────────────────── */
 
 function st_dispositivi($da, $a) {

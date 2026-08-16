@@ -109,23 +109,30 @@ function sc_gettone($chiaveFile) {
     return $d['access_token'];
 }
 
-/* Una POST e basta. curl se c'e', altrimenti i flussi: su questo
-   hosting curl c'e', ma un fallback costa sei righe e toglie di mezzo
-   una dipendenza dal fornitore */
+/* Una chiamata HTTP e basta. curl se c'e', altrimenti i flussi: su
+   questo hosting curl c'e', ma un fallback costa sei righe e toglie di
+   mezzo una dipendenza dal fornitore.
+
+   $corpo a null = GET. Serve per l'elenco delle sitemap, che e' l'unica
+   cosa che non si chiede in POST */
 function sc_posta($url, $corpo, $tipo, $gettone = '') {
-    $testate = array('Content-Type: ' . $tipo);
+    $testate = array();
+    if ($corpo !== null) $testate[] = 'Content-Type: ' . $tipo;
     if ($gettone !== '') $testate[] = 'Authorization: Bearer ' . $gettone;
 
     if (function_exists('curl_init')) {
         $c = curl_init($url);
-        curl_setopt_array($c, array(
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $corpo,
+        $opt = array(
             CURLOPT_HTTPHEADER => $testate,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 20,
             CURLOPT_CONNECTTIMEOUT => 8
-        ));
+        );
+        if ($corpo !== null) {
+            $opt[CURLOPT_POST] = true;
+            $opt[CURLOPT_POSTFIELDS] = $corpo;
+        }
+        curl_setopt_array($c, $opt);
         $r = curl_exec($c);
         $err = curl_error($c);
         curl_close($c);
@@ -134,15 +141,43 @@ function sc_posta($url, $corpo, $tipo, $gettone = '') {
     }
 
     $ctx = stream_context_create(array('http' => array(
-        'method' => 'POST',
+        'method' => $corpo === null ? 'GET' : 'POST',
         'header' => implode("\r\n", $testate),
-        'content' => $corpo,
+        'content' => $corpo === null ? '' : $corpo,
         'timeout' => 20,
         'ignore_errors' => true
     )));
     $r = @file_get_contents($url, false, $ctx);
     if ($r === false) throw new Exception('rete: chiamata fallita');
     return $r;
+}
+
+/* Chiede una fetta di searchAnalytics e restituisce le righe.
+   Impaginata: Google ne da' al massimo 25000 per volta, e su sedici
+   mesi di storico una parola sola puo' superarle */
+function sc_interroga($url, $gettone, $dimensioni, $inizio, $fine) {
+    $tutte = array();
+    $salto = 0;
+    do {
+        $r = sc_posta($url, json_encode(array(
+            'startDate'  => $inizio,
+            'endDate'    => $fine,
+            'dimensions' => $dimensioni,
+            'rowLimit'   => 5000,
+            'startRow'   => $salto,
+            'type'       => 'web'
+        )), 'application/json', $gettone);
+
+        $d = json_decode($r, true);
+        if (isset($d['error'])) {
+            throw new Exception(isset($d['error']['message']) ? $d['error']['message'] : 'errore da Google');
+        }
+        $righe = isset($d['rows']) ? $d['rows'] : array();
+        foreach ($righe as $x) $tutte[] = $x;
+        $salto += 5000;
+    } while (count($righe) === 5000 && $salto < 50000);
+
+    return $tutte;
 }
 
 /* ── La sincronizzazione ─────────────────────────────────────────── */
@@ -181,44 +216,71 @@ function sc_sincronizza($forza = false) {
         $url = 'https://searchconsole.googleapis.com/webmasters/v3/sites/' . $sito . '/searchAnalytics/query';
 
         $db = an_db();
+        $prese = 0;
+
+        /* 1. Parola cercata x pagina di arrivo — il dettaglio fine */
+        $righe = sc_interroga($url, $gettone, array('date', 'query', 'page'), $inizio, $fine);
         $ins = $db->prepare('INSERT OR REPLACE INTO ricerche
             (giorno, chiave, pagina, clic, impressioni, posizione) VALUES (?, ?, ?, ?, ?, ?)');
+        $db->beginTransaction();
+        foreach ($righe as $x) {
+            $ins->execute(array(
+                $x['keys'][0],
+                mb_substr($x['keys'][1], 0, 200),
+                mb_substr($x['keys'][2], 0, 200),
+                (int) $x['clicks'], (int) $x['impressions'], (float) $x['position']
+            ));
+        }
+        $db->commit();
+        $prese += count($righe);
 
-        $prese = 0;
-        $salto = 0;
-        do {
-            $r = sc_posta($url, json_encode(array(
-                'startDate'  => $inizio,
-                'endDate'    => $fine,
-                'dimensions' => array('date', 'query', 'page'),
-                'rowLimit'   => 5000,
-                'startRow'   => $salto,
-                'type'       => 'web'
-            )), 'application/json', $gettone);
+        /* 2. Le altre dimensioni, una interrogazione ciascuna.
 
-            $d = json_decode($r, true);
-            if (isset($d['error'])) {
-                throw new Exception(isset($d['error']['message']) ? $d['error']['message'] : 'errore da Google');
+           I totali del giorno si chiedono a parte e NON si sommano
+           dalle righe sopra: Google nasconde le parole cercate da
+           pochissime persone (per non far risalire a chi ha cercato),
+           quindi la somma delle query e' sempre piu' bassa del vero.
+           Sommandole, il grafico direbbe meno clic di quanti ce ne
+           sono stati davvero. */
+        $dim = array(
+            'totale'      => array('date'),
+            'paese'       => array('date', 'country'),
+            'dispositivo' => array('date', 'device'),
+            'aspetto'     => array('date', 'searchAppearance')
+        );
+        $insD = $db->prepare('INSERT OR REPLACE INTO ricerche_dim
+            (giorno, tipo, valore, clic, impressioni, posizione) VALUES (?, ?, ?, ?, ?, ?)');
+
+        foreach ($dim as $tipo => $chiavi) {
+            /* searchAppearance non si puo' chiedere insieme ad altro su
+               alcune proprieta': se rifiuta, si salta quella e basta,
+               non si butta via tutto il resto */
+            try {
+                $righe = sc_interroga($url, $gettone, $chiavi, $inizio, $fine);
+            } catch (Exception $e) {
+                continue;
             }
-            $righe = isset($d['rows']) ? $d['rows'] : array();
-
             $db->beginTransaction();
             foreach ($righe as $x) {
-                $ins->execute(array(
-                    $x['keys'][0],
-                    mb_substr($x['keys'][1], 0, 200),
-                    mb_substr($x['keys'][2], 0, 200),
-                    (int) $x['clicks'],
-                    (int) $x['impressions'],
-                    (float) $x['position']
+                $insD->execute(array(
+                    $x['keys'][0], $tipo,
+                    isset($x['keys'][1]) ? mb_substr($x['keys'][1], 0, 60) : '',
+                    (int) $x['clicks'], (int) $x['impressions'], (float) $x['position']
                 ));
             }
             $db->commit();
-
             $prese += count($righe);
-            $salto += 5000;
-            /* Meno di una pagina piena vuol dire che sono finite */
-        } while (count($righe) === 5000 && $salto < 50000);
+        }
+
+        /* 3. Sitemap e indicizzazione: non sono statistiche, sono lo
+           stato di salute. Se falliscono non devono portarsi dietro i
+           numeri appena scaricati, quindi stanno dentro un try loro */
+        try { sc_sitemap($sito, $gettone); } catch (Exception $e) {
+            an_stato('sitemap_errore', mb_substr($e->getMessage(), 0, 200));
+        }
+        try { sc_indicizzazione($cfg['sito'], $gettone); } catch (Exception $e) {
+            an_stato('indice_errore', mb_substr($e->getMessage(), 0, 200));
+        }
 
         an_stato('ricerche_aggiornate', (string) time());
         an_stato('ricerche_errore', '');
@@ -236,4 +298,86 @@ function sc_sincronizza($forza = false) {
         flock($fp, LOCK_UN);
         fclose($fp);
     }
+}
+
+/* ── Sitemap ─────────────────────────────────────────────────────── */
+
+/* Quante pagine Google dice di aver trovato nella sitemap e quando
+   l'ha letta l'ultima volta. E' il controllo che si fa per primo
+   quando una pagina nuova non compare: se la sitemap non viene letta
+   da tre settimane, il problema non sono le parole chiave */
+function sc_sitemap($sitoCodificato, $gettone) {
+    $r = sc_posta('https://searchconsole.googleapis.com/webmasters/v3/sites/'
+        . $sitoCodificato . '/sitemaps', null, '', $gettone);
+    $d = json_decode($r, true);
+    if (isset($d['error'])) {
+        throw new Exception(isset($d['error']['message']) ? $d['error']['message'] : 'errore sitemap');
+    }
+
+    $out = array();
+    foreach (isset($d['sitemap']) ? $d['sitemap'] : array() as $s) {
+        $inviate = 0;
+        $indicizzate = 0;
+        foreach (isset($s['contents']) ? $s['contents'] : array() as $c) {
+            $inviate += (int) (isset($c['submitted']) ? $c['submitted'] : 0);
+            $indicizzate += (int) (isset($c['indexed']) ? $c['indexed'] : 0);
+        }
+        $out[] = array(
+            'percorso'  => isset($s['path']) ? $s['path'] : '',
+            'letta'     => isset($s['lastDownloaded']) ? $s['lastDownloaded'] : '',
+            'errori'    => (int) (isset($s['errors']) ? $s['errors'] : 0),
+            'avvisi'    => (int) (isset($s['warnings']) ? $s['warnings'] : 0),
+            'inviate'   => $inviate,
+            'indicizzate' => $indicizzate
+        );
+    }
+    an_stato('sitemap', json_encode($out));
+    an_stato('sitemap_errore', '');
+    return $out;
+}
+
+/* ── Indicizzazione ──────────────────────────────────────────────── */
+
+/* "Google questa pagina ce l'ha?" — la domanda che viene prima di
+   tutte le altre: se la risposta e' no, nessuna statistica sulle
+   ricerche ha senso.
+
+   Si controllano solo le pagine vere del sito, che sono tre: l'API di
+   ispezione ha una quota di 2000 al giorno ma va a una richiesta per
+   indirizzo, e chiederle a raffica non servirebbe a niente.
+
+   RICHIEDE PERMESSO "COMPLETA" sulla proprieta': con "Limitata" Google
+   risponde 403. Se succede, il messaggio finisce nella riga di stato e
+   il pannello lo dice, invece di lasciare il riquadro vuoto senza
+   spiegazione. */
+function sc_indicizzazione($sito, $gettone) {
+    $pagine = array($sito, $sito . 'privacy.html');
+
+    $db = an_db();
+    $ins = $db->prepare('INSERT OR REPLACE INTO pagine_google
+        (url, stato, motivo, scansione, robots, aggiornato, verdetto)
+        VALUES (?, ?, ?, ?, ?, ?, ?)');
+
+    foreach ($pagine as $u) {
+        $r = sc_posta('https://searchconsole.googleapis.com/v1/urlInspection/index:inspect',
+            json_encode(array('inspectionUrl' => $u, 'siteUrl' => $sito, 'languageCode' => 'it')),
+            'application/json', $gettone);
+        $d = json_decode($r, true);
+        if (isset($d['error'])) {
+            throw new Exception(isset($d['error']['message']) ? $d['error']['message'] : 'errore ispezione');
+        }
+        $i = isset($d['inspectionResult']['indexStatusResult'])
+            ? $d['inspectionResult']['indexStatusResult'] : array();
+
+        $ins->execute(array(
+            $u,
+            isset($i['coverageState']) ? mb_substr($i['coverageState'], 0, 120) : '',
+            isset($i['indexingState']) ? mb_substr($i['indexingState'], 0, 60) : '',
+            isset($i['lastCrawlTime']) ? $i['lastCrawlTime'] : '',
+            isset($i['robotsTxtState']) ? $i['robotsTxtState'] : '',
+            time(),
+            isset($i['verdict']) ? $i['verdict'] : ''
+        ));
+    }
+    an_stato('indice_errore', '');
 }

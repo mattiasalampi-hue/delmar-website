@@ -121,8 +121,47 @@ if ($dentro) {
     $D['azioni']    = st_azioni($per['da'], $per['a']);
     $D['ricerche']  = st_ricerche($per['da'], $per['a']);
     $D['occasioni'] = st_occasioni($per['da'], $per['a']);
+    $D['g_tot']     = st_google($per['da'], $per['a']);
+    $D['g_prec']    = st_google($per['da_prec'], $per['a_prec']);
+    $D['g_serie']   = st_google_serie($per['da'], $per['a']);
+    $D['g_pagine']  = st_google_pagine($per['da'], $per['a']);
+    $D['g_paesi']   = st_google_dim('paese', $per['da'], $per['a']);
+    $D['g_disp']    = st_google_dim('dispositivo', $per['da'], $per['a']);
+    $D['g_aspetto'] = st_google_dim('aspetto', $per['da'], $per['a']);
+    $D['sitemap']   = st_sitemap();
+    $D['indice']    = st_indicizzazione();
     $D['sc_quando'] = an_stato('ricerche_aggiornate');
     $D['sc_errore'] = an_stato('ricerche_errore');
+    $D['sm_errore'] = an_stato('sitemap_errore');
+    $D['ix_errore'] = an_stato('indice_errore');
+}
+
+/* I codici paese di Google sono a tre lettere (ita, deu, fra). In un
+   elenco da leggere di fretta valgono meno del nome scritto: qui ci
+   sono quelli che possono capitare a un ingrosso di pesce in Toscana,
+   per gli altri resta la sigla in maiuscolo */
+function paese($c) {
+    $n = array(
+        'ita' => 'Italia', 'fra' => 'Francia', 'deu' => 'Germania', 'esp' => 'Spagna',
+        'che' => 'Svizzera', 'aut' => 'Austria', 'gbr' => 'Regno Unito', 'usa' => 'Stati Uniti',
+        'nld' => 'Paesi Bassi', 'bel' => 'Belgio', 'prt' => 'Portogallo', 'grc' => 'Grecia',
+        'svn' => 'Slovenia', 'hrv' => 'Croazia', 'rou' => 'Romania', 'pol' => 'Polonia',
+        'alb' => 'Albania', 'mar' => 'Marocco', 'tun' => 'Tunisia', 'chn' => 'Cina',
+        'ind' => 'India', 'bra' => 'Brasile', 'arg' => 'Argentina', 'can' => 'Canada'
+    );
+    $c = strtolower((string) $c);
+    return isset($n[$c]) ? $n[$c] : strtoupper($c);
+}
+
+/* Verde o rosso in base al VERDETTO, che è un codice, non alla
+   descrizione, che arriva tradotta in italiano da Google e cambia
+   parole quando vuole. Il testo si mostra com'è: è già in italiano e
+   già chiaro ("Inviata e indicizzata", "L'URL è sconosciuto a
+   Google") */
+function statoIndice($verdetto) {
+    if ($verdetto === 'PASS') return 'pn-stato-si';
+    if ($verdetto === 'FAIL' || $verdetto === 'PARTIAL') return 'pn-stato-no';
+    return '';
 }
 ?><!doctype html>
 <html lang="it">
@@ -133,7 +172,7 @@ if ($dentro) {
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="assets/favicon.png?v=1" type="image/png" />
     <link rel="stylesheet" href="css/poppins.css?v=1" />
-    <link rel="stylesheet" href="css/pannello.css?v=2" />
+    <link rel="stylesheet" href="css/pannello.css?v=3" />
   </head>
   <body>
 <?php if (!$dentro): ?>
@@ -256,19 +295,78 @@ if ($dentro) {
         </section>
       </div>
 
-      <!-- 4. RICERCHE GOOGLE -->
+      <!-- 4. GOOGLE — tutto quello che Search Console sa dire -->
+      <?php
+        $g = $D['g_tot']; $gp = $D['g_prec'];
+        $gTetto = 1;
+        foreach ($D['g_serie'] as $r) { if ($r['impressioni'] > $gTetto) $gTetto = $r['impressioni']; }
+      ?>
+      <section class="pn-riquadro pn-google">
+        <h2>Google</h2>
+        <p class="pn-sotto">
+          <?php if ($D['sc_quando']): ?>
+            Da Search Console, scaricate il <?= e(date('d/m alle H:i', (int) $D['sc_quando'])) ?>
+            · <a href="?g=<?= $giorni ?>&amp;risincronizza=1">riscarica adesso</a>
+            · i dati di Google arrivano con due o tre giorni di ritardo
+          <?php else: ?>
+            Search Console non è ancora collegata: mancano
+            <code>search_console_chiave</code> e <code>search_console_sito</code>
+            in <code>config.php</code>.
+          <?php endif; ?>
+        </p>
+
+        <?php if ($D['sc_errore']): ?>
+          <p class="pn-avviso">Ultimo scarico fallito: <?= e($D['sc_errore']) ?></p>
+        <?php endif; ?>
+
+        <?php if (!$g['impressioni'] && !$g['clic']): ?>
+          <p class="pn-vuoto">
+            Nessun dato per questo periodo. Su una proprietà appena verificata è
+            normale: Search Console elabora i primi numeri in un giorno o due.
+          </p>
+        <?php else: ?>
+
+        <div class="pn-numeri pn-numeri-fitti">
+          <div class="pn-numero">
+            <span class="pn-n"><?= n($g['clic']) ?></span>
+            <span class="pn-e">clic da Google <?= delta(st_variazione($g['clic'], $gp['clic'])) ?></span>
+          </div>
+          <div class="pn-numero">
+            <span class="pn-n"><?= n($g['impressioni']) ?></span>
+            <span class="pn-e">volte che siamo comparsi <?= delta(st_variazione($g['impressioni'], $gp['impressioni'])) ?></span>
+          </div>
+          <div class="pn-numero">
+            <span class="pn-n"><?= dec($g['ctr'], 1) ?>%</span>
+            <span class="pn-e">di chi ci vede ci clicca <?= delta(st_variazione($g['ctr'], $gp['ctr'])) ?></span>
+          </div>
+          <div class="pn-numero">
+            <span class="pn-n"><?= dec($g['posizione'], 1) ?></span>
+            <span class="pn-e">posizione media <?= delta(st_variazione($g['posizione'], $gp['posizione']), -1) ?></span>
+          </div>
+        </div>
+
+        <p class="pn-sotto pn-sotto-stacco">
+          Colonna chiara: quante volte siamo comparsi. Colonna piena: i clic.
+        </p>
+        <div class="pn-grafico">
+          <?php foreach ($D['g_serie'] as $r): ?>
+            <div class="pn-colonna"
+                 title="<?= e(date('d/m', strtotime($r['giorno']))) ?> — <?= n($r['clic']) ?> clic su <?= n($r['impressioni']) ?> comparse">
+              <div class="pn-barra pn-barra-eco" style="height: <?= max(1, round($r['impressioni'] / $gTetto * 100)) ?>%"></div>
+              <div class="pn-barra pn-barra-clic" style="height: <?= max(0, round($r['clic'] / $gTetto * 100)) ?>%"></div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <div class="pn-asse">
+          <span><?= e(date('d/m', strtotime($D['g_serie'][0]['giorno']))) ?></span>
+          <span><?= e(date('d/m', strtotime($D['g_serie'][count($D['g_serie']) - 1]['giorno']))) ?></span>
+        </div>
+        <?php endif; ?>
+      </section>
+
       <div class="pn-griglia">
         <section class="pn-riquadro">
           <h2>Ricerche che portano clic</h2>
-          <p class="pn-sotto">
-            <?php if ($D['sc_quando']): ?>
-              Da Search Console, aggiornate il <?= e(date('d/m alle H:i', (int) $D['sc_quando'])) ?>
-              · <a href="?g=<?= $giorni ?>&amp;risincronizza=1">riscarica adesso</a>
-            <?php else: ?>
-              Search Console non è ancora collegata: manca la chiave dell'account
-              di servizio in <code>config.php</code>.
-            <?php endif; ?>
-          </p>
           <?php foreach ($D['ricerche'] as $r): ?>
             <div class="pn-riga pn-riga-piatta">
               <span class="pn-et"><?= e($r['chiave']) ?></span>
@@ -276,9 +374,6 @@ if ($dentro) {
             </div>
           <?php endforeach; ?>
           <?php if (!$D['ricerche']): ?><p class="pn-vuoto">—</p><?php endif; ?>
-          <?php if ($D['sc_errore']): ?>
-            <p class="pn-avviso">Ultimo aggiornamento fallito: <?= e($D['sc_errore']) ?></p>
-          <?php endif; ?>
         </section>
 
         <section class="pn-riquadro">
@@ -291,6 +386,93 @@ if ($dentro) {
             </div>
           <?php endforeach; ?>
           <?php if (!$D['occasioni']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+        </section>
+
+        <section class="pn-riquadro">
+          <h2>Pagine nei risultati</h2>
+          <p class="pn-sotto">Tante comparse e pochi clic = il titolo non convince</p>
+          <?php foreach ($D['g_pagine'] as $r):
+              $ctr = $r['impressioni'] ? $r['clic'] / $r['impressioni'] * 100 : 0; ?>
+            <div class="pn-riga pn-riga-piatta">
+              <span class="pn-et"><?= e(preg_replace('#^https?://[^/]+#', '', $r['pagina'])) ?>
+                <small><?= n($r['impressioni']) ?> comparse · <?= dec($ctr, 1) ?>%</small></span>
+              <span class="pn-val"><?= n($r['clic']) ?></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['g_pagine']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+        </section>
+
+        <section class="pn-riquadro">
+          <h2>Paesi</h2>
+          <?php foreach ($D['g_paesi'] as $r): $q = $g['impressioni'] ? $r['impressioni'] / $g['impressioni'] * 100 : 0; ?>
+            <div class="pn-riga" style="--q: <?= round($q) ?>%">
+              <span class="pn-et"><?= e(paese($r['valore'])) ?>
+                <small><?= n($r['impressioni']) ?> comparse</small></span>
+              <span class="pn-val"><?= n($r['clic']) ?><small> clic</small></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['g_paesi']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+        </section>
+
+        <section class="pn-riquadro">
+          <h2>Da che dispositivo cercano</h2>
+          <p class="pn-sotto">Google, non il nostro contatore: qui c'è anche chi non è mai entrato</p>
+          <?php foreach ($D['g_disp'] as $r): $q = $g['impressioni'] ? $r['impressioni'] / $g['impressioni'] * 100 : 0; ?>
+            <div class="pn-riga" style="--q: <?= round($q) ?>%">
+              <span class="pn-et"><?= e(strtolower($r['valore']) === 'mobile' ? 'telefono'
+                    : (strtolower($r['valore']) === 'desktop' ? 'scrivania'
+                    : (strtolower($r['valore']) === 'tablet' ? 'tavoletta' : $r['valore']))) ?></span>
+              <span class="pn-val"><?= dec($q, 0) ?>%<small> · <?= n($r['clic']) ?> clic</small></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['g_disp']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+        </section>
+
+        <?php if ($D['g_aspetto']): ?>
+        <section class="pn-riquadro">
+          <h2>Come compariamo</h2>
+          <p class="pn-sotto">Risultato normale, scheda, recensioni…</p>
+          <?php foreach ($D['g_aspetto'] as $r): ?>
+            <div class="pn-riga pn-riga-piatta">
+              <span class="pn-et"><?= e($r['valore']) ?></span>
+              <span class="pn-val"><?= n($r['clic']) ?><small> clic / <?= n($r['impressioni']) ?></small></span>
+            </div>
+          <?php endforeach; ?>
+        </section>
+        <?php endif; ?>
+
+        <section class="pn-riquadro">
+          <h2>Google ci vede?</h2>
+          <p class="pn-sotto">Se una pagina non è indicizzata, nessuna statistica sulle ricerche la riguarda</p>
+          <?php foreach ($D['indice'] as $r): ?>
+            <div class="pn-riga pn-riga-piatta">
+              <span class="pn-et"><?= e(preg_replace('#^https?://[^/]+/?#', '/', $r['url'])) ?>
+                <?php if ($r['scansione']): ?>
+                  <small>vista il <?= e(date('d/m/Y', strtotime($r['scansione']))) ?></small>
+                <?php endif; ?>
+              </span>
+              <span class="pn-val pn-stato <?= statoIndice($r['verdetto']) ?>">
+                <?= e($r['stato'] !== '' ? $r['stato'] : '—') ?>
+              </span>
+            </div>
+          <?php endforeach; ?>
+          <?php foreach ($D['sitemap'] as $s): ?>
+            <div class="pn-riga pn-riga-piatta">
+              <span class="pn-et"><?= e(preg_replace('#^https?://[^/]+#', '', $s['percorso'])) ?>
+                <small><?= $s['letta'] ? 'letta il ' . e(date('d/m/Y', strtotime($s['letta']))) : 'mai letta' ?></small>
+              </span>
+              <span class="pn-val"><?= n($s['inviate']) ?><small> indirizzi<?= $s['errori'] ? ' · ' . n($s['errori']) . ' errori' : '' ?></small></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['indice'] && !$D['sitemap']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+          <?php if ($D['ix_errore'] || $D['sm_errore']): ?>
+            <p class="pn-avviso">
+              <?= e($D['ix_errore'] ? $D['ix_errore'] : $D['sm_errore']) ?>
+              <br />Serve il permesso <strong>Completa</strong> in Search Console: l'account
+              di servizio ha <strong>Limitata</strong>, che basta per le ricerche ma non per
+              l'ispezione degli indirizzi.
+            </p>
+          <?php endif; ?>
         </section>
       </div>
 

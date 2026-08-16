@@ -470,6 +470,62 @@ body {
   pointer-events: none;
 }
 
+/* Il grafico di Google ha due misure sulla stessa colonna: quante
+   volte siamo comparsi e quanti hanno cliccato. Sovrapposte e non
+   affiancate, perché una è sempre un sottoinsieme dell'altra: così la
+   parte chiara che avanza È la quota di chi ci ha visti e tirato
+   dritto */
+.pn-barra-eco {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: rgba(21, 28, 100, .16);
+}
+
+.pn-barra-clic {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Google ───────────────────────────────────
+   Un bordo suo perché è l'unico blocco che non viene dal nostro
+   contatore: i numeri hanno un'altra fonte, un altro ritardo e un
+   altro significato, e confonderli sarebbe il modo più facile di
+   leggere male entrambi */
+.pn-google {
+  border-left: 3px solid rgba(21, 28, 100, .35);
+}
+
+.pn-numeri-fitti {
+  margin: .9rem 0 .4rem;
+}
+
+.pn-numeri-fitti .pn-numero {
+  background: rgba(21, 28, 100, .04);
+  padding: .9rem 1rem;
+}
+
+.pn-numeri-fitti .pn-n {
+  font-size: 1.55rem;
+}
+
+.pn-sotto-stacco {
+  margin-top: 1.2rem;
+}
+
+.pn-stato {
+  font-size: .74rem;
+  font-weight: 400;
+  text-align: right;
+}
+
+.pn-stato-si {
+  color: #1c7a52;
+}
+
+.pn-stato-no {
+  color: var(--pn-cor);
+}
+
 .pn-barra {
   width: 100%;
   background: var(--pn-cor);

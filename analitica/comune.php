@@ -134,6 +134,45 @@ function an_db() {
     )');
     $db->exec('CREATE INDEX IF NOT EXISTS i_ricerche_giorno ON ricerche(giorno)');
 
+    /* Le altre dimensioni di Search Console, tutte nella stessa
+       tabella con una colonna "tipo" invece di quattro tabelle uguali:
+       cambiano solo l'etichetta, i numeri sono sempre gli stessi tre.
+       tipo = totale (valore vuoto, i totali del giorno) | paese |
+       dispositivo | aspetto (come compare il risultato: normale,
+       recensioni, FAQ...) */
+    $db->exec('CREATE TABLE IF NOT EXISTS ricerche_dim (
+        giorno TEXT NOT NULL,
+        tipo TEXT NOT NULL,
+        valore TEXT NOT NULL DEFAULT \'\',
+        clic INTEGER NOT NULL DEFAULT 0,
+        impressioni INTEGER NOT NULL DEFAULT 0,
+        posizione REAL NOT NULL DEFAULT 0,
+        PRIMARY KEY (giorno, tipo, valore)
+    )');
+    $db->exec('CREATE INDEX IF NOT EXISTS i_dim_tipo ON ricerche_dim(tipo, giorno)');
+
+    /* Stato di indicizzazione, una riga per pagina. Non e' una serie
+       storica: e' una fotografia di adesso, riscritta a ogni giro.
+       Serve a rispondere alla domanda che viene prima di tutte le
+       altre — "Google questa pagina ce l'ha?" — perche' se la risposta
+       e' no, nessuna statistica sulle ricerche ha senso */
+    $db->exec('CREATE TABLE IF NOT EXISTS pagine_google (
+        url TEXT PRIMARY KEY,
+        stato TEXT,
+        motivo TEXT,
+        scansione TEXT,
+        robots TEXT,
+        aggiornato INTEGER,
+        verdetto TEXT
+    )');
+    /* verdetto: PASS / PARTIAL / FAIL / NEUTRAL. Serve perche' "stato"
+       arriva TRADOTTO — chiediamo l'ispezione in italiano, e Google
+       risponde "Inviata e indicizzata" invece di "Submitted and
+       indexed". Colorare di verde o di rosso confrontando stringhe
+       italiane vorrebbe dire rompersi il giorno che Google cambia una
+       parola; il verdetto invece e' un codice e non cambia */
+    an_colonna($db, 'pagine_google', 'verdetto', 'TEXT');
+
     /* Sacchetto per le cose che il codice deve ricordarsi fra una
        chiamata e l'altra: quando ha sincronizzato l'ultima volta, e
        simili */
@@ -197,6 +236,7 @@ function an_pulisci() {
     $db->prepare('DELETE FROM visite WHERE giorno < ?')->execute(array($limite));
     $db->prepare('DELETE FROM eventi WHERE giorno < ?')->execute(array($limite));
     $db->prepare('DELETE FROM ricerche WHERE giorno < ?')->execute(array($limite));
+    $db->prepare('DELETE FROM ricerche_dim WHERE giorno < ?')->execute(array($limite));
 }
 
 /* Il sale del giorno. Si crea la prima volta che serve e si buttano
