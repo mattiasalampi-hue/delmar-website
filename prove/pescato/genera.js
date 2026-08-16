@@ -8,61 +8,10 @@
 */
 const fs = require('fs');
 const path = require('path');
+const { WA, testa, piede } = require('./comune');
 
 const qui = __dirname;
 const specie = JSON.parse(fs.readFileSync(path.join(qui, 'specie.json'), 'utf8'));
-
-const intestazione = (titolo) => `<!doctype html>
-<html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${titolo} all'ingrosso — DelMar</title>
-    <meta name="robots" content="noindex" />
-    <link rel="stylesheet" href="../../css/poppins.css?v=1" />
-    <link rel="stylesheet" href="../../css/style.css?v=101" />
-    <link rel="stylesheet" href="css/d.css?v=1" />
-    <link rel="stylesheet" href="css/scheda.css?v=1" />
-  </head>
-  <body class="pr-pagina">
-    <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
-      <symbol id="ico-wa" viewBox="0 0 24 24">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-      </symbol>
-    </svg>
-
-    <header id="hdr">
-      <a href="../../index.html"><img src="../../assets/logo.png?v=2" alt="DelMar" class="logo" /></a>
-      <nav id="main-nav">
-        <span class="nav-qui" aria-current="page">Prodotti</span>
-        <a href="../../index.html#processo">Come Lavoriamo</a>
-        <a href="../../index.html#azienda">Azienda</a>
-        <a href="../../index.html#marina">Marina AI</a>
-        <a href="../../domande-frequenti.html">Domande</a>
-        <a href="../../index.html#contatti">Contatti</a>
-        <a href="https://wa.me/393356654017?text=Ciao%20Marina!" target="_blank" rel="noopener noreferrer" class="nav-wa">Ordina ora</a>
-      </nav>
-      <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
-    </header>
-`;
-
-const piede = `
-    <footer class="pr-piede">
-      <div class="pr-piede-in">
-        <img src="../../assets/logo.png?v=2" alt="DelMar" class="pr-piede-logo" />
-        <p class="pr-piede-dati">
-          LE DELIZIE DEL MARE S.R.L. — Via Dorsale 13, 54100 Massa (MS)<br />
-          P.IVA 01081190454 — <a href="mailto:info@del-mar.it">info@del-mar.it</a>
-        </p>
-      </div>
-    </footer>
-
-    <script src="js/d.js?v=1"></script>
-    <script src="js/nastro.js?v=1"></script>
-    <script src="../../js/cursore.js?v=2"></script>
-  </body>
-</html>
-`;
 
 /* Il nastro porta TUTTE le altre specie del giorno, non una selezione: chi e'
    arrivato in fondo sta guardando il banco e vuole vedere cos'altro c'e'. */
@@ -100,7 +49,7 @@ function scheda(s) {
   const paragrafi = s.descrizione.map((p) => `          <p>${p}</p>`).join('\n');
   const messaggio = encodeURIComponent(`Ciao, vorrei informazioni su ${s.nome.toLowerCase()} di oggi`);
 
-  return `${intestazione(s.nome)}
+  return `${testa(s.nome + ' del giorno', { css: ['scheda.css'], simboli: ['wa'] })}
     <!-- L'uscita resta appesa mentre si scorre: una scheda e' lunga, e la via
          di ritorno non deve stare solo in cima dove nessuno torna a cercarla -->
     <div class="sc-briciole">
@@ -142,7 +91,7 @@ ${paragrafi}
         </dl>
 
         <div class="sc-azione">
-          <a href="https://wa.me/393356654017?text=${messaggio}" target="_blank" rel="noopener noreferrer" class="pr-btn pr-btn-wa">
+          <a href="https://wa.me/${WA}?text=${messaggio}" target="_blank" rel="noopener noreferrer" class="pr-btn pr-btn-wa">
             <svg aria-hidden="true"><use href="#ico-wa"/></svg>
             Chiedi prezzo e disponibilità
           </a>
@@ -155,7 +104,7 @@ ${paragrafi}
     </main>
 
 ${nastro(s)}
-${piede}`;
+${piede(['js/d.js?v=1', 'js/nastro.js?v=1', '../../js/cursore.js?v=2'])}`;
 }
 
 /* La vetrina: le card diventano tutte collegamenti alle rispettive schede */

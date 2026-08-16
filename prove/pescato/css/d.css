@@ -423,6 +423,34 @@
   color: var(--text-mid);
 }
 
+/* I collegamenti di servizio, sotto la carta d'identita' dell'azienda. La
+   privacy deve stare su ogni pagina; il catalogo e le domande sono le due
+   uscite utili a chi e' arrivato in fondo e non ha ancora scritto */
+.pr-piede-link {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem 1.6rem;
+  justify-content: center;
+  margin: 1.4rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+  font-size: .74rem;
+  font-weight: 300;
+}
+
+.pr-piede-link a {
+  color: var(--text-dim);
+  border-bottom: 1px solid transparent;
+  transition: color .3s, border-color .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pr-piede-link a:hover {
+    color: var(--wa);
+    border-bottom-color: var(--wa);
+  }
+}
+
 /* ─ Telefono ────────────────────────────────*/
 @media (max-width: 900px) {
   .pr-hero {

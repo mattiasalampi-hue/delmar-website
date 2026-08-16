@@ -134,7 +134,18 @@
              come una parte del sito. Sta dopo Marina AI perche' li'
              chiude il gruppo di chi sta ancora decidendo, prima di
              Contatti che e' l'ultimo passo -->
-        <a href="#prodotti">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
+        <!-- "Prodotti" porta al CATALOGO, non piu' alla sezione qui sotto.
+             Quella sezione non e' un elenco di prodotti: sono tre argomenti
+             ("dal mare di casa", "vivi in vasca", "la scorta la teniamo
+             noi"), e chi clicca una voce di menu chiamata Prodotti si
+             aspetta di vedere dei prodotti. Ai tre argomenti ci si arriva
+             scorrendo, che e' il loro mestiere.
+             ATTENZIONE: finche' il catalogo sta in prove/ questo
+             collegamento vale solo su GitHub Pages. Prima di pubblicare
+             index.html su del-mar.it il catalogo va spostato nella sua
+             cartella definitiva e questi indirizzi vanno rifatti.
+             (Mattias, 2026-08-17) -->
+        <a href="prove/pescato/prodotti.html">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
         <a href="#gallery">Gallery</a> <a href="#marina">Marina AI</a>
         <a href="domande-frequenti.html">Domande</a> <a href="#contatti">Contatti</a>
         <a href="https://wa.me/393356654017?text=Ciao%20Marina!" target="_blank" rel="noopener noreferrer" class="nav-wa">Ordina ora</a>
@@ -213,7 +224,13 @@
             Ogni notte selezioniamo solo il meglio: dai pescherecci dell'Alto Tirreno, dai mercati del Mediterraneo e
             del Nord Europa e, via aerea, dai mari di tutto il mondo. Tutto in un'unica consegna.
           </p>
-          <a href="#contatti" class="prod-link">Richiedi il listino prezzi<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
+          <!-- LE TRE STRISCE PORTANO AL CATALOGO, non piu' ai contatti.
+               Mandavano tutte e tre a "#contatti": si chiedeva a un
+               ristoratore di scrivere prima di avergli fatto vedere una sola
+               cassa di pesce. Ora ogni striscia porta dove porta il suo
+               argomento, e la richiesta parte dalla scheda del prodotto —
+               gia' con dentro il nome di quello che gli serve. -->
+          <a href="prove/pescato/d-sito.html" class="prod-link">Guarda il pescato di stanotte<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
       </div>
       <div class="prod-strip rev">
@@ -225,7 +242,7 @@
             vasche e arrivano vivi nella tua cucina senza giorni di anticipo; tutto il resto lo prendiamo su
             ordinazione, qualunque sia la richiesta.
           </p>
-          <a href="#contatti" class="prod-link">Richiedi disponibilità<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
+          <a href="prove/pescato/catalogo-crostacei.html" class="prod-link">Vedi crostacei e molluschi<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
       </div>
       <div class="prod-strip">
@@ -239,7 +256,7 @@
             nostro stabilimento.<br />Niente cella piena e capitale fermo: ordini ogni giorno il quantitativo esatto
             che ti serve, e lo trovi sempre.
           </p>
-          <a href="#contatti" class="prod-link">Scopri il catalogo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
+          <a href="prove/pescato/prodotti.html" class="prod-link">Sfoglia tutto il catalogo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
       </div>
     </section>
@@ -711,9 +728,29 @@
             <a href="https://wa.me/393356654017" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           </div>
         </div>
+        <!-- IL CATALOGO HA UNA COLONNA SUA, con tutte e otto le categorie.
+             Vale lo stesso ragionamento scritto sotto per le domande
+             frequenti, moltiplicato per otto: sono otto pagine che nessuno
+             linka, e una pagina che nessuno linka resta fuori dall'indice
+             anche se sta in mappa. Il piede e' l'unico posto che compare su
+             OGNI pagina del sito, quindi e' da qui che Google impara che
+             esistono e quanto contano.
+             Gli indirizzi puntano a prove/ e vanno rifatti quando il
+             catalogo si sposta nella cartella definitiva. -->
+        <div class="footer-col">
+          <p class="footer-col-title">Catalogo</p>
+          <a href="prove/pescato/d-sito.html">Pescato dell'Arcipelago Toscano</a>
+          <a href="prove/pescato/catalogo-fresco.html">Pesce fresco</a>
+          <a href="prove/pescato/catalogo-crostacei.html">Crostacei e molluschi</a>
+          <a href="prove/pescato/catalogo-cefalopodi.html">Calamaro, polpo e seppia</a>
+          <a href="prove/pescato/catalogo-crudo.html">Tonno e crudi</a>
+          <a href="prove/pescato/catalogo-filetti.html">Filetti e affumicati</a>
+          <a href="prove/pescato/catalogo-cucina.html">Pasta, contorni e basi</a>
+          <a href="prove/pescato/catalogo-dessert.html">Dessert monoporzione</a>
+        </div>
         <div class="footer-col">
           <p class="footer-col-title">Naviga</p>
-          <a href="#prodotti">Prodotti</a>
+          <a href="prove/pescato/prodotti.html">Catalogo prodotti</a>
           <a href="#processo">Come Lavoriamo</a>
           <a href="#azienda">Azienda</a>
           <a href="#gallery">Gallery</a>
