@@ -1,0 +1,411 @@
+/* LA SCHEDA DI UNA SPECIE.
+   Due colonne: la fotografia grande a sinistra, che resta appesa mentre si
+   legge, e il testo a destra. Il pesce e' la ragione per cui si e' arrivati
+   qui, e chi legge la descrizione non deve tornare in su per riguardarlo. */
+
+/* LA VIA DI RITORNO, appesa sotto l'intestazione.
+   Prima era una briciola grigia in cima alla pagina: si legge come
+   decorazione, e dopo mezzo schermo di scorrimento non c'e' piu'. Una scheda
+   di prodotto si legge fino in fondo, e chi arriva alla fine deve poter
+   tornare al banco senza cercare — o senza usare il tasto del browser, che
+   chi arriva da Google non ha nemmeno. */
+.sc-briciole {
+  position: sticky;
+  top: var(--h-hdr, 4.1rem);
+  z-index: 90;
+  background: rgba(255, 255, 255, .93);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  margin-top: calc(var(--h-hdr, 4.1rem) + .5rem);
+}
+
+.sc-briciole-in {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: .8rem 6%;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+
+/* Freccia + parole, non solo una freccia: "indietro" da solo non dice DOVE si
+   torna, e su una pagina aperta da una ricerca quel dove non e' ovvio */
+.sc-indietro {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .4rem .9rem .4rem .7rem;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: .76rem;
+  color: var(--ink);
+  transition: border-color .3s, color .3s, background .3s;
+}
+
+.sc-indietro svg {
+  width: .85rem;
+  height: .85rem;
+  transition: transform .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sc-indietro:hover {
+    border-color: var(--wa);
+    color: var(--wa);
+    background: rgba(201, 67, 44, .04);
+  }
+
+  .sc-indietro:hover svg {
+    transform: translateX(-2px);
+  }
+}
+
+.sc-qui {
+  font-size: .76rem;
+  color: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+  /* Sul telefono il nome della specie e' gia' nel titolo due centimetri sotto:
+     qui basta la via d'uscita */
+  .sc-qui {
+    display: none;
+  }
+}
+
+.sc-pagina {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2rem 6% 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 3.5rem;
+  align-items: start;
+}
+
+/* ─ La fotografia ───────────────────────── */
+/* Si ferma sotto la barra di ritorno, non sotto l'intestazione: sopra ci sono
+   due strisce appese, e la foto deve incastrarsi sotto la seconda */
+.sc-foto {
+  position: sticky;
+  top: calc(var(--h-hdr, 4.1rem) + 4.3rem);
+}
+
+.sc-foto img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--bg-soft);
+}
+
+/* Stessa scelta della vetrina: senza scatto resta il nome sul blu, non un
+   segnaposto che chiede scusa */
+.sc-foto-vuota {
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--ink);
+}
+
+.sc-foto-vuota span {
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 200;
+  letter-spacing: -.04em;
+  line-height: 1.15;
+  text-align: center;
+  color: rgba(255, 255, 255, .3);
+}
+
+.sc-altro-vuoto {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .8rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--ink);
+}
+
+.sc-altro-vuoto span {
+  font-size: .82rem;
+  font-weight: 300;
+  line-height: 1.25;
+  text-align: center;
+  color: rgba(255, 255, 255, .3);
+}
+
+.sc-didascalia {
+  margin: .7rem 0 0;
+  font-size: .74rem;
+  font-weight: 300;
+  color: var(--text-dim);
+}
+
+/* ─ Il testo ────────────────────────────── */
+/* Lo stato del giorno sta PRIMA del nome: chi arriva da una ricerca vuole
+   sapere prima di tutto se c'e' adesso. Quando manca, la riga diventa grigia
+   e dice quando torna — mai una pagina che tace sulla disponibilita' */
+.sc-stato {
+  display: inline-block;
+  margin: 0 0 1.2rem;
+  padding: .35rem .9rem;
+  border-radius: 2rem;
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.sc-stato-si {
+  background: rgba(27, 122, 82, .12);
+  color: #1b7a52;
+}
+
+.sc-stato-no {
+  background: var(--bg-alt);
+  color: var(--text-dim);
+}
+
+.sc-testo h1 {
+  margin: 0 0 .4rem;
+  font-size: clamp(2rem, 4.4vw, 3.2rem);
+  font-weight: 200;
+  letter-spacing: -.045em;
+  line-height: 1.05;
+  color: var(--ink);
+}
+
+.sc-scientifico {
+  margin: 0 0 2rem;
+  font-size: .82rem;
+  font-weight: 300;
+  color: var(--text-dim);
+}
+
+.sc-scientifico em {
+  font-style: italic;
+}
+
+.sc-descrizione p {
+  margin: 0 0 1.1rem;
+  font-size: .96rem;
+  font-weight: 300;
+  line-height: 1.95;
+  color: var(--text-hi);
+}
+
+/* ─ I dettagli ──────────────────────────── */
+/* A due colonne e con le etichette piccole: sono dati da consultare, non da
+   leggere. Chi vuole sapere la zona FAO la cerca con l'occhio, non legge */
+.sc-dettagli {
+  margin: 2.2rem 0 0;
+  padding: 1.6rem 0 0;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.3rem 1.5rem;
+}
+
+.sc-dettagli dt {
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: .3rem;
+}
+
+.sc-dettagli dd {
+  margin: 0;
+  font-size: .88rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* ─ L'azione ────────────────────────────── */
+.sc-azione {
+  margin-top: 2.4rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--border);
+}
+
+.sc-azione-nota {
+  margin: 1rem 0 0;
+  font-size: .8rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+
+/* ─ Le altre specie ─────────────────────── */
+.sc-altri {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 3rem 6% 5rem;
+  border-top: 1px solid var(--border);
+}
+
+.sc-altri-testa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .8rem;
+  margin-bottom: 1.4rem;
+}
+
+.sc-altri h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: -.025em;
+  color: var(--ink);
+}
+
+.sc-tutti {
+  font-size: .8rem;
+  color: var(--wa);
+  white-space: nowrap;
+}
+
+/* TUTTO il pescato di oggi, in un nastro che scorre invece di una griglia
+   tagliata a quattro. Le specie sono una decina e cambiano ogni notte:
+   sceglierne quattro vorrebbe dire nascondere le altre proprio a chi sta
+   guardando il banco. In orizzontale ci stanno tutte, e sul telefono
+   scorrere di lato e' il gesto piu' naturale che esista. */
+/* Il guscio serve solo alle frecce, che stanno sopra il nastro e devono
+   ancorarsi a qualcosa che non scorre */
+.sc-nastro-guscio {
+  position: relative;
+}
+
+.sc-freccia {
+  position: absolute;
+  top: calc(50% - 1.6rem);
+  z-index: 3;
+  width: 2.9rem;
+  height: 2.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .94);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 14px rgba(21, 28, 100, .1);
+  color: var(--ink);
+  cursor: pointer;
+  transition: opacity .3s, background .3s, border-color .3s;
+}
+
+.sc-freccia svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.sc-freccia-sx { left: -.6rem; }
+.sc-freccia-dx { right: -.6rem; }
+
+/* Spenta invece che nascosta: sparendo, le altre si spostano e il pollice
+   sbaglia bersaglio. Cosi' resta dov'e' e si capisce che non c'e' altro */
+.sc-freccia.is-spenta {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sc-freccia:hover {
+    background: #fff;
+    border-color: var(--wa);
+    color: var(--wa);
+  }
+}
+
+/* Sul telefono le frecce non servono: si scorre col dito, ed e' piu' veloce
+   di qualunque bottone. Occuperebbero solo spazio sopra le foto */
+@media (max-width: 720px) {
+  .sc-freccia {
+    display: none;
+  }
+}
+
+.sc-nastro {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  /* Lo spazio ai lati e' negativo sul contenitore e positivo qui dentro: cosi'
+     il nastro arriva fino al bordo dello schermo mentre le foto restano
+     allineate al testo sopra. Senza, l'ultima foto sembra tagliata male */
+  margin: 0 -6%;
+  padding: .25rem 6% 1.2rem;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.sc-nastro::-webkit-scrollbar {
+  height: 6px;
+}
+
+.sc-nastro::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.sc-altro {
+  flex: 0 0 auto;
+  width: 11rem;
+  scroll-snap-align: start;
+}
+
+.sc-altro img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+.sc-altro span {
+  display: block;
+  margin-top: .6rem;
+  font-size: .88rem;
+  color: var(--ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sc-altro:hover span {
+    color: var(--wa);
+  }
+}
+
+/* ─ Telefono ────────────────────────────── */
+@media (max-width: 860px) {
+  .sc-pagina {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: 1.5rem;
+  }
+
+  /* La foto smette di restare appesa: su telefono si scorre e basta, e una
+     colonna sticky occuperebbe lo schermo impedendo di leggere */
+  .sc-foto {
+    position: static;
+  }
+
+  .sc-dettagli {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+}

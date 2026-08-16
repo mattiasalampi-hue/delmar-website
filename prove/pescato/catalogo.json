@@ -1,0 +1,1310 @@
+{
+  "_nota": "Contenuto curato a partire dal venduto reale degli ultimi 12 mesi (delmar_agent_pricing). La query propone, la selezione la fa una persona: alcuni best seller non sono da vetrina e viceversa. Le pezzature e le provenienze sono quelle davvero a magazzino, non un desiderio.",
+  "cataloghi": [
+    {
+      "slug": "catalogo-fresco",
+      "nome": "Pesce fresco",
+      "titolo": "Pesce fresco all'ingrosso",
+      "occhiello": "In cella tutti i giorni dell'anno",
+      "sottotitolo": "pezzature costanti, provenienza dichiarata",
+      "sotto": "L'orata 600/800 di Grecia è la stessa a gennaio e ad agosto. È su questo che si costruisce una carta che non cambia ogni settimana.",
+      "magazzino": 160,
+      "intro_titolo": "Orata, spigola, ombrina e rombo freschi all'ingrosso per ristoranti e pescherie",
+      "intro": [
+        "È la parte del magazzino che <strong>non dipende dal mare</strong>: pezzatura certa, provenienza dichiarata, disponibilità tutto l'anno. Ogni specie esiste in più taglie e più provenienze, e la scelta la fa il piatto — la 300/400 è la porzione singola, la 600/800 il filetto da due, sopra il chilo si va al sale o al forno intero.",
+        "Il pesce arriva <strong>intero e in ghiaccio</strong>, con etichetta di tracciabilità e zona FAO di cattura. Sfilettiamo in laboratorio su richiesta: si paga la resa, non lo scarto."
+      ],
+      "famiglie": [
+        {
+          "nome": "Pesce di allevamento",
+          "sotto": "Quello che non dipende dal mare: stessa pezzatura, stesso prezzo, tutto l'anno.",
+          "voci": [
+            {
+              "nome": "Orata",
+              "cerca": [
+                "gilthead bream fish market",
+                "orata pescheria",
+                "sea bream on ice market",
+                "Sparus aurata food"
+              ],
+              "sotto": "La più venduta della casa, in sei pezzature. La 300/400 è la porzione singola, la 600/800 il filetto da due, sopra il chilo si va al sale o al forno intero.",
+              "pezzature": [
+                "200/300",
+                "300/400",
+                "400/600",
+                "600/800",
+                "800/1000",
+                "1000/1500"
+              ],
+              "provenienze": [
+                "Grecia",
+                "Spagna",
+                "Croazia",
+                "Turchia",
+                "Italia",
+                "Capraia"
+              ],
+              "foto": "foto-prodotti/orata.webp"
+            },
+            {
+              "nome": "Spigola",
+              "cerca": [
+                "sea bass fish market ice",
+                "branzino pescheria",
+                "seabass fishmonger display",
+                "Dicentrarchus labrax food"
+              ],
+              "sotto": "Fino a 3,5 kg. Sotto gli 800 g è porzione, sopra i due chili diventa trancio: stesso pesce, due voci di menù e due margini diversi.",
+              "pezzature": [
+                "300/400",
+                "400/600",
+                "600/800",
+                "800/1000",
+                "1000/1500",
+                "1500/2000",
+                "2000/3500"
+              ],
+              "provenienze": [
+                "Grecia",
+                "Spagna",
+                "Croazia",
+                "Turchia",
+                "Corsica"
+              ],
+              "foto": "foto-prodotti/spigola.webp"
+            },
+            {
+              "nome": "Ombrina boccadoro",
+              "cerca": [
+                "meagre fish market",
+                "corvina fish market stall",
+                "whole fish on ice counter",
+                "Argyrosomus regius food"
+              ],
+              "sotto": "Carne soda e poche lische. È l'unico allevato che regge il trancio spesso e il crudo senza sfaldarsi, e chi lo prova smette di comprare ricciola per il carpaccio.",
+              "pezzature": [
+                "800/1500",
+                "3000/4000",
+                "4000+",
+                "5000+"
+              ],
+              "provenienze": [
+                "Corsica",
+                "Croazia",
+                "Spagna",
+                "Grecia",
+                "Italia"
+              ],
+              "foto": "foto-prodotti/ombrina-boccadoro.webp"
+            },
+            {
+              "nome": "Rombo chiodato",
+              "cerca": [
+                "turbot fish market",
+                "rombo pescheria",
+                "turbot on ice fishmonger"
+              ],
+              "sotto": "Il pesce da carrello. Intero al forno rende per due, e dai due chili in su si porziona in sala senza che si rompa.",
+              "pezzature": [
+                "800/1000",
+                "1000/1500",
+                "1500/2000",
+                "2000/3000"
+              ],
+              "provenienze": [
+                "Francia",
+                "Spagna"
+              ],
+              "foto": "foto-prodotti/rombo-chiodato.webp"
+            },
+            {
+              "nome": "Salmone fresco",
+              "cerca": [
+                "salmon fillet fishmonger counter",
+                "fresh salmon on ice market",
+                "salmone pescheria",
+                "salmon fillet counter"
+              ],
+              "sotto": "Norvegia Superior e Princess, il Loch Duart di Scozia su ordinazione. I filetti li facciamo in laboratorio: si paga la resa, non lo scarto.",
+              "pezzature": [
+                "4/5 kg",
+                "5/6 kg",
+                "6/7 kg",
+                "filetti"
+              ],
+              "provenienze": [
+                "Norvegia",
+                "Scozia"
+              ],
+              "foto": "foto-prodotti/salmone-fresco.webp"
+            },
+            {
+              "nome": "Ricciola",
+              "cerca": [
+                "amberjack fish market",
+                "yellowtail fish market stall",
+                "ricciola pescheria",
+                "Seriola dumerili food"
+              ],
+              "sotto": "La base del crudo quando il tonno costa troppo. L'oceanica di allevamento c'è tutto l'anno, la fresca di Spagna arriva a stagione.",
+              "pezzature": [
+                "0,8/1,5 kg",
+                "3/4 kg",
+                "3/6 kg"
+              ],
+              "provenienze": [
+                "Spagna",
+                "Oceano"
+              ],
+              "foto": "foto-prodotti/ricciola.webp"
+            },
+            {
+              "nome": "Dentice reale e pagaro",
+              "cerca": [
+                "dentex fish market",
+                "sea bream fish market stall",
+                "dentice pescheria",
+                "Dentex dentex food"
+              ],
+              "sotto": "Per quando l'orata ce l'hanno tutti in carta. Costa poco più e in sala si racconta da solo.",
+              "pezzature": [
+                "600/800",
+                "800/1000",
+                "1000/1500"
+              ],
+              "provenienze": [
+                "Croazia",
+                "Grecia"
+              ],
+              "foto": "foto-prodotti/dentice-reale-e-pagaro.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Pesce di cattura",
+          "sotto": "Fuori dal PAT: quello che arriva dagli altri mari, sempre in giornata.",
+          "voci": [
+            {
+              "nome": "Alici fresche",
+              "cerca": [
+                "anchovies fish market crate",
+                "alici pescheria",
+                "fresh anchovies on ice",
+                "Engraulis encrasicolus food"
+              ],
+              "sotto": "Mar Ligure quando c'è, poi Adriatico, Spagna e Portogallo. È il pesce che muove più cassette di tutto il banco fresco.",
+              "pezzature": [
+                "cassetta 5 kg",
+                "sfuse"
+              ],
+              "provenienze": [
+                "Mar Ligure",
+                "Adriatico",
+                "Spagna",
+                "Portogallo"
+              ],
+              "foto": "foto-prodotti/alici-fresche.webp"
+            },
+            {
+              "nome": "Pescatrice",
+              "cerca": [
+                "monkfish fish market",
+                "monkfish tail fishmonger",
+                "rana pescatrice pescheria"
+              ],
+              "sotto": "Code già pulite. La 1/2 kg è quella che rende meglio: sotto si perde troppo in testa, sopra il trancio viene spesso da tagliare.",
+              "pezzature": [
+                "code 1/2 kg"
+              ],
+              "provenienze": [
+                "Atlantico",
+                "Tirreno"
+              ],
+              "foto": "foto-prodotti/pescatrice.webp"
+            }
+          ]
+        }
+      ],
+      "cerca": [
+        "fish market stall display",
+        "pescheria banco pesce",
+        "fresh fish counter ice"
+      ],
+      "foto": "foto-prodotti/copertina-fresco.webp"
+    },
+    {
+      "slug": "catalogo-crostacei",
+      "nome": "Crostacei e molluschi",
+      "titolo": "Crostacei e molluschi",
+      "occhiello": "Vivi in vasca, bivalvi depurati",
+      "sottotitolo": "la parte del menù che si ricorda",
+      "sotto": "Astici che arrivano vivi, cozze con l'etichetta di depurazione, ostriche dalla Fines de Claire alla Gillardeau.",
+      "magazzino": 158,
+      "intro_titolo": "Astici vivi, gamberi, scampi, cozze, vongole e ostriche all'ingrosso",
+      "intro": [
+        "È la famiglia che <strong>muove più chili di tutte</strong> e insieme quella con i margini più alti della carta: le cozze si contano a tonnellate, le ostriche a pezzo. Fra le due c'è tutto quello su cui un banco crudo si distingue dagli altri.",
+        "I crostacei restano <strong>vivi in vasca fino al carico del furgone</strong> e si ordinano a pezzo, non a chilo: quello che sale è quello che avete scelto. I bivalvi arrivano depurati e con l'etichetta, i gamberi congelati a bordo."
+      ],
+      "famiglie": [
+        {
+          "nome": "Crostacei vivi",
+          "sotto": "Tenuti in vasca fino al carico del furgone. Si ordinano a pezzo, non a chilo.",
+          "voci": [
+            {
+              "nome": "Astice",
+              "cerca": [
+                "live lobster market display",
+                "lobsters on ice fish market",
+                "astice pescheria"
+              ],
+              "sotto": "Canadese e americano sempre in vasca, il blu di Bretagna su ordinazione. Si ordinano a pezzo e arrivano vivi: quello che sale sul furgone è quello che avete scelto.",
+              "pezzature": [
+                "400/600",
+                "600/800",
+                "800+"
+              ],
+              "provenienze": [
+                "Canada",
+                "Stati Uniti",
+                "Bretagna"
+              ],
+              "foto": "foto-prodotti/astice.webp"
+            },
+            {
+              "nome": "Aragosta",
+              "cerca": [
+                "spiny lobster market stall",
+                "rock lobster on ice market",
+                "aragosta pescheria"
+              ],
+              "sotto": "Reale del Marocco e atlantica. Qualsiasi pezzatura su ordinazione, con un giorno di preavviso.",
+              "pezzature": [
+                "300/400",
+                "400/600",
+                "600+"
+              ],
+              "provenienze": [
+                "Marocco",
+                "Atlantico"
+              ],
+              "foto": "foto-prodotti/aragosta.webp"
+            },
+            {
+              "nome": "Granciporro e granchio blu",
+              "cerca": [
+                "brown crab fish market",
+                "crabs on ice market stall",
+                "granchio pescheria"
+              ],
+              "sotto": "Il granciporro per il crudo e per i sughi, il granchio blu quando il cliente lo chiede per nome.",
+              "pezzature": [
+                "400/600",
+                "600+"
+              ],
+              "provenienze": [
+                "Atlantico",
+                "Adriatico"
+              ],
+              "foto": "foto-prodotti/granciporro-e-granchio-blu.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Gamberi e scampi",
+          "sotto": "Congelati a bordo. Dall'argentino rosso alla mazzancolla, sgusciati e no.",
+          "voci": [
+            {
+              "nome": "Gambero argentino",
+              "cerca": [
+                "red shrimp on ice market",
+                "argentine red shrimp seafood",
+                "gamberi rossi pescheria",
+                "Pleoticus muelleri shrimp"
+              ],
+              "sotto": "Congelato a bordo, non a terra ore dopo. L1 è la pezzatura da piatto; le code C1 sono l'articolo che muove più chili della cella.",
+              "pezzature": [
+                "L1 (10/20 pz/kg)",
+                "L2 (20/30 pz/kg)",
+                "code C1",
+                "code CR"
+              ],
+              "provenienze": [
+                "Argentina"
+              ],
+              "formato": "cartoni da 2 kg · IQF",
+              "foto": "foto-prodotti/gambero-argentino.webp"
+            },
+            {
+              "nome": "Gambero sgusciato e devenato",
+              "cerca": [
+                "peeled shrimp bowl seafood",
+                "shrimp tails plate",
+                "peeled prawns tray"
+              ],
+              "sotto": "Zero scarto e zero tempo di cucina: il costo porzione si calcola prima di comprare, non dopo aver pulito.",
+              "pezzature": [
+                "10/30",
+                "31/35",
+                "41/50",
+                "51/60"
+              ],
+              "provenienze": [
+                "Ecuador",
+                "Argentina"
+              ],
+              "formato": "IQF 10x750 g · 6x2 kg",
+              "foto": "foto-prodotti/gambero-sgusciato-e-devenato.webp"
+            },
+            {
+              "nome": "Mazzancolle tropicali",
+              "cerca": [
+                "tiger prawns on ice market",
+                "prawns fish market stall",
+                "mazzancolle pescheria"
+              ],
+              "sotto": "Con la testa, per il piatto che si guarda prima di mangiarlo.",
+              "pezzature": [
+                "50/60",
+                "60/70"
+              ],
+              "provenienze": [
+                "Indo-Pacifico"
+              ],
+              "formato": "6x2 kg peso netto",
+              "foto": "foto-prodotti/mazzancolle-tropicali.webp"
+            },
+            {
+              "nome": "Gambero di Tunisi",
+              "cerca": [
+                "prawns on ice market stall",
+                "mediterranean prawns seafood",
+                "gamberi pescheria",
+                "Penaeus kerathurus"
+              ],
+              "sotto": "Il monocero mediterraneo, per quando serve un gambero che sappia di Mediterraneo e non di allevamento tropicale.",
+              "pezzature": [
+                "AA (16/20 pz/kg)",
+                "n°1 (16/20)"
+              ],
+              "provenienze": [
+                "Tunisia"
+              ],
+              "formato": "10x1 kg",
+              "foto": "foto-prodotti/gambero-di-tunisi.webp"
+            },
+            {
+              "nome": "Scampi Porcupine",
+              "cerca": [
+                "langoustine market ice",
+                "scampi pescheria",
+                "norway lobster fish market"
+              ],
+              "sotto": "Banco dell'Atlantico, pezzatura costante. Il guscio tiene la cottura e non si sfalda nel sugo.",
+              "pezzature": [
+                "31/40"
+              ],
+              "provenienze": [
+                "Porcupine",
+                "Atlantico"
+              ],
+              "formato": "6x1 kg",
+              "foto": "foto-prodotti/scampi-porcupine.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Bivalvi",
+          "sotto": "Vivi, con etichetta di depurazione. Cozze e vongole sono i due articoli più venduti della casa.",
+          "voci": [
+            {
+              "nome": "Cozze",
+              "cerca": [
+                "mussels market stall",
+                "cozze pescheria",
+                "fresh mussels crate market",
+                "Mytilus edulis food"
+              ],
+              "sotto": "Arborea e Scardovari le italiane di riferimento, La Spezia la locale. Le sbissate arrivano già pulite: sono venti minuti di cucina in meno a servizio.",
+              "pezzature": [
+                "intere",
+                "sbissate",
+                "selezione chef"
+              ],
+              "provenienze": [
+                "Arborea",
+                "Scardovari",
+                "La Spezia",
+                "Olbia",
+                "Adriatico",
+                "Spagna"
+              ],
+              "foto": "foto-prodotti/cozze.webp"
+            },
+            {
+              "nome": "Vongole",
+              "cerca": [
+                "clams fish market stall",
+                "vongole pescheria",
+                "fresh clams basket market"
+              ],
+              "sotto": "Veraci grosse per il piatto, lupini per lo spaghetto. Tutte spurgate, tutte con etichetta di depurazione.",
+              "pezzature": [
+                "veraci grosse",
+                "veraci medie",
+                "lupini",
+                "jumbo DelMar"
+              ],
+              "provenienze": [
+                "Italia",
+                "Portogallo",
+                "Francia"
+              ],
+              "foto": "foto-prodotti/vongole.webp"
+            },
+            {
+              "nome": "Ostriche",
+              "cerca": [
+                "oysters ice display market",
+                "oyster stall market",
+                "huitres marche etal"
+              ],
+              "sotto": "Dalla Fines de Claire alla Gillardeau. È la voce su cui un banco crudo si distingue, ed è anche quella col margine più alto della carta.",
+              "pezzature": [
+                "n°2",
+                "n°3",
+                "mignon"
+              ],
+              "provenienze": [
+                "Gillardeau",
+                "Tsarskaya",
+                "Prieur",
+                "Donegal",
+                "Belon",
+                "Amélie"
+              ],
+              "foto": "foto-prodotti/ostriche.webp"
+            },
+            {
+              "nome": "Cannolicchi, fasolari, tartufi di mare",
+              "cerca": [
+                "razor clams market stall",
+                "cannolicchi pescheria",
+                "razor shells fresh market"
+              ],
+              "sotto": "I bivalvi che riempiono un plateau senza doverli spiegare al cliente. Freschi, sfusi, a disponibilità del giorno.",
+              "pezzature": [
+                "freschi, sfusi"
+              ],
+              "provenienze": [
+                "Italia",
+                "Francia"
+              ],
+              "foto": "foto-prodotti/cannolicchi-fasolari-tartufi-di-mare.webp"
+            },
+            {
+              "nome": "Capesante",
+              "cerca": [
+                "scallops half shell market",
+                "scallops fishmonger display",
+                "capesante pescheria"
+              ],
+              "sotto": "Mezzo guscio pronte da gratinare, oppure i gusci vuoti per chi il ripieno se lo fa da sé.",
+              "pezzature": [
+                "mezzo guscio",
+                "gusci"
+              ],
+              "provenienze": [
+                "Atlantico"
+              ],
+              "foto": "foto-prodotti/capesante.webp"
+            },
+            {
+              "nome": "Vongole con guscio",
+              "cerca": [
+                "manila clams seafood tray",
+                "clams shell seafood dish",
+                "vongole spaghetti"
+              ],
+              "sotto": "Le vongole senza il rischio della sabbia. La 40/60 è la pezzatura giusta per lo spaghetto.",
+              "pezzature": [
+                "40/60"
+              ],
+              "provenienze": [
+                "Pacifico"
+              ],
+              "formato": "5x1 kg",
+              "foto": "foto-prodotti/vongole-con-guscio.webp"
+            }
+          ]
+        }
+      ],
+      "cerca": [
+        "live lobster tank market",
+        "shellfish market stall",
+        "crostacei banco pescheria"
+      ],
+      "foto": "foto-prodotti/copertina-crostacei.webp"
+    },
+    {
+      "slug": "catalogo-cefalopodi",
+      "nome": "Calamaro, polpo e seppia",
+      "titolo": "Calamaro, polpo e seppia",
+      "occhiello": "Il primo prodotto della cella",
+      "sottotitolo": "ogni lavorazione, ogni pezzatura",
+      "sotto": "Centosettantacinque articoli fra calamaro, polpo, seppia e totano. È da qui che esce il fritto di mezza Toscana.",
+      "magazzino": 175,
+      "intro_titolo": "Calamaro Patagonia, polpo del Marocco e seppie pulite all'ingrosso",
+      "intro": [
+        "I cefalopodi sono <strong>il primo prodotto del magazzino per chili venduti</strong>, e la ragione è semplice: reggono la frittura, reggono il congelamento e hanno una resa che si calcola prima di comprare. Il calamaro C4 lavorato esiste in cinque tagli diversi proprio perché ogni cucina lo vuole in un modo.",
+        "Il <strong>decongelato pronto</strong> è la voce che muove più chili di tutte: si apre la busta e va in padella, senza spazio in abbattitore e senza nessuno che pulisca durante il servizio. La glassatura è sempre dichiarata."
+      ],
+      "famiglie": [
+        {
+          "nome": "Calamari e totani",
+          "sotto": "Patagonia C4 in ogni lavorazione: intero, aperto, ad anelli, a strisce, butterfly.",
+          "voci": [
+            {
+              "nome": "Calamaro Patagonia C4",
+              "cerca": [
+                "squid fish market stall",
+                "calamari on ice market",
+                "frozen squid tubes"
+              ],
+              "sotto": "Intero, aperto, ad anelli, a strisce, butterfly. Il decongelato pronto è l'articolo che muove più chili di tutto il magazzino: si apre la busta e va in frittura.",
+              "pezzature": [
+                "intero pulito",
+                "aperto",
+                "anelli e ciuffi",
+                "strisce",
+                "butterfly"
+              ],
+              "provenienze": [
+                "Patagonia",
+                "Argentina"
+              ],
+              "formato": "cartoni 5 kg · IQF 6x900 g · buste 10 kg",
+              "foto": "foto-prodotti/calamaro-patagonia-c4.webp"
+            },
+            {
+              "nome": "Calamaro C4 large",
+              "cerca": [
+                "squid tubes seafood tray",
+                "whole squid market stall",
+                "calamari fishmonger"
+              ],
+              "sotto": "La pezzatura da 10/12 cm, per chi il taglio se lo fa in casa e vuole decidere lo spessore dell'anello.",
+              "pezzature": [
+                "L",
+                "LL",
+                "10/12 cm"
+              ],
+              "provenienze": [
+                "Patagonia"
+              ],
+              "formato": "cartone 5 kg",
+              "foto": "foto-prodotti/calamaro-c4-large.webp"
+            },
+            {
+              "nome": "Totano gigante",
+              "cerca": [
+                "calamari rings cooked seafood",
+                "squid rings plate",
+                "fried calamari dish"
+              ],
+              "sotto": "A rondelle e già cotto: entra nell'insalata di mare senza altre lavorazioni e senza il rischio di tirarlo troppo.",
+              "pezzature": [
+                "rondelle cotte"
+              ],
+              "provenienze": [
+                "Pacifico"
+              ],
+              "formato": "5x1 kg",
+              "foto": "foto-prodotti/totano-gigante.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Polpo",
+          "sotto": "Marocco, IQF singolo o in vaschetta, dalla 1000/1500 alla 3000/4000.",
+          "voci": [
+            {
+              "nome": "Polpo del Marocco",
+              "cerca": [
+                "octopus fish market stall",
+                "polpo pescheria",
+                "octopus on ice market"
+              ],
+              "sotto": "IQF singolo o in vaschetta, dalla 1000/1500 alla 3000/4000. Le teste costano una frazione e vanno nei sughi: è il modo più semplice di abbassare il costo di un primo.",
+              "pezzature": [
+                "1000/1500",
+                "1200/1500",
+                "1500/2000",
+                "2000/3000",
+                "3000/4000",
+                "teste"
+              ],
+              "provenienze": [
+                "Marocco"
+              ],
+              "formato": "IQF glassatura 10% · vaschetta · cartone 12 kg",
+              "foto": "foto-prodotti/polpo-del-marocco.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Seppie",
+          "sotto": "Fresche da pulire o già pulite dall'India e dal Marocco.",
+          "voci": [
+            {
+              "nome": "Seppie fresche",
+              "cerca": [
+                "cuttlefish fish market stall",
+                "seppie pescheria",
+                "cuttlefish on ice market",
+                "Sepia officinalis food"
+              ],
+              "sotto": "Intere da pulire. La 100/300 va in umido e sulla graticola, la pezzatura grande si taglia a listarelle.",
+              "pezzature": [
+                "100/300",
+                "100/400"
+              ],
+              "provenienze": [
+                "Francia",
+                "Tirreno"
+              ],
+              "foto": "foto-prodotti/seppie-fresche.webp"
+            },
+            {
+              "nome": "Seppie pulite",
+              "cerca": [
+                "cleaned cuttlefish seafood tray",
+                "cuttlefish fillet plate",
+                "seppie pulite",
+                "cuttlefish food"
+              ],
+              "sotto": "Già pulite: si scongelano e vanno in padella. Niente nero, niente osso, nessuno che le pulisca durante il servizio.",
+              "pezzature": [
+                "U1",
+                "1/2",
+                "5/7",
+                "8/12",
+                "500/1000"
+              ],
+              "provenienze": [
+                "India",
+                "Marocco"
+              ],
+              "formato": "IQF 6x1 kg · 1x6 kg",
+              "foto": "foto-prodotti/seppie-pulite.webp"
+            }
+          ]
+        }
+      ],
+      "cerca": [
+        "squid octopus market stall",
+        "calamari fish market",
+        "polpo calamari pescheria"
+      ],
+      "foto": "foto-prodotti/copertina-cefalopodi.webp"
+    },
+    {
+      "slug": "catalogo-crudo",
+      "nome": "Tonno e crudi",
+      "titolo": "Tonno e prodotti da crudo",
+      "occhiello": "Filone sashimi a marchio DelMar",
+      "sottotitolo": "il secondo prodotto della casa",
+      "sotto": "Quarantacinque tonnellate di tonno l'anno. Filone pinne gialle e sashimi selezionati e confezionati da noi.",
+      "magazzino": 68,
+      "intro_titolo": "Tonno filone, sashimi, pesce spada e capesante all'ingrosso",
+      "intro": [
+        "Il <strong>tonno filone</strong> è il secondo prodotto della casa per chili venduti, e il <strong>sashimi a marchio DelMar</strong> — obeso e pinne gialle, selezionati e confezionati da noi — è quello su cui i sushi bar ci chiamano: colore che tiene in vetrina e nessuna sorpresa al taglio.",
+        "Intorno c'è tutto il resto del banco crudo: salmone e ricciola, capesante già sgusciate, alici marinate, acciughe cantabriche, tartare monoporzione. Prodotti <strong>abbattuti come prevede la norma</strong>, con la tracciabilità in ordine — che sul crudo non è un dettaglio ma il primo controllo che vi faranno."
+      ],
+      "famiglie": [
+        {
+          "nome": "Tonno e pesce spada",
+          "sotto": "Filone decongelato pronto al taglio. Quarantacinque tonnellate l'anno: è il prodotto che conosciamo meglio.",
+          "voci": [
+            {
+              "nome": "Tonno filone pinne gialle",
+              "cerca": [
+                "tuna fish market stall",
+                "tuna loin sliced",
+                "tonno pescheria",
+                "Thunnus albacares food"
+              ],
+              "sotto": "Il filone decongelato pronto al taglio, in atmosfera protettiva. È il secondo prodotto della casa dopo le cozze: si porziona come si vuole e non si butta niente.",
+              "pezzature": [
+                "filone intero",
+                "sfuso",
+                "porzionato"
+              ],
+              "provenienze": [
+                "Oceano Indiano",
+                "Atlantico"
+              ],
+              "formato": "ATM · decongelato pronto",
+              "foto": "foto-prodotti/tonno-filone-pinne-gialle.webp"
+            },
+            {
+              "nome": "Tonno sashimi DelMar",
+              "cerca": [
+                "sashimi tuna sliced plate",
+                "tuna sashimi restaurant",
+                "tonno crudo piatto"
+              ],
+              "sotto": "Filone obeso e pinne gialle selezionati e confezionati da noi, a marchio nostro. È il prodotto su cui i sushi bar ci chiamano: colore che tiene in vetrina e nessuna sorpresa al taglio.",
+              "pezzature": [
+                "obeso",
+                "pinne gialle",
+                "grado AA"
+              ],
+              "provenienze": [
+                "selezione DelMar"
+              ],
+              "formato": "decongelato · sottovuoto",
+              "foto": "foto-prodotti/tonno-sashimi-delmar.webp"
+            },
+            {
+              "nome": "Pesce spada filone",
+              "cerca": [
+                "swordfish steak market",
+                "pesce spada pescheria",
+                "swordfish loin"
+              ],
+              "sotto": "Filone preparato e fette grado B. Il trancio spesso regge la griglia senza asciugarsi, ed è il secondo che si vende da solo in carta.",
+              "pezzature": [
+                "filone",
+                "fette",
+                "grado B"
+              ],
+              "provenienze": [
+                "Atlantico",
+                "Indiano"
+              ],
+              "formato": "decongelato · congelato 10 kg",
+              "foto": "foto-prodotti/pesce-spada-filone.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Per il banco crudo",
+          "sotto": "Quello che completa un plateau o una carta di crudi senza passare dalla cucina.",
+          "voci": [
+            {
+              "nome": "Capesante sgusciate",
+              "cerca": [
+                "scallop meat bowl",
+                "scallops seafood plate",
+                "capesante polpa"
+              ],
+              "sotto": "Solo la noce, in barattolo da un chilo, venti pezzi. Per il crudo e per la tartare: nessuno scarto, nessun tempo di pulizia, porzione contabile al pezzo.",
+              "pezzature": [
+                "barattolo 1 kg",
+                "20 pezzi"
+              ],
+              "provenienze": [
+                "Atlantico"
+              ],
+              "formato": "barattolo · 20 pz",
+              "foto": "foto-prodotti/capesante-sgusciate.webp"
+            },
+            {
+              "nome": "Alici marinate e acciughe",
+              "cerca": [
+                "marinated anchovies plate",
+                "alici marinate antipasto",
+                "anchovy fillets olive oil"
+              ],
+              "sotto": "Filetti marinati in vassoio da 200 g e da 1 kg, più le acciughe cantabriche in salamoia. L'antipasto che esce senza passare dalla cucina.",
+              "pezzature": [
+                "vassoio 200 g",
+                "vassoio 1 kg",
+                "cantabriche 50 g"
+              ],
+              "provenienze": [
+                "Mar Cantabrico",
+                "Mediterraneo"
+              ],
+              "formato": "vassoio · vasetto in olio d'oliva",
+              "foto": "foto-prodotti/alici-marinate-e-acciughe.webp"
+            },
+            {
+              "nome": "Tartare di gambero rosso",
+              "cerca": [
+                "shrimp tartare plate",
+                "tartare di gambero rosso",
+                "raw shrimp appetizer"
+              ],
+              "sotto": "Monoporzione da 80 g, già condita e abbattuta. Il crudo per chi non ha il laboratorio per farlo, con la tracciabilità in ordine.",
+              "pezzature": [
+                "80 g"
+              ],
+              "provenienze": [
+                "Argentina"
+              ],
+              "formato": "monoporzione congelata",
+              "foto": "foto-prodotti/tartare-di-gambero-rosso.webp"
+            }
+          ]
+        }
+      ],
+      "cerca": [
+        "tuna loin cutting board",
+        "tuna sashimi counter",
+        "tonno filone banco"
+      ],
+      "foto": "foto-prodotti/copertina-crudo.webp"
+    },
+    {
+      "slug": "catalogo-filetti",
+      "nome": "Filetti e affumicati",
+      "titolo": "Filetti e affumicati",
+      "occhiello": "Porzionati, resa nota prima del servizio",
+      "sottotitolo": "il piatto che esce sempre uguale",
+      "sotto": "Merluzzo, baccalà, filetti porzionati e affumicati. La base del fritto e del piatto che deve uscire veloce.",
+      "magazzino": 90,
+      "intro_titolo": "Filetti di merluzzo, baccalà e salmone affumicato all'ingrosso",
+      "intro": [
+        "Il filettame è la parte del magazzino che serve a <strong>rendere prevedibile un servizio</strong>: la porzione è quella, la resa è nota prima di comprare e il piatto esce uguale anche col cuoco nuovo. Su un menù a prezzo fisso conta più della freschezza.",
+        "Merluzzo islandese e d'Alaska, cuori di baccalà, filetti di orata e branzino porzionati 120/160. Gli <strong>affumicati</strong> chiudono il cerchio: salmone preaffettato per il servizio veloce e i ritagli, che a parità di sapore costano una frazione."
+      ],
+      "famiglie": [
+        {
+          "nome": "Merluzzo e baccalà",
+          "sotto": "Filetti islandesi e Cabo Norte, cuori IQF, brosme. Glassatura sempre dichiarata.",
+          "voci": [
+            {
+              "nome": "Merluzzo nordico e d'Alaska",
+              "cerca": [
+                "cod fillet fishmonger counter",
+                "cod fish market ice",
+                "merluzzo pescheria",
+                "Gadus morhua food"
+              ],
+              "sotto": "Filetti islandesi e Cabo Norte, più il fiore jumbo per chi vuole il pezzo intero. Glassatura dichiarata: quando scriviamo 10% è il 10%.",
+              "pezzature": [
+                "400/600",
+                "500/1000",
+                "1000+",
+                "fiore jumbo 500+"
+              ],
+              "provenienze": [
+                "Islanda",
+                "Norvegia",
+                "Alaska"
+              ],
+              "formato": "glassatura 10% · IQF",
+              "foto": "foto-prodotti/merluzzo-nordico-e-d-alaska.webp"
+            },
+            {
+              "nome": "Baccalà e cuore di merluzzo",
+              "cerca": [
+                "salt cod fillet market",
+                "baccala pescheria",
+                "dried salted cod"
+              ],
+              "sotto": "Filetto salato 700/1000 e cuori IQF dalla 100/300 alla 500/800. Il cuore è la parte centrale senza spine: si porziona a peso e la resa è quella dichiarata.",
+              "pezzature": [
+                "700/1000 salato",
+                "100/300",
+                "400/600",
+                "500/800"
+              ],
+              "provenienze": [
+                "Norvegia",
+                "Islanda",
+                "Namibia"
+              ],
+              "formato": "IWP · IQF",
+              "foto": "foto-prodotti/baccala-e-cuore-di-merluzzo.webp"
+            },
+            {
+              "nome": "Brosme",
+              "cerca": [
+                "white fish fillet on ice",
+                "cod fillet market stall",
+                "fish fillet counter",
+                "Brosme brosme food"
+              ],
+              "sotto": "L'alternativa al merluzzo quando il merluzzo va fuori prezzo. Stessa consistenza, stessa cottura, nessuno se ne accorge.",
+              "pezzature": [
+                "500/1000"
+              ],
+              "provenienze": [
+                "Atlantico del Nord"
+              ],
+              "formato": "glassatura 10%",
+              "foto": "foto-prodotti/brosme.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Filetti porzionati",
+          "sotto": "Pronti da mettere in padella: nessuna lisca, nessuno scarto, porzione contabile.",
+          "voci": [
+            {
+              "nome": "Filetti di orata e branzino",
+              "cerca": [
+                "fish fillets fishmonger display",
+                "sea bream fillet plate",
+                "filetti di pesce pescheria",
+                "fish fillet counter"
+              ],
+              "sotto": "Porzionati 120/160: il piatto esce uguale anche col cuoco nuovo, e la resa è nota prima del servizio.",
+              "pezzature": [
+                "120/160"
+              ],
+              "provenienze": [
+                "Mediterraneo"
+              ],
+              "formato": "glassatura 30%",
+              "foto": "foto-prodotti/filetti-di-orata-e-branzino.webp"
+            },
+            {
+              "nome": "Filetti di triglia e pangasio",
+              "cerca": [
+                "red mullet fish market",
+                "triglie pescheria",
+                "red mullet fillet plate"
+              ],
+              "sotto": "La triglia del Tirreno per la frittura, il pangasio per tenere il costo pasto dove deve stare.",
+              "pezzature": [
+                "500 g",
+                "170/220"
+              ],
+              "provenienze": [
+                "Tirreno",
+                "Vietnam"
+              ],
+              "formato": "10x800 g",
+              "foto": "foto-prodotti/filetti-di-triglia-e-pangasio.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Affumicati",
+          "sotto": "L'antipasto di pesce che sta in carta tutto l'anno senza dipendere da una stagione.",
+          "voci": [
+            {
+              "nome": "Salmone affumicato",
+              "cerca": [
+                "smoked salmon slices plate",
+                "salmone affumicato antipasto",
+                "smoked salmon platter"
+              ],
+              "sotto": "Preaffettato 0,9/1,3 kg per il servizio veloce, intero per chi taglia in sala, e i ritagli da 250 e 500 g — che a parità di sapore costano una frazione e vanno in tartare, paste e crostini.",
+              "pezzature": [
+                "preaffettato 0,9/1,3",
+                "intero 0,5/0,9",
+                "ritagli 250 g",
+                "ritagli 500 g"
+              ],
+              "provenienze": [
+                "Norvegia",
+                "Scozia",
+                "Alaska"
+              ],
+              "formato": "sottovuoto · blister 100 g",
+              "foto": "foto-prodotti/salmone-affumicato.webp"
+            },
+            {
+              "nome": "Pesce spada e tonno affumicati",
+              "cerca": [
+                "smoked swordfish carpaccio",
+                "smoked tuna slices",
+                "pesce spada affumicato"
+              ],
+              "sotto": "Standard e premium, più il marlin. È l'antipasto di pesce che sta in carta tutto l'anno senza dipendere da nessuna stagione.",
+              "pezzature": [
+                "standard",
+                "premium",
+                "100 g"
+              ],
+              "provenienze": [
+                "Mediterraneo",
+                "Atlantico"
+              ],
+              "formato": "sottovuoto",
+              "foto": "foto-prodotti/pesce-spada-e-tonno-affumicati.webp"
+            }
+          ]
+        }
+      ],
+      "cerca": [
+        "fish fillets counter display",
+        "smoked salmon platter",
+        "filetti pesce banco"
+      ],
+      "foto": "foto-prodotti/copertina-filetti.webp"
+    },
+    {
+      "slug": "catalogo-cucina",
+      "nome": "Pasta, contorni e basi",
+      "titolo": "Pasta, contorni e basi",
+      "occhiello": "Un fornitore in meno da gestire",
+      "sottotitolo": "quello che non è pesce ma serve lo stesso",
+      "sotto": "Patate, basi per la pizza, pasta fresca e piatti pronti. Sullo stesso furgone e sulla stessa fattura del pesce.",
+      "magazzino": 98,
+      "intro_titolo": "Contorni surgelati, basi pizza e pasta fresca all'ingrosso per ristoranti",
+      "intro": [
+        "Non è pesce, ed è proprio questo il punto: sono le voci per cui un locale si ritrova ad aprire <strong>un secondo e un terzo conto fornitore</strong> — le patate del contorno, la base della pizza, il primo di pesce. Da noi arrivano sullo stesso furgone e sulla stessa fattura, e per una cucina piccola è mezza giornata di amministrazione in meno al mese.",
+        "Contorni McCain e Aviko in tutti i tagli, basi tonde e in teglia, pinsa e focaccia, pasta fresca e ripiena, risotti e paella. Sono i piatti che <strong>escono uguali con chiunque in cucina</strong>, e servono soprattutto quando entra un gruppo senza preavviso."
+      ],
+      "famiglie": [
+        {
+          "nome": "Contorni e basi",
+          "sotto": "Patate, pizza, focaccia: il contorno e l'impasto senza un fornitore dedicato.",
+          "voci": [
+            {
+              "nome": "Patate McCain e Aviko",
+              "cerca": [
+                "frozen french fries bag",
+                "frozen potato chips food",
+                "french fries basket"
+              ],
+              "sotto": "Julienne, 9,5 mm, cubetti, crispers. Un fornitore in meno da gestire per il contorno.",
+              "pezzature": [
+                "julienne",
+                "9,5 mm",
+                "3/8",
+                "cubetti"
+              ],
+              "provenienze": [
+                "McCain",
+                "Aviko"
+              ],
+              "formato": "5x2,5 kg",
+              "foto": "foto-prodotti/patate-mccain-e-aviko.webp"
+            },
+            {
+              "nome": "Basi pizza e pinsa",
+              "cerca": [
+                "pizza dough base tray",
+                "pizza crust bakery",
+                "pinsa romana"
+              ],
+              "sotto": "Tonda 30, quadrata 28x28, pinsa, romana 33 cm. Per chi la pizza la fa ma non ha il banco per l'impasto.",
+              "pezzature": [
+                "tonda 30 cm",
+                "quadrata 28x28",
+                "pinsa",
+                "romana 33 cm"
+              ],
+              "provenienze": [
+                "Italia"
+              ],
+              "formato": "cartone",
+              "foto": "foto-prodotti/basi-pizza-e-pinsa.webp"
+            },
+            {
+              "nome": "Focaccia precotta",
+              "cerca": [
+                "focaccia bread bakery tray",
+                "focaccia genovese",
+                "focaccia sliced"
+              ],
+              "sotto": "Precotta, sei pezzi a confezione. Forno e via.",
+              "pezzature": [
+                "6 pz/confezione"
+              ],
+              "provenienze": [
+                "Italia"
+              ],
+              "formato": "confezione",
+              "foto": "foto-prodotti/focaccia-precotta.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Pasta e piatti pronti",
+          "sotto": "Il primo di pesce senza tenere un pastaio, e i piatti che escono uguali con chiunque in cucina.",
+          "voci": [
+            {
+              "nome": "Pasta fresca e ripiena",
+              "cerca": [
+                "fresh pasta ravioli",
+                "pasta fresca ripiena",
+                "italian fresh pasta"
+              ],
+              "sotto": "Ravioli al branzino, scrigni agli scampi, gnocchetti Zini, paccheri e linguine trafilate al bronzo. Il primo di pesce senza tenere un pastaio.",
+              "pezzature": [
+                "ravioli",
+                "scrigni",
+                "gnocchetti",
+                "paccheri",
+                "linguine"
+              ],
+              "provenienze": [
+                "Italia"
+              ],
+              "formato": "congelata",
+              "foto": "foto-prodotti/pasta-fresca-e-ripiena.webp"
+            },
+            {
+              "nome": "Risotti, paella e preparati",
+              "cerca": [
+                "seafood paella pan",
+                "risotto ai frutti di mare",
+                "seafood rice dish"
+              ],
+              "sotto": "Preparato per risotto IQF, paella 8x900 g, misto di verdure pastellate. Piatti che escono uguali con chiunque in cucina, utili quando entra un gruppo senza preavviso.",
+              "pezzature": [
+                "IQF 6x1 kg",
+                "8x900 g"
+              ],
+              "provenienze": [
+                "Italia",
+                "Spagna"
+              ],
+              "formato": "congelato",
+              "foto": "foto-prodotti/risotti-paella-e-preparati.webp"
+            }
+          ]
+        }
+      ],
+      "cerca": [
+        "french fries basket restaurant",
+        "pizza dough base tray",
+        "fresh pasta ravioli"
+      ],
+      "foto": "foto-prodotti/copertina-cucina.webp"
+    },
+    {
+      "slug": "catalogo-dessert",
+      "nome": "Dessert monoporzione",
+      "titolo": "Dessert monoporzione",
+      "occhiello": "Martinucci · Annunziata · Sfogliagel",
+      "sottotitolo": "si scongela solo quello che si vende",
+      "sotto": "Pasticceria vera in monoporzione surgelata. Quello che non esce resta in cella, non nel bidone.",
+      "magazzino": 52,
+      "cerca": [
+        "pastry display case",
+        "plated dessert restaurant",
+        "pasticceria vetrina dolci"
+      ],
+      "intro_titolo": "Dessert monoporzione surgelati per ristoranti, bar e gastronomie",
+      "intro": [
+        "Il dessert è la voce di menù con <strong>il margine più alto e la gestione peggiore</strong>: o si tiene un pasticcere, o si butta quello che non è uscito. La monoporzione surgelata toglie il problema alla radice — si scongela solo quello che si vende, e il resto non è uno scarto ma giacenza.",
+        "Lavoriamo <strong>Martinucci</strong> di Lecce, <strong>Annunziata</strong> e <strong>Sfogliagel</strong>: pasticceria di fascia alta, non dolci da distributore. Quasi tutto si scongela in frigo e si impiatta freddo; i lievitati vanno in forno e escono come appena fatti."
+      ],
+      "famiglie": [
+        {
+          "nome": "Al piatto",
+          "sotto": "I dessert che si impiattano freddi, senza passare dal forno.",
+          "voci": [
+            {
+              "nome": "Soufflé al cioccolato",
+              "cerca": [
+                "chocolate lava cake plated dessert",
+                "chocolate fondant dessert plate",
+                "chocolate souffle restaurant"
+              ],
+              "sotto": "Cuore fondente, anche cioccolato e pistacchio. È il dolce più venduto della casa: si cuoce al momento ed esce uguale tutte le sere.",
+              "pezzature": [
+                "cioccolato",
+                "cioccolato e pistacchio"
+              ],
+              "provenienze": [
+                "Martinucci"
+              ],
+              "foto": "foto-prodotti/souffle-al-cioccolato.webp"
+            },
+            {
+              "nome": "Tartufo",
+              "cerca": [
+                "tartufo ice cream dessert plate",
+                "chocolate truffle dessert plated",
+                "tartufo di pizzo dolce"
+              ],
+              "sotto": "Nero, bianco, al pistacchio. Sta in carta tutto l'anno e non chiede nessun impiattamento.",
+              "pezzature": [
+                "nero",
+                "bianco",
+                "pistacchio"
+              ],
+              "provenienze": [
+                "Martinucci"
+              ],
+              "foto": "foto-prodotti/tartufo.webp"
+            },
+            {
+              "nome": "Babà al rum",
+              "cerca": [
+                "baba au rhum dessert plate",
+                "baba napoletano dolce",
+                "rum baba pastry"
+              ],
+              "sotto": "Monoporzione, già bagnato. Si scongela e si serve.",
+              "pezzature": [
+                "monoporzione"
+              ],
+              "provenienze": [
+                "Martinucci"
+              ],
+              "foto": "foto-prodotti/baba-al-rum.webp"
+            },
+            {
+              "nome": "Pasticciotto crema e amarena",
+              "cerca": [
+                "pasticciotto leccese pastry",
+                "italian pastry cream tart",
+                "pasticceria dolci vetrina"
+              ],
+              "sotto": "Il pasticciotto leccese, quello vero. Funziona a fine pasto e funziona al bar la mattina.",
+              "pezzature": [
+                "monoporzione"
+              ],
+              "provenienze": [
+                "Martinucci"
+              ],
+              "foto": "foto-prodotti/pasticciotto-crema-e-amarena.webp"
+            },
+            {
+              "nome": "Monoporzioni classiche",
+              "cerca": [
+                "tiramisu portion glass dessert",
+                "cheesecake slice plated",
+                "chocolate cake slice plated"
+              ],
+              "sotto": "Tiramisù, cheesecake, tre cioccolati. Già porzionate: niente taglio durante il servizio, niente vassoio che avanza a fine sera.",
+              "pezzature": [
+                "tiramisù",
+                "cheesecake",
+                "tre cioccolati"
+              ],
+              "provenienze": [
+                "Annunziata"
+              ],
+              "foto": "foto-prodotti/monoporzioni-classiche.webp"
+            }
+          ]
+        },
+        {
+          "nome": "Da forno",
+          "sotto": "Da cuocere, non da scongelare: escono come appena fatti.",
+          "voci": [
+            {
+              "nome": "Lievitati da forno",
+              "cerca": [
+                "pecan pastry braid bakery",
+                "chocolate filled pastry bakery",
+                "danish pastry tray"
+              ],
+              "sotto": "Treccia alle noci pecan e panzerotto cioccolato e nocciola. Da cuocere, non da scongelare: escono dal forno come appena fatti, e la mattina si vendono da soli.",
+              "pezzature": [
+                "treccia",
+                "panzerotto"
+              ],
+              "provenienze": [
+                "Sfogliagel"
+              ],
+              "foto": "foto-prodotti/lievitati-da-forno.webp"
+            }
+          ]
+        }
+      ],
+      "foto": "foto-prodotti/copertina-dessert.webp"
+    }
+  ]
+}

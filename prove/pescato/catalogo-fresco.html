@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orata, spigola, ombrina e rombo freschi all'ingrosso per ristoranti e pescherie — DelMar</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../../css/poppins.css?v=1" />
+    <link rel="stylesheet" href="../../css/style.css?v=101" />
+    <!-- L'indice appeso e le righe degli argomenti sono GIA' nel sito, sulla
+         pagina delle domande frequenti. Si carica quel foglio invece di
+         ridisegnarli: due copie della stessa cosa divergono al primo
+         ritocco, e il pescato deve sembrare la stessa mano -->
+    <link rel="stylesheet" href="../../css/domande-frequenti.css?v=3" />
+    <link rel="stylesheet" href="css/d.css?v=1" />
+    <link rel="stylesheet" href="css/catalogo.css?v=1" />
+  </head>
+  <body class="pr-pagina">
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+      <symbol id="ico-wa" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </symbol>
+      <symbol id="ico-arr" viewBox="0 0 24 24">
+        <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+    </svg>
+
+    <header id="hdr">
+      <a href="../../index.html"><img src="../../assets/logo.png?v=2" alt="DelMar" class="logo" /></a>
+      <nav id="main-nav">
+        <span class="nav-qui" aria-current="page">Prodotti</span>
+        <a href="../../index.html#processo">Come Lavoriamo</a>
+        <a href="../../index.html#azienda">Azienda</a>
+        <a href="../../index.html#marina">Marina AI</a>
+        <a href="../../domande-frequenti.html">Domande</a>
+        <a href="../../index.html#contatti">Contatti</a>
+        <a href="https://wa.me/393356654017?text=Ciao%20Marina!" target="_blank" rel="noopener noreferrer" class="nav-wa">Ordina ora</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
+    </header>
+
+    <section class="pr-hero">
+      <canvas id="pr-sfondo"></canvas>
+      <canvas id="pr-pesci"></canvas>
+      <div class="pr-hero-in">
+        <p class="pr-occhiello">In cella tutti i giorni dell'anno</p>
+        <h1 class="pr-titolo">Pesce fresco all'ingrosso<br /><em>pezzature costanti, provenienza dichiarata</em></h1>
+        <p class="pr-sotto">L'orata 600/800 di Grecia è la stessa a gennaio e ad agosto. È su questo che si costruisce una carta che non cambia ogni settimana.</p>
+      </div>
+    </section>
+
+    <div class="fq-barra">
+      <div class="fq-avanzamento"><span id="fq-avanza"></span></div>
+      <div class="fq-barra-in">
+        <a class="ct-torna" href="prodotti.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Cataloghi
+        </a>
+        <div class="fq-indice" role="navigation" aria-label="Famiglie del catalogo">
+          <a href="#pesce-di-allevamento">Pesce di allevamento</a>
+          <a href="#pesce-di-cattura">Pesce di cattura</a>
+        </div>
+      </div>
+    </div>
+
+    <main class="pr-corpo">
+      <div class="pr-intro">
+        <h2>Orata, spigola, ombrina e rombo freschi all'ingrosso per ristoranti e pescherie</h2>
+        <p>È la parte del magazzino che <strong>non dipende dal mare</strong>: pezzatura certa, provenienza dichiarata, disponibilità tutto l'anno. Ogni specie esiste in più taglie e più provenienze, e la scelta la fa il piatto — la 300/400 è la porzione singola, la 600/800 il filetto da due, sopra il chilo si va al sale o al forno intero.</p>
+        <p>Il pesce arriva <strong>intero e in ghiaccio</strong>, con etichetta di tracciabilità e zona FAO di cattura. Sfilettiamo in laboratorio su richiesta: si paga la resa, non lo scarto.</p>
+      </div>
+
+      <div class="fq-argomenti">
+        <a class="fq-arg" href="#pesce-di-allevamento">
+          <span class="fq-arg-n">01</span>
+          <span class="fq-arg-t">Pesce di allevamento</span>
+          <span class="fq-arg-d">Orata, Spigola, Ombrina boccadoro, Rombo chiodato…</span>
+          <span class="fq-arg-c">7 voci<svg aria-hidden="true"><use href="#ico-arr"/></svg></span>
+        </a>
+        <a class="fq-arg" href="#pesce-di-cattura">
+          <span class="fq-arg-n">02</span>
+          <span class="fq-arg-t">Pesce di cattura</span>
+          <span class="fq-arg-d">Alici fresche, Pescatrice</span>
+          <span class="fq-arg-c">2 voci<svg aria-hidden="true"><use href="#ico-arr"/></svg></span>
+        </a>
+      </div>
+
+      <!-- QUELLO CHE SI VEDE E' UN ESTRATTO, e va detto con un numero.
+           Diciotto prodotti in pagina su cinquecentottantanove in cella si
+           leggono come "questo e' tutto quello che hanno" se nessuno dice il
+           secondo numero. Ed e' il contrario di quello che serve: chi non
+           trova la sua referenza se ne va, invece di chiederla. -->
+      <p class="ct-estratto">
+        In pagina i <strong>9 prodotti più richiesti</strong>. In cella oggi
+        ce ne sono <strong>160</strong>, e su ordinazione prendiamo
+        qualsiasi cosa: se non vedi quello che ti serve,
+        <a href="https://wa.me/393356654017?text=Ciao%2C%20cerco%20un%20prodotto%20che%20non%20vedo%20sul%20sito%3A%20" target="_blank" rel="noopener noreferrer">chiedilo</a>.
+      </p>
+
+      <section class="ct-famiglia" id="pesce-di-allevamento">
+        <div class="ct-fam-testa">
+          <span class="fq-arg-n">01</span>
+          <h2>Pesce di allevamento</h2>
+          <p class="ct-fam-sotto">Quello che non dipende dal mare: stessa pezzatura, stesso prezzo, tutto l'anno.</p>
+          <p class="ct-fam-conta">7 voci</p>
+        </div>
+
+        <div class="ct-voci">
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/orata.webp" alt="Orata" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Orata</h3>
+              <p class="ct-voce-sotto">La più venduta della casa, in sei pezzature. La 300/400 è la porzione singola, la 600/800 il filetto da due, sopra il chilo si va al sale o al forno intero.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">200/300</span><span class="ct-chip">300/400</span><span class="ct-chip">400/600</span><span class="ct-chip">600/800</span><span class="ct-chip">800/1000</span><span class="ct-chip">1000/1500</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Grecia</span><span class="ct-chip ct-chip-prov">Spagna</span><span class="ct-chip ct-chip-prov">Croazia</span><span class="ct-chip ct-chip-prov">Turchia</span><span class="ct-chip ct-chip-prov">Italia</span><span class="ct-chip ct-chip-prov">Capraia</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Orata" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/spigola.webp" alt="Spigola" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Spigola</h3>
+              <p class="ct-voce-sotto">Fino a 3,5 kg. Sotto gli 800 g è porzione, sopra i due chili diventa trancio: stesso pesce, due voci di menù e due margini diversi.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">300/400</span><span class="ct-chip">400/600</span><span class="ct-chip">600/800</span><span class="ct-chip">800/1000</span><span class="ct-chip">1000/1500</span><span class="ct-chip">1500/2000</span><span class="ct-chip">2000/3500</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Grecia</span><span class="ct-chip ct-chip-prov">Spagna</span><span class="ct-chip ct-chip-prov">Croazia</span><span class="ct-chip ct-chip-prov">Turchia</span><span class="ct-chip ct-chip-prov">Corsica</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Spigola" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/ombrina-boccadoro.webp" alt="Ombrina boccadoro" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Ombrina boccadoro</h3>
+              <p class="ct-voce-sotto">Carne soda e poche lische. È l'unico allevato che regge il trancio spesso e il crudo senza sfaldarsi, e chi lo prova smette di comprare ricciola per il carpaccio.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">800/1500</span><span class="ct-chip">3000/4000</span><span class="ct-chip">4000+</span><span class="ct-chip">5000+</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Corsica</span><span class="ct-chip ct-chip-prov">Croazia</span><span class="ct-chip ct-chip-prov">Spagna</span><span class="ct-chip ct-chip-prov">Grecia</span><span class="ct-chip ct-chip-prov">Italia</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Ombrina%20boccadoro" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/rombo-chiodato.webp" alt="Rombo chiodato" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Rombo chiodato</h3>
+              <p class="ct-voce-sotto">Il pesce da carrello. Intero al forno rende per due, e dai due chili in su si porziona in sala senza che si rompa.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">800/1000</span><span class="ct-chip">1000/1500</span><span class="ct-chip">1500/2000</span><span class="ct-chip">2000/3000</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Francia</span><span class="ct-chip ct-chip-prov">Spagna</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Rombo%20chiodato" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/salmone-fresco.webp" alt="Salmone fresco" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Salmone fresco</h3>
+              <p class="ct-voce-sotto">Norvegia Superior e Princess, il Loch Duart di Scozia su ordinazione. I filetti li facciamo in laboratorio: si paga la resa, non lo scarto.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">4/5 kg</span><span class="ct-chip">5/6 kg</span><span class="ct-chip">6/7 kg</span><span class="ct-chip">filetti</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Norvegia</span><span class="ct-chip ct-chip-prov">Scozia</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Salmone%20fresco" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/ricciola.webp" alt="Ricciola" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Ricciola</h3>
+              <p class="ct-voce-sotto">La base del crudo quando il tonno costa troppo. L'oceanica di allevamento c'è tutto l'anno, la fresca di Spagna arriva a stagione.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">0,8/1,5 kg</span><span class="ct-chip">3/4 kg</span><span class="ct-chip">3/6 kg</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Spagna</span><span class="ct-chip ct-chip-prov">Oceano</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Ricciola" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/dentice-reale-e-pagaro.webp" alt="Dentice reale e pagaro" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Dentice reale e pagaro</h3>
+              <p class="ct-voce-sotto">Per quando l'orata ce l'hanno tutti in carta. Costa poco più e in sala si racconta da solo.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">600/800</span><span class="ct-chip">800/1000</span><span class="ct-chip">1000/1500</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Croazia</span><span class="ct-chip ct-chip-prov">Grecia</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Dentice%20reale%20e%20pagaro" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="ct-famiglia" id="pesce-di-cattura">
+        <div class="ct-fam-testa">
+          <span class="fq-arg-n">02</span>
+          <h2>Pesce di cattura</h2>
+          <p class="ct-fam-sotto">Fuori dal PAT: quello che arriva dagli altri mari, sempre in giornata.</p>
+          <p class="ct-fam-conta">2 voci</p>
+        </div>
+
+        <div class="ct-voci">
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/alici-fresche.webp" alt="Alici fresche" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Alici fresche</h3>
+              <p class="ct-voce-sotto">Mar Ligure quando c'è, poi Adriatico, Spagna e Portogallo. È il pesce che muove più cassette di tutto il banco fresco.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">cassetta 5 kg</span><span class="ct-chip">sfuse</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Mar Ligure</span><span class="ct-chip ct-chip-prov">Adriatico</span><span class="ct-chip ct-chip-prov">Spagna</span><span class="ct-chip ct-chip-prov">Portogallo</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Alici%20fresche" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="ct-voce">
+            <div class="ct-voce-foto">
+              <img src="foto-prodotti/pescatrice.webp" alt="Pescatrice" loading="lazy" />
+            </div>
+            <div class="ct-voce-testo">
+              <h3>Pescatrice</h3>
+              <p class="ct-voce-sotto">Code già pulite. La 1/2 kg è quella che rende meglio: sotto si perde troppo in testa, sopra il trancio viene spesso da tagliare.</p>
+            <div class="ct-riga">
+              <span class="ct-et">Pezzature</span>
+              <div class="ct-valori"><span class="ct-chip">code 1/2 kg</span></div>
+            </div>
+            <div class="ct-riga">
+              <span class="ct-et">Provenienza</span>
+              <div class="ct-valori"><span class="ct-chip ct-chip-prov">Atlantico</span><span class="ct-chip ct-chip-prov">Tirreno</span></div>
+            </div>
+              <a class="ct-chiedi" href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20sapere%20disponibilit%C3%A0%20e%20prezzo%20di%3A%20Pescatrice" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+                <span>Chiedi disponibilità e prezzo</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    <section class="ct-altri">
+      <h2>Gli altri cataloghi</h2>
+      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="Gli altri cataloghi">
+        <a href="d-sito.html">Pescato dell'Arcipelago Toscano</a>
+        <a href="catalogo-crostacei.html">Crostacei e molluschi</a>
+        <a href="catalogo-cefalopodi.html">Calamaro, polpo e seppia</a>
+        <a href="catalogo-crudo.html">Tonno e crudi</a>
+        <a href="catalogo-filetti.html">Filetti e affumicati</a>
+        <a href="catalogo-cucina.html">Pasta, contorni e basi</a>
+        <a href="catalogo-dessert.html">Dessert monoporzione</a>
+      </div>
+    </section>
+
+      <section class="pr-chiusura">
+        <p class="pr-chiusura-occhiello">Il prezzo si chiede, non si cerca</p>
+        <h2>Scrivici su WhatsApp<br />per il listino e le disponibilità</h2>
+        <p class="pr-chiusura-testo">Ti mandiamo il listino del tuo settore e ti diciamo cosa c'è in cella adesso. Si ordina fino alle 2 di notte, si consegna entro le 11.</p>
+        <div class="pr-chiusura-azioni">
+          <a href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20informazioni%20sui%20vostri%20prodotti" target="_blank" rel="noopener noreferrer" class="pr-btn pr-btn-wa">
+            <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+            Scrivici su WhatsApp
+          </a>
+        </div>
+        <p class="pr-chiusura-tel">Rispondiamo tutti i giorni, festivi compresi</p>
+      </section>
+    </main>
+
+    <footer class="pr-piede">
+      <div class="pr-piede-in">
+        <img src="../../assets/logo.png?v=2" alt="DelMar" class="pr-piede-logo" />
+        <p class="pr-piede-dati">
+          LE DELIZIE DEL MARE S.R.L. — Via Dorsale 13, 54100 Massa (MS)<br />
+          P.IVA 01081190454 — <a href="mailto:info@del-mar.it">info@del-mar.it</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="../../js/caustiche.js?v=1"></script>
+    <script src="../../js/pesci.js?v=4"></script>
+    <script src="js/d.js?v=1"></script>
+    <script src="js/catalogo.js?v=1"></script>
+    <script src="../../js/cursore.js?v=2"></script>
+  </body>
+</html>

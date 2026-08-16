@@ -1,0 +1,344 @@
+[
+  {
+    "slug": "triglia-di-fango",
+    "foto": "foto-4.jpg",
+    "nome": "Triglia di fango",
+    "taglia": "Pezzatura grande",
+    "scientifico": "Mullus barbatus",
+    "descrizione": [
+      "La triglia di fango è il pesce che racconta meglio il fondale dell'Alto Tirreno: vive sui fondali sabbiosi e fangosi fra i 50 e i 150 metri, e la si riconosce dalla livrea rosata attraversata da una banda dorata che sbiadisce appena il pesce esce dall'acqua — motivo per cui il colore acceso, in cassa, è la prima prova di freschezza.",
+      "La pezzatura grande è la più richiesta in cucina: regge la griglia e il forno senza sfaldarsi e si sfiletta pulita, mentre le taglie piccole finiscono in frittura o nelle zuppe. Carne bianca e saporita, che non chiede molto: sale, olio buono, forse un rametto di timo.",
+      "Va tenuta in ghiaccio e usata entro 24-48 ore dallo sbarco: non è pesce da conservare. Se serve sfilettata o pulita ce ne occupiamo noi in laboratorio, senza costi aggiuntivi."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Pesca a strascico, barche locali",
+    "pezzature": "Grande, media, piccola (da frittura)",
+    "stagione": "Da maggio a settembre",
+    "cucina": "Griglia, forno, filetti · le piccole in frittura",
+    "conservazione": "In ghiaccio, 24-48 ore"
+  },
+  {
+    "slug": "cicale-di-mare",
+    "foto": "foto-3.jpg",
+    "nome": "Cicale",
+    "taglia": "Pannocchie fresche",
+    "scientifico": "Squilla mantis",
+    "descrizione": [
+      "Le cicale — pannocchie, canocchie, a seconda di dove le si chiama — sono uno dei crostacei più identitari dell'Alto Tirreno. Vivono infossate nei fondali fangosi e si pescano soprattutto nei mesi freddi, quando la polpa è piena e dolce. I due occhi scuri sul telson, quelli che sembrano dipinti, sono il modo più rapido di riconoscerle.",
+      "In cucina reggono tutto: lessate e condite appena, alla griglia, nei sughi per la pasta o dentro una zuppa. La polpa si stacca in un filetto unico se il guscio viene inciso lungo i fianchi, ed è il motivo per cui i ristoranti le mettono volentieri sui piatti di crudo e di antipasti caldi.",
+      "Sono delicate: si lavorano appena arrivate e non si conservano più di 24 ore in ghiaccio. Quantità sempre limitate, perché dipendono dalla singola battuta di pesca."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Pesca a strascico e reti da posta",
+    "pezzature": "Selezionate a pezzatura in cassa",
+    "stagione": "Da ottobre a marzo, il periodo migliore",
+    "cucina": "Lesse, alla griglia, nei sughi e nelle zuppe",
+    "conservazione": "In ghiaccio, entro 24 ore"
+  },
+  {
+    "slug": "gambero-rosso",
+    "foto": "foto-12.jpg",
+    "nome": "Gambero rosso",
+    "taglia": "Seconda pezzatura",
+    "scientifico": "Aristaeomorpha foliacea",
+    "descrizione": [
+      "Il gambero rosso è il crostaceo più pregiato che entra dal nostro mare: vive in profondità, oltre i 400 metri, e arriva a bordo solo con le battute lunghe. Il colore intenso e la testa piena sono ciò che il ristoratore guarda per primo — e sono anche le due cose che si perdono più in fretta se la catena del freddo si interrompe.",
+      "La seconda pezzatura è quella che i ristoranti usano di più: costa meno della prima e in cucina rende uguale quando il gambero viene sgusciato, per un crudo, una tartare o un condimento. La prima pezzatura resta per i piatti dove il gambero si presenta intero.",
+      "Per il crudo, su richiesta lo forniamo già abbattuto a norma con la relativa attestazione: va indicato al momento dell'ordine, non è automatico."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Pesca a strascico di profondità",
+    "pezzature": "Prima e seconda scelta",
+    "stagione": "Tutto l'anno, con picchi in estate",
+    "cucina": "Crudo, tartare, sughi · testa per il fondo",
+    "conservazione": "In ghiaccio · abbattimento su richiesta"
+  },
+  {
+    "slug": "gambero-rosa",
+    "foto": "foto-5.jpg",
+    "nome": "Gambero rosa",
+    "taglia": "Seconda pezzatura",
+    "scientifico": "Parapenaeus longirostris",
+    "descrizione": [
+      "Il gambero rosa è il più versatile dei nostri crostacei: pezzatura media, guscio sottile, polpa dolce e soda. Si pesca su fondali meno profondi del rosso e arriva in quantità più costanti, il che lo rende il gambero su cui un menù può contare tutto l'anno.",
+      "In cucina è il gambero della pasta, dei risotti e delle fritture: si sguscia in fretta e non si sfalda in padella. Nelle pezzature più grandi regge anche la griglia e il crudo, dove la dolcezza si sente meglio.",
+      "Arriva in cassa con il ghiaccio e va lavorato in giornata. Se serve già sgusciato ce ne occupiamo noi: è tempo di brigata che non spendi."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Pesca a strascico",
+    "pezzature": "Prima e seconda scelta",
+    "stagione": "Tutto l'anno",
+    "cucina": "Paste e risotti, fritture, griglia",
+    "conservazione": "In ghiaccio, lavorare in giornata"
+  },
+  {
+    "slug": "razza-clavata",
+    "foto": "foto-7.jpg",
+    "nome": "Razza clavata",
+    "taglia": "Fresca, intera",
+    "scientifico": "Raja clavata",
+    "descrizione": [
+      "La razza clavata si riconosce dalle spine ricurve sul dorso — le clave che le danno il nome — e dalla pelle ruvida a macchie scure. È un pesce di fondale che arriva intero e si lavora in casa: le ali sono la parte che finisce in cucina, il resto serve per i fondi.",
+      "La carne è bianca, soda e senza lische: solo cartilagine, che la rende uno dei pesci più comodi da servire a chi le lische non le vuole. Regge bene la cottura al forno e in umido, ed è la base di piatti di tradizione che i ristoranti di pesce tengono volentieri in carta.",
+      "Va tenuta in ghiaccio e cucinata entro un paio di giorni. Su richiesta la consegniamo già pulita e porzionata in ali."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Pesca a strascico",
+    "pezzature": "Intera, pezzature miste",
+    "stagione": "Tutto l'anno",
+    "cucina": "Forno, umido, ali in padella",
+    "conservazione": "In ghiaccio, 48 ore"
+  },
+  {
+    "slug": "scorfano",
+    "foto": "foto-11.jpg",
+    "nome": "Scorfano",
+    "taglia": "Fresco",
+    "scientifico": "Scorpaena scrofa",
+    "descrizione": [
+      "Lo scorfano è brutto e prezioso: testa grande, spine velenose sul dorso, colore rosso mattone. Vive sui fondali rocciosi e si pesca in quantità sempre modeste, il che lo rende un pesce da carta corta più che da servizio continuo.",
+      "È il pesce delle zuppe per antonomasia — la testa e le spine danno un fondo che nessun altro pesce del nostro mare regala — ma le pezzature grandi sfilettate reggono benissimo anche il forno e la griglia. La carne è bianca, compatta e non si sfalda.",
+      "Va maneggiato con attenzione per le spine: se serve già pulito e sfilettato ce ne occupiamo noi in laboratorio."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Reti da posta e strascico",
+    "pezzature": "Pezzature miste, prevalenza media",
+    "stagione": "Tutto l'anno",
+    "cucina": "Zuppe e fondi · le grandi al forno",
+    "conservazione": "In ghiaccio, 48 ore"
+  },
+  {
+    "slug": "spigola-di-mare",
+    "foto": "foto-10.jpg",
+    "nome": "Spigola",
+    "taglia": "Pezzatura grande",
+    "scientifico": "Dicentrarchus labrax",
+    "descrizione": [
+      "Questa è spigola di mare, pescata: un'altra cosa rispetto a quella di allevamento, e si vede dalla forma affusolata, dalla pinna dorsale integra e dalla carne più soda. Vive sotto costa e nelle acque salmastre, e arriva in quantità limitate perché dipende dalla singola battuta.",
+      "La pezzatura grande è quella che i ristoranti usano per il servizio in sala: si presenta intera al sale o al forno, oppure si sfiletta per due porzioni pulite. La carne bianca e delicata è quella su cui la differenza fra pescato e allevato si sente di più, ed è il motivo per cui vale la pena dirlo in carta.",
+      "In ghiaccio si tiene bene un paio di giorni. Sfilettatura e pulizia su richiesta, incluse."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Reti da posta, pesca locale",
+    "pezzature": "Grande e media",
+    "stagione": "Tutto l'anno, meglio in inverno",
+    "cucina": "Al sale, al forno, filetti in padella",
+    "conservazione": "In ghiaccio, 48 ore"
+  },
+  {
+    "slug": "calamaro",
+    "foto": "foto-2.jpg",
+    "nome": "Calamaro",
+    "taglia": "Pezzatura media",
+    "scientifico": "Loligo vulgaris",
+    "descrizione": [
+      "Il calamaro nostrano è un altro prodotto rispetto a quello d'importazione: il mantello è più sottile, la carne più dolce e le pinne arrivano intatte. Si pesca sotto costa e in quantità che cambiano molto da una notte all'altra.",
+      "La pezzatura media è la più comoda in cucina: si taglia ad anelli per la frittura, si apre e si incide per la griglia, si farcisce intero per il forno. Nelle pezzature piccole è il calamaro dei fritti misti, in quelle grandi regge la cottura lunga senza indurire.",
+      "Va pulito in giornata. Se serve già pulito, ad anelli o aperto, lo consegniamo lavorato come chiedi."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Reti da posta e strascico",
+    "pezzature": "Grande, media, piccola",
+    "stagione": "Da settembre a marzo",
+    "cucina": "Frittura, griglia, ripieni",
+    "conservazione": "In ghiaccio, pulire in giornata"
+  },
+  {
+    "slug": "frittura-del-giorno",
+    "foto": "foto-6.jpg",
+    "nome": "Frittura",
+    "taglia": "Mista, del giorno",
+    "scientifico": "Mista di specie locali",
+    "descrizione": [
+      "La frittura è quello che il mare ha dato in taglia piccola: triglie, merluzzetti, calamaretti, gamberi, a seconda della battuta. Non è una selezione fatta a tavolino ma la composizione vera della pesca, e cambia ogni notte — per questo si ordina sapendo cosa aspettarsi, non scegliendo specie per specie.",
+      "È il prodotto su cui i ristoranti di mare fanno il servizio dell'estate: costa meno del pesce a pezzatura, si frigge in pochi minuti e ha una resa alta per porzione. La qualità si vede dalla dimensione uniforme e dalla pulizia della cassa, non dal peso.",
+      "Va usata in giornata: le taglie piccole perdono freschezza molto più in fretta di un pesce grande."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Pesca a strascico, taglie piccole",
+    "pezzature": "Mista, calibro da frittura",
+    "stagione": "Tutto l'anno, più abbondante d'estate",
+    "cucina": "Frittura",
+    "conservazione": "In ghiaccio, usare in giornata"
+  },
+  {
+    "slug": "cefalo",
+    "foto": "foto-9.jpg",
+    "nome": "Cefalo",
+    "taglia": "Fresco",
+    "scientifico": "Mugil cephalus",
+    "descrizione": [
+      "Il cefalo è un pesce sottovalutato che sta tornando nelle cucine di ricerca: vive sotto costa e nelle acque salmastre, ha carne saporita e grassa il giusto, e costa una frazione dei pesci più blasonati. Quello di mare aperto, come questo, ha un sapore molto più pulito di quello di laguna.",
+      "Regge la griglia e il forno, si sfiletta bene ed è ottimo affumicato o marinato. È il pesce con cui un ristorante può costruire un piatto di carattere tenendo il costo del menù sotto controllo — e i cuochi che lo conoscono lo trattano con lo stesso rispetto di una spigola.",
+      "Da lavorare entro un paio di giorni, tenuto in ghiaccio."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Reti da posta, pesca locale",
+    "pezzature": "Pezzature miste",
+    "stagione": "Tutto l'anno",
+    "cucina": "Griglia, forno, marinature e affumicature",
+    "conservazione": "In ghiaccio, 48 ore"
+  },
+  {
+    "slug": "pesce-prete",
+    "foto": "foto-8.jpg",
+    "nome": "Pesce prete",
+    "taglia": "Fresco",
+    "scientifico": "Uranoscopus scaber",
+    "descrizione": [
+      "Il pesce prete passa la vita mezzo sepolto nella sabbia con gli occhi rivolti al cielo, ed è da lì che gli viene il nome. Ha una testa grossa e un corpo corto: la resa in filetto non è altissima, ma quello che dà è una carne bianca, soda e senza spine fastidiose.",
+      "È un pesce da zuppa e da brodo di grande carattere, e nelle pezzature maggiori un filetto che regge la padella meglio di molti pesci più costosi. Rientra in quella famiglia di pesci poveri del Tirreno che oggi i cuochi cercano proprio perché raccontano il mare vero.",
+      "Va pulito con attenzione — ha una spina opercolare — e ce ne occupiamo noi se serve."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Pesca a strascico",
+    "pezzature": "Pezzature miste",
+    "stagione": "Tutto l'anno",
+    "cucina": "Zuppe, brodi, filetti in padella",
+    "conservazione": "In ghiaccio, 48 ore"
+  },
+  {
+    "slug": "gambero-bianco",
+    "foto": "foto-1.jpg",
+    "nome": "Gambero bianco",
+    "taglia": "Fresco",
+    "scientifico": "Parapenaeus longirostris",
+    "descrizione": [
+      "Il gambero bianco è il più delicato dei tre gamberi che entrano dal nostro mare: guscio chiaro e sottile, polpa dolcissima, pezzatura contenuta. Arriva in quantità piccole e irregolari, quindi è un prodotto da proporre quando c'è, non da mettere fisso in carta.",
+      "Dà il meglio crudo o appena scottato, dove la dolcezza non viene coperta: tartare, crudi misti, condimenti a fine cottura. Sgusciarlo è rapido perché il carapace è morbido.",
+      "È il crostaceo che si deteriora più in fretta: va lavorato lo stesso giorno in cui arriva. Per il crudo, abbattimento a norma su richiesta."
+    ],
+    "zona": "FAO 37.1.3 — Mar Tirreno settentrionale",
+    "metodo": "Pesca a strascico",
+    "pezzature": "Pezzatura piccola e media",
+    "stagione": "Tutto l'anno, quantità variabili",
+    "cucina": "Crudo, tartare, scottature veloci",
+    "conservazione": "Lavorare in giornata · abbattimento su richiesta"
+  },
+  {
+    "slug": "scampi",
+    "foto": null,
+    "nome": "Scampi",
+    "taglia": "Prima e seconda",
+    "scientifico": "Nephrops norvegicus",
+    "descrizione": [
+      "Gli scampi del Tirreno arrivano in quattro selezioni, dalla prima alla quarta, e la differenza non è solo la taglia: la prima ha il guscio più duro e regge la cottura intera, la terza e la quarta rendono meglio sgusciate perché la polpa è la stessa a metà del prezzo.",
+      "Si riconoscono freschi dall'occhio nero e pieno e dalla testa attaccata bene al corpo. Quando la testa si stacca sotto il proprio peso lo scampo è vecchio di giorni, e in cottura si sfalda.",
+      "È il crostaceo che regge meglio il crudo fra quelli locali: dolce, senza il retrogusto iodato del gambero rosso, e con una resa alta se si lavora subito."
+    ],
+    "zona": "FAO 37.1.3 — Mar Ligure e Tirreno settentrionale",
+    "metodo": "Reti a strascico",
+    "pezzature": "Selezione I, II, III, IV",
+    "stagione": "Tutto l'anno, migliori in inverno",
+    "cucina": "Crudi, alla catalana, in guazzetto, nei primi",
+    "conservazione": "In ghiaccio, da lavorare entro 24 ore"
+  },
+  {
+    "slug": "astice-blu",
+    "foto": null,
+    "nome": "Astice blu",
+    "taglia": "Vivo, a pezzo",
+    "scientifico": "Homarus gammarus",
+    "descrizione": [
+      "L'astice blu del Mediterraneo è raro e arriva a pezzi singoli, non a cassette. Si distingue dal canadese per il colore — blu scuro screziato invece che marrone — e per le chele più corte e più tozze.",
+      "La carne è più compatta e più dolce di quella atlantica, e non si sfibra nemmeno quando lo si cuoce intero. È il motivo per cui in carta si può scrivere il nome per esteso e chiedere il prezzo che merita.",
+      "Arriva vivo e resta vivo in vasca fino al carico. Quando entra è quasi sempre uno o due pezzi: chi lo vuole lo prenota la sera prima."
+    ],
+    "zona": "FAO 37.1.3 — Arcipelago Toscano",
+    "metodo": "Nasse e reti",
+    "pezzature": "A pezzo, 400/800 g",
+    "stagione": "Primavera ed estate",
+    "cucina": "Alla catalana, alla griglia, nei primi importanti",
+    "conservazione": "Vivo in vasca fino alla consegna"
+  },
+  {
+    "slug": "san-pietro",
+    "foto": null,
+    "nome": "San Pietro",
+    "taglia": "Pezzatura piccola",
+    "scientifico": "Zeus faber",
+    "descrizione": [
+      "Il pesce con la macchia nera sul fianco — l'impronta del dito di San Pietro, dice la storia. È brutto da guardare e ha una testa enorme, quindi la resa è bassa: da un chilo intero escono poco più di trecento grammi di filetto.",
+      "Ma quel filetto è fra i migliori che il Tirreno dia: bianco, sodo, senza spine intramuscolari, e regge la padella e il forno senza perdere acqua. È il pesce che i cuochi comprano quando il piatto deve fare impressione.",
+      "La pezzatura piccola costa meno ed è perfetta per la porzione singola intera; quella grande si sfiletta e si porziona."
+    ],
+    "zona": "FAO 37.1.3 — Mar Ligure e Tirreno settentrionale",
+    "metodo": "Reti a strascico e tramaglio",
+    "pezzature": "Piccolo 300/600 g, grande 800/1500 g",
+    "stagione": "Autunno e inverno",
+    "cucina": "In padella, al forno, in guazzetto",
+    "conservazione": "In ghiaccio, 2 giorni"
+  },
+  {
+    "slug": "gobetto",
+    "foto": null,
+    "nome": "Gobetto",
+    "taglia": "Fresco, sfuso",
+    "scientifico": "Plesionika narval",
+    "descrizione": [
+      "Il gambero della gobba, piccolo e con il rostro lungo e ricurvo. È un prodotto quasi solo locale: si pesca a profondità medie davanti all'Elba e non arriva mai in quantità.",
+      "Ha un sapore più dolce e meno salino del gambero rosa, e si mangia crudo o appena scottato. Sgusciarlo è un lavoro, e per questo lo comprano quasi solo i locali che il crudo lo fanno sul serio.",
+      "Quando entra, entra poco: è una delle voci che spariscono dalla lista entro la mattina."
+    ],
+    "zona": "FAO 37.1.3 — Arcipelago Toscano",
+    "metodo": "Nasse e strascico",
+    "pezzature": "Sfuso",
+    "stagione": "Primavera e autunno",
+    "cucina": "Crudo, scottato, in tartare",
+    "conservazione": "In ghiaccio, da usare in giornata"
+  },
+  {
+    "slug": "sovaci",
+    "foto": null,
+    "nome": "Sovaci e passere",
+    "taglia": "Fresche, intere",
+    "scientifico": "Platichthys flesus",
+    "descrizione": [
+      "Le passere di mare, che qui si chiamano sovaci. Pesci piatti di piccola taglia, con la carne bianca e dolce e una lisca centrale che si toglie in un colpo dopo la cottura.",
+      "Sono il pesce piatto economico del Tirreno: costano una frazione della sogliola e in frittura o in padella si comportano allo stesso modo. Chi li conosce li usa nei menù a prezzo fisso.",
+      "Vanno consumate in fretta: la carne è delicata e dopo due giorni perde consistenza."
+    ],
+    "zona": "FAO 37.1.3 — Mar Ligure e Tirreno settentrionale",
+    "metodo": "Reti a strascico",
+    "pezzature": "Intere, sfuse",
+    "stagione": "Inverno e primavera",
+    "cucina": "In padella, fritte, al forno",
+    "conservazione": "In ghiaccio, 1-2 giorni"
+  },
+  {
+    "slug": "zuppa-di-pesce",
+    "foto": null,
+    "nome": "Zuppa di pesce",
+    "taglia": "Mista, del giorno",
+    "scientifico": "Selezione mista di scoglio",
+    "descrizione": [
+      "Il misto per la zuppa: scorfanetti, cappone, tracine, pesci di scoglio di piccola taglia che da soli non fanno porzione ma insieme fanno il fondo migliore che esista.",
+      "È la voce che cambia più di tutte, perché è fatta di quello che avanza dalla selezione della notte. Esiste in due gradi — la extra ha più scorfano e meno pesce minuto — e la zuppetta, più piccola, che si usa solo per il brodo.",
+      "Costa poco e rende molto: da tre chili di misto esce il fondo per venti porzioni. È il modo più economico di avere in carta un piatto che sa di mare vero."
+    ],
+    "zona": "FAO 37.1.3 — Arcipelago Toscano",
+    "metodo": "Reti a strascico e tramaglio",
+    "pezzature": "Extra, mista, zuppetta",
+    "stagione": "Tutto l'anno",
+    "cucina": "Zuppe, cacciucco, fondi e fumetti",
+    "conservazione": "In ghiaccio, 1-2 giorni"
+  },
+  {
+    "slug": "pesce-spada",
+    "foto": null,
+    "nome": "Pesce spada",
+    "taglia": "A trance",
+    "scientifico": "Xiphias gladius",
+    "descrizione": [
+      "Lo spada fresco del Tirreno, già tagliato a trance. Non entra spesso — è pesca stagionale e non tutte le barche lo prendono — ma quando arriva è una voce che si vende da sola.",
+      "La trancia fresca si riconosce dal colore rosato e dal grasso bianco e compatto lungo il taglio: se il grasso è giallo o la carne è opaca, lo spada ha già qualche giorno.",
+      "Regge la griglia meglio di quasi tutti i pesci, e la parte vicino alla pelle si presta al crudo se lavorata subito."
+    ],
+    "zona": "FAO 37.1.3 — Mar Ligure e Tirreno settentrionale",
+    "metodo": "Palangaro",
+    "pezzature": "Trance fresche",
+    "stagione": "Estate e inizio autunno",
+    "cucina": "Alla griglia, in padella, a carpaccio",
+    "conservazione": "In ghiaccio, 2 giorni"
+  }
+]

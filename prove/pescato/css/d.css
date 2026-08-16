@@ -1,0 +1,455 @@
+/* IL PESCATO, dentro il linguaggio del sito.
+   Carica style.css e ne usa i colori, i caratteri e l'intestazione: questa e'
+   una pagina di del-mar.it, non una pagina a se'. Stesso impianto della
+   pagina delle domande frequenti — apertura con le campiture, corpo su
+   bianco, chiusura sul blu. */
+
+.pr-pagina #hdr {
+  opacity: 1;
+}
+
+.nav-qui {
+  font-size: .65rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--wa);
+  cursor: default;
+}
+
+/* ─ Apertura ────────────────────────────────
+   Le stesse due campiture della sezione contatti: mare profondo a sinistra
+   dove sta il titolo, luce a destra. caustiche.js dipinge lo scuro a
+   sinistra, quindi il testo DEVE stare li' */
+/* L'apertura resta BASSA di proposito. Il testo che spiega e che serve ai
+   motori di ricerca sta piu' giu', in una colonna sua: qui bastano il nome del
+   prodotto e una riga. Un'apertura alta, con titolo su tre righe e quattro
+   righe di testo, si mangia tutto lo schermo prima che si veda un pesce — e su
+   una pagina che vive di fotografie e' il difetto peggiore che possa avere. */
+.pr-hero {
+  position: relative;
+  min-height: 46vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #0e1445;
+  padding: 7.5rem 6% 3.5rem;
+}
+
+#pr-sfondo,
+#pr-pesci {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#pr-sfondo { z-index: 0; }
+#pr-pesci { z-index: 1; }
+
+/* Un po' piu' larga di prima: il nome del prodotto e' lungo, e in una colonna
+   stretta andava su tre righe facendo alzare tutta l'apertura */
+.pr-hero-in {
+  position: relative;
+  z-index: 2;
+  width: min(52%, 44rem);
+}
+
+.pr-occhiello {
+  margin: 0 0 1.4rem;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.pr-titolo {
+  margin: 0 0 1.1rem;
+  font-size: clamp(1.9rem, 4vw, 3.2rem);
+  font-weight: 200;
+  line-height: 1.04;
+  letter-spacing: -.045em;
+  color: #fff;
+}
+
+/* La seconda riga piu' piccola e velata, come sulla pagina delle domande:
+   insieme restano una frase sola invece di due titoli impilati */
+.pr-titolo em {
+  display: block;
+  margin-top: .1em;
+  font-style: normal;
+  font-size: .62em;
+  font-weight: 300;
+  color: rgba(255, 255, 255, .66);
+}
+
+.pr-sotto {
+  margin: 0;
+  max-width: 44ch;
+  font-size: .92rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, .74);
+}
+
+/* ─ La riga della giornata ──────────────────
+   Appesa sotto l'intestazione come la barra delle domande: dice QUANDO, che
+   sul pescato e' l'informazione che distingue questa pagina da un catalogo */
+/* --h-hdr la misura d.js sull'intestazione vera. Il 4.1rem di scorta serve
+   solo se il JavaScript non parte: sbagliato di poco, meglio di niente */
+.pr-barra {
+  position: sticky;
+  top: var(--h-hdr, 4.1rem);
+  z-index: 90;
+  background: rgba(255, 255, 255, .93);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* La data sta al centro e spinge la via di ritorno a sinistra e l'orario a
+   destra: con space-between i tre pezzi si distribuirebbero a caso ogni volta
+   che cambia la lunghezza della data */
+.pr-barra-in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem 1.4rem;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: .9rem 6%;
+}
+
+/* Il margine automatico spinge l'orario di aggiornamento a destra e tiene la
+   via di ritorno attaccata a sinistra, qualunque sia la lunghezza della data */
+.pr-giorno {
+  margin: 0 auto 0 0;
+  font-size: .84rem;
+  font-weight: 300;
+  color: var(--text-mid);
+}
+
+.pr-giorno strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.pr-agg {
+  margin: 0;
+  font-size: .72rem;
+  color: var(--text-dim);
+}
+
+/* ─ Corpo ───────────────────────────────────*/
+.pr-corpo {
+  background: var(--bg);
+}
+
+/* Il testo che racconta il prodotto. Colonna stretta (66 caratteri): oltre,
+   l'occhio fatica a ritrovare l'inizio della riga dopo — stessa misura della
+   pagina privacy e delle risposte alle domande frequenti */
+.pr-intro {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 4rem 6% 1rem;
+}
+
+.pr-intro h2 {
+  margin: 0 0 1.4rem;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 300;
+  letter-spacing: -.035em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.pr-intro p {
+  margin: 0 0 1.1rem;
+  font-size: .95rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--text-hi);
+}
+
+.pr-intro strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.pr-griglia {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2.5rem 6% 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 2.4rem 1.6rem;
+}
+
+/* La scheda e' un collegamento: si entra nella specie. La freccia compare
+   al passaggio invece di stare sempre li' — in una griglia di dodici,
+   dodici frecce sono rumore */
+.pr-card {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  color: inherit;
+}
+
+.pr-card h2::after {
+  content: '→';
+  margin-left: .45rem;
+  opacity: 0;
+  color: var(--wa);
+  transition: opacity .3s, transform .3s;
+  display: inline-block;
+  transform: translateX(-4px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pr-card:hover h2 {
+    color: var(--wa);
+  }
+
+  .pr-card:hover h2::after {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* LE FOTO SONO VERTICALI e piene di polistirolo bianco: su fondo bianco la
+   cassa si fonde con la pagina. Non si ribalta il sito in scuro per questo —
+   basta un bordo sottile e un fondo appena grigio a fare da appoggio, che e'
+   il linguaggio che il sito usa gia' per le sue schede */
+.pr-foto {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--bg-soft);
+}
+
+.pr-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.2s cubic-bezier(.2, .7, .3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pr-card:hover .pr-foto img {
+    transform: scale(1.04);
+  }
+}
+
+/* IL RIQUADRO SENZA FOTOGRAFIA.
+   Non e' un segnaposto in attesa: e' come si presenta una specie sbarcata di
+   cui il buyer non ha fatto lo scatto, ed e' un caso frequente. Il nome in
+   grande sul fondo del sito si legge come una scelta grafica; un'icona di
+   immagine rotta o la scritta "foto non disponibile" direbbero che manca
+   qualcosa, e a chi legge non manca niente — il pesce c'e'. */
+.pr-foto-vuota {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+  background: var(--ink);
+}
+
+.pr-foto-vuota span {
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  font-weight: 200;
+  letter-spacing: -.03em;
+  line-height: 1.2;
+  text-align: center;
+  color: rgba(255, 255, 255, .3);
+}
+
+.pr-testo h2 {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 400;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+
+.pr-taglia {
+  margin: .25rem 0 0;
+  font-size: .78rem;
+  font-weight: 300;
+  color: var(--text-dim);
+}
+
+/* ─ Chiusura ────────────────────────────────
+   Stesso impianto della chiusura delle domande frequenti */
+.pr-chiusura {
+  max-width: 62rem;
+  margin: 0 auto 4rem;
+  padding: 4.5rem 8% 4.2rem;
+  text-align: center;
+  background: var(--ink);
+  border-radius: 3px;
+}
+
+.pr-chiusura-occhiello {
+  margin: 0 0 1.1rem;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.pr-chiusura h2 {
+  margin: 0 0 1.2rem;
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  font-weight: 200;
+  letter-spacing: -.04em;
+  line-height: 1.12;
+  color: #fff;
+}
+
+.pr-chiusura-testo {
+  max-width: 42ch;
+  margin: 0 auto 2.2rem;
+  font-size: .92rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, .68);
+}
+
+.pr-chiusura-azioni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  justify-content: center;
+  margin-bottom: 1.8rem;
+}
+
+/* Un solo bottone, quindi puo' permettersi di essere piu' grande: quando
+   l'azione e' una sola non c'e' niente con cui dividere l'attenzione, e
+   tenerlo della misura di prima lo farebbe sembrare timido in mezzo al blu */
+.pr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  padding: 1.15rem 2.6rem;
+  border-radius: 2px;
+  font-size: .8rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  transition: background .3s, border-color .3s, color .3s;
+}
+
+.pr-btn svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.pr-btn svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+.pr-btn .arr {
+  fill: none;
+  stroke: currentColor;
+}
+
+.pr-btn-wa {
+  background: var(--accent-bright);
+  color: #fff;
+  border: 1px solid var(--accent-bright);
+}
+
+.pr-btn-ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, .82);
+  border: 1px solid rgba(255, 255, 255, .28);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pr-btn-wa:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--ink);
+  }
+
+  .pr-btn-ghost:hover {
+    border-color: #fff;
+    color: #fff;
+  }
+}
+
+.pr-chiusura-tel {
+  margin: 0;
+  font-size: .78rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, .5);
+}
+
+.pr-chiusura-tel a {
+  color: rgba(255, 255, 255, .85);
+  border-bottom: 1px solid rgba(255, 255, 255, .3);
+}
+
+/* ─ Piede ───────────────────────────────────*/
+.pr-piede {
+  padding: 3rem 6%;
+  border-top: 1px solid var(--border);
+  background: var(--bg-soft);
+  text-align: center;
+}
+
+.pr-piede-logo {
+  height: 2rem;
+  width: auto;
+  margin: 0 auto 1.2rem;
+  opacity: .8;
+}
+
+.pr-piede-dati {
+  margin: 0;
+  font-size: .74rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--text-dim);
+}
+
+.pr-piede a {
+  color: var(--text-mid);
+}
+
+/* ─ Telefono ────────────────────────────────*/
+@media (max-width: 900px) {
+  .pr-hero {
+    min-height: 56vh;
+    padding: 7.5rem 6% 4rem;
+  }
+
+  .pr-hero-in {
+    width: 100%;
+  }
+
+  /* Come nella sezione contatti della home: sotto i 900 le campiture si
+     spengono e resta il fondo profondo coi pesci sopra */
+  #pr-sfondo {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .pr-griglia {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem .9rem;
+    padding-top: 2.5rem;
+  }
+
+  .pr-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,62 @@
+﻿[
+    {
+        "nome":  "GAMBERO BIANCO",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-1.jpg"
+    },
+    {
+        "nome":  "CALAMARO MEDIO PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-2.jpg"
+    },
+    {
+        "nome":  "CICALE PANNOCCHIE FRESCHE PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-3.jpg"
+    },
+    {
+        "nome":  "TRIGLIE GRANDI DI FANGO PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-4.jpg"
+    },
+    {
+        "nome":  "GAMBERO ROSA II PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-5.jpg"
+    },
+    {
+        "nome":  "FRITTURA FRESCA PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-6.jpg"
+    },
+    {
+        "nome":  "RAZZA FRESCA CLAVATA PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-7.jpg"
+    },
+    {
+        "nome":  "PESCE PRETE PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-8.jpg"
+    },
+    {
+        "nome":  "CEFALO FRESCO PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-9.jpg"
+    },
+    {
+        "nome":  "SPIGOLA GRANDE FRESCA PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-10.jpg"
+    },
+    {
+        "nome":  "SCORFANO FRESCO PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-11.jpg"
+    },
+    {
+        "nome":  "GAMBERO FRESCO ROSSO II PAT",
+        "fonte":  "giacenza",
+        "file":  "foto/foto-12.jpg"
+    }
+]

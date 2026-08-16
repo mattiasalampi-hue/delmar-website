@@ -1,0 +1,194 @@
+/* IL FOGLIO DI SCELTA DELLE FOTO.
+   Non e' una pagina del sito: e' uno strumento di lavoro, si usa una volta e
+   non lo vede nessun cliente. Quindi niente carattere del marchio e niente
+   grazie — solo foto grandi affiancate, perche' l'unica cosa che conta e'
+   riuscire a confrontarle con l'occhio senza scorrere. */
+
+:root {
+  --bordo: #d8dae2;
+  --fondo: #f4f5f8;
+  --inchiostro: #151c64;
+  --scelto: #c9432c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0 0 22rem;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #222;
+  background: var(--fondo);
+}
+
+.testa {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 1.2rem 2rem;
+  background: #fff;
+  border-bottom: 1px solid var(--bordo);
+}
+
+.testa h1 {
+  margin: 0 0 .4rem;
+  font-size: 1.2rem;
+  color: var(--inchiostro);
+}
+
+.testa p {
+  margin: 0;
+  font-size: .82rem;
+  line-height: 1.5;
+  color: #666;
+}
+
+.conteggio {
+  margin-top: .5rem !important;
+  font-size: .9rem !important;
+  color: var(--inchiostro) !important;
+}
+
+code {
+  padding: .1rem .35rem;
+  background: var(--fondo);
+  border-radius: 3px;
+  font-size: .95em;
+}
+
+.voce {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--bordo);
+}
+
+.voce h2 {
+  margin: 0 0 .8rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--inchiostro);
+}
+
+.voce h2 small {
+  display: block;
+  margin-top: .2rem;
+  font-size: .72rem;
+  font-weight: 400;
+  color: #888;
+}
+
+/* Segna a colpo d'occhio quali prodotti restano da fare: con quarantasette
+   voci, ritrovare quella che si era saltata e' il lavoro piu' noioso */
+.voce.is-fatta {
+  background: #fff;
+}
+
+.voce.is-fatta h2::before {
+  content: '✓ ';
+  color: #1b7a52;
+}
+
+.scelte {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+
+.sc {
+  flex: 0 0 auto;
+  width: 15rem;
+  cursor: pointer;
+}
+
+.sc input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sc img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  border: 3px solid transparent;
+  border-radius: 4px;
+  background: #fff;
+  transition: border-color .15s;
+}
+
+.sc:hover img {
+  border-color: #bbb;
+}
+
+.sc input:checked + img {
+  border-color: var(--scelto);
+}
+
+.meta {
+  display: block;
+  margin-top: .35rem;
+  font-size: .68rem;
+  line-height: 1.45;
+  color: #777;
+}
+
+.niente {
+  margin: 0;
+  padding: 1rem;
+  background: #fff3f0;
+  border-left: 3px solid var(--scelto);
+  font-size: .82rem;
+  color: #8a3a28;
+}
+
+/* Il risultato resta incollato in basso: si sceglie scorrendo, e il pezzo da
+   copiare deve essere sempre raggiungibile senza tornare in fondo */
+.esito {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 20rem;
+  padding: 1rem 2rem;
+  background: #fff;
+  border-top: 1px solid var(--bordo);
+  overflow: auto;
+}
+
+.esito h2 {
+  margin: 0 0 .6rem;
+  font-size: .9rem;
+  display: inline-block;
+  color: var(--inchiostro);
+}
+
+#copia {
+  margin-left: 1rem;
+  padding: .4rem 1rem;
+  border: 1px solid var(--inchiostro);
+  border-radius: 3px;
+  background: var(--inchiostro);
+  color: #fff;
+  font-size: .78rem;
+  cursor: pointer;
+}
+
+#copia:hover {
+  background: #fff;
+  color: var(--inchiostro);
+}
+
+pre {
+  margin: .6rem 0 0;
+  padding: .8rem;
+  background: var(--fondo);
+  border-radius: 3px;
+  font-size: .72rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

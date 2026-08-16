@@ -1,0 +1,554 @@
+[
+  {
+    "prodotto": "alici-fresche",
+    "foto": "foto-prodotti/alici-fresche.webp",
+    "autore": "ignoto",
+    "licenza": "CC BY-SA 3.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Box_of_Engraulis_encrasicholus.jpg"
+  },
+  {
+    "prodotto": "alici-marinate-e-acciughe",
+    "foto": "foto-prodotti/alici-marinate-e-acciughe.webp",
+    "autore": "Kolforn (Kolforn)I'd appreciate if you could mail me (Kolforn@gmail.com) if you want to use this picture out of the Wikimedia project scope. .mw-parser-output .responsive-license-cc{clear:both;text-align:center;box-sizing:border-box;width:100%;justify-content:space-around;align-items:center;margin:0.5em auto;background-color:#f9f9f9;border:2px solid #e0e0e0;border-spacing:8px;display:flex}.mw-parser-output .responsive-license-cc div{margin:4px}.mw-parser-output .rlicense-text div{margin:0.5em auto}@media screen and (max-width:640px){.mw-parser-output .responsive-license-cc{flex-flow:column}.mw-parser-output .rlicense-text{order:1}} This file is licensed under the Creative Commons Attribution-Share Alike 4.0 International license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. share alike – If you remix, transform, or build upon the material, you must distribute your contributions under the same or compatible license as the original.https://creativecommons.org/licenses/by-sa/4.0CC BY-SA 4.0 Creative Commons Attribution-Share Alike 4.0 truetrue",
+    "licenza": "BY-SA 4.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=61014600"
+  },
+  {
+    "prodotto": "aragosta",
+    "foto": "foto-prodotti/aragosta.webp",
+    "autore": "frankieleon",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/23307937@N04/3509293754"
+  },
+  {
+    "prodotto": "astice",
+    "foto": "foto-prodotti/astice.webp",
+    "autore": "Ben Sutherland",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/60179301@N00/8714221198"
+  },
+  {
+    "prodotto": "baba-al-rum",
+    "foto": "foto-prodotti/baba-al-rum.webp",
+    "autore": "jimmyweee",
+    "licenza": "CC BY 2.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Paris_pastries_shop_-_Mille-feuille_-_Baba_au_rhum.jpg"
+  },
+  {
+    "prodotto": "baccala-e-cuore-di-merluzzo",
+    "foto": "foto-prodotti/baccala-e-cuore-di-merluzzo.webp",
+    "autore": "Much Ramblings",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/48837722@N04/5936927239"
+  },
+  {
+    "prodotto": "basi-pizza-e-pinsa",
+    "foto": "foto-prodotti/basi-pizza-e-pinsa.webp",
+    "autore": "flickr4jazz",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/9341577@N08/2709761925"
+  },
+  {
+    "prodotto": "brosme",
+    "foto": "foto-prodotti/brosme.webp",
+    "autore": "Pmg",
+    "licenza": "CC BY-SA 3.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Brosme_for_sale.jpg"
+  },
+  {
+    "prodotto": "calamaro-c4-large",
+    "foto": "foto-prodotti/calamaro-c4-large.webp",
+    "autore": "PattayaPatrol",
+    "licenza": "BY-SA 4.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=194511576"
+  },
+  {
+    "prodotto": "calamaro-patagonia-c4",
+    "foto": "foto-prodotti/calamaro-patagonia-c4.webp",
+    "autore": "Stepheye",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/23808271@N08/3220526946"
+  },
+  {
+    "prodotto": "cannolicchi-fasolari-tartufi-di-mare",
+    "foto": "foto-prodotti/cannolicchi-fasolari-tartufi-di-mare.webp",
+    "autore": "goosmurf",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/19349404@N00/16421990851"
+  },
+  {
+    "prodotto": "capesante",
+    "foto": "foto-prodotti/capesante.webp",
+    "autore": "sodai gomi",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/49774228@N00/28970985565"
+  },
+  {
+    "prodotto": "capesante-sgusciate",
+    "foto": "foto-prodotti/capesante-sgusciate.webp",
+    "autore": "Gary Soup",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/87117631@N00/12667751313"
+  },
+  {
+    "prodotto": "copertina-cefalopodi",
+    "foto": "foto-prodotti/copertina-cefalopodi.webp",
+    "autore": "avlxyz",
+    "licenza": "BY-SA 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/10559879@N00/3739162586"
+  },
+  {
+    "prodotto": "copertina-congelato",
+    "foto": "foto-prodotti/copertina-congelato.webp",
+    "autore": "Faroclom",
+    "licenza": "CC BY-SA 3.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:HKCEC_WC_HKTDC_Food_Expo_2009_Frozen_Food_Shrimp_Seafood.JPG"
+  },
+  {
+    "prodotto": "copertina-crostacei",
+    "foto": "foto-prodotti/copertina-crostacei.webp",
+    "autore": "Joe Ross from Lansing, Michigan",
+    "licenza": "BY-SA 2.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=109214818"
+  },
+  {
+    "prodotto": "copertina-crudo",
+    "foto": "foto-prodotti/copertina-crudo.webp",
+    "autore": "avlxyz",
+    "licenza": "BY-SA 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/10559879@N00/2570349350"
+  },
+  {
+    "prodotto": "copertina-cucina",
+    "foto": "foto-prodotti/copertina-cucina.webp",
+    "autore": "Ceeseven",
+    "licenza": "CC BY-SA 4.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Basket_of_French_Fries.JPG"
+  },
+  {
+    "prodotto": "copertina-dessert",
+    "foto": "foto-prodotti/copertina-dessert.webp",
+    "autore": "jbcurio",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/69131582@N00/2540997121"
+  },
+  {
+    "prodotto": "copertina-dolci",
+    "foto": "foto-prodotti/copertina-dolci.webp",
+    "autore": "Ted Drake",
+    "licenza": "BY-SA 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/64184609@N00/165647916"
+  },
+  {
+    "prodotto": "copertina-filetti",
+    "foto": "foto-prodotti/copertina-filetti.webp",
+    "autore": "Gwen 's",
+    "licenza": "BY-SA 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/41616276@N04/6921983307"
+  },
+  {
+    "prodotto": "copertina-fresco",
+    "foto": "foto-prodotti/copertina-fresco.webp",
+    "autore": "Winniepix",
+    "licenza": "CC BY 2.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Fresh_fish_displayed_on_a_market_stall_at_the_port_in_Antibes,_France_(54479363589).jpg"
+  },
+  {
+    "prodotto": "cozze",
+    "foto": "foto-prodotti/cozze.webp",
+    "autore": "Wolfmann",
+    "licenza": "BY-SA 4.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=67821216"
+  },
+  {
+    "prodotto": "dentice-reale-e-pagaro",
+    "foto": "foto-prodotti/dentice-reale-e-pagaro.webp",
+    "autore": "Petar Milošević",
+    "licenza": "CC BY-SA 3.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Dentex_dentex_grilled.JPG"
+  },
+  {
+    "prodotto": "filetti-di-orata-e-branzino",
+    "foto": "foto-prodotti/filetti-di-orata-e-branzino.webp",
+    "autore": "kennejima",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/17152247@N00/14386141750"
+  },
+  {
+    "prodotto": "filetti-di-triglia-e-pangasio",
+    "foto": "foto-prodotti/filetti-di-triglia-e-pangasio.webp",
+    "autore": "avlxyz",
+    "licenza": "BY-SA 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/10559879@N00/1157911499"
+  },
+  {
+    "prodotto": "focaccia-precotta",
+    "foto": "foto-prodotti/focaccia-precotta.webp",
+    "autore": "Alessio Sbarbaro User_talk:Yoggysot",
+    "licenza": "BY-SA 3.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=25518612"
+  },
+  {
+    "prodotto": "frutta-ripiena-e-sorbetti",
+    "foto": "foto-prodotti/frutta-ripiena-e-sorbetti.webp",
+    "autore": "kimba Howard",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=7162212"
+  },
+  {
+    "prodotto": "gambero-argentino",
+    "foto": "foto-prodotti/gambero-argentino.webp",
+    "autore": "Assianir",
+    "licenza": "BY-SA 3.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=12215016"
+  },
+  {
+    "prodotto": "gambero-di-tunisi",
+    "foto": "foto-prodotti/gambero-di-tunisi.webp",
+    "autore": "jujurenoult",
+    "licenza": "BY 4.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=106913514"
+  },
+  {
+    "prodotto": "gambero-sgusciato-e-devenato",
+    "foto": "foto-prodotti/gambero-sgusciato-e-devenato.webp",
+    "autore": "Grocery.com",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/78559452@N08/8974056376"
+  },
+  {
+    "prodotto": "granciporro-e-granchio-blu",
+    "foto": "foto-prodotti/granciporro-e-granchio-blu.webp",
+    "autore": "Pattaya Patrol",
+    "licenza": "BY-SA 4.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=188522917"
+  },
+  {
+    "prodotto": "lievitati-da-forno",
+    "foto": "foto-prodotti/lievitati-da-forno.webp",
+    "autore": "Cimgdaiuonabe",
+    "licenza": "CC BY-SA 3.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:HK_Jardon_night_233_Nathan_Road_JD_Mall_shop_BreadTalk_breads_special_price_Danish_bar_Sept-2012.JPG"
+  },
+  {
+    "prodotto": "mazzancolle-tropicali",
+    "foto": "foto-prodotti/mazzancolle-tropicali.webp",
+    "autore": "avlxyz",
+    "licenza": "BY-SA 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/10559879@N00/4659306361"
+  },
+  {
+    "prodotto": "merluzzo-nordico-e-d-alaska",
+    "foto": "foto-prodotti/merluzzo-nordico-e-d-alaska.webp",
+    "autore": "The U.S. Food and Drug Administration",
+    "licenza": "Public domain",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Gadus_morhua_(FDA_117).jpg"
+  },
+  {
+    "prodotto": "mini-meringate-e-mini-mousse",
+    "foto": "foto-prodotti/mini-meringate-e-mini-mousse.webp",
+    "autore": "Vegan Feast Catering",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/25128194@N02/3806116067"
+  },
+  {
+    "prodotto": "monoporzione-cheesecake",
+    "foto": "foto-prodotti/monoporzione-cheesecake.webp",
+    "autore": "Ruth and Dave",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/95142644@N00/11823602425"
+  },
+  {
+    "prodotto": "monoporzione-tiramisu",
+    "foto": "foto-prodotti/monoporzione-tiramisu.webp",
+    "autore": "Prayitno / Thank you for (12 millions +) view",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/34128007@N04/16652928907"
+  },
+  {
+    "prodotto": "monoporzione-tre-cioccolati",
+    "foto": "foto-prodotti/monoporzione-tre-cioccolati.webp",
+    "autore": "Acabashi",
+    "licenza": "CC BY-SA 4.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Chocolate_cake_and_tea_service.jpg"
+  },
+  {
+    "prodotto": "monoporzioni-classiche",
+    "foto": "foto-prodotti/monoporzioni-classiche.webp",
+    "autore": "JIP",
+    "licenza": "CC BY-SA 4.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Slice_of_chocolate_cake_at_the_office.jpg"
+  },
+  {
+    "prodotto": "ombrina-boccadoro",
+    "foto": "foto-prodotti/ombrina-boccadoro.webp",
+    "autore": "NASA",
+    "licenza": "Public domain",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Fish_Ponds_and_Rice_Fields,_Lower_Guadalquivir_River.jpg"
+  },
+  {
+    "prodotto": "orata",
+    "foto": "foto-prodotti/orata.webp",
+    "autore": "Wolfmann",
+    "licenza": "BY-SA 4.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=67824901"
+  },
+  {
+    "prodotto": "ostriche",
+    "foto": "foto-prodotti/ostriche.webp",
+    "autore": "Stepheye",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/23808271@N08/3219690455"
+  },
+  {
+    "prodotto": "panzerotto-cioccolato-e-nocciola",
+    "foto": "foto-prodotti/panzerotto-cioccolato-e-nocciola.webp",
+    "autore": "Beckmann's Old World Bakery",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/60413841@N08/5507302429"
+  },
+  {
+    "prodotto": "pasta-fresca-e-ripiena",
+    "foto": "foto-prodotti/pasta-fresca-e-ripiena.webp",
+    "autore": "Vegan Feast Catering",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/25128194@N02/5085096845"
+  },
+  {
+    "prodotto": "pasticciotto-crema-e-amarena",
+    "foto": "foto-prodotti/pasticciotto-crema-e-amarena.webp",
+    "autore": "I, Calcagnile Floriano, User:Florixc https://www.flickr.com/photos/florixc/",
+    "licenza": "CC BY-SA 3.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Pasticciotto_galatina.jpg"
+  },
+  {
+    "prodotto": "patate-mccain-e-aviko",
+    "foto": "foto-prodotti/patate-mccain-e-aviko.webp",
+    "autore": "Ser Amantio di Nicolao",
+    "licenza": "CC0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Basket_of_Slim_Chickens_tenders_and_french_fries,_with_sauce.jpg"
+  },
+  {
+    "prodotto": "pescatrice",
+    "foto": "foto-prodotti/pescatrice.webp",
+    "autore": "amanderson2",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/49399018@N00/14270268556"
+  },
+  {
+    "prodotto": "pesce-spada-e-tonno-affumicati",
+    "foto": "foto-prodotti/pesce-spada-e-tonno-affumicati.webp",
+    "autore": "Dan Costin",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/30955003@N00/8129561724"
+  },
+  {
+    "prodotto": "pesce-spada-filone",
+    "foto": "foto-prodotti/pesce-spada-filone.webp",
+    "autore": "Whiteghost.ink",
+    "licenza": "BY-SA 4.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=36022208"
+  },
+  {
+    "prodotto": "polpo-del-marocco",
+    "foto": "foto-prodotti/polpo-del-marocco.webp",
+    "autore": "Shixart1985",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=192225945"
+  },
+  {
+    "prodotto": "ricciola",
+    "foto": "foto-prodotti/ricciola.webp",
+    "autore": "Hasegawa.mayu",
+    "licenza": "CC BY-SA 4.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Seriola_dumerili_sashimi.jpg"
+  },
+  {
+    "prodotto": "risotti-paella-e-preparati",
+    "foto": "foto-prodotti/risotti-paella-e-preparati.webp",
+    "autore": "lsbardel",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/10372764@N03/5625549442"
+  },
+  {
+    "prodotto": "rombo-chiodato",
+    "foto": "foto-prodotti/rombo-chiodato.webp",
+    "autore": "Deror avi",
+    "licenza": "BY-SA 3.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=6650779"
+  },
+  {
+    "prodotto": "salmone-affumicato",
+    "foto": "foto-prodotti/salmone-affumicato.webp",
+    "autore": "Berries.com",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/126560659@N06/16613095094"
+  },
+  {
+    "prodotto": "salmone-fresco",
+    "foto": "foto-prodotti/salmone-fresco.webp",
+    "autore": "Abi Skipp",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/9557815@N05/12291594346"
+  },
+  {
+    "prodotto": "scampi-porcupine",
+    "foto": "foto-prodotti/scampi-porcupine.webp",
+    "autore": "corsi photo",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/11211909@N00/34106018540"
+  },
+  {
+    "prodotto": "seppie-fresche",
+    "foto": "foto-prodotti/seppie-fresche.webp",
+    "autore": "koadmunkee",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/29946035@N08/3920377051"
+  },
+  {
+    "prodotto": "seppie-pulite",
+    "foto": "foto-prodotti/seppie-pulite.webp",
+    "autore": "TANNMY NAISZE Wanguo",
+    "licenza": "CC0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:SZ_%E6%B7%B1%E5%9C%B3_Shenzhen_%E9%BE%8D%E8%8F%AF_Longhua_%E4%B8%AD%E6%A2%85%E8%B7%AF_Zhongmei_Road_%E6%B0%91%E5%A1%98%E8%B7%AF_Mintang_Road_%E8%90%8A%E8%92%99_%E6%B0%B4%E6%A6%AD%E6%98%A5%E5%A4%A9%E8%8A%B1%E5%9C%92_Top_Spring_Fashion_Walk_ShuiXie_mall_%E6%B2%83%E7%88%BE%E7%91%AA%E8%B6%85%E5%B8%82_Walmart_Supermarket_food_frozen_%E5%A2%A8%E9%AD%9A%E9%AC%9A_Cuttlefish_tentacle_May_2024_R12S.jpg"
+  },
+  {
+    "prodotto": "souffle-al-cioccolato",
+    "foto": "foto-prodotti/souffle-al-cioccolato.webp",
+    "autore": "mrkathika",
+    "licenza": "BY-SA 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/23842402@N07/2541178187"
+  },
+  {
+    "prodotto": "spigola",
+    "foto": "foto-prodotti/spigola.webp",
+    "autore": "Wolfmann",
+    "licenza": "BY-SA 4.0",
+    "fonte": "Openverse",
+    "originale": "https://commons.wikimedia.org/w/index.php?curid=67824900"
+  },
+  {
+    "prodotto": "tartare-di-gambero-rosso",
+    "foto": "foto-prodotti/tartare-di-gambero-rosso.webp",
+    "autore": "T.Tseng",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/68147320@N02/15460827566"
+  },
+  {
+    "prodotto": "tartufo",
+    "foto": "foto-prodotti/tartufo.webp",
+    "autore": "Berries.com",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/126560659@N06/15372709803"
+  },
+  {
+    "prodotto": "tonno-filone-pinne-gialle",
+    "foto": "foto-prodotti/tonno-filone-pinne-gialle.webp",
+    "autore": "The U.S. Food and Drug Administration",
+    "licenza": "Public domain",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Thunnus_albacares_(RFEIMG-0327).jpg"
+  },
+  {
+    "prodotto": "tonno-sashimi-delmar",
+    "foto": "foto-prodotti/tonno-sashimi-delmar.webp",
+    "autore": "ultrakml",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/34948727@N00/8104669952"
+  },
+  {
+    "prodotto": "totano-gigante",
+    "foto": "foto-prodotti/totano-gigante.webp",
+    "autore": "Lauyuenkuema3",
+    "licenza": "CC BY-SA 3.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:HK_%E9%95%B7%E6%B4%B2_Cheung_Chau_%E8%88%88%E6%A8%82%E6%B5%B7%E9%AE%AE_Hing_Lok_Seafoods_Restaurant_food_dish_%E9%85%A5%E7%82%B8%E9%AD%B7%E9%AD%9A_Deep_fried_Calamari_squid_Sept-2013.JPG"
+  },
+  {
+    "prodotto": "treccia-alle-noci-pecan",
+    "foto": "foto-prodotti/treccia-alle-noci-pecan.webp",
+    "autore": "joyosity",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/33993074@N00/15108738410"
+  },
+  {
+    "prodotto": "vongole",
+    "foto": "foto-prodotti/vongole.webp",
+    "autore": "shankar s.",
+    "licenza": "BY 2.0",
+    "fonte": "Openverse",
+    "originale": "https://www.flickr.com/photos/77742560@N06/48624288831"
+  },
+  {
+    "prodotto": "vongole-con-guscio",
+    "foto": "foto-prodotti/vongole-con-guscio.webp",
+    "autore": "ayustety from Restaurant \"Aruden-tei\" in Ginza, Tokyo",
+    "licenza": "CC BY-SA 2.0",
+    "fonte": "Wikimedia Commons",
+    "originale": "https://commons.wikimedia.org/wiki/File:Spaghetti_Vongole_by_ayustety_in_Ginza,_Tokyo.jpg"
+  }
+]

@@ -1,0 +1,183 @@
+/* PROVA A — "Il banco di stanotte"
+   Griglia sobria su fondo profondo. Il fondo scuro non e' un vezzo: le foto
+   sono casse di polistirolo bianche con ghiaccio, e su bianco si smontano —
+   il bordo della cassa si fonde con la pagina e resta una macchia. Su blu
+   profondo il ghiaccio brilla e i colori del pesce (rosso triglia, rosa
+   gambero) escono fuori.
+   Le foto sono VERTICALI perche' cosi' le fanno al banco: la griglia le
+   rispetta invece di ritagliarle in 16:9. */
+
+:root {
+  --blu: #0e1445;
+  --blu-alto: #151c64;
+  --corallo: #c9432c;
+  --corallo-vivo: #ff6b57;
+  --chiaro: rgba(255, 255, 255, .92);
+  --tenue: rgba(255, 255, 255, .55);
+  --linea: rgba(255, 255, 255, .12);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.pa {
+  background: var(--blu);
+  color: var(--chiaro);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+.pa-torna {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  padding: .4rem .8rem;
+  background: rgba(0, 0, 0, .5);
+  border-radius: 2rem;
+  color: var(--tenue);
+  font-size: .7rem;
+  text-decoration: none;
+}
+
+/* ─ Testata ─────────────────────────────── */
+.pa-testa {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 7rem 6% 3.5rem;
+  text-align: center;
+}
+
+.pa-occhiello {
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--corallo-vivo);
+  margin-bottom: 1.2rem;
+}
+
+.pa-testa h1 {
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  font-weight: 200;
+  line-height: 1.02;
+  letter-spacing: -.045em;
+  color: #fff;
+}
+
+.pa-data {
+  margin-top: 1.4rem;
+  font-size: .85rem;
+  color: var(--tenue);
+  letter-spacing: .02em;
+}
+
+.pa-nota {
+  max-width: 34rem;
+  margin: 1.6rem auto 0;
+  font-size: .95rem;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, .72);
+}
+
+/* ─ La griglia ──────────────────────────── */
+.pa-griglia {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 6% 5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 2rem 1.5rem;
+}
+
+.pa-card {
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+}
+
+/* 3:4, il formato in cui le foto nascono. Ritagliarle in orizzontale
+   vorrebbe dire buttare via meta' della cassa — e la cassa fa da cornice */
+.pa-foto {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .04);
+}
+
+.pa-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.2s cubic-bezier(.2, .7, .3, 1);
+}
+
+@media (hover: hover) {
+  .pa-card:hover .pa-foto img {
+    transform: scale(1.04);
+  }
+}
+
+.pa-testo h2 {
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: -.02em;
+  color: #fff;
+}
+
+.pa-taglia {
+  margin-top: .25rem;
+  font-size: .78rem;
+  color: var(--tenue);
+}
+
+/* ─ Chiusura ────────────────────────────── */
+.pa-chiudi {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 4rem 6% 7rem;
+  text-align: center;
+  border-top: 1px solid var(--linea);
+}
+
+.pa-chiudi h2 {
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 200;
+  letter-spacing: -.04em;
+  color: #fff;
+  margin-bottom: .9rem;
+}
+
+.pa-chiudi p {
+  color: rgba(255, 255, 255, .68);
+  font-size: .95rem;
+  line-height: 1.8;
+}
+
+.pa-btn {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: .95rem 2.2rem;
+  background: var(--corallo-vivo);
+  color: #fff;
+  font-size: .74rem;
+  letter-spacing: .08em;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+@media (max-width: 34rem) {
+  .pa-griglia {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.4rem .8rem;
+  }
+
+  .pa-testa {
+    padding-top: 5rem;
+  }
+}

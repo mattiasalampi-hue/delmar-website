@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Il pescato di oggi — DelMar</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../../css/poppins.css?v=1" />
+    <link rel="stylesheet" href="../../css/style.css?v=101" />
+    <link rel="stylesheet" href="../../css/consenso.css?v=1" />
+    <link rel="stylesheet" href="css/d.css?v=1" />
+    <!-- Solo per la via di ritorno ai cataloghi nella barra della giornata:
+         e' lo stesso componente delle pagine di listino, non se ne riscrive uno -->
+    <link rel="stylesheet" href="css/catalogo.css?v=1" />
+  </head>
+  <body class="pr-pagina">
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+      <symbol id="ico-wa" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </symbol>
+      <symbol id="ico-arr" viewBox="0 0 24 24">
+        <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+    </svg>
+
+    <!-- L'intestazione del sito, la stessa di tutte le altre pagine -->
+    <header id="hdr">
+      <a href="../../index.html"><img src="../../assets/logo.png?v=2" alt="DelMar" class="logo" /></a>
+      <nav id="main-nav">
+        <span class="nav-qui" aria-current="page">Prodotti</span>
+        <a href="../../index.html#processo">Come Lavoriamo</a>
+        <a href="../../index.html#azienda">Azienda</a>
+        <a href="../../index.html#marina">Marina AI</a>
+        <a href="../../domande-frequenti.html">Domande</a>
+        <a href="../../index.html#contatti">Contatti</a>
+        <a href="https://wa.me/393356654017?text=Ciao%20Marina!" target="_blank" rel="noopener noreferrer" class="nav-wa">Ordina ora</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
+    </header>
+
+    <!-- Apertura: le stesse campiture della sezione contatti e della pagina
+         domande. Il pescato entra dentro il sito, non accanto -->
+    <section class="pr-hero">
+      <canvas id="pr-sfondo"></canvas>
+      <canvas id="pr-pesci"></canvas>
+      <div class="pr-hero-in">
+        <p class="pr-occhiello">Pesce locale per ristoranti e pescherie</p>
+        <h1 class="pr-titolo">Pescato dell'Arcipelago Toscano<br /><em>sbarcato stanotte</em></h1>
+        <p class="pr-sotto">
+          Cambia ogni notte con quello che il mare ha dato. Quando è finito, è finito.
+        </p>
+      </div>
+    </section>
+
+    <!-- La riga della giornata: sta appesa sotto l'intestazione come la barra
+         delle domande frequenti -->
+    <div class="pr-barra">
+      <div class="pr-barra-in">
+        <!-- La via di ritorno all'indice: il pescato e' uno dei quattro
+             cataloghi, e da qui si deve poter tornare a scegliere -->
+        <a class="ct-torna" href="prodotti.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Cataloghi
+        </a>
+        <p class="pr-giorno"><strong>Lunedì 17 agosto</strong> · diciannove specie sbarcate</p>
+        <p class="pr-agg">Aggiornato ieri alle 20:40</p>
+      </div>
+    </div>
+
+    <main class="pr-corpo">
+      <!-- Il paragrafo che spiega il prodotto a chi non vi conosce, e che dice a
+           Google di cosa parla la pagina. Sta PRIMA delle foto perche' un motore
+           di ricerca legge il testo, non le immagini -->
+      <div class="pr-intro">
+        <h2>Pesce fresco del Tirreno, all'ingrosso, il giorno dopo la pesca</h2>
+        <p>
+          Il <strong>Pescato dell'Arcipelago Toscano</strong> è il pesce dei
+          nostri mari: triglie, cicale, gamberi rossi e rosa, razza, scorfano,
+          calamari e la frittura del giorno, sbarcati dalle barche fra Livorno,
+          l'Elba e la costa apuana. È pesca di piccola taglia e di giornata,
+          quindi le quantità sono limitate e le specie cambiano continuamente —
+          per questo la pagina si aggiorna ogni sera con quello che ci sarà
+          davvero al banco domani mattina.
+        </p>
+        <p>
+          Lo forniamo <strong>all'ingrosso a ristoranti, pescherie, hotel e
+          gastronomie</strong> in Toscana, Liguria ed Emilia-Romagna: si ordina
+          la sera su WhatsApp e si riceve entro le 11 del mattino, ancora in
+          ghiaccio, con l'etichetta di tracciabilità e la zona FAO di cattura.
+        </p>
+        <!-- Il pescato e' l'unica pagina che mostra TUTTO invece di una
+             selezione: negli altri cataloghi le voci sono i piu' venduti su
+             centinaia di referenze, qui sono lo sbarcato di stanotte per
+             intero. Vale la pena dirlo, perche' e' il contrario di quello
+             che un visitatore si aspetta da una vetrina. -->
+        <p>
+          A differenza degli altri cataloghi, qui non c'è nessuna selezione:
+          <strong>questo è tutto quello che le barche hanno portato stanotte</strong>.
+          Le specie che non vedete non ci sono, e domani la lista sarà diversa.
+        </p>
+      </div>
+
+      <div class="pr-griglia">
+        <a class="pr-card" href="triglia-di-fango.html">
+          <div class="pr-foto"><img src="foto/foto-4.jpg" alt="Triglia di fango" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Triglia di fango</h2>
+            <p class="pr-taglia">Pezzatura grande</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="cicale-di-mare.html">
+          <div class="pr-foto"><img src="foto/foto-3.jpg" alt="Cicale" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Cicale</h2>
+            <p class="pr-taglia">Pannocchie fresche</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="gambero-rosso.html">
+          <div class="pr-foto"><img src="foto/foto-12.jpg" alt="Gambero rosso" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Gambero rosso</h2>
+            <p class="pr-taglia">Seconda pezzatura</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="gambero-rosa.html">
+          <div class="pr-foto"><img src="foto/foto-5.jpg" alt="Gambero rosa" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Gambero rosa</h2>
+            <p class="pr-taglia">Seconda pezzatura</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="razza-clavata.html">
+          <div class="pr-foto"><img src="foto/foto-7.jpg" alt="Razza clavata" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Razza clavata</h2>
+            <p class="pr-taglia">Fresca, intera</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="scorfano.html">
+          <div class="pr-foto"><img src="foto/foto-11.jpg" alt="Scorfano" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Scorfano</h2>
+            <p class="pr-taglia">Fresco</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="spigola-di-mare.html">
+          <div class="pr-foto"><img src="foto/foto-10.jpg" alt="Spigola" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Spigola</h2>
+            <p class="pr-taglia">Pezzatura grande</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="calamaro.html">
+          <div class="pr-foto"><img src="foto/foto-2.jpg" alt="Calamaro" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Calamaro</h2>
+            <p class="pr-taglia">Pezzatura media</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="frittura-del-giorno.html">
+          <div class="pr-foto"><img src="foto/foto-6.jpg" alt="Frittura" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Frittura</h2>
+            <p class="pr-taglia">Mista, del giorno</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="cefalo.html">
+          <div class="pr-foto"><img src="foto/foto-9.jpg" alt="Cefalo" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Cefalo</h2>
+            <p class="pr-taglia">Fresco</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="pesce-prete.html">
+          <div class="pr-foto"><img src="foto/foto-8.jpg" alt="Pesce prete" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Pesce prete</h2>
+            <p class="pr-taglia">Fresco</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="gambero-bianco.html">
+          <div class="pr-foto"><img src="foto/foto-1.jpg" alt="Gambero bianco" loading="lazy" /></div>
+          <div class="pr-testo">
+            <h2>Gambero bianco</h2>
+            <p class="pr-taglia">Fresco</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="scampi.html">
+          <div class="pr-foto pr-foto-vuota"><span>Scampi</span></div>
+          <div class="pr-testo">
+            <h2>Scampi</h2>
+            <p class="pr-taglia">Prima e seconda</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="astice-blu.html">
+          <div class="pr-foto pr-foto-vuota"><span>Astice blu</span></div>
+          <div class="pr-testo">
+            <h2>Astice blu</h2>
+            <p class="pr-taglia">Vivo, a pezzo</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="san-pietro.html">
+          <div class="pr-foto pr-foto-vuota"><span>San Pietro</span></div>
+          <div class="pr-testo">
+            <h2>San Pietro</h2>
+            <p class="pr-taglia">Pezzatura piccola</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="gobetto.html">
+          <div class="pr-foto pr-foto-vuota"><span>Gobetto</span></div>
+          <div class="pr-testo">
+            <h2>Gobetto</h2>
+            <p class="pr-taglia">Fresco, sfuso</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="sovaci.html">
+          <div class="pr-foto pr-foto-vuota"><span>Sovaci e passere</span></div>
+          <div class="pr-testo">
+            <h2>Sovaci e passere</h2>
+            <p class="pr-taglia">Fresche, intere</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="zuppa-di-pesce.html">
+          <div class="pr-foto pr-foto-vuota"><span>Zuppa di pesce</span></div>
+          <div class="pr-testo">
+            <h2>Zuppa di pesce</h2>
+            <p class="pr-taglia">Mista, del giorno</p>
+          </div>
+        </a>
+
+        <a class="pr-card" href="pesce-spada.html">
+          <div class="pr-foto pr-foto-vuota"><span>Pesce spada</span></div>
+          <div class="pr-testo">
+            <h2>Pesce spada</h2>
+            <p class="pr-taglia">A trance</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Chiusura: identica per impianto a quella delle domande frequenti -->
+      <section class="pr-chiusura">
+        <p class="pr-chiusura-occhiello">Il prezzo cambia ogni notte</p>
+        <h2>Scrivici su WhatsApp<br />per informazioni o per ordinare</h2>
+        <p class="pr-chiusura-testo">
+          Ti diciamo il prezzo di oggi e cosa c'è davvero in cella. Si ordina fino
+          alle 2 di notte, si consegna entro le 11.
+        </p>
+        <div class="pr-chiusura-azioni">
+          <a href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20informazioni%20sul%20pescato%20di%20oggi" target="_blank" rel="noopener noreferrer" class="pr-btn pr-btn-wa">
+            <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+            Scrivici su WhatsApp
+          </a>
+        </div>
+        <p class="pr-chiusura-tel">Rispondiamo tutti i giorni, festivi compresi</p>
+      </section>
+    </main>
+
+    <footer class="pr-piede">
+      <div class="pr-piede-in">
+        <img src="../../assets/logo.png?v=2" alt="DelMar" class="pr-piede-logo" />
+        <p class="pr-piede-dati">
+          LE DELIZIE DEL MARE S.R.L. — Via Dorsale 13, 54100 Massa (MS)<br />
+          P.IVA 01081190454 — <a href="mailto:info@del-mar.it">info@del-mar.it</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="../../js/caustiche.js?v=1"></script>
+    <script src="../../js/pesci.js?v=4"></script>
+    <script src="js/d.js?v=1"></script>
+    <script src="../../js/cursore.js?v=2"></script>
+  </body>
+</html>

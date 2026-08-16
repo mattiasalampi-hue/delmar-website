@@ -1,0 +1,187 @@
+/* PROVA C — "La lavagna"
+   Due colonne: a sinistra la lavagna del giorno che resta FERMA mentre le
+   fotografie scorrono a destra, una sotto l'altra, grandi.
+   E' il taglio piu' editoriale dei tre: la data enorme fa da ancora e
+   dichiara la cosa che conta — questo pesce e' di oggi — mentre le foto
+   scorrono come un servizio fotografico invece che come un catalogo.
+   Regge se le foto sono belle una per una. Su una foto storta si nota. */
+
+:root {
+  --blu: #0e1445;
+  --blu-scuro: #090d2a;
+  --corallo-vivo: #ff6b57;
+  --chiaro: rgba(255, 255, 255, .92);
+  --tenue: rgba(255, 255, 255, .5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.pc {
+  background: var(--blu-scuro);
+  color: var(--chiaro);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+.pc-torna {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  padding: .4rem .8rem;
+  background: rgba(0, 0, 0, .5);
+  border-radius: 2rem;
+  color: var(--tenue);
+  font-size: .7rem;
+  text-decoration: none;
+}
+
+.pc-impaginato {
+  display: grid;
+  grid-template-columns: 22rem 1fr;
+  gap: 0;
+  max-width: 82rem;
+  margin: 0 auto;
+}
+
+/* ─ La lavagna, ferma ───────────────────── */
+.pc-lavagna {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  padding: 4rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--blu);
+  border-right: 1px solid rgba(255, 255, 255, .1);
+}
+
+.pc-occhiello {
+  font-size: .56rem;
+  font-weight: 600;
+  letter-spacing: .38em;
+  text-transform: uppercase;
+  color: var(--corallo-vivo);
+  line-height: 1.8;
+}
+
+/* La data grande e' il vero titolo: dice in un colpo solo la cosa che
+   distingue questa pagina da un catalogo — e' di oggi */
+.pc-giorno {
+  margin: 1.8rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 200;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.pc-giorno strong {
+  display: block;
+  font-size: 5.5rem;
+  font-weight: 200;
+  letter-spacing: -.06em;
+  line-height: .9;
+  margin: .2rem 0;
+}
+
+.pc-conta {
+  margin-top: 1.6rem;
+  font-size: .8rem;
+  letter-spacing: .04em;
+  color: var(--tenue);
+}
+
+.pc-nota {
+  margin-top: 2rem;
+  font-size: .88rem;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, .7);
+}
+
+.pc-btn {
+  display: inline-block;
+  margin-top: 2.2rem;
+  padding: .9rem 1.6rem;
+  background: var(--corallo-vivo);
+  color: #fff;
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+.pc-firma {
+  margin-top: 2rem;
+  font-size: .68rem;
+  color: rgba(255, 255, 255, .35);
+}
+
+/* ─ Le fotografie ───────────────────────── */
+.pc-colonna {
+  padding: 4rem 0 6rem;
+  display: grid;
+  gap: 4rem;
+  justify-items: center;
+}
+
+.pc-pezzo {
+  width: min(34rem, 88%);
+}
+
+.pc-pezzo img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  border-radius: 3px;
+}
+
+.pc-didascalia {
+  padding-top: 1rem;
+}
+
+.pc-didascalia h2 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: -.03em;
+  color: #fff;
+}
+
+.pc-didascalia p {
+  margin-top: .3rem;
+  font-size: .82rem;
+  color: var(--tenue);
+}
+
+/* Su telefono la lavagna non puo' restare ferma: diventa la copertina, e
+   le foto vengono sotto */
+@media (max-width: 56rem) {
+  .pc-impaginato {
+    grid-template-columns: 1fr;
+  }
+
+  .pc-lavagna {
+    position: static;
+    height: auto;
+    padding: 5rem 8% 3rem;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+  }
+
+  .pc-giorno strong {
+    font-size: 4.5rem;
+  }
+
+  .pc-colonna {
+    padding: 3rem 0 5rem;
+    gap: 3rem;
+  }
+}

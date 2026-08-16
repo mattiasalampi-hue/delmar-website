@@ -1,0 +1,418 @@
+/* I CATALOGHI DI LINEA — fresco, congelato, dolci.
+   Sono l'opposto del pescato: li' il prodotto cambia ogni notte e la
+   fotografia E' il prodotto; qui il prodotto e' sempre lo stesso e quello che
+   cambia e' la PEZZATURA. Un'orata di Grecia e' identica a gennaio e ad
+   agosto: fotografarne ventuno versioni non aggiungerebbe niente.
+
+   Da qui il disegno: niente muro di fotografie, ma un elenco ragionato —
+   la specie in grande, le pezzature e le provenienze in chiaro sotto. E'
+   la forma di una carta dei vini, ed e' il modo in cui un ristoratore legge
+   davvero: cerca la taglia che gli serve, non l'immagine. */
+
+/* Saltando a una famiglia, il titolo deve fermarsi SOTTO l'intestazione e la
+   barra, non dietro: senza questo si atterra sulla prima voce e il nome della
+   famiglia resta nascosto sopra */
+html:has(.ct-famiglia) {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--h-hdr, 4.1rem) + 4.4rem);
+}
+
+/* L'APERTURA NON STA QUI: e' la stessa del pescato, in d.css — campiture
+   animate e pesci, la firma delle pagine prodotto. Un tempo i cataloghi di
+   linea avevano un'apertura fotografica loro, ed era un errore: chi passava
+   dal pescato a un catalogo leggeva "altro sito", non "altra sezione". */
+
+/* ─ La barra e l'indice ─────────────────────
+   NON SONO QUI: sono `.fq-barra` e `.fq-indice` di domande-frequenti.css,
+   caricato da queste pagine. Le pillole col bordo, quella corrente riempita
+   di blu, il filo dell'avanzamento sul bordo — e' roba gia' disegnata e gia'
+   approvata, e riscriverla qui avrebbe voluto dire vederle divergere al primo
+   ritocco. Qui restano solo i due aggiustamenti che servono al catalogo. */
+
+/* L'altezza dell'intestazione la misura d.js: il 4.1rem fisso di
+   domande-frequenti.css lascia dodici pixel di fessura sopra i 1024 px */
+.fq-barra {
+  top: var(--h-hdr, 4.1rem);
+}
+
+/* La pagina domande ha l'indice largo e la ricerca a destra; qui a sinistra
+   c'e' la via di ritorno, quindi l'indice si prende lo spazio che avanza */
+.fq-barra-in {
+  max-width: 76rem;
+  margin: 0 auto;
+}
+
+.ct-torna {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  flex: 0 0 auto;
+  padding-right: 1.4rem;
+  border-right: 1px solid var(--border);
+  font-size: .74rem;
+  color: var(--text-dim);
+  transition: color .3s;
+}
+
+.ct-torna svg {
+  width: .8rem;
+  height: .8rem;
+  transition: transform .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ct-torna:hover {
+    color: var(--wa);
+  }
+
+  .ct-torna:hover svg {
+    transform: translateX(-2px);
+  }
+}
+
+/* ─ L'indice dei quattro cataloghi ──────────
+   E' `.pr-griglia` con dentro `.pr-card`, la vetrina del pescato tale e
+   quale. L'unica differenza: qui i titoli hanno lunghezze molto diverse —
+   "Dolci al piatto" sta su una riga, "Pescato dell'Arcipelago Toscano" su
+   due — e le righe di sotto uscivano sfalsate di mezzo centimetro. Due righe
+   di spazio riservato al titolo le riallineano tutte. */
+.pr-griglia-cat .pr-testo h2 {
+  line-height: 1.3;
+  min-height: 2.6em;
+}
+
+/* La riga che dice quanto c'e' dietro la vetrina. Sta subito sotto il
+   selettore, dove chi ha appena contato le famiglie si sta chiedendo se e'
+   tutto qui */
+.ct-estratto {
+  max-width: 76rem;
+  margin: 1.2rem auto 0;
+  padding: 0 6%;
+  font-size: .84rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--text-mid);
+}
+
+.ct-estratto strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.ct-estratto a {
+  color: var(--wa);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ct-estratto a:hover {
+    border-bottom-color: var(--wa);
+  }
+}
+
+/* ─ Il selettore delle famiglie ─────────────
+   Sono le righe `.fq-arg` della pagina domande, identiche. Qui si allineano
+   solo alla larghezza del catalogo e si staccano dal testo che le precede. */
+.fq-argomenti {
+  max-width: 76rem;
+  margin: 2.5rem auto 0;
+  padding: 0 6%;
+  /* Nelle domande frequenti il contenitore sta gia' dentro un blocco con i
+     margini laterali, quindi il suo filo superiore combacia con quelli delle
+     righe. Qui i margini li mette lui, e il filo veniva fuori piu' largo
+     delle righe di un dito per parte: si sposta sulla prima riga, che sta
+     dentro i margini come tutte le altre */
+  border-top: 0;
+}
+
+.fq-argomenti .fq-arg:first-child {
+  border-top: 1px solid var(--border);
+}
+
+/* ─ Una famiglia ────────────────────────────
+   Due colonne: il nome della famiglia resta appeso a sinistra mentre a destra
+   scorrono le specie. Chi e' a meta' dell'elenco dei gamberi deve sapere che
+   sta ancora leggendo i gamberi senza tornare in su. */
+.ct-famiglia {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 3.5rem 6%;
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: 3.5rem;
+  align-items: start;
+  border-top: 1px solid var(--border);
+}
+
+.ct-famiglia:first-of-type {
+  border-top: 0;
+}
+
+/* Sotto l'intestazione E sotto la barra delle famiglie: sono due strisce
+   appese, e il nome della famiglia deve incastrarsi sotto la seconda */
+.ct-fam-testa {
+  position: sticky;
+  top: calc(var(--h-hdr, 4.1rem) + 4rem);
+}
+
+.ct-fam-testa .fq-arg-n {
+  display: block;
+  margin-bottom: .5rem;
+}
+
+.ct-fam-testa h2 {
+  margin: 0 0 .7rem;
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: -.035em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.ct-fam-sotto {
+  margin: 0 0 1rem;
+  font-size: .82rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--text-dim);
+}
+
+.ct-fam-conta {
+  margin: 0;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ─ Una specie ──────────────────────────────*/
+.ct-voci {
+  display: flex;
+  flex-direction: column;
+}
+
+.ct-voce {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: 1.8rem;
+  align-items: start;
+  padding: 1.8rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Senza foto il testo si prende tutta la riga invece di lasciare un vuoto a
+   sinistra: una colonna vuota dice "qui manca qualcosa" a ogni lettore */
+.ct-voce-nuda {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ct-voce:first-child {
+  padding-top: 0;
+}
+
+.ct-voce:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* 4:3 come le ritaglia assegna-foto.js: dichiarare qui la stessa forma evita
+   che la pagina salti mentre le immagini arrivano */
+.ct-voce-foto {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--bg-soft);
+}
+
+.ct-voce-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.2s cubic-bezier(.2, .7, .3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ct-voce:hover .ct-voce-foto img {
+    transform: scale(1.04);
+  }
+}
+
+.ct-voce h3 {
+  margin: 0 0 .35rem;
+  font-size: 1.22rem;
+  font-weight: 400;
+  letter-spacing: -.025em;
+  color: var(--ink);
+}
+
+.ct-voce-sotto {
+  margin: 0 0 1rem;
+  max-width: 58ch;
+  font-size: .88rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--text-hi);
+}
+
+/* Etichetta a sinistra, valori a destra: sono dati da consultare con l'occhio,
+   non da leggere riga per riga */
+.ct-riga {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: .8rem;
+  align-items: baseline;
+  margin-bottom: .5rem;
+}
+
+.ct-et {
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding-top: .3rem;
+}
+
+.ct-valori {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+/* LE PEZZATURE SONO IL PRODOTTO, non un dettaglio: una pastiglia per ognuna,
+   perche' un ristoratore le scorre cercando la sua e deve trovarla al volo.
+   Un elenco separato da virgole obbligherebbe a leggere tutto. */
+.ct-chip {
+  padding: .28rem .65rem;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: .74rem;
+  font-weight: 300;
+  color: var(--text-hi);
+  background: var(--bg-soft);
+  white-space: nowrap;
+}
+
+/* Le provenienze non sono pezzature: stesso posto, peso diverso, cosi' non si
+   confondono con un colpo d'occhio */
+.ct-chip-prov {
+  background: transparent;
+  border-style: dashed;
+  color: var(--text-dim);
+}
+
+.ct-formato {
+  font-size: .78rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--text-dim);
+  padding-top: .3rem;
+}
+
+/* Il prezzo non c'e' e non ci sara': la richiesta E' la conversione, e il
+   messaggio parte gia' scritto col nome della specie dentro */
+.ct-chiedi {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .9rem;
+  font-size: .78rem;
+  color: var(--wa);
+}
+
+.ct-chiedi svg {
+  width: .85rem;
+  height: .85rem;
+  fill: currentColor;
+}
+
+.ct-chiedi span {
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ct-chiedi:hover span {
+    border-bottom-color: var(--wa);
+  }
+}
+
+/* ─ La riga sugli altri cataloghi ────────────
+   In fondo a un catalogo si e' visto tutto: il passo successivo non e'
+   uscire dal sito, e' l'altro catalogo */
+.ct-altri {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 3rem 6% 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.ct-altri h2 {
+  margin: 0 0 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--ink);
+}
+
+/* Le pillole della barra appesa, riusate qui. Nella barra scorrono di lato
+   perche' hanno una riga sola di spazio; qui la riga e' tutta la pagina,
+   quindi vanno a capo invece di nascondersi in un rullo orizzontale */
+.ct-altri-pillole {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  gap: .5rem;
+}
+
+/* Un filo piu' grandi che nella barra: li' convivono con la data e con la via
+   di ritorno, qui sono l'unica cosa nella sezione e devono farsi prendere */
+.ct-altri-pillole a {
+  padding: .6rem 1.2rem;
+  font-size: .78rem;
+}
+
+/* ─ Telefono ────────────────────────────────*/
+@media (max-width: 900px) {
+  /* La colonna della famiglia va sopra e smette di restare appesa: su una
+     schermata stretta due colonne diventano due strisce illeggibili */
+  .ct-famiglia {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+    padding: 2.5rem 6%;
+  }
+
+  .ct-fam-testa {
+    position: static;
+  }
+}
+
+@media (max-width: 620px) {
+  /* La foto va sopra il testo e si allarga: a 13 rem accanto a una colonna di
+     testo stretta non si capirebbe che pesce e', ed e' l'unica cosa che una
+     foto deve fare */
+  .ct-voce {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .ct-voce-foto {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Le etichette vanno sopra i valori: in 6,5 rem di colonna sinistra su un
+     telefono resterebbero due parole per riga */
+  .ct-riga {
+    grid-template-columns: 1fr;
+    gap: .3rem;
+    margin-bottom: .8rem;
+  }
+
+  .ct-et {
+    padding-top: 0;
+  }
+}
