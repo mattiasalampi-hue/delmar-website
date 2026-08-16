@@ -78,23 +78,30 @@ function an_db() {
         sistema TEXT,
         larghezza INTEGER,
         lingua TEXT,
-        /* rif: un codice a caso creato dal browser per QUELLA pagina
-           vista. Serve solo a ritrovare la riga quando, chiudendo la
-           scheda, arriva il secondo colpo con i secondi passati.
-           Non identifica una persona: cambia a ogni pagina e non e'
-           collegato a niente */
         rif TEXT,
         durata INTEGER DEFAULT 0
     )');
+    /* rif: un codice a caso creato dal browser per QUELLA pagina vista.
+       Serve solo a ritrovare la riga quando, chiudendo la scheda,
+       arriva il secondo colpo con i secondi passati. Non identifica una
+       persona: cambia a ogni pagina e non e' collegato a niente.
+
+       Il commento sta QUI FUORI e non dentro la stringa SQL: la stringa
+       e' fra apici singoli, e un apostrofo la chiude a meta'. E' gia'
+       successo — "non e' collegato" ha spaccato tutto il file, e con
+       comune.php rotto raccogli.php smette di raccogliere in silenzio,
+       perche' sendBeacon non riporta gli errori a nessuno. */
+    /* Le colonne aggiunte dopo, PRIMA degli indici che le usano. Su un
+       database gia' popolato CREATE TABLE IF NOT EXISTS non le crea, e
+       l'indice su una colonna che non esiste ancora solleva un errore
+       che ferma tutto il resto della preparazione: niente tabelle nuove,
+       niente pannello. Successo davvero, la prima volta in produzione */
+    an_colonna($db, 'visite', 'rif', 'TEXT');
+    an_colonna($db, 'visite', 'durata', 'INTEGER DEFAULT 0');
+
     $db->exec('CREATE INDEX IF NOT EXISTS i_visite_giorno ON visite(giorno)');
     $db->exec('CREATE INDEX IF NOT EXISTS i_visite_impronta ON visite(giorno, impronta)');
     $db->exec('CREATE INDEX IF NOT EXISTS i_visite_rif ON visite(rif)');
-
-    /* Le colonne aggiunte dopo: su un database gia' popolato CREATE
-       TABLE IF NOT EXISTS non le crea, e senza questo il pannello
-       cadrebbe su "no such column" solo in produzione */
-    an_colonna($db, 'visite', 'rif', 'TEXT');
-    an_colonna($db, 'visite', 'durata', 'INTEGER DEFAULT 0');
 
     $db->exec('CREATE TABLE IF NOT EXISTS eventi (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
