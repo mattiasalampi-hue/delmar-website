@@ -8,7 +8,7 @@
 */
 const fs = require('fs');
 const path = require('path');
-const { WA, testa, piede } = require('./comune');
+const { WA, testa, piede, altriCataloghi } = require('./comune');
 
 const qui = __dirname;
 const specie = JSON.parse(fs.readFileSync(path.join(qui, 'specie.json'), 'utf8'));
@@ -137,20 +137,37 @@ specie.forEach((s) => {
   scritte++;
 });
 
-/* La griglia della vetrina si riscrive fra i due segnaposto, cosi' il resto
-   della pagina (apertura, testo, chiusura) resta come l'abbiamo disegnata */
+/* d-sito.html e' scritta a mano — apertura, testi, chiusura — e lo script
+   riscrive solo i due blocchi che dipendono dai dati.
+   I confini sono COMMENTI ESPLICITI e non pezzi di markup: la prima versione
+   cercava "</div> seguito dal commento Chiusura", e il giorno che ho infilato
+   una sezione nuova fra la griglia e la chiusura il segnaposto ha smesso di
+   combaciare. Lo script non e' andato in errore: ha detto "non trovati" ed e'
+   passato oltre, quindi la griglia sarebbe rimasta indietro in silenzio.
+   Un commento con un nome dentro non si sposta per sbaglio. (Mattias,
+   2026-08-17) */
 const vetrinaFile = path.join(qui, 'd-sito.html');
 let vetrina = fs.readFileSync(vetrinaFile, 'utf8');
-const apre = '<div class="pr-griglia">';
-const chiude = '      </div>\n\n      <!-- Chiusura';
-const i = vetrina.indexOf(apre);
-const j = vetrina.indexOf(chiude);
-if (i > -1 && j > -1) {
-  vetrina = vetrina.slice(0, i + apre.length) + '\n' + vetrinaCards() + '\n' + vetrina.slice(j);
-  fs.writeFileSync(vetrinaFile, vetrina);
-  console.log('vetrina aggiornata con ' + specie.length + ' schede collegate');
-} else {
-  console.log('ATTENZIONE: segnaposto della griglia non trovati, vetrina non toccata');
+
+function riscrivi(testo, nome, contenuto) {
+  const apre = `<!-- ${nome}:INIZIO`;
+  const chiude = `<!-- ${nome}:FINE -->`;
+  const i = testo.indexOf(apre);
+  const j = testo.indexOf(chiude);
+
+  if (i < 0 || j < 0) {
+    console.log(`ATTENZIONE: segnaposto ${nome} non trovati, blocco non toccato`);
+    return testo;
+  }
+  // Dall'inizio del commento di apertura fino alla fine della sua riga
+  const dopoApertura = testo.indexOf('-->', i) + 3;
+  return testo.slice(0, dopoApertura) + '\n' + contenuto + '\n      ' + testo.slice(j);
 }
+
+vetrina = riscrivi(vetrina, 'GRIGLIA', '      <div class="pr-griglia">\n' + vetrinaCards() + '\n      </div>');
+vetrina = riscrivi(vetrina, 'ALTRI', altriCataloghi('d-sito'));
+
+fs.writeFileSync(vetrinaFile, vetrina);
+console.log(`vetrina: ${specie.length} schede collegate, altri cataloghi aggiornati`);
 
 console.log(scritte + ' schede generate');

@@ -12,7 +12,7 @@ const qui = __dirname;
 const dati = JSON.parse(fs.readFileSync(path.join(qui, 'catalogo.json'), 'utf8'));
 const cataloghi = dati.cataloghi;
 
-const { WA, testa, piede } = require('./comune');
+const { WA, testa, piede, altriCataloghi } = require('./comune');
 
 /* Il pescato non sta in catalogo.json perche' non e' un catalogo di linea: e'
    la pagina che cambia ogni notte. Ma nell'indice deve stare per primo, ed e'
@@ -116,31 +116,6 @@ function famiglia(f, i) {
 ${f.voci.map(voce).join('\n\n')}
         </div>
       </section>`;
-}
-
-/* In fondo a un catalogo si e' visto tutto: il passo dopo non e' uscire dal
-   sito, e' l'altro catalogo */
-/* CHI ARRIVA QUI SA GIA' COS'E' UN CATALOGO: e' passato dall'indice, dove
-   ogni catalogo ha la sua fotografia e la sua riga. Rileggerne sette
-   descrizioni in fondo alla pagina non aggiunge niente — serve solo un
-   bersaglio da cliccare.
-   Prima erano sette riquadri bordati in una griglia da quattro: il buco a
-   destra, altezze diverse, e un tipo di scheda che nel sito non esiste da
-   nessun'altra parte. Ora sono le stesse pillole della barra appesa qui
-   sopra, che il lettore ha davanti agli occhi da tutta la pagina.
-   (Mattias, 2026-08-17) */
-function altriCataloghi(corrente) {
-  const tutti = [
-    { slug: 'd-sito', nome: 'Pescato dell\'Arcipelago Toscano' },
-    ...cataloghi.map((c) => ({ slug: c.slug, nome: c.nome })),
-  ].filter((c) => c.slug !== corrente);
-
-  return `    <section class="ct-altri">
-      <h2>Gli altri cataloghi</h2>
-      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="Gli altri cataloghi">
-${tutti.map((c) => `        <a href="${c.slug}.html">${c.nome}</a>`).join('\n')}
-      </div>
-    </section>`;
 }
 
 function catalogo(c) {

@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="../../css/poppins.css?v=1" />
     <link rel="stylesheet" href="../../css/style.css?v=101" />
     <link rel="stylesheet" href="../../css/consenso.css?v=1" />
+    <!-- Serve alle pillole degli altri cataloghi in fondo alla pagina:
+         .fq-indice sta li' dentro, ed e' lo stesso componente della barra
+         appesa della pagina domande -->
+    <link rel="stylesheet" href="../../css/domande-frequenti.css?v=3" />
     <link rel="stylesheet" href="css/d.css?v=1" />
     <!-- Solo per la via di ritorno ai cataloghi nella barra della giornata:
          e' lo stesso componente delle pagine di listino, non se ne riscrive uno -->
@@ -101,6 +105,7 @@
         </p>
       </div>
 
+      <!-- GRIGLIA:INIZIO — le schede le scrive genera.js da specie.json -->
       <div class="pr-griglia">
         <a class="pr-card" href="triglia-di-fango.html">
           <div class="pr-foto"><img src="foto/foto-4.jpg" alt="Triglia di fango" loading="lazy" /></div>
@@ -254,6 +259,27 @@
           </div>
         </a>
       </div>
+      <!-- GRIGLIA:FINE -->
+
+      <!-- ALTRI CATALOGHI: la scrive genera.js fra questi due segnaposto.
+           Senza, il pescato era un vicolo cieco — si guardava il banco e
+           sotto c'era solo il pulsante WhatsApp. Ma chi entra qui da una
+           ricerca sul pescato locale e' spesso lo stesso che comprerebbe
+           anche crostacei o calamari: il percorso non deve fermarsi. -->
+      <!-- ALTRI:INIZIO -->
+    <section class="ct-altri">
+      <h2>Gli altri cataloghi</h2>
+      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="Gli altri cataloghi">
+        <a href="catalogo-fresco.html">Pesce fresco</a>
+        <a href="catalogo-crostacei.html">Crostacei e molluschi</a>
+        <a href="catalogo-cefalopodi.html">Calamaro, polpo e seppia</a>
+        <a href="catalogo-crudo.html">Tonno e crudi</a>
+        <a href="catalogo-filetti.html">Filetti e affumicati</a>
+        <a href="catalogo-cucina.html">Pasta, contorni e basi</a>
+        <a href="catalogo-dessert.html">Dessert monoporzione</a>
+      </div>
+    </section>
+      <!-- ALTRI:FINE -->
 
       <!-- Chiusura: identica per impianto a quella delle domande frequenti -->
       <section class="pr-chiusura">

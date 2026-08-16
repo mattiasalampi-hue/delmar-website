@@ -107,4 +107,31 @@ ${script.map((f) => `    <script src="${f}"></script>`).join('\n')}
 `;
 }
 
-module.exports = { WA, SIMBOLI, testa, piede };
+/* GLI ALTRI CATALOGHI, in fondo a ogni pagina prodotto.
+   Sta qui e non in genera-catalogo.js perche' serve anche alla vetrina del
+   pescato, che e' generata dall'altro script: e' il pezzo che tiene insieme
+   il percorso, e non deve esistere in due versioni che si scordano una
+   categoria a testa.
+
+   Sono le stesse pillole della barra appesa. Chi arriva in fondo sa gia'
+   cos'e' un catalogo — e' passato dall'indice — quindi non gli servono le
+   descrizioni, gli serve un bersaglio da cliccare. */
+function altriCataloghi(corrente) {
+  const fs = require('fs');
+  const path = require('path');
+  const dati = JSON.parse(fs.readFileSync(path.join(__dirname, 'catalogo.json'), 'utf8'));
+
+  const tutti = [
+    { slug: 'd-sito', nome: 'Pescato dell\'Arcipelago Toscano' },
+    ...dati.cataloghi.map((c) => ({ slug: c.slug, nome: c.nome })),
+  ].filter((c) => c.slug !== corrente);
+
+  return `    <section class="ct-altri">
+      <h2>Gli altri cataloghi</h2>
+      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="Gli altri cataloghi">
+${tutti.map((c) => `        <a href="${c.slug}.html">${c.nome}</a>`).join('\n')}
+      </div>
+    </section>`;
+}
+
+module.exports = { WA, SIMBOLI, testa, piede, altriCataloghi };
