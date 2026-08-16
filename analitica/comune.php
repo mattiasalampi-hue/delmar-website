@@ -173,6 +173,17 @@ function an_db() {
        parola; il verdetto invece e' un codice e non cambia */
     an_colonna($db, 'pagine_google', 'verdetto', 'TEXT');
 
+    /* Il resto di quello che l'ispezione racconta e che vale la pena
+       tenere. canonico_google contro canonico_nostro e' la trappola
+       classica: Google puo' decidere che la pagina "vera" e' un'altra,
+       e da quel momento le statistiche finiscono su quella — senza
+       dirlo da nessuna parte se non qui */
+    an_colonna($db, 'pagine_google', 'canonico_google', 'TEXT');
+    an_colonna($db, 'pagine_google', 'canonico_nostro', 'TEXT');
+    an_colonna($db, 'pagine_google', 'scaricamento', 'TEXT');
+    an_colonna($db, 'pagine_google', 'scansionata_come', 'TEXT');
+    an_colonna($db, 'pagine_google', 'ricchi', 'TEXT');
+
     /* Sacchetto per le cose che il codice deve ricordarsi fra una
        chiamata e l'altra: quando ha sincronizzato l'ultima volta, e
        simili */

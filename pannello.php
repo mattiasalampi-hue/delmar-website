@@ -128,6 +128,8 @@ if ($dentro) {
     $D['g_paesi']   = st_google_dim('paese', $per['da'], $per['a']);
     $D['g_disp']    = st_google_dim('dispositivo', $per['da'], $per['a']);
     $D['g_aspetto'] = st_google_dim('aspetto', $per['da'], $per['a']);
+    $D['g_canali']  = st_google_canali($per['da'], $per['a']);
+    $D['permesso']  = an_stato('sc_permesso');
     $D['sitemap']   = st_sitemap();
     $D['indice']    = st_indicizzazione();
     $D['sc_quando'] = an_stato('ricerche_aggiornate');
@@ -162,6 +164,33 @@ function statoIndice($verdetto) {
     if ($verdetto === 'PASS') return 'pn-stato-si';
     if ($verdetto === 'FAIL' || $verdetto === 'PARTIAL') return 'pn-stato-no';
     return '';
+}
+
+/* I canali di Search Console, in italiano. googleNews e news sono due
+   cose diverse per Google (l'app Notizie e la sezione Notizie della
+   ricerca) e restano separati anche qui */
+function canale($c) {
+    $n = array(
+        'web' => 'Ricerca normale', 'image' => 'Ricerca per immagini',
+        'video' => 'Video', 'news' => 'Notizie', 'discover' => 'Discover',
+        'googleNews' => 'App Google Notizie'
+    );
+    return isset($n[$c]) ? $n[$c] : $c;
+}
+
+/* Lo stato dello scaricamento della pagina: se Google non riesce a
+   prenderla, tutto il resto e' rumore */
+function scaricamento($s) {
+    $n = array(
+        'SUCCESSFUL' => '', 'SOFT_404' => 'sembra una pagina vuota',
+        'BLOCKED_ROBOTS_TXT' => 'bloccata da robots.txt',
+        'NOT_FOUND' => 'non trovata (404)', 'ACCESS_DENIED' => 'accesso negato',
+        'SERVER_ERROR' => 'errore del server', 'REDIRECT_ERROR' => 'reindirizzamento rotto',
+        'ACCESS_FORBIDDEN' => 'vietata (403)', 'BLOCKED_4XX' => 'bloccata (4xx)',
+        'INTERNAL_CRAWL_ERROR' => 'errore interno di Google',
+        'INVALID_URL' => 'indirizzo non valido'
+    );
+    return isset($n[$s]) ? $n[$s] : '';
 }
 ?><!doctype html>
 <html lang="it">
@@ -433,6 +462,23 @@ function statoIndice($verdetto) {
           <?php if (!$D['g_disp']): ?><p class="pn-vuoto">—</p><?php endif; ?>
         </section>
 
+        <section class="pn-riquadro">
+          <h2>Dove ci trovano</h2>
+          <p class="pn-sotto">Search Console tiene separate le immagini dalla ricerca normale: per un ingrosso di pesce non è un dettaglio</p>
+          <?php
+            $totCan = 0;
+            foreach ($D['g_canali'] as $r) $totCan += $r['impressioni'];
+          ?>
+          <?php foreach ($D['g_canali'] as $r): $q = $totCan ? $r['impressioni'] / $totCan * 100 : 0; ?>
+            <div class="pn-riga" style="--q: <?= round($q) ?>%">
+              <span class="pn-et"><?= e(canale($r['valore'])) ?>
+                <small><?= n($r['impressioni']) ?> comparse · pos. <?= dec($r['posizione'], 1) ?></small></span>
+              <span class="pn-val"><?= n($r['clic']) ?><small> clic</small></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['g_canali']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+        </section>
+
         <?php if ($D['g_aspetto']): ?>
         <section class="pn-riquadro">
           <h2>Come compariamo</h2>
@@ -449,12 +495,26 @@ function statoIndice($verdetto) {
         <section class="pn-riquadro">
           <h2>Google ci vede?</h2>
           <p class="pn-sotto">Se una pagina non è indicizzata, nessuna statistica sulle ricerche la riguarda</p>
-          <?php foreach ($D['indice'] as $r): ?>
+          <?php foreach ($D['indice'] as $r):
+              $guai = array();
+              $sc = scaricamento($r['scaricamento']);
+              if ($sc !== '') $guai[] = $sc;
+              /* Il canonico scelto da Google diverso dal nostro e' la
+                 trappola che non si vede da nessun'altra parte: da quel
+                 momento le statistiche finiscono sull'altra pagina */
+              if ($r['canonico_google'] && $r['canonico_nostro']
+                  && $r['canonico_google'] !== $r['canonico_nostro']) {
+                  $guai[] = 'Google preferisce ' . preg_replace('#^https?://[^/]+#', '', $r['canonico_google']);
+              }
+          ?>
             <div class="pn-riga pn-riga-piatta">
               <span class="pn-et"><?= e(preg_replace('#^https?://[^/]+/?#', '/', $r['url'])) ?>
-                <?php if ($r['scansione']): ?>
-                  <small>vista il <?= e(date('d/m/Y', strtotime($r['scansione']))) ?></small>
-                <?php endif; ?>
+                <small>
+                  <?php if ($r['scansione']): ?>vista il <?= e(date('d/m/Y', strtotime($r['scansione']))) ?><?php endif; ?>
+                  <?php if ($r['scansionata_come'] === 'MOBILE'): ?> · da telefono<?php endif; ?>
+                  <?php if ($r['ricchi']): ?> · dati strutturati: <?= e($r['ricchi']) ?><?php endif; ?>
+                  <?php if ($guai): ?> · <strong><?= e(implode(' · ', $guai)) ?></strong><?php endif; ?>
+                </small>
               </span>
               <span class="pn-val pn-stato <?= statoIndice($r['verdetto']) ?>">
                 <?= e($r['stato'] !== '' ? $r['stato'] : '—') ?>
@@ -470,6 +530,14 @@ function statoIndice($verdetto) {
             </div>
           <?php endforeach; ?>
           <?php if (!$D['indice'] && !$D['sitemap']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+          <?php if ($D['permesso']): ?>
+            <p class="pn-sotto pn-sotto-stacco">
+              Permesso dell'account di servizio sulla proprietà:
+              <strong><?= e($D['permesso']) ?></strong>.
+              Sta qui perché un riquadro vuoto per mancanza di dati e uno vuoto
+              per mancanza di diritti si assomigliano, e si risolvono in modi opposti.
+            </p>
+          <?php endif; ?>
           <?php if ($D['ix_errore'] || $D['sm_errore']): ?>
             <p class="pn-avviso">
               <?= e($D['ix_errore'] ? $D['ix_errore'] : $D['sm_errore']) ?>

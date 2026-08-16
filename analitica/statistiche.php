@@ -367,13 +367,19 @@ function st_occasioni($da, $a, $quante = 12) {
 /* I totali di Google del periodo: clic, quante volte siamo comparsi,
    ogni quante volte ci cliccano, in che posizione stiamo.
 
-   Vengono dalla riga 'totale', non dalla somma delle parole cercate:
-   Google nasconde le ricerche fatte da pochissime persone, quindi
-   sommare le parole darebbe sempre meno clic del vero */
+   Vengono dal canale 'web' chiesto per intero, non dalla somma delle
+   parole cercate: Google nasconde le ricerche fatte da pochissime
+   persone, quindi sommare le parole darebbe sempre meno clic del vero.
+
+   Solo 'web' e non tutti i canali insieme: mescolare la posizione
+   media della ricerca normale con quella delle immagini darebbe un
+   numero che non descrive niente. Gli altri canali stanno nel loro
+   riquadro */
 function st_google($da, $a) {
     $r = st_uno("SELECT SUM(clic) clic, SUM(impressioni) impressioni,
                         SUM(posizione * impressioni) / NULLIF(SUM(impressioni), 0) posizione
-                 FROM ricerche_dim WHERE tipo = 'totale' AND giorno BETWEEN ? AND ?",
+                 FROM ricerche_dim WHERE tipo = 'canale' AND valore = 'web'
+                   AND giorno BETWEEN ? AND ?",
                 array($da, $a));
 
     $clic = (int) (isset($r['clic']) ? $r['clic'] : 0);
@@ -391,7 +397,8 @@ function st_google($da, $a) {
    che non lo e' */
 function st_google_serie($da, $a) {
     $righe = st_q("SELECT giorno, clic, impressioni FROM ricerche_dim
-                   WHERE tipo = 'totale' AND giorno BETWEEN ? AND ?", array($da, $a));
+                   WHERE tipo = 'canale' AND valore = 'web'
+                     AND giorno BETWEEN ? AND ?", array($da, $a));
     $per = array();
     foreach ($righe as $r) $per[$r['giorno']] = $r;
 
@@ -432,8 +439,18 @@ function st_sitemap() {
 }
 
 function st_indicizzazione() {
-    return st_q('SELECT url, stato, motivo, scansione, robots, aggiornato, verdetto
-                 FROM pagine_google ORDER BY url');
+    return st_q('SELECT * FROM pagine_google ORDER BY url');
+}
+
+/* I canali: ricerca normale, immagini, video, notizie, Discover.
+   Quelli a zero non si mostrano — un elenco di cinque righe vuote
+   occupa spazio per dire niente */
+function st_google_canali($da, $a) {
+    return st_q("SELECT valore, SUM(clic) clic, SUM(impressioni) impressioni,
+                        SUM(posizione * impressioni) / NULLIF(SUM(impressioni), 0) posizione
+                 FROM ricerche_dim WHERE tipo = 'canale' AND giorno BETWEEN ? AND ?
+                 GROUP BY valore HAVING SUM(impressioni) > 0
+                 ORDER BY impressioni DESC", array($da, $a));
 }
 
 /* ── Compattini in fondo ─────────────────────────────────────────── */

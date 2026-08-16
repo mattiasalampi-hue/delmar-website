@@ -155,7 +155,7 @@ function sc_posta($url, $corpo, $tipo, $gettone = '') {
 /* Chiede una fetta di searchAnalytics e restituisce le righe.
    Impaginata: Google ne da' al massimo 25000 per volta, e su sedici
    mesi di storico una parola sola puo' superarle */
-function sc_interroga($url, $gettone, $dimensioni, $inizio, $fine) {
+function sc_interroga($url, $gettone, $dimensioni, $inizio, $fine, $canale = 'web') {
     $tutte = array();
     $salto = 0;
     do {
@@ -165,7 +165,14 @@ function sc_interroga($url, $gettone, $dimensioni, $inizio, $fine) {
             'dimensions' => $dimensioni,
             'rowLimit'   => 5000,
             'startRow'   => $salto,
-            'type'       => 'web'
+            'type'       => $canale,
+            /* dataState 'all' include anche gli ultimi due giorni, quelli
+               che Google marca come provvisori e che di default non
+               manderebbe affatto. Su un pannello che si guarda la
+               mattina, "ieri non risulta niente" sembra un guasto: meglio
+               un numero che nei giorni dopo si assesta — tanto lo
+               riscarichiamo comunque, vedi SC_RIPASSO */
+            'dataState'  => 'all'
         )), 'application/json', $gettone);
 
         $d = json_decode($r, true);
@@ -198,6 +205,12 @@ function sc_sincronizza($forza = false) {
     $fp = @fopen($lucchetto, 'c');
     if (!$fp) return false;
     if (!flock($fp, LOCK_EX | LOCK_NB)) { fclose($fp); return false; }
+
+    /* Il giro completo sono una ventina di chiamate: sopra i 30 secondi
+       di default PHP taglierebbe a meta', e l'ultima cosa scritta
+       resterebbe li' senza che nessuno se ne accorga — gira a
+       connessione gia' chiusa, quindi l'errore non lo vedrebbe nessuno */
+    @set_time_limit(180);
 
     try {
         $cfg = sc_config();
@@ -236,14 +249,13 @@ function sc_sincronizza($forza = false) {
 
         /* 2. Le altre dimensioni, una interrogazione ciascuna.
 
-           I totali del giorno si chiedono a parte e NON si sommano
-           dalle righe sopra: Google nasconde le parole cercate da
-           pochissime persone (per non far risalire a chi ha cercato),
-           quindi la somma delle query e' sempre piu' bassa del vero.
-           Sommandole, il grafico direbbe meno clic di quanti ce ne
-           sono stati davvero. */
+           Nessuna di queste si ricava sommando le righe del punto 1:
+           Google nasconde le parole cercate da pochissime persone, per
+           non far risalire a chi ha cercato, quindi la somma delle
+           query e' sistematicamente piu' bassa del vero. Ogni taglio
+           va chiesto per intero, e i totali arrivano dal canale 'web'
+           al punto 3. */
         $dim = array(
-            'totale'      => array('date'),
             'paese'       => array('date', 'country'),
             'dispositivo' => array('date', 'device'),
             'aspetto'     => array('date', 'searchAppearance')
@@ -272,15 +284,44 @@ function sc_sincronizza($forza = false) {
             $prese += count($righe);
         }
 
-        /* 3. Sitemap e indicizzazione: non sono statistiche, sono lo
-           stato di salute. Se falliscono non devono portarsi dietro i
-           numeri appena scaricati, quindi stanno dentro un try loro */
+        /* 3. I CANALI. Search Console non misura solo la ricerca
+           normale: tiene separate immagini, video, notizie e Discover.
+           Di default l'API dà solo 'web', e per un ingrosso di pesce
+           con le foto dei banchi la ricerca per immagini non è un
+           dettaglio — è gente che cerca "branzino" e vede la nostra
+           vasca.
+
+           Una chiamata per canale, e chi non ha dati risponde vuoto
+           senza lamentarsi. Se un canale non è disponibile sulla
+           proprietà solleva: si salta quello e basta */
+        foreach (array('web', 'image', 'video', 'news', 'discover', 'googleNews') as $canale) {
+            try {
+                $righe = sc_interroga($url, $gettone, array('date'), $inizio, $fine, $canale);
+            } catch (Exception $e) {
+                continue;
+            }
+            $db->beginTransaction();
+            foreach ($righe as $x) {
+                $insD->execute(array(
+                    $x['keys'][0], 'canale', $canale,
+                    (int) $x['clicks'], (int) $x['impressions'], (float) $x['position']
+                ));
+            }
+            $db->commit();
+            $prese += count($righe);
+        }
+
+        /* 4. Sitemap, indicizzazione e livello di permesso: non sono
+           statistiche, sono lo stato di salute. Se falliscono non
+           devono portarsi dietro i numeri appena scaricati, quindi
+           stanno dentro un try loro */
         try { sc_sitemap($sito, $gettone); } catch (Exception $e) {
             an_stato('sitemap_errore', mb_substr($e->getMessage(), 0, 200));
         }
         try { sc_indicizzazione($cfg['sito'], $gettone); } catch (Exception $e) {
             an_stato('indice_errore', mb_substr($e->getMessage(), 0, 200));
         }
+        try { sc_proprieta($sito, $gettone); } catch (Exception $e) { /* niente di grave */ }
 
         an_stato('ricerche_aggiornate', (string) time());
         an_stato('ricerche_errore', '');
@@ -351,12 +392,19 @@ function sc_sitemap($sitoCodificato, $gettone) {
    il pannello lo dice, invece di lasciare il riquadro vuoto senza
    spiegazione. */
 function sc_indicizzazione($sito, $gettone) {
-    $pagine = array($sito, $sito . 'privacy.html');
+    /* Gli indirizzi si leggono dalla NOSTRA sitemap invece di tenerli
+       scritti qui: aggiungendo una pagina al sito, il pannello se ne
+       accorge da solo. Un elenco a mano invecchia in silenzio, e la
+       pagina nuova — proprio quella su cui ci si chiede "ma Google
+       l'ha vista?" — sarebbe l'unica a mancare */
+    $pagine = sc_indirizzi_sitemap($sito);
+    if (!$pagine) $pagine = array($sito);
 
     $db = an_db();
     $ins = $db->prepare('INSERT OR REPLACE INTO pagine_google
-        (url, stato, motivo, scansione, robots, aggiornato, verdetto)
-        VALUES (?, ?, ?, ?, ?, ?, ?)');
+        (url, stato, motivo, scansione, robots, aggiornato, verdetto,
+         canonico_google, canonico_nostro, scaricamento, scansionata_come, ricchi)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
     foreach ($pagine as $u) {
         $r = sc_posta('https://searchconsole.googleapis.com/v1/urlInspection/index:inspect',
@@ -366,8 +414,21 @@ function sc_indicizzazione($sito, $gettone) {
         if (isset($d['error'])) {
             throw new Exception(isset($d['error']['message']) ? $d['error']['message'] : 'errore ispezione');
         }
-        $i = isset($d['inspectionResult']['indexStatusResult'])
-            ? $d['inspectionResult']['indexStatusResult'] : array();
+        $res = isset($d['inspectionResult']) ? $d['inspectionResult'] : array();
+        $i = isset($res['indexStatusResult']) ? $res['indexStatusResult'] : array();
+
+        /* I risultati arricchiti: sono i dati strutturati JSON-LD che
+           abbiamo messo nella pagina. Sapere che Google li ha LETTI e
+           quanti oggetti ci ha trovato è l'unico modo di scoprire che
+           si sono rotti — altrimenti la pagina resta uguale e la scheda
+           nei risultati sparisce senza dire niente */
+        $ricchi = array();
+        if (isset($res['richResultsResult']['detectedItems'])) {
+            foreach ($res['richResultsResult']['detectedItems'] as $x) {
+                $ricchi[] = (isset($x['richResultType']) ? $x['richResultType'] : '?')
+                    . (isset($x['items']) ? ' (' . count($x['items']) . ')' : '');
+            }
+        }
 
         $ins->execute(array(
             $u,
@@ -376,8 +437,44 @@ function sc_indicizzazione($sito, $gettone) {
             isset($i['lastCrawlTime']) ? $i['lastCrawlTime'] : '',
             isset($i['robotsTxtState']) ? $i['robotsTxtState'] : '',
             time(),
-            isset($i['verdict']) ? $i['verdict'] : ''
+            isset($i['verdict']) ? $i['verdict'] : '',
+            isset($i['googleCanonical']) ? mb_substr($i['googleCanonical'], 0, 200) : '',
+            isset($i['userCanonical']) ? mb_substr($i['userCanonical'], 0, 200) : '',
+            isset($i['pageFetchState']) ? $i['pageFetchState'] : '',
+            isset($i['crawledAs']) ? $i['crawledAs'] : '',
+            mb_substr(implode(', ', $ricchi), 0, 200)
         ));
     }
+
+    /* Le pagine tolte dalla sitemap non devono restare a fare numero */
+    $tieni = str_repeat('?,', count($pagine) - 1) . '?';
+    $db->prepare('DELETE FROM pagine_google WHERE url NOT IN (' . $tieni . ')')->execute($pagine);
+
     an_stato('indice_errore', '');
+}
+
+/* Legge gli indirizzi dalla sitemap del sito. A mano invece che con
+   SimpleXML: e' un elenco di <loc>, e non vale la pena dipendere da
+   un'estensione che su un hosting condiviso potrebbe non esserci.
+
+   Tetto a 40: l'API di ispezione ha una quota di 2000 al giorno ma va
+   a una chiamata per indirizzo, e su un sito di tre pagine il tetto
+   serve solo a non far esplodere niente se un domani la sitemap
+   diventasse enorme */
+function sc_indirizzi_sitemap($sito) {
+    $xml = @file_get_contents(rtrim($sito, '/') . '/sitemap.xml');
+    if ($xml === false) return array();
+    if (!preg_match_all('#<loc>\s*([^<\s]+)\s*</loc>#i', $xml, $m)) return array();
+    return array_slice(array_unique($m[1]), 0, 40);
+}
+
+/* Che permesso ha davvero l'account di servizio sulla proprieta'.
+   Serve a rispondere in un colpo alla domanda "il riquadro e' vuoto
+   perche' non ci sono dati o perche' non abbiamo il diritto di
+   leggerli?" — due cause identiche a vedersi e opposte da risolvere */
+function sc_proprieta($sitoCodificato, $gettone) {
+    $r = sc_posta('https://searchconsole.googleapis.com/webmasters/v3/sites/' . $sitoCodificato,
+        null, '', $gettone);
+    $d = json_decode($r, true);
+    if (isset($d['permissionLevel'])) an_stato('sc_permesso', $d['permissionLevel']);
 }
