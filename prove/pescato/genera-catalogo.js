@@ -185,10 +185,9 @@ ${c.famiglie.map((f, i) => {
            secondo numero. Ed e' il contrario di quello che serve: chi non
            trova la sua referenza se ne va, invece di chiederla. -->
       <p class="ct-estratto">
-        In pagina i <strong>${vetrina} prodotti più richiesti</strong>. In cella oggi
-        ce ne sono <strong>${c.magazzino}</strong>, e su ordinazione prendiamo
-        qualsiasi cosa: se non vedi quello che ti serve,
-        <a href="https://wa.me/${WA}?text=${encodeURIComponent('Ciao, cerco un prodotto che non vedo sul sito: ')}" target="_blank" rel="noopener noreferrer">chiedilo</a>.
+        In pagina i <strong>${vetrina} più richiesti</strong> su
+        <strong>${c.magazzino}</strong> in cella. Se non vedi quello che ti serve,
+        <a href="https://wa.me/${WA}?text=${encodeURIComponent('Ciao, cerco un prodotto che non vedo sul sito: ')}" target="_blank" rel="noopener noreferrer">chiedilo</a><span class="solo-largo">: su ordinazione prendiamo qualsiasi cosa</span>.
       </p>`;
 
   /* Il titolo della finestra e' la frase SEO, non il nome del catalogo:
@@ -199,13 +198,16 @@ ${hero}
 ${barra}
 
     <main class="pr-corpo">
-      <!-- Sul telefono resta il primo paragrafo. Il secondo elabora — come
-           lavoriamo, cosa e' incluso — ed e' roba che si legge da fermi, non
-           scorrendo col pollice per arrivare ai prodotti. Resta nel
-           documento, quindi Google lo legge lo stesso. -->
+      <!-- L'INTRODUZIONE E' UN PARAGRAFO SOLO, e sul telefono ne resta la
+           prima frase. Erano due paragrafi pieni — tredici, sedici righe su
+           uno schermo stretto — prima di far vedere un pesce. Il secondo
+           diceva quasi sempre cose operative (come arriva, con che etichetta,
+           entro che ora) che stanno gia' identiche nella chiusura in fondo a
+           questa stessa pagina: ripeterle in cima costava quindici righe e
+           non aggiungeva niente. (Mattias, 2026-08-17) -->
       <div class="pr-intro">
         <h2>${c.intro_titolo}</h2>
-${c.intro.map((p, i) => `        <p${i > 0 ? ' class="solo-largo"' : ''}>${p}</p>`).join('\n')}
+${c.intro.map((p) => `        <p>${primaFrase(p)}</p>`).join('\n')}
       </div>
 
 ${scelta}
@@ -287,33 +289,24 @@ function indice() {
              fornitore ittico e legge "dessert" nel titolo pensa di aver
              sbagliato azienda. (Mattias, 2026-08-17) -->
         <h2>Ingrosso di pesce fresco e congelato per ristoranti in Toscana, Liguria ed Emilia-Romagna</h2>
+        <!-- Erano tre paragrafi. Il terzo (orari, prezzi non online) e' tutto
+             ripetuto nella chiusura in fondo a questa pagina; il primo si e'
+             stretto tenendo il numero, che e' la cosa che convince. Resta
+             quello che dice che questa e' una selezione: e' l'unica frase che,
+             se non la si legge, fa perdere un cliente che non trova la sua
+             referenza. -->
         <p>
-          Riforniamo <strong>ristoranti, pescherie, hotel, gastronomie e sushi bar</strong>
-          — oltre mille locali nell'ultimo anno — con una consegna sola. Chi ordina da
-          noi non tiene in piedi tre fornitori per riempire un menù: il pesce del
-          giorno e la cella del congelato arrivano sullo stesso furgone e sulla stessa
-          fattura, e con loro il dessert, che è la voce per cui quasi nessuno ha voglia
-          di aprire un conto a parte.
+          Riforniamo <strong>oltre mille locali</strong> fra ristoranti, pescherie,
+          hotel e sushi bar. <span class="solo-largo">Pesce del giorno, cella del
+          congelato e dessert sullo stesso furgone e sulla stessa fattura: chi ordina
+          da noi non tiene in piedi tre fornitori per riempire un menù.</span>
         </p>
         <p>
-          Quello che vedete in queste pagine è <strong>una selezione dei prodotti più
-          richiesti</strong>, non il magazzino: le referenze in giacenza sono più di
-          mille e cambiano ogni giorno, e <strong>su ordinazione prendiamo
-          qualunque cosa</strong> — specie, pezzature e provenienze che non stanno in
-          nessuna vetrina. Se cercate qualcosa che qui non c'è, è quasi sempre una
-          domanda su WhatsApp, non un problema.
-        </p>
-        <!-- Sul telefono resta fuori: chi arriva qui vuole vedere i prodotti,
-             e orari e modalita' d'ordine li ritrova identici nella chiusura in
-             fondo a questa stessa pagina. Il paragrafo sopra invece resta,
-             perche' dice che questa e' una selezione — che e' l'unica cosa che
-             se non si legge fa perdere un cliente. -->
-        <p class="solo-largo">
-          Si ordina <strong>su WhatsApp fino alle 2 di notte</strong> e si riceve entro
-          le 11 del mattino, in ghiaccio e con l'etichetta di tracciabilità. I
-          <strong>prezzi non stanno online</strong> perché cambiano ogni giorno e
-          cambiano per settore: si chiedono in chat e arrivano in pochi minuti, con
-          la disponibilità reale di quel momento.
+          Quello che vedete qui è <strong>una selezione dei prodotti più
+          richiesti</strong>, non il magazzino. <span class="solo-largo">Le referenze in
+          giacenza sono più di mille e cambiano ogni giorno, e su ordinazione prendiamo
+          qualunque cosa: se cercate qualcosa che non c'è, è una domanda su WhatsApp,
+          non un problema.</span>
         </p>
       </div>
 
