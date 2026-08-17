@@ -68,9 +68,19 @@ window.DelMarDito = (function () {
 
   /* Quello che sta SOPRA la tela e va lasciato al suo mestiere. La tela e'
      trasparente ai tocchi, quindi il bersaglio dell'evento e' gia' l'elemento
-     di contenuto quando ce n'e' uno */
+     di contenuto quando ce n'e' uno.
+
+     QUI CI STA SOLO ROBA CHE SI TOCCA PER USARLA. Nella prima versione
+     c'era anche .pr-hero-in, il blocco del titolo, per non rubare gesti sul
+     testo: su schermo stretto quel blocco occupa quasi tutta l'apertura,
+     quindi quasi ovunque il dito si appoggiasse risultava "sul contenuto" e
+     la pagina scorreva lo stesso. Il gioco sembrava non funzionare mai.
+     Un titolo non e' un comando: sopra il titolo si gioca.
+     La griglia dei contatti invece resta, perche' li' c'e' un modulo da
+     compilare e togliere lo scorrimento sopra i campi romperebbe la pagina.
+     (Mattias, 2026-08-17) */
   function suContenuto(t) {
-    return !!(t && t.closest && t.closest('a, button, input, textarea, select, label, .pr-hero-in, .contatti-grid'));
+    return !!(t && t.closest && t.closest('a, button, input, textarea, select, label, .contatti-grid'));
   }
 
   function sopraUnaTela(x, y) {

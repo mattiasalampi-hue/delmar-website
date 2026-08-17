@@ -49,6 +49,23 @@
 #pr-sfondo { z-index: 0; }
 #pr-pesci { z-index: 1; }
 
+/* SULL'APERTURA, COL DITO, NON SI SCORRE: si gioca.
+   preventDefault() da solo non basta ed e' la ragione per cui il primo
+   tentativo falliva a intermittenza — se il browser ha gia' deciso che quel
+   gesto e' uno scorrimento, l'evento arriva non annullabile e la pagina
+   parte lo stesso. touch-action glielo dice PRIMA, quando ancora non ha
+   deciso niente.
+   Si puo' fare perche' l'apertura e' alta 56vh sul telefono: sotto resta
+   quasi meta' schermata da cui far scendere la pagina. Se un domani questa
+   sezione diventasse alta quanto lo schermo, qui si resterebbe incastrati.
+   Solo su schermo tattile: col mouse lo scorrimento e' la rotella e questo
+   non c'entra niente. (Mattias, 2026-08-17) */
+@media (pointer: coarse) {
+  .pr-hero {
+    touch-action: none;
+  }
+}
+
 /* Un po' piu' larga di prima: il nome del prodotto e' lungo, e in una colonna
    stretta andava su tre righe facendo alzare tutta l'apertura */
 .pr-hero-in {

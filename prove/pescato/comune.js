@@ -61,7 +61,7 @@ function testa(titolo, opts = {}) {
          pagina delle domande frequenti. Si carica quel foglio invece di
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
     <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=3" />
-    <link rel="stylesheet" href="css/d.css?v=1" />
+    <link rel="stylesheet" href="css/d.css?v=2" />
 ${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=1" />`).join('\n')}
   </head>
   <body class="pr-pagina">
