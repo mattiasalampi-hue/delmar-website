@@ -20,6 +20,7 @@ const path = require('path');
 
 const qui = __dirname;
 const DENTRO = path.join(qui, 'foto-trovate');
+const MIE = path.join(qui, 'foto-mie');
 const FUORI = path.join(qui, 'foto-prodotti');
 const LARGO = 900;
 const QUALITA = 80;
@@ -67,6 +68,28 @@ if (process.argv.includes('--prima')) {
     } catch (e) { /* cartella senza crediti: la voce resta senza foto */ }
   }
   console.log(`--prima: riempiti ${riempiti} prodotti che non avevano una scelta a mano\n`);
+}
+
+/* LE FOTO DI CASA VINCONO SU TUTTO.
+   foto-mie/ tiene gli originali che manda Mattias: sono foto DelMar, e una
+   foto DelMar batte sempre la migliore candidata trovata su Commons. Il nome
+   del file E' lo slug del prodotto — foto-mie/copertina-fresco.jpg diventa
+   foto-prodotti/copertina-fresco.webp — cosi' aggiungerne una e' copiare un
+   file, senza toccare ne' questo script ne' il catalogo.
+
+   Sta qui in fondo, dopo scelte.json e dopo --prima, perche' e' l'ultima
+   parola. E sta in una cartella versionata apposta: scelte.json e
+   foto-trovate/ sono gitignorati, quindi una foto messa li' sparirebbe al
+   primo giro su un'altra macchina, o al primo assegna-foto.js senza scelte. */
+const mie = new Set();
+if (fs.existsSync(MIE)) {
+  for (const file of fs.readdirSync(MIE)) {
+    const slug = file.replace(/\.[^.]+$/, '');
+    if (slug === file) continue;
+    scelte[slug] = `foto-mie/${file}`;
+    mie.add(slug);
+  }
+  if (mie.size) console.log(`foto-mie: ${mie.size} foto di casa, hanno la precedenza\n`);
 }
 
 if (!Object.keys(scelte).length) {
@@ -124,10 +147,15 @@ function creditoDi(slug, file) {
       .toFile(destinazione);
 
     const peso = fs.statSync(destinazione).size;
-    const c = creditoDi(slug, path.basename(percorso));
+    /* Le foto di casa non hanno attribuzione da citare: sono nostre. Senza
+       questo ramo finirebbero fra i "crediti non trovati", che e' la stessa
+       riga di una foto libera di cui abbiamo perso l'autore — e sono due
+       problemi opposti da tenere distinti quando si scrive la pagina crediti. */
+    const c = mie.has(slug) ? null : creditoDi(slug, path.basename(percorso));
     if (c) crediti.push({ prodotto: slug, foto: `foto-prodotti/${slug}.webp`, autore: c.autore, licenza: c.licenza, fonte: c.fonte, originale: c.pagina });
 
-    console.log(`  · ${slug.padEnd(34)} ${Math.round(peso / 1024)} KB   ${c ? c.licenza : 'crediti non trovati'}`);
+    const nota = mie.has(slug) ? 'foto DelMar' : (c ? c.licenza : 'crediti non trovati');
+    console.log(`  · ${slug.padEnd(34)} ${Math.round(peso / 1024)} KB   ${nota}`);
     fatte++;
   }
 

@@ -104,52 +104,12 @@
     "originale": "https://www.flickr.com/photos/87117631@N00/12667751313"
   },
   {
-    "prodotto": "copertina-cefalopodi",
-    "foto": "foto-prodotti/copertina-cefalopodi.webp",
-    "autore": "avlxyz",
-    "licenza": "BY-SA 2.0",
-    "fonte": "Openverse",
-    "originale": "https://www.flickr.com/photos/10559879@N00/3739162586"
-  },
-  {
     "prodotto": "copertina-congelato",
     "foto": "foto-prodotti/copertina-congelato.webp",
     "autore": "Faroclom",
     "licenza": "CC BY-SA 3.0",
     "fonte": "Wikimedia Commons",
     "originale": "https://commons.wikimedia.org/wiki/File:HKCEC_WC_HKTDC_Food_Expo_2009_Frozen_Food_Shrimp_Seafood.JPG"
-  },
-  {
-    "prodotto": "copertina-crostacei",
-    "foto": "foto-prodotti/copertina-crostacei.webp",
-    "autore": "Joe Ross from Lansing, Michigan",
-    "licenza": "BY-SA 2.0",
-    "fonte": "Openverse",
-    "originale": "https://commons.wikimedia.org/w/index.php?curid=109214818"
-  },
-  {
-    "prodotto": "copertina-crudo",
-    "foto": "foto-prodotti/copertina-crudo.webp",
-    "autore": "avlxyz",
-    "licenza": "BY-SA 2.0",
-    "fonte": "Openverse",
-    "originale": "https://www.flickr.com/photos/10559879@N00/2570349350"
-  },
-  {
-    "prodotto": "copertina-cucina",
-    "foto": "foto-prodotti/copertina-cucina.webp",
-    "autore": "Ceeseven",
-    "licenza": "CC BY-SA 4.0",
-    "fonte": "Wikimedia Commons",
-    "originale": "https://commons.wikimedia.org/wiki/File:Basket_of_French_Fries.JPG"
-  },
-  {
-    "prodotto": "copertina-dessert",
-    "foto": "foto-prodotti/copertina-dessert.webp",
-    "autore": "jbcurio",
-    "licenza": "BY 2.0",
-    "fonte": "Openverse",
-    "originale": "https://www.flickr.com/photos/69131582@N00/2540997121"
   },
   {
     "prodotto": "copertina-dolci",
@@ -166,14 +126,6 @@
     "licenza": "BY-SA 2.0",
     "fonte": "Openverse",
     "originale": "https://www.flickr.com/photos/41616276@N04/6921983307"
-  },
-  {
-    "prodotto": "copertina-fresco",
-    "foto": "foto-prodotti/copertina-fresco.webp",
-    "autore": "Winniepix",
-    "licenza": "CC BY 2.0",
-    "fonte": "Wikimedia Commons",
-    "originale": "https://commons.wikimedia.org/wiki/File:Fresh_fish_displayed_on_a_market_stall_at_the_port_in_Antibes,_France_(54479363589).jpg"
   },
   {
     "prodotto": "cozze",
