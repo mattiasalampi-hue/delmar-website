@@ -55,4 +55,15 @@
       stile: 4
     });
   }
+
+  /* IL FONDO DELLA CHIUSURA.
+     Costa zero in scarico — caustiche.js e' gia' caricato per l'apertura —
+     e nemmeno in lavoro: la funzione ha il suo IntersectionObserver, quindi
+     finche' non si scorre fino in fondo alla pagina non disegna un
+     fotogramma. Se il canvas non c'e' o lo script non parte, resta il blu
+     pieno del foglio di stile e non si rompe niente. */
+  var fondo = document.querySelector('.pr-chiusura-fondo');
+  if (fondo && window.DelMarCaustiche) {
+    window.DelMarCaustiche(fondo, { tipo: 'profondita' });
+  }
 })();

@@ -302,12 +302,38 @@
 /* ─ Chiusura ────────────────────────────────
    Stesso impianto della chiusura delle domande frequenti */
 .pr-chiusura {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   max-width: 62rem;
   margin: 0 auto 4rem;
   padding: 4.5rem 8% 4.2rem;
   text-align: center;
+  /* Resta il blu pieno: e' quello che si vede finche' la tela non ha
+     dipinto il primo fotogramma, e quello che resta se il canvas non parte.
+     Senza, per un istante il testo bianco starebbe su fondo bianco. */
   background: var(--ink);
   border-radius: 3px;
+}
+
+/* LA SUPERFICIE VISTA DA SOTTO.
+   Il blu piatto su un blocco alto settecento pixel e' la stessa macchia
+   ferma che aveva fatto scartare le sfumature CSS nella sezione contatti.
+   Qui la tela dipinge la luce che entra dall'alto e si spegne scendendo:
+   e' la variante 'profondita' di caustiche.js, la stessa grammatica
+   dell'apertura senza esserne una copia. */
+.pr-chiusura-fondo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 3px;
+}
+
+/* Il testo torna sopra la tela senza z-index negativi su di lei */
+.pr-chiusura > *:not(.pr-chiusura-fondo) {
+  position: relative;
 }
 
 .pr-chiusura-occhiello {

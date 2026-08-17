@@ -135,6 +135,71 @@ window.DelMarCaustiche = function (cvs, opzioni) {
       }
     },
 
+    /* PROFONDITA' — l'unica senza taglio verticale.
+       Le altre quattro nascono dalla sezione contatti, dove meta' schermo
+       e' chiaro e meta' scuro e la luce esce dalla cucitura. Il blocco di
+       chiusura dei cataloghi invece e' scuro per intero: li' un taglio
+       luminoso al centro finirebbe esattamente dietro il titolo.
+
+       Qui la luce entra DALL'ALTO e si spegne scendendo — la superficie
+       dell'acqua vista da sotto. Per farlo servono un fondo e una maschera
+       diversi, e infatti questa variante porta le sue: 'sfondo' e
+       'maschera' sostituiscono quelli predefiniti quando ci sono. */
+    profondita: {
+      largo: 0,
+      confine: () => 0,
+      sfondo(c, w, h) {
+        const g = c.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, '#1d2c80');
+        g.addColorStop(.42, '#151d61');
+        g.addColorStop(1, '#080c2c');
+        c.fillStyle = g;
+        c.fillRect(0, 0, w, h);
+      },
+      /* La luce sta STRETTA in alto, non diffusa a mezza altezza: sotto il
+         titolo passa la riga piu' importante della pagina, e una banda
+         chiara che ci corre dietro la fa faticare. Cosi' invece il testo
+         galleggia sul blu profondo e la luce resta un accento sopra. */
+      maschera(c, w, h) {
+        const m = c.createLinearGradient(0, 0, 0, h * .95);
+        m.addColorStop(0,   'rgba(0,0,0,1)');
+        m.addColorStop(.2,  'rgba(0,0,0,.44)');
+        m.addColorStop(.5,  'rgba(0,0,0,.11)');
+        m.addColorStop(.82, 'rgba(0,0,0,0)');
+        c.globalCompositeOperation = 'destination-in';
+        c.fillStyle = m;
+        c.fillRect(0, 0, w, h);
+      },
+      disegna(w, h) {
+        /* Bande orizzontali e larghe, non righe verticali: e' lo stesso
+           motivo per cui sul sito si usa 'larghe' invece di 'fitte' —
+           dietro un titolo da leggere il fondo deve respirare, non vibrare.
+
+           TUTTO IN PROPORZIONE, NIENTE PIXEL FISSI. Alla prima scrittura la
+           frequenza era in pixel: su una tela larga come un telefono la
+           sinusoide non arrivava a completare un sesto di periodo, e le
+           bande diventavano righe quasi dritte in diagonale. Con x
+           normalizzato fra 0 e 1 la forma e' la stessa a ogni larghezza; le
+           ampiezze e lo spessore seguono altezza e larghezza per lo stesso
+           motivo. */
+        dctx.lineWidth = Math.max(1.6, w * .0073);
+        for (let i = 0; i < 11; i++) {
+          const f = i * 1.6;
+          const base = (i / 10) * h * .78;
+          dctx.beginPath();
+          for (let x = -12; x <= w + 12; x += 8) {
+            const u = x / w;
+            const y = base
+              + Math.sin(u * 2.58 + t * .24 + f) * h * .16
+              + Math.sin(u * 6.35 - t * .16 + f) * h * .068;
+            x === -12 ? dctx.moveTo(x, y) : dctx.lineTo(x, y);
+          }
+          dctx.strokeStyle = `rgba(190,225,255,${(1 - i / 10) * .26})`;
+          dctx.stroke();
+        }
+      }
+    },
+
     /* Superficie — la luce entra dall'alto e il confine ondeggia, che e'
        la stessa superficie vista di taglio */
     superficie: {
@@ -183,31 +248,37 @@ window.DelMarCaustiche = function (cvs, opzioni) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
-    const chiaro = ctx.createLinearGradient(0, 0, 0, h);
-    chiaro.addColorStop(0, '#f4f6f9');
-    chiaro.addColorStop(1, '#e4e7ee');
-    ctx.fillStyle = chiaro;
-    ctx.fillRect(0, 0, w, h);
+    /* Una variante puo' portarsi il fondo suo — vedi 'profondita', che non
+       ha due campiture da dividere. Le altre usano quello qui sotto. */
+    if (tipo.sfondo) {
+      tipo.sfondo(ctx, w, h);
+    } else {
+      const chiaro = ctx.createLinearGradient(0, 0, 0, h);
+      chiaro.addColorStop(0, '#f4f6f9');
+      chiaro.addColorStop(1, '#e4e7ee');
+      ctx.fillStyle = chiaro;
+      ctx.fillRect(0, 0, w, h);
 
-    /* La meta' scura e' una FORMA che segue il confine riga per riga,
-       sfocata sul bordo: cosi' le due campiture si fondono invece di
-       toccarsi con una linea */
-    ctx.save();
-    ctx.filter = 'blur(9px)';
-    ctx.beginPath();
-    ctx.moveTo(-30, -30);
-    for (let y = -20; y <= h + 20; y += 6) {
-      ctx.lineTo(tipo.confine(y / S) * S, y);
+      /* La meta' scura e' una FORMA che segue il confine riga per riga,
+         sfocata sul bordo: cosi' le due campiture si fondono invece di
+         toccarsi con una linea */
+      ctx.save();
+      ctx.filter = 'blur(9px)';
+      ctx.beginPath();
+      ctx.moveTo(-30, -30);
+      for (let y = -20; y <= h + 20; y += 6) {
+        ctx.lineTo(tipo.confine(y / S) * S, y);
+      }
+      ctx.lineTo(-30, h + 30);
+      ctx.closePath();
+      const scuro = ctx.createLinearGradient(0, 0, 0, h);
+      scuro.addColorStop(0, '#0e1445');
+      scuro.addColorStop(.55, '#1a2270');
+      scuro.addColorStop(1, '#0d1240');
+      ctx.fillStyle = scuro;
+      ctx.fill();
+      ctx.restore();
     }
-    ctx.lineTo(-30, h + 30);
-    ctx.closePath();
-    const scuro = ctx.createLinearGradient(0, 0, 0, h);
-    scuro.addColorStop(0, '#0e1445');
-    scuro.addColorStop(.55, '#1a2270');
-    scuro.addColorStop(1, '#0d1240');
-    ctx.fillStyle = scuro;
-    ctx.fill();
-    ctx.restore();
 
     dctx.setTransform(1, 0, 0, 1, 0, 0);
     dctx.clearRect(0, 0, w, h);
@@ -215,17 +286,23 @@ window.DelMarCaustiche = function (cvs, opzioni) {
     tipo.disegna(w, h);
 
     /* La maschera: piena sul taglio, trasparente a 'largo' pixel da li'.
-       destination-in tiene solo quello che ci sta dentro */
-    const cx = w * .5;
-    const m = dctx.createLinearGradient(cx - tipo.largo, 0, cx + tipo.largo, 0);
-    m.addColorStop(0,   'rgba(0,0,0,0)');
-    m.addColorStop(.28, 'rgba(0,0,0,.55)');
-    m.addColorStop(.5,  'rgba(0,0,0,1)');
-    m.addColorStop(.72, 'rgba(0,0,0,.55)');
-    m.addColorStop(1,   'rgba(0,0,0,0)');
-    dctx.globalCompositeOperation = 'destination-in';
-    dctx.fillStyle = m;
-    dctx.fillRect(0, 0, w, h);
+       destination-in tiene solo quello che ci sta dentro.
+       Anche questa una variante puo' sostituirla: 'profondita' spegne la
+       luce scendendo invece che allontanandosi dal centro. */
+    if (tipo.maschera) {
+      tipo.maschera(dctx, w, h);
+    } else {
+      const cx = w * .5;
+      const m = dctx.createLinearGradient(cx - tipo.largo, 0, cx + tipo.largo, 0);
+      m.addColorStop(0,   'rgba(0,0,0,0)');
+      m.addColorStop(.28, 'rgba(0,0,0,.55)');
+      m.addColorStop(.5,  'rgba(0,0,0,1)');
+      m.addColorStop(.72, 'rgba(0,0,0,.55)');
+      m.addColorStop(1,   'rgba(0,0,0,0)');
+      dctx.globalCompositeOperation = 'destination-in';
+      dctx.fillStyle = m;
+      dctx.fillRect(0, 0, w, h);
+    }
 
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
