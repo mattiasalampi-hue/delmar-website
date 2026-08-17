@@ -222,7 +222,7 @@ ${chiusura(
     'Ti mandiamo il listino del tuo settore e ti diciamo cosa c\'è in cella adesso. Si ordina fino alle 2 di notte, si consegna entro le 11.'
   )}
     </main>
-${piede(['../../js/caustiche.js?v=1', '../../js/pesci.js?v=8', 'js/d.js?v=1', 'js/catalogo.js?v=1', '../../js/cursore.js?v=2'])}`;
+${piede(['../../js/caustiche.js?v=1', '../../js/pesci.js?v=9', 'js/d.js?v=1', 'js/catalogo.js?v=1', '../../js/cursore.js?v=2'])}`;
 }
 
 /* ─ L'indice ────────────────────────────────
@@ -320,7 +320,7 @@ ${chiusura(
     'Ristorante, pescheria, sushi bar o gastronomia: il listino è diverso per ognuno. Dicci qual è il tuo e ti mandiamo quello, non un catalogo generico.'
   )}
     </main>
-${piede(['../../js/caustiche.js?v=1', '../../js/pesci.js?v=8', 'js/d.js?v=1', '../../js/cursore.js?v=2'])}`;
+${piede(['../../js/caustiche.js?v=1', '../../js/pesci.js?v=9', 'js/d.js?v=1', '../../js/cursore.js?v=2'])}`;
 }
 
 let n = 0;

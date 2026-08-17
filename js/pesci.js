@@ -170,7 +170,15 @@ window.DelMarPesci = function (cvs, opzioni) {
   const o = Object.assign({
     /* Pochi e grossi, non tanti e minuti: a questa taglia cinquanta
        pesci coprono il fondo e sembrano un acquario sovraffollato */
-    quanti:   () => (window.matchMedia('(max-width: 768px)').matches ? 9 : 20),
+    /* SUL TELEFONO PIU' FITTI, non meno.
+       Nove era il numero giusto quando i pesci erano decorazione: pochi,
+       per non appesantire uno schermo piccolo. Da quando col dito ci si
+       gioca il conto cambia — una sciabolata li fa scattare via tutti
+       insieme e su 390 pixel di larghezza restano due secondi di acqua
+       vuota, che e' il momento in cui si smette di giocare. Con venti il
+       banco si ricompone subito e c'e' sempre un bersaglio a tiro.
+       (Mattias, 2026-08-17) */
+    quanti:   () => (window.matchMedia('(max-width: 768px)').matches ? 24 : 20),
     /* Negativo = nessuna divisione, tutti del colore chiaro */
     confine:  () => -1,
     /* DUE SPECIE, non una. Con un colore solo il banco sembrava una
@@ -341,7 +349,11 @@ window.DelMarPesci = function (cvs, opzioni) {
     }
     return {
       sp,
-      x: daBordo ? (versoDestra ? -30 : W + 30) : caso(0, W),
+      /* Chi rientra nasce appena fuori dal bordo. Anche qui la distanza e'
+         proporzionale: trenta pixel fissi su un telefono sono un'attesa
+         lunga proprio dopo aver preso un pesce, cioe' nel momento in cui si
+         sta guardando lo schermo per vedere cos'e' successo */
+      x: daBordo ? (versoDestra ? -Math.min(30, W * .04) : W + Math.min(30, W * .04)) : caso(0, W),
       y: caso(H * .06, H * .94),
       ang: versoDestra ? caso(-.4, .4) : Math.PI + caso(-.4, .4),
       v,
@@ -573,9 +585,16 @@ window.DelMarPesci = function (cvs, opzioni) {
         p.ang += d * .07;
       }
 
-      /* Ai lati passano dall'altra parte: il banco non finisce mai */
-      if (p.x < -40) p.x = W + 40;
-      if (p.x > W + 40) p.x = -40;
+      /* Ai lati passano dall'altra parte: il banco non finisce mai.
+         Il margine oltre il bordo era 40 pixel fissi, e su uno schermo largo
+         non si nota. Su un telefono da 390 sono un decimo della larghezza
+         PER PARTE: un pesce scattato via restava invisibile un pezzo, e con
+         una sciabolata che li fa partire tutti insieme lo schermo si
+         svuotava. Proporzionale alla tela: stesso comportamento sul largo,
+         rientro quasi immediato sullo stretto. */
+      const oltre = Math.min(40, W * .05);
+      if (p.x < -oltre) p.x = W + oltre;
+      if (p.x > W + oltre) p.x = -oltre;
 
       if (p.lampo > 0) p.lampo -= .06;
     }
