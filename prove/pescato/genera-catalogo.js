@@ -21,12 +21,17 @@ const PESCATO = {
   slug: 'd-sito',
   nome: 'Pescato dell\'Arcipelago Toscano',
   riga: 'Cambia ogni notte · aggiornato dopo le 20',
-  foto: 'foto/foto-4.jpg',
+  foto: 'foto-prodotti/copertina-pescato.webp',
   sotto: 'Quello che le barche hanno preso stanotte, fotografato al banco. Quando è finito, è finito.',
 };
 
 function chiusura(occhiello, titolo, testo) {
+  /* La tela sta PRIMA del testo e non dietro con uno z-index negativo: un
+     figlio sotto zero esce dal contesto di impilamento del blocco e finisce
+     dietro allo sfondo della pagina, cioe' sparisce. Ordine nel documento
+     piu' position:relative sul testo, e basta. */
   return `      <section class="pr-chiusura">
+        <canvas class="pr-chiusura-fondo" aria-hidden="true"></canvas>
         <p class="pr-chiusura-occhiello">${occhiello}</p>
         <h2>${titolo}</h2>
         <p class="pr-chiusura-testo">${testo}</p>
@@ -77,16 +82,31 @@ function voce(v) {
 
   const msg = encodeURIComponent(`Ciao, vorrei sapere disponibilità e prezzo di: ${v.nome}`);
 
-  /* La foto puo' mancare: la voce resta valida e il testo si prende tutta la
-     larghezza. Un riquadro grigio col nome dentro sarebbe peggio del niente —
-     dichiara un buco invece di non farsi notare */
+  /* IL RIQUADRO CHE STA AL POSTO DELLA FOTOGRAFIA.
+
+     Va online cosi', con le foto ancora da fare, quindi non puo' dire "foto
+     mancante": al visitatore quella scritta racconta che il sito e' a meta',
+     e un fornitore a meta' non riceve ordini. Deve leggersi come una scelta.
+
+     Ed e' una scelta che questa pagina aveva gia' fatto: il foglio di stile
+     dice che i cataloghi di linea NON sono un muro di fotografie ma un
+     elenco ragionato, perche' un'orata di Grecia e' identica a gennaio e ad
+     agosto e fotografarne ventuno versioni non aggiunge niente. Il riquadro
+     e' un'etichetta da banco — pesce disegnato e nome della specie — e sta
+     bene accanto a una foto vera quando arrivera'.
+
+     `aria-hidden` sul simbolo: il nome della specie e' gia' nel titolo della
+     scheda, ripeterlo a chi ascolta sarebbe solo rumore. */
   const foto = v.foto
     ? `            <div class="ct-voce-foto">
               <img src="${v.foto}" alt="${v.nome}" loading="lazy" />
             </div>\n`
-    : '';
+    : `            <div class="ct-voce-foto ct-foto-segno" aria-hidden="true">
+              <svg class="ct-foto-segno-i"><use href="#ico-pesce"/></svg>
+              <span class="ct-foto-segno-n">${v.nome}</span>
+            </div>\n`;
 
-  return `          <article class="ct-voce${v.foto ? '' : ' ct-voce-nuda'}">
+  return `          <article class="ct-voce">
 ${foto}            <div class="ct-voce-testo">
               <h3>${v.nome}</h3>
               <p class="ct-voce-sotto">${primaFrase(v.sotto)}</p>
@@ -192,7 +212,7 @@ ${c.famiglie.map((f, i) => {
 
   /* Il titolo della finestra e' la frase SEO, non il nome del catalogo:
      "Congelato e decongelato" non e' quello che qualcuno digita su Google */
-  return `${testa(c.intro_titolo, { css: ['catalogo.css'], simboli: ['wa', 'arr'] })}
+  return `${testa(c.intro_titolo, { css: ['catalogo.css'], simboli: ['wa', 'arr', 'pesce'] })}
 ${hero}
 
 ${barra}
@@ -253,15 +273,20 @@ function indice() {
     })),
   ];
 
+  /* Stesso segnaposto delle schede: una categoria appena aggiunta non ha
+     ancora la sua copertina, e senza questo il riquadro chiamerebbe una foto
+     che non esiste — cioe' l'icona di immagine rotta, in cima all'indice. */
   const griglia = carte.map((c) => `        <a class="pr-card" href="${c.href}">
-          <div class="pr-foto"><img src="${c.foto}" alt="${c.nome}" loading="lazy" /></div>
+          <div class="pr-foto">${c.foto
+    ? `<img src="${c.foto}" alt="${c.nome}" loading="lazy" />`
+    : `<span class="ct-foto-segno pr-foto-segno" aria-hidden="true"><svg class="ct-foto-segno-i"><use href="#ico-pesce"/></svg><span class="ct-foto-segno-n">${c.nome}</span></span>`}</div>
           <div class="pr-testo">
             <h2>${c.nome}</h2>
             <p class="pr-taglia">${c.riga}</p>
           </div>
         </a>`).join('\n\n');
 
-  return `${testa('Prodotti e cataloghi', { css: ['catalogo.css'], simboli: ['wa', 'arr'] })}
+  return `${testa('Prodotti e cataloghi', { css: ['catalogo.css'], simboli: ['wa', 'arr', 'pesce'] })}
     <section class="pr-hero">
       <canvas id="pr-sfondo"></canvas>
       <canvas id="pr-pesci"></canvas>
