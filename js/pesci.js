@@ -178,7 +178,7 @@ window.DelMarPesci = function (cvs, opzioni) {
        vuota, che e' il momento in cui si smette di giocare. Con venti il
        banco si ricompone subito e c'e' sempre un bersaglio a tiro.
        (Mattias, 2026-08-17) */
-    quanti:   () => (window.matchMedia('(max-width: 768px)').matches ? 24 : 20),
+    quanti:   () => (window.matchMedia('(max-width: 768px)').matches ? 40 : 20),
     /* Negativo = nessuna divisione, tutti del colore chiaro */
     confine:  () => -1,
     /* DUE SPECIE, non una. Con un colore solo il banco sembrava una
@@ -353,10 +353,16 @@ window.DelMarPesci = function (cvs, opzioni) {
          proporzionale: trenta pixel fissi su un telefono sono un'attesa
          lunga proprio dopo aver preso un pesce, cioe' nel momento in cui si
          sta guardando lo schermo per vedere cos'e' successo */
-      x: daBordo ? (versoDestra ? -Math.min(30, W * .04) : W + Math.min(30, W * .04)) : caso(0, W),
+      x: daBordo ? (versoDestra ? -Math.min(30, W * .02) : W + Math.min(30, W * .02)) : caso(0, W),
       y: caso(H * .06, H * .94),
       ang: versoDestra ? caso(-.4, .4) : Math.PI + caso(-.4, .4),
-      v,
+      /* CHI RIENTRA ENTRA DI CORSA e poi rallenta da solo, perche' la
+         velocita' plana sempre verso vBase. Entrare all'andatura di
+         crociera vuol dire farsi aspettare proprio quando si sta guardando
+         lo schermo — dopo una presa, o dopo che una sciabolata ha spinto
+         mezzo banco oltre il bordo. Cosi' invece il pesce e' dentro subito
+         e nel giro di un secondo si e' gia' rimesso a bighellonare */
+      v: daBordo ? v * 2.6 : v,
       vBase: v,
       z,
       lung: caso(7, 13) * (.5 + z * .6) * o.taglia,
@@ -368,6 +374,9 @@ window.DelMarPesci = function (cvs, opzioni) {
          PRENDIBILI — a fondo scala scattano sempre e non ne prendi mai
          uno, e un gioco che non si vince smette di essere un gioco */
       fiato: 0,
+      /* Fotogrammi di spinta che restano al rientro: chi nasce dal bordo
+         entra di corsa, chi nasce in mezzo alla scena no */
+      rientro: daBordo ? 60 : 0,
       lampo: 0,
       /* Fotogrammi che restano allo scatto in corso, e in che direzione
          va. Zero = sta nuotando normalmente */
@@ -559,9 +568,20 @@ window.DelMarPesci = function (cvs, opzioni) {
            modo che la velocita' residua dello scatto scenda planando
            invece di essere riportata di colpo a quella di crociera —
            altrimenti alla fine dello scatto il pesce inchioderebbe */
-        const tetto = p.vBase * (1 + scappa * ALLERTA) * (1 - p.fiato * CALO);
+        /* RIENTRO: chi e' appena tornato dentro nuota piu' svelto finche' il
+           conto non si esaurisce. Serve una SPINTA CHE DURI, non un colpo
+           iniziale: l'andatura di crociera e' bassissima di proposito —
+           mezzo pixel a fotogramma, un pesce indisturbato bighellona — e uno
+           slancio che plana in due decimi di secondo lascia il pesce fermo
+           sul bordo per il resto del tempo. Con un secondo a quattro
+           volte, invece, entra e arriva a un terzo dello schermo, cioe'
+           dove si gioca.
+           (Mattias, 2026-08-17) */
+        const spinta = p.rientro > 0 ? 3 : 0;
+        const tetto = p.vBase * (1 + spinta + scappa * ALLERTA) * (1 - p.fiato * CALO);
         p.v = p.v > tetto ? Math.max(tetto, p.v * PLANA) : p.v + (tetto - p.v) * PRONTI;
       }
+      if (p.rientro > 0) p.rientro--;
 
       p.x += Math.cos(p.ang) * p.v;
       p.y += Math.sin(p.ang) * p.v;
@@ -592,9 +612,17 @@ window.DelMarPesci = function (cvs, opzioni) {
          una sciabolata che li fa partire tutti insieme lo schermo si
          svuotava. Proporzionale alla tela: stesso comportamento sul largo,
          rientro quasi immediato sullo stretto. */
-      const oltre = Math.min(40, W * .05);
-      if (p.x < -oltre) p.x = W + oltre;
-      if (p.x > W + oltre) p.x = -oltre;
+      const oltre = Math.min(40, W * .02);
+      if (p.x < -oltre || p.x > W + oltre) {
+        p.x = p.x < 0 ? W + oltre : -oltre;
+        /* Rientra di slancio, come chi nasce dal bordo: dopo una sciabolata
+           mezzo banco esce insieme, e se tornassero tutti all'andatura di
+           crociera lo schermo resterebbe vuoto proprio nel momento in cui
+           si sta guardando cos'e' successo. La velocita' plana da sola
+           verso vBase, quindi lo slancio si spegne senza doverlo spegnere */
+        p.v = Math.max(p.v, p.vBase * 2.6);
+        p.rientro = 60;
+      }
 
       if (p.lampo > 0) p.lampo -= .06;
     }
