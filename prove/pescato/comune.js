@@ -20,6 +20,16 @@ const SIMBOLI = {
   arr: `<symbol id="ico-arr" viewBox="0 0 24 24">
         <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </symbol>`,
+  /* Il pesce che sta al posto della fotografia quando la fotografia non c'e'
+     ancora. Disegnato e non fotografato di proposito: un segno grafico non
+     promette niente sul prodotto, mentre una foto d'archivio dichiara "ecco
+     cosa vi arriva" e poi la cassa non le somiglia. */
+  pesce: `<symbol id="ico-pesce" viewBox="0 0 64 40">
+        <path d="M2 20c9-11 20-16 30-16s18 5 22 16c-4 11-12 16-22 16S11 31 2 20Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M54 20c3-4 6-6 8-7-1 4-1 10 0 14-2-1-5-3-8-7Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        <circle cx="18" cy="17" r="1.8" fill="currentColor"/>
+        <path d="M30 8c2 4 3 8 3 12s-1 8-3 12" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".55"/>
+      </symbol>`,
 };
 
 /* LE VOCI DEL MENU SONO QUELLE DELLA HOME, nello stesso ordine.

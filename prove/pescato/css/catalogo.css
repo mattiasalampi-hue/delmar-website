@@ -250,6 +250,69 @@ html:has(.ct-famiglia) {
   background: var(--bg-soft);
 }
 
+/* L'ETICHETTA CHE STA AL POSTO DELLA FOTOGRAFIA.
+   Va online cosi', quindi non e' un buco dichiarato ma un elemento finito:
+   niente tratteggio — che e' il segno universale del "qui manca qualcosa" —
+   ma un fondo pieno chiarissimo, il pesce disegnato e il nome della specie.
+   Forma 4:3 identica allo scatto vero: quando la foto arriva e prende il suo
+   posto, la pagina non si sposta di un pixel. */
+.ct-foto-segno {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: 1rem;
+  text-align: center;
+  background: linear-gradient(168deg, #fbfcfd 0%, var(--bg-soft) 58%, #eef1f6 100%);
+}
+
+.ct-foto-segno-i {
+  width: 2.6rem;
+  height: 1.7rem;
+  color: var(--ink);
+  opacity: .3;
+  flex: none;
+}
+
+/* Il nome in maiuscoletto spaziato: e' la grammatica dei cartellini del banco
+   e delle etichette di cassa, non quella di una didascalia mancante */
+.ct-foto-segno-n {
+  font-size: .7rem;
+  line-height: 1.35;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  max-width: 90%;
+}
+
+/* Il filo sotto il nome chiude l'etichetta e le da' un fondo: senza, il testo
+   galleggia in mezzo al riquadro e torna a sembrare un segnaposto */
+/* Nell'indice il riquadro della copertina e' piu' grande di quello di una
+   scheda: il pesce e il nome vanno su di conseguenza, o si perdono in mezzo */
+.pr-foto-segno {
+  width: 100%;
+  height: 100%;
+}
+
+.pr-foto-segno .ct-foto-segno-i {
+  width: 3.4rem;
+  height: 2.2rem;
+}
+
+.pr-foto-segno .ct-foto-segno-n {
+  font-size: .78rem;
+}
+
+.ct-foto-segno-n::after {
+  content: '';
+  display: block;
+  width: 1.6rem;
+  height: 1px;
+  margin: .5rem auto 0;
+  background: var(--border);
+}
+
 .ct-voce-foto img {
   width: 100%;
   height: 100%;
@@ -317,7 +380,11 @@ html:has(.ct-famiglia) {
   font-weight: 300;
   color: var(--text-hi);
   background: var(--bg-soft);
+  /* Un calibro non va mai spezzato: "600/800" su due righe non e' piu' un
+     calibro. Ma nowrap da solo lascia sfondare un chip piu' largo dello
+     schermo, e a quel punto scorre tutta la pagina in orizzontale */
   white-space: nowrap;
+  max-width: 100%;
 }
 
 /* Le provenienze non sono pezzature: stesso posto, peso diverso, cosi' non si
@@ -326,6 +393,11 @@ html:has(.ct-famiglia) {
   background: transparent;
   border-style: dashed;
   color: var(--text-dim);
+  /* Le provenienze SI', a capo possono andare: sono parole, e una come
+     "Mar Ligure e Tirreno settentrionale (FAO 37.1.3)" su un telefono da
+     360 px e' piu' larga dello schermo. Spezzarla fra due parole si legge;
+     lasciarla su una riga sola faceva scorrere la pagina di lato. */
+  white-space: normal;
 }
 
 .ct-formato {
@@ -423,6 +495,32 @@ html:has(.ct-famiglia) {
 
   .ct-voce-foto {
     aspect-ratio: 16 / 9;
+  }
+
+  /* IL SEGNAPOSTO IN 16/9 E' BASSO E LARGO, non piu' quadrato.
+     Con la misura del desktop, un nome come "Preparati per risotto, paella
+     e caciucco" — quaranta caratteri — andava a tre righe dentro un
+     riquadro alto la meta', e usciva dal bordo. Qui il pesce si stringe, il
+     nome si allarga fino quasi al bordo e il filo sotto sparisce: in un
+     riquadro basso non chiudeva niente, rubava solo l'ultima riga. */
+  .ct-foto-segno {
+    gap: .4rem;
+    padding: .7rem 1.2rem;
+  }
+
+  .ct-foto-segno-i {
+    width: 2rem;
+    height: 1.3rem;
+  }
+
+  .ct-foto-segno-n {
+    font-size: .66rem;
+    letter-spacing: .08em;
+    max-width: 100%;
+  }
+
+  .ct-foto-segno-n::after {
+    display: none;
   }
 }
 
