@@ -35,29 +35,43 @@ window.DelMarDito = (function () {
 
   /* ── SCORRERE O GIOCARE ────────────────────────
      Il dito serve a due cose che si escludono: far scendere la pagina e
-     tagliare i pesci. Finche' vinceva lo scorrimento, il gioco era
-     ingiocabile — appena si provava a sciabolare, la pagina scappava via.
+     tagliare i pesci.
 
-     La soluzione ovvia — bloccare lo scorrimento sopra la tela — e' una
-     trappola: l'apertura e' alta mezzo schermo ed e' la PRIMA cosa che si
-     vede, quindi chi arriva col telefono resterebbe incastrato senza poter
-     scendere. Un gioco non puo' costare la navigazione del sito.
+     Sopra l'acqua vince il gioco, sempre: la pagina resta ferma finche' il
+     dito e' li'. Avevo provato a decidere dalla direzione — orizzontale
+     gioco, verticale scorrimento — ed era troppo sottile: si sciabola in
+     tutte le direzioni e mezze passate finivano a far scorrere la pagina.
+     Si scorre da FUORI, e basta.
 
-     Quindi si decide dalla direzione, come fanno le giostre di immagini che
-     convivono con lo scorrimento: dopo i primi dieci pixel di movimento, se
-     il dito va piu' in orizzontale che in verticale e' una sciabolata e la
-     pagina resta ferma; se va piu' in verticale e' uno scorrimento e non lo
-     tocchiamo. A parita' vince lo scorrimento, perche' sbagliare da quella
-     parte costa una passata a vuoto, dall'altra costa il sito.
+     Si puo' fare perche' l'area di gioco non riempie mai lo schermo: sul
+     telefono l'apertura e' alta 56vh, quindi sotto resta quasi meta'
+     schermata da cui far scendere la pagina. Se un domani una di queste
+     tele diventasse alta quanto il viewport, questo blocco incastrerebbe
+     chi legge — e' la cosa da ricordare prima di allungarne una.
 
-     Ai pesci il dito arriva comunque, anche mentre si scorre: si vedono
-     scattare via mentre la pagina scende, e ogni tanto ne resta uno preso.
+     DUE ECCEZIONI, e sono necessarie:
+     · si blocca solo su schermo tattile (pointer: coarse), cioe' telefono e
+       tavoletta. Sul portatile con schermo tattile comanda il mouse e il
+       gioco e' quello del calamaro.
+     · non si blocca quando il dito si appoggia su CONTENUTO — un
+       collegamento, un campo del modulo, il testo dell'apertura. Nella
+       sezione contatti della home la tela copre anche il modulo: senza
+       questa riga non si potrebbe piu' scorrere con il dito sopra i campi,
+       e la pagina sembrerebbe rotta.
      (Mattias, 2026-08-17) */
   const zone = [];        /* le tele su cui si gioca */
-  let inZona = false;     /* il tocco e' partito sopra una tela? */
-  let deciso = false;
-  let gioca = false;
-  let partX = 0, partY = 0;
+  let inZona = false;     /* il tocco e' partito sopra l'acqua? */
+
+  function tattile() {
+    return matchMedia('(pointer: coarse)').matches;
+  }
+
+  /* Quello che sta SOPRA la tela e va lasciato al suo mestiere. La tela e'
+     trasparente ai tocchi, quindi il bersaglio dell'evento e' gia' l'elemento
+     di contenuto quando ce n'e' uno */
+  function suContenuto(t) {
+    return !!(t && t.closest && t.closest('a, button, input, textarea, select, label, .pr-hero-in, .contatti-grid'));
+  }
 
   function sopraUnaTela(x, y) {
     for (const c of zone) {
@@ -74,55 +88,39 @@ window.DelMarDito = (function () {
      di prova ce ne sono quattro. Qui non c'e' niente da consumare — chiunque
      legga trova lo stesso segmento — e non conta chi disegna per primo.
      (Mattias, 2026-08-17) */
+  /* LA SCIA. Il taglio si deve vedere, se no non si capisce di aver fatto
+     qualcosa: il dito copre il punto in cui passa, ed e' proprio quello che
+     nasconde l'unica risposta visiva. Si tengono i punti degli ultimi 220
+     millisecondi — piu' corta sembra un puntino, piu' lunga uno strascico
+     che resta appeso quando il dito e' gia' fermo. */
+  const VITA = 220;
+  let scia = [];
+
   function segna(e) {
     const t = e.touches && e.touches[0];
     if (!t) return;
     prima = ora || { x: t.clientX, y: t.clientY };
     ora = { x: t.clientX, y: t.clientY };
+    scia.push({ x: t.clientX, y: t.clientY, t: performance.now() });
   }
 
   function inizio(e) {
     const t = e.touches && e.touches[0];
     if (!t) return;
-    inZona = sopraUnaTela(t.clientX, t.clientY);
-    deciso = false;
-    gioca = false;
-    partX = t.clientX;
-    partY = t.clientY;
+    inZona = tattile() && !suContenuto(e.target) && sopraUnaTela(t.clientX, t.clientY);
     segna(e);
   }
 
   function muove(e) {
     segna(e);
-    if (!inZona) return;
-
-    const t = e.touches[0];
-    if (!deciso) {
-      const dx = Math.abs(t.clientX - partX);
-      const dy = Math.abs(t.clientY - partY);
-      /* Dieci pixel: sotto, la direzione e' rumore del dito che si appoggia */
-      if (dx + dy < 10) return;
-      deciso = true;
-      /* La soglia non e' a 45 gradi ma un po' piu' aperta verso il gioco: a
-         45 esatti — dx uguale a dy — la sciabolata in diagonale, che e' il
-         gesto piu' naturale per tagliare, finiva nello scorrimento. Con .8
-         gioca tutto quello che sta entro una cinquantina di gradi
-         dall'orizzontale, mentre uno scorrimento anche storto resta molto
-         piu' verticale di cosi' e passa alla pagina */
-      gioca = dx > dy * .8;
-    }
-
-    /* Una volta deciso non si cambia idea a meta' gesto: un gioco che ogni
-       tanto lascia scappare la pagina e' peggio di uno che non c'e' */
-    if (gioca && e.cancelable) e.preventDefault();
+    /* Sopra l'acqua la pagina non si muove. Fuori, non tocchiamo niente */
+    if (inZona && e.cancelable) e.preventDefault();
   }
 
   function stacca() {
     ora = null;
     prima = null;
     inZona = false;
-    deciso = false;
-    gioca = false;
   }
 
   addEventListener('touchstart', inizio, { passive: true });
@@ -143,6 +141,17 @@ window.DelMarDito = (function () {
        partito su un'area di gioco o sul resto della pagina */
     zona: function (cvs) {
       if (zone.indexOf(cvs) < 0) zone.push(cvs);
+    },
+
+    /* I punti ancora vivi, con quanto gli resta da 1 a 0. La potatura sta
+       qui e non nel disegno perche' le tele possono essere piu' d'una e la
+       scia e' una sola */
+    scia: function () {
+      const adesso = performance.now();
+      if (scia.length && adesso - scia[scia.length - 1].t > VITA) scia = [];
+      else scia = scia.filter((p) => adesso - p.t < VITA);
+
+      return scia.map((p) => ({ x: p.x, y: p.y, vita: 1 - (adesso - p.t) / VITA }));
     }
   };
 })();
@@ -744,6 +753,44 @@ window.DelMarPesci = function (cvs, opzioni) {
     return `rgba(${r},${g},${b},${a})`;
   }
 
+  /* LA SCIA DEL TAGLIO, sopra i pesci.
+     Va disegnata DOPO i pesci: e' il gesto di chi gioca, e passargli
+     dietro la farebbe sembrare parte dello sfondo. Si assottiglia verso la
+     coda invece di essere una riga di spessore fisso — e' quello che la fa
+     leggere come un colpo dato in una direzione e non come uno scarabocchio.
+     Due passate: una larga e velata sotto, che fa da alone nell'acqua, e una
+     sottile e piena sopra. */
+  function disegnaScia() {
+    if (!window.DelMarDito) return;
+    const punti = window.DelMarDito.scia();
+    if (punti.length < 2) return;
+
+    const r = cvs.getBoundingClientRect();
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    for (let mano = 0; mano < 2; mano++) {
+      const alone = mano === 0;
+      for (let i = 1; i < punti.length; i++) {
+        const a = punti[i - 1], b = punti[i];
+        /* Lo spessore segue quanto e' fresco il tratto, non la sua
+           posizione nell'elenco: cosi' un dito fermo lascia la scia
+           spegnersi da sola invece di tenerla accesa */
+        const q = b.vita;
+        ctx.beginPath();
+        ctx.moveTo(a.x - r.left, a.y - r.top);
+        ctx.lineTo(b.x - r.left, b.y - r.top);
+        ctx.lineWidth = (alone ? 13 : 5) * q + 1;
+        ctx.strokeStyle = alone
+          ? 'rgba(255, 158, 120, ' + (q * .22).toFixed(3) + ')'
+          : 'rgba(255, 255, 255, ' + (q * .92).toFixed(3) + ')';
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+
   function disegna() {
     ctx.clearRect(0, 0, W, H);
     for (const p of pesci) disegnaPesce(p);
@@ -798,6 +845,9 @@ window.DelMarPesci = function (cvs, opzioni) {
         ctx.restore();
       }
     }
+
+    /* Per ultima: il taglio passa sopra tutto, anche sopra i +1 */
+    disegnaScia();
   }
 
   function giro() {
