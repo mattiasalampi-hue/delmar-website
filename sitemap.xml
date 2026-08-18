@@ -226,4 +226,22 @@
     <changefreq>yearly</changefreq>
     <priority>0.1</priority>
   </url>
+
+  <!-- ─ Le pagine di zona ────────────────────
+       Una per area di consegna, coi numeri veri del gestionale: sono le
+       pagine che devono uscire per "fornitore pesce <zona>" e fanno da
+       atterraggio alle campagne. Priorita' alta: ognuna e' una home per
+       il suo territorio. -->
+  <url>
+    <loc>https://del-mar.it/consegna/versilia.html</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/consegna/genova.html</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

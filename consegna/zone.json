@@ -1,0 +1,62 @@
+{
+  "_nota": "Le pagine di zona. OGNI NUMERO QUI DENTRO e' stato misurato sul gestionale (TABGIR + CLIENTI + vendite ultimi 12 mesi, 18/08/2026): i clienti attivi sono quelli con ordini negli ultimi 12 mesi, i giorni di consegna vengono dalla tabella giri di Ergon, i prodotti dal venduto reale della zona negli ultimi 90 giorni. Se una zona cambia (giorni, giro, copertura), si aggiorna qui e si rigenera: mai correggere l'HTML a mano.",
+  "zone": [
+    {
+      "slug": "versilia",
+      "nome": "Versilia",
+      "titolo_seo": "Fornitore di pesce all'ingrosso in Versilia",
+      "occhiello": "Forte dei Marmi · Pietrasanta · Viareggio · Camaiore",
+      "titolo": "Pesce all'ingrosso in Versilia",
+      "sottotitolo": "consegna ogni mattina entro le 11, domenica compresa",
+      "sotto": "Riforniamo oltre duecento locali della Versilia fra ristoranti, stabilimenti balneari, pizzerie e hotel: pesce fresco, crudo e congelato sullo stesso furgone, ogni giorno.",
+      "descrizione": "Pesce fresco, crudo e congelato per ristoranti, bagni e pizzerie della Versilia: consegna ogni mattina entro le 11, domenica compresa. Oltre 200 locali serviti.",
+      "fatti": [
+        { "numero": "200+", "voce": "locali serviti in Versilia" },
+        { "numero": "7 su 7", "voce": "giorni di consegna, domenica compresa" },
+        { "numero": "entro le 11", "voce": "il pesce è nella tua cucina" },
+        { "numero": "fino alle 2", "voce": "si ordina su WhatsApp, di notte" }
+      ],
+      "comuni": ["Forte dei Marmi", "Marina di Pietrasanta", "Pietrasanta", "Tonfano", "Viareggio", "Lido di Camaiore", "Camaiore", "Capezzano", "Seravezza"],
+      "giorni_testo": "Il giro della Versilia esce dal nostro magazzino di Massa ogni mattina, tutti i giorni della settimana, domenica e festivi compresi. Ordini entro le 2 di notte su WhatsApp (o entro le 18 al telefono) e la merce è al tuo banco entro le 11: chi chiude il servizio a mezzanotte ordina dopo aver visto cosa gli è rimasto in cella.",
+      "prodotti_testo": "Le cucine della Versilia da noi comprano soprattutto cozze di Arborea e della Spezia, salmone fresco, calamari, alici del Mar Ligure, tonno a filone per il crudo, vongole, spigole e gamberi. E per i bagni e le pizzerie c'è il resto del furgone: basi pizza, pinse e patate, consegnate insieme al pesce, su un'unica fattura.",
+      "prodotti_link": [
+        { "href": "../catalogo/catalogo-crostacei.html", "nome": "Crostacei e molluschi" },
+        { "href": "../catalogo/catalogo-crudo.html", "nome": "Tonno e crudi" },
+        { "href": "../catalogo/catalogo-fresco.html", "nome": "Pesce fresco" },
+        { "href": "../catalogo/pescato-arcipelago-toscano.html", "nome": "Pescato dell'Arcipelago Toscano" },
+        { "href": "../catalogo/catalogo-cucina.html", "nome": "Basi pizza e contorni" }
+      ],
+      "wa_testo": "Ciao, ho un locale in Versilia e vorrei ricevere il listino",
+      "chiusura_titolo": "Dicci dov'è il tuo locale<br />e ti mandiamo il listino della zona",
+      "chiusura_testo": "Ristorante, stabilimento, pizzeria o hotel fra Forte dei Marmi e Viareggio: scrivici su WhatsApp e ti diciamo subito cosa c'è in cella e a che ora passa il furgone da te."
+    },
+    {
+      "slug": "genova",
+      "nome": "Genova",
+      "titolo_seo": "Fornitore di pesce all'ingrosso a Genova",
+      "occhiello": "Genova · Arenzano · Varazze · Savona",
+      "titolo": "Pesce all'ingrosso a Genova",
+      "sottotitolo": "consegna cinque giorni a settimana, domenica compresa",
+      "sotto": "Da Massa al Ponente ligure: riforniamo più di cinquanta locali fra Genova, Arenzano e Savona con pesce fresco, crudo e congelato, cinque giorni a settimana.",
+      "descrizione": "Pesce fresco e congelato all'ingrosso per ristoranti e trattorie di Genova e del Ponente: consegna il martedì, giovedì, venerdì, sabato e domenica. Più di 50 locali serviti.",
+      "fatti": [
+        { "numero": "50+", "voce": "locali serviti fra Genova e il Ponente" },
+        { "numero": "5 giorni", "voce": "mar · gio · ven · sab · dom" },
+        { "numero": "entro le 11", "voce": "il pesce è nella tua cucina" },
+        { "numero": "fino alle 2", "voce": "si ordina su WhatsApp, di notte" }
+      ],
+      "comuni": ["Genova centro", "Genova Voltri", "Arenzano", "Celle Ligure", "Varazze", "Savona"],
+      "giorni_testo": "Il giro di Genova passa il martedì, il giovedì, il venerdì, il sabato e la domenica: cinque consegne a settimana, festivi compresi. Ordini entro le 2 di notte su WhatsApp (o entro le 18 al telefono) e la merce arriva entro le 11 del giorno di giro.",
+      "prodotti_testo": "Le cucine liguri da noi comprano soprattutto alici fresche del Mar Ligure — le acciughe, ovviamente —, cozze di Scardovari e di Arborea, calamari ad anelli e ciuffi per la frittura, vongole veraci, ombrina boccadoro, seppie, orate e spigole in tutte le taglie.",
+      "prodotti_link": [
+        { "href": "../catalogo/catalogo-fresco.html", "nome": "Pesce fresco" },
+        { "href": "../catalogo/catalogo-crostacei.html", "nome": "Crostacei e molluschi" },
+        { "href": "../catalogo/catalogo-cefalopodi.html", "nome": "Calamaro, polpo e seppia" },
+        { "href": "../catalogo/catalogo-crudo.html", "nome": "Tonno e crudi" }
+      ],
+      "wa_testo": "Ciao, ho un locale a Genova e vorrei ricevere il listino",
+      "chiusura_titolo": "Dicci dov'è il tuo locale<br />e ti mandiamo il listino della zona",
+      "chiusura_testo": "Trattoria, ristorante o pescheria fra Genova e Savona: scrivici su WhatsApp e ti diciamo cosa c'è in cella e quando passa il furgone nel tuo giro."
+    }
+  ]
+}

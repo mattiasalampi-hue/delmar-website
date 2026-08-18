@@ -1,0 +1,97 @@
+/* LE PAGINE DI ZONA — solo i pezzi che il sito non ha gia'.
+   L'apertura, l'intestazione, le righe numerate e la chiusura arrivano da
+   style.css, d.css e domande-frequenti.css: qui ci sono i quattro numeri
+   in cima e le pillole dei comuni, che sono i due blocchi nuovi. */
+
+/* ─ I quattro numeri ────────────────────────
+   Stanno PRIMA di tutto: chi atterra da un annuncio decide in cinque
+   secondi, e la griglia gli mette davanti le quattro risposte che cerca
+   (quanti, quando, entro che ora, come si ordina) senza farlo leggere. */
+.zn-fatti {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 3rem 6% 0;
+}
+
+.zn-fatto {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  padding: 1.2rem 1.4rem;
+  border-left: 1px solid var(--border);
+}
+
+.zn-fatto:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+.zn-fatto-n {
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.zn-fatto-v {
+  font-size: .78rem;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--text-mid);
+}
+
+/* ─ I comuni ────────────────────────────────
+   Pillole come quelle degli indici, ma NON cliccabili: sono un elenco di
+   copertura, non una navigazione, e il bordo tratteggiato lo dice */
+.zn-comuni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: 1.4rem;
+}
+
+.zn-comune {
+  font-size: .78rem;
+  font-weight: 400;
+  color: var(--text-hi);
+  padding: .38rem .9rem;
+  border: 1px dashed var(--border);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Le pillole dei cataloghi qui sotto invece SONO collegamenti, e usano il
+   componente .fq-indice gia' caricato: serve solo un filo d'aria sopra */
+.zn-cataloghi {
+  margin-top: 1.4rem;
+  position: static;
+  overflow: visible;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  /* Due numeri per riga: quattro in fila su 390px diventano illeggibili */
+  .zn-fatti {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem 0;
+    padding-top: 2.2rem;
+  }
+
+  .zn-fatto {
+    padding: 0 1.1rem;
+  }
+
+  .zn-fatto:nth-child(odd) {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .zn-fatto-n {
+    font-size: 1.45rem;
+  }
+}

@@ -33,13 +33,15 @@ const SIMBOLI = {
 };
 
 /* LE VOCI DEL MENU SONO QUELLE DELLA HOME, nello stesso ordine.
-   "Prodotti" e' la pagina in cui ci si trova, quindi non e' un collegamento
-   ma la voce accesa. `su` e' la strada per tornare alla radice del sito:
-   dalle pagine del catalogo sono due livelli, e il giorno che il catalogo si
-   sposta si cambia qui e basta. */
-function menu(su) {
+   Nelle pagine del catalogo "Prodotti" e' la voce accesa; nelle pagine di
+   zona (cartella consegna/) e' un collegamento come gli altri, perche' non e'
+   la pagina in cui ci si trova. `su` e' la strada per tornare alla radice. */
+function menu(su, cartella = 'catalogo') {
+  const prodotti = cartella === 'catalogo'
+    ? `<span class="nav-qui" aria-current="page">Prodotti</span>`
+    : `<a href="${su}catalogo/prodotti.html">Prodotti</a>`;
   return `      <nav id="main-nav">
-        <span class="nav-qui" aria-current="page">Prodotti</span>
+        ${prodotti}
         <a href="${su}index.html#processo">Come Lavoriamo</a>
         <a href="${su}index.html#azienda">Azienda</a>
         <a href="${su}index.html#gallery">Gallery</a>
@@ -85,8 +87,11 @@ function descrizioneBreve(testo) {
 function testa(titolo, opts = {}) {
   const su = opts.su || '../';
   const css = opts.css || [];
+  /* La cartella entra nel canonical e nell'og:url: il default e' catalogo,
+     le pagine di zona passano 'consegna' */
+  const cartella = opts.cartella || 'catalogo';
   const simboli = (opts.simboli || ['wa']).map((k) => SIMBOLI[k]).join('\n      ');
-  const urlAssoluto = opts.pagina ? `https://del-mar.it/catalogo/${opts.pagina}` : '';
+  const urlAssoluto = opts.pagina ? `https://del-mar.it/${cartella}/${opts.pagina}` : '';
   const canonical = urlAssoluto
     ? `\n    <link rel="canonical" href="${urlAssoluto}" />`
     : '';
@@ -126,7 +131,7 @@ function testa(titolo, opts = {}) {
          pagina delle domande frequenti. Si carica quel foglio invece di
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
     <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=7" />
-    <link rel="stylesheet" href="css/d.css?v=2" />
+    <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=2" />
 ${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=2" />`).join('\n')}
   </head>
   <body class="pr-pagina">
@@ -136,7 +141,7 @@ ${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=2" />`).join('\n')
 
     <header id="hdr">
       <a href="${su}index.html"><img src="${su}assets/logo.png?v=2" alt="DelMar" class="logo" /></a>
-${menu(su)}
+${menu(su, cartella)}
       <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
     </header>
 `;
@@ -149,6 +154,9 @@ ${menu(su)}
    scrivere e ha ancora un dubbio. */
 function piede(script, opts = {}) {
   const su = opts.su || '../';
+  /* Dalle pagine di zona il catalogo sta in un'altra cartella: il prefisso
+     lo dice chi chiama ('../catalogo/'), per quelle del catalogo e' vuoto */
+  const cat = opts.cat || '';
 
   return `
     <footer class="pr-piede">
@@ -159,10 +167,10 @@ function piede(script, opts = {}) {
           P.IVA 01081190454 — <a href="mailto:info@del-mar.it">info@del-mar.it</a>
         </p>
         <p class="pr-piede-link">
-          <a href="prodotti.html">Catalogo prodotti</a>
+          <a href="${cat}prodotti.html">Catalogo prodotti</a>
           <a href="${su}domande-frequenti.html">Domande frequenti</a>
           <a href="${su}privacy.html">Privacy e cookie</a>
-          <a href="crediti.html">Crediti fotografici</a>
+          <a href="${cat}crediti.html">Crediti fotografici</a>
         </p>
       </div>
     </footer>
