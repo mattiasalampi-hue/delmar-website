@@ -1,7 +1,7 @@
 [
   {
     "slug": "triglia-di-fango",
-    "foto": "foto-4.jpg",
+    "foto": "foto-4.webp",
     "nome": "Triglia di fango",
     "taglia": "Pezzatura grande",
     "scientifico": "Mullus barbatus",
@@ -15,11 +15,13 @@
     "pezzature": "Grande, media, piccola (da frittura)",
     "stagione": "Da maggio a settembre",
     "cucina": "Griglia, forno, filetti · le piccole in frittura",
-    "conservazione": "In ghiaccio, 24-48 ore"
+    "conservazione": "In ghiaccio, 24-48 ore",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "cicale-di-mare",
-    "foto": "foto-3.jpg",
+    "foto": "foto-3.webp",
     "nome": "Cicale",
     "taglia": "Pannocchie fresche",
     "scientifico": "Squilla mantis",
@@ -33,11 +35,13 @@
     "pezzature": "Selezionate a pezzatura in cassa",
     "stagione": "Da ottobre a marzo, il periodo migliore",
     "cucina": "Lesse, alla griglia, nei sughi e nelle zuppe",
-    "conservazione": "In ghiaccio, entro 24 ore"
+    "conservazione": "In ghiaccio, entro 24 ore",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "gambero-rosso",
-    "foto": "foto-12.jpg",
+    "foto": "foto-12.webp",
     "nome": "Gambero rosso",
     "taglia": "Seconda pezzatura",
     "scientifico": "Aristaeomorpha foliacea",
@@ -51,11 +55,13 @@
     "pezzature": "Prima e seconda scelta",
     "stagione": "Tutto l'anno, con picchi in estate",
     "cucina": "Crudo, tartare, sughi · testa per il fondo",
-    "conservazione": "In ghiaccio · abbattimento su richiesta"
+    "conservazione": "In ghiaccio · abbattimento su richiesta",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "gambero-rosa",
-    "foto": "foto-5.jpg",
+    "foto": "foto-5.webp",
     "nome": "Gambero rosa",
     "taglia": "Seconda pezzatura",
     "scientifico": "Parapenaeus longirostris",
@@ -69,11 +75,13 @@
     "pezzature": "Prima e seconda scelta",
     "stagione": "Tutto l'anno",
     "cucina": "Paste e risotti, fritture, griglia",
-    "conservazione": "In ghiaccio, lavorare in giornata"
+    "conservazione": "In ghiaccio, lavorare in giornata",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "razza-clavata",
-    "foto": "foto-7.jpg",
+    "foto": "foto-7.webp",
     "nome": "Razza clavata",
     "taglia": "Fresca, intera",
     "scientifico": "Raja clavata",
@@ -87,11 +95,13 @@
     "pezzature": "Intera, pezzature miste",
     "stagione": "Tutto l'anno",
     "cucina": "Forno, umido, ali in padella",
-    "conservazione": "In ghiaccio, 48 ore"
+    "conservazione": "In ghiaccio, 48 ore",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "scorfano",
-    "foto": "foto-11.jpg",
+    "foto": "foto-11.webp",
     "nome": "Scorfano",
     "taglia": "Fresco",
     "scientifico": "Scorpaena scrofa",
@@ -105,11 +115,13 @@
     "pezzature": "Pezzature miste, prevalenza media",
     "stagione": "Tutto l'anno",
     "cucina": "Zuppe e fondi · le grandi al forno",
-    "conservazione": "In ghiaccio, 48 ore"
+    "conservazione": "In ghiaccio, 48 ore",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "spigola-di-mare",
-    "foto": "foto-10.jpg",
+    "foto": "foto-10.webp",
     "nome": "Spigola",
     "taglia": "Pezzatura grande",
     "scientifico": "Dicentrarchus labrax",
@@ -123,11 +135,13 @@
     "pezzature": "Grande e media",
     "stagione": "Tutto l'anno, meglio in inverno",
     "cucina": "Al sale, al forno, filetti in padella",
-    "conservazione": "In ghiaccio, 48 ore"
+    "conservazione": "In ghiaccio, 48 ore",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "calamaro",
-    "foto": "foto-2.jpg",
+    "foto": "foto-2.webp",
     "nome": "Calamaro",
     "taglia": "Pezzatura media",
     "scientifico": "Loligo vulgaris",
@@ -141,11 +155,13 @@
     "pezzature": "Grande, media, piccola",
     "stagione": "Da settembre a marzo",
     "cucina": "Frittura, griglia, ripieni",
-    "conservazione": "In ghiaccio, pulire in giornata"
+    "conservazione": "In ghiaccio, pulire in giornata",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "frittura-del-giorno",
-    "foto": "foto-6.jpg",
+    "foto": "foto-6.webp",
     "nome": "Frittura",
     "taglia": "Mista, del giorno",
     "scientifico": "Mista di specie locali",
@@ -159,11 +175,13 @@
     "pezzature": "Mista, calibro da frittura",
     "stagione": "Tutto l'anno, più abbondante d'estate",
     "cucina": "Frittura",
-    "conservazione": "In ghiaccio, usare in giornata"
+    "conservazione": "In ghiaccio, usare in giornata",
+    "larghezza": 1400,
+    "altezza": 1050
   },
   {
     "slug": "cefalo",
-    "foto": "foto-9.jpg",
+    "foto": "foto-9.webp",
     "nome": "Cefalo",
     "taglia": "Fresco",
     "scientifico": "Mugil cephalus",
@@ -177,11 +195,13 @@
     "pezzature": "Pezzature miste",
     "stagione": "Tutto l'anno",
     "cucina": "Griglia, forno, marinature e affumicature",
-    "conservazione": "In ghiaccio, 48 ore"
+    "conservazione": "In ghiaccio, 48 ore",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "pesce-prete",
-    "foto": "foto-8.jpg",
+    "foto": "foto-8.webp",
     "nome": "Pesce prete",
     "taglia": "Fresco",
     "scientifico": "Uranoscopus scaber",
@@ -195,11 +215,13 @@
     "pezzature": "Pezzature miste",
     "stagione": "Tutto l'anno",
     "cucina": "Zuppe, brodi, filetti in padella",
-    "conservazione": "In ghiaccio, 48 ore"
+    "conservazione": "In ghiaccio, 48 ore",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "gambero-bianco",
-    "foto": "foto-1.jpg",
+    "foto": "foto-1.webp",
     "nome": "Gambero bianco",
     "taglia": "Fresco",
     "scientifico": "Parapenaeus longirostris",
@@ -213,7 +235,9 @@
     "pezzature": "Pezzatura piccola e media",
     "stagione": "Tutto l'anno, quantità variabili",
     "cucina": "Crudo, tartare, scottature veloci",
-    "conservazione": "Lavorare in giornata · abbattimento su richiesta"
+    "conservazione": "Lavorare in giornata · abbattimento su richiesta",
+    "larghezza": 1050,
+    "altezza": 1400
   },
   {
     "slug": "scampi",

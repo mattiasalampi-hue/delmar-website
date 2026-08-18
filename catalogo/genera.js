@@ -8,7 +8,17 @@
 */
 const fs = require('fs');
 const path = require('path');
-const { WA, testa, piede, altriCataloghi } = require('./comune');
+const { WA, testa, piede, altriCataloghi, briciole } = require('./comune');
+
+const RADICE = 'https://del-mar.it';
+
+/* Le dimensioni nell'HTML fermano il "salto" della pagina mentre le foto
+   caricano (il CLS che Google misura): stanno in specie.json, scritte una
+   volta dallo script di conversione, cosi' generare le pagine non richiede
+   sharp. Se una specie non le ha, l'attributo semplicemente non esce. */
+function dimensioni(s) {
+  return s.larghezza ? ` width="${s.larghezza}" height="${s.altezza}"` : '';
+}
 
 const qui = __dirname;
 const specie = JSON.parse(fs.readFileSync(path.join(qui, 'specie.json'), 'utf8'));
@@ -19,7 +29,7 @@ function nastro(corrente) {
   const altre = specie.filter((s) => s.slug !== corrente.slug);
   const voci = altre.map((s) => `        <a class="sc-altro" href="${s.slug}.html">
           ${s.foto
-            ? `<img src="foto/${s.foto}" alt="${s.nome}" loading="lazy" />`
+            ? `<img src="foto/${s.foto}" alt="${s.nome}" loading="lazy"${dimensioni(s)} />`
             : `<div class="sc-altro-vuoto"><span>${s.nome}</span></div>`}
           <span>${s.nome}</span>
         </a>`).join('\n');
@@ -27,7 +37,7 @@ function nastro(corrente) {
   return `    <section class="sc-altri">
       <div class="sc-altri-testa">
         <h2>Anche oggi al banco</h2>
-        <a href="d-sito.html" class="sc-tutti">Vedi tutto il pescato di oggi →</a>
+        <a href="pescato-arcipelago-toscano.html" class="sc-tutti">Vedi tutto il pescato di oggi →</a>
       </div>
 
       <div class="sc-nastro-guscio">
@@ -45,34 +55,32 @@ ${voci}
     </section>`;
 }
 
-/* La descrizione per Google e' l'inizio della scheda, non un testo a parte:
-   si prendono frasi intere finche' ci stanno, perche' uno snippet mozzato a
-   meta' parola nei risultati si legge come trascuratezza. */
-function descrizionePerGoogle(s) {
-  const frasi = s.descrizione[0].split(/(?<=[.!?])\s+/);
-  let d = '';
-  for (const f of frasi) {
-    if (d && (d + ' ' + f).length > 155) break;
-    d = d ? d + ' ' + f : f;
-  }
-  return d;
-}
-
 function scheda(s) {
   const paragrafi = s.descrizione.map((p) => `          <p>${p}</p>`).join('\n');
   const messaggio = encodeURIComponent(`Ciao, vorrei informazioni su ${s.nome.toLowerCase()} di oggi`);
 
-  return `${testa(s.nome + ' del giorno', {
+  /* "Scampi del giorno" non lo cerca nessuno; "Scampi — pescato
+     dell'Arcipelago Toscano" dice specie e provenienza, che sono le due
+     parole con cui un ristoratore cerca. La descrizione e' l'inizio della
+     scheda: il tetto dei 155 caratteri glielo mette testa(). */
+  return `${testa(`${s.nome} — pescato dell'Arcipelago Toscano`, {
     css: ['scheda.css'],
     simboli: ['wa'],
     pagina: `${s.slug}.html`,
-    descrizione: descrizionePerGoogle(s),
+    descrizione: s.descrizione[0],
+    immagine: s.foto ? `foto/${s.foto}` : 'foto-prodotti/copertina-pescato.webp',
+    jsonld: [briciole([
+      ['Home', `${RADICE}/`],
+      ['Catalogo prodotti', `${RADICE}/catalogo/prodotti.html`],
+      ['Pescato dell\'Arcipelago Toscano', `${RADICE}/catalogo/pescato-arcipelago-toscano.html`],
+      [s.nome, `${RADICE}/catalogo/${s.slug}.html`],
+    ])],
   })}
     <!-- L'uscita resta appesa mentre si scorre: una scheda e' lunga, e la via
          di ritorno non deve stare solo in cima dove nessuno torna a cercarla -->
     <div class="sc-briciole">
       <div class="sc-briciole-in">
-        <a class="sc-indietro" href="d-sito.html">
+        <a class="sc-indietro" href="pescato-arcipelago-toscano.html">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Tutto il pescato di oggi
         </a>
@@ -83,7 +91,7 @@ function scheda(s) {
     <main class="sc-pagina">
       <div class="sc-foto">
         ${s.foto
-          ? `<img src="foto/${s.foto}" alt="Cassa di ${s.nome.toLowerCase()} fresco sul ghiaccio, pescato dell'Arcipelago Toscano" />
+          ? `<img src="foto/${s.foto}" alt="Cassa di ${s.nome.toLowerCase()} fresco sul ghiaccio, pescato dell'Arcipelago Toscano"${dimensioni(s)} />
         <p class="sc-didascalia">La cassa di stanotte, fotografata al banco</p>`
           : `<div class="sc-foto-vuota"><span>${s.nome}</span></div>
         <p class="sc-didascalia">Sbarcato stanotte. La fotografia arriva col giro delle casse</p>`}
@@ -135,7 +143,7 @@ ${piede(['js/d.js?v=1', 'js/nastro.js?v=1', '../js/cursore.js?v=2'])}`;
    legge come una scelta e non come un buco. (Mattias, 2026-08-17) */
 function cornice(s) {
   return s.foto
-    ? `<div class="pr-foto"><img src="foto/${s.foto}" alt="${s.nome}" loading="lazy" /></div>`
+    ? `<div class="pr-foto"><img src="foto/${s.foto}" alt="${s.nome}" loading="lazy"${dimensioni(s)} /></div>`
     : `<div class="pr-foto pr-foto-vuota"><span>${s.nome}</span></div>`;
 }
 
@@ -155,7 +163,7 @@ specie.forEach((s) => {
   scritte++;
 });
 
-/* d-sito.html e' scritta a mano — apertura, testi, chiusura — e lo script
+/* pescato-arcipelago-toscano.html e' scritta a mano — apertura, testi, chiusura — e lo script
    riscrive solo i due blocchi che dipendono dai dati.
    I confini sono COMMENTI ESPLICITI e non pezzi di markup: la prima versione
    cercava "</div> seguito dal commento Chiusura", e il giorno che ho infilato
@@ -164,7 +172,7 @@ specie.forEach((s) => {
    passato oltre, quindi la griglia sarebbe rimasta indietro in silenzio.
    Un commento con un nome dentro non si sposta per sbaglio. (Mattias,
    2026-08-17) */
-const vetrinaFile = path.join(qui, 'd-sito.html');
+const vetrinaFile = path.join(qui, 'pescato-arcipelago-toscano.html');
 let vetrina = fs.readFileSync(vetrinaFile, 'utf8');
 
 function riscrivi(testo, nome, contenuto) {
@@ -183,7 +191,7 @@ function riscrivi(testo, nome, contenuto) {
 }
 
 vetrina = riscrivi(vetrina, 'GRIGLIA', '      <div class="pr-griglia">\n' + vetrinaCards() + '\n      </div>');
-vetrina = riscrivi(vetrina, 'ALTRI', altriCataloghi('d-sito'));
+vetrina = riscrivi(vetrina, 'ALTRI', altriCataloghi('pescato-arcipelago-toscano'));
 
 fs.writeFileSync(vetrinaFile, vetrina);
 console.log(`vetrina: ${specie.length} schede collegate, altri cataloghi aggiornati`);

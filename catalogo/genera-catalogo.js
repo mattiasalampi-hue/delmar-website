@@ -12,13 +12,15 @@ const qui = __dirname;
 const dati = JSON.parse(fs.readFileSync(path.join(qui, 'catalogo.json'), 'utf8'));
 const cataloghi = dati.cataloghi;
 
-const { WA, testa, piede, altriCataloghi, primaFrase } = require('./comune');
+const { WA, testa, piede, altriCataloghi, primaFrase, briciole } = require('./comune');
+
+const RADICE = 'https://del-mar.it';
 
 /* Il pescato non sta in catalogo.json perche' non e' un catalogo di linea: e'
    la pagina che cambia ogni notte. Ma nell'indice deve stare per primo, ed e'
    la ragione per cui qualcuno arriva qui. */
 const PESCATO = {
-  slug: 'd-sito',
+  slug: 'pescato-arcipelago-toscano',
   nome: 'Pescato dell\'Arcipelago Toscano',
   riga: 'Cambia ogni notte · aggiornato dopo le 20',
   foto: 'foto-prodotti/copertina-pescato.webp',
@@ -210,16 +212,25 @@ ${c.famiglie.map((f, i) => {
         <a href="https://wa.me/${WA}?text=${encodeURIComponent('Ciao, cerco un prodotto che non vedo sul sito: ')}" target="_blank" rel="noopener noreferrer">chiedilo</a><span class="solo-largo">: su ordinazione prendiamo qualsiasi cosa</span>.
       </p>`;
 
-  /* Il titolo della finestra e' la frase SEO, non il nome del catalogo:
-     "Congelato e decongelato" non e' quello che qualcuno digita su Google.
-     La descrizione e' il sottotitolo dell'apertura: e' gia' la frase che
-     spiega la pagina a chi non l'ha ancora vista, cioe' esattamente il
-     mestiere dello snippet nei risultati. */
-  return `${testa(c.intro_titolo, {
+  /* Il titolo della finestra e' c.titolo ("Pesce fresco all'ingrosso"), NON
+     intro_titolo: quello arriva a 89 caratteri e Google lo troncava a meta'
+     frase — un title mozzato perde il clic. Sotto i 60 caratteri col
+     marchio, e la frase lunga resta in pagina come H2, dove il suo mestiere
+     lo fa ancora. La descrizione e' il sottotitolo dell'apertura, e la
+     misura gliela da' testa() (tetto 155). */
+  return `${testa(c.titolo, {
     css: ['catalogo.css'],
     simboli: ['wa', 'arr', 'pesce'],
     pagina: `${c.slug}.html`,
     descrizione: c.sotto,
+    /* I filetti non hanno ancora una copertina propria: piuttosto che un
+       link WhatsApp senza foto, l'anteprima di riserva del marchio */
+    immagine: c.foto || 'foto-prodotti/copertina-pescato.webp',
+    jsonld: [briciole([
+      ['Home', `${RADICE}/`],
+      ['Catalogo prodotti', `${RADICE}/catalogo/prodotti.html`],
+      [c.nome, `${RADICE}/catalogo/${c.slug}.html`],
+    ])],
   })}
 ${hero}
 
@@ -266,7 +277,7 @@ function indice() {
      vetrina del pescato: stessa cornice, stesso ingrandimento al passaggio,
      stessa freccia. Quattro in fila, nessun buco. (Mattias, 2026-08-17) */
   const carte = [
-    { ...PESCATO, href: 'd-sito.html' },
+    { ...PESCATO, href: 'pescato-arcipelago-toscano.html' },
     ...cataloghi.map((c) => ({
       href: `${c.slug}.html`,
       /* Sulla card va il nome CORTO, non il titolo della pagina: in quindici
@@ -294,11 +305,34 @@ function indice() {
           </div>
         </a>`).join('\n\n');
 
-  return `${testa('Prodotti e cataloghi', {
+  /* L'ItemList dice a Google che questa pagina E' un elenco, e di cosa:
+     gli stessi nove cataloghi delle card, nello stesso ordine — markup e
+     pagina devono dire la stessa cosa */
+  const listaCataloghi = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Cataloghi DelMar',
+    itemListElement: carte.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.nome,
+      url: `${RADICE}/catalogo/${c.href}`,
+    })),
+  };
+
+  return `${testa('Catalogo ittico all\'ingrosso per la ristorazione', {
     css: ['catalogo.css'],
     simboli: ['wa', 'arr', 'pesce'],
     pagina: 'prodotti.html',
-    descrizione: 'Ingrosso di pesce fresco e congelato per ristoranti, pescherie e sushi bar in Toscana, Liguria ed Emilia-Romagna. Otto cataloghi, oltre mille referenze, consegna entro le 11.',
+    descrizione: 'Ingrosso di pesce per ristoranti, pescherie e sushi bar in Toscana, Liguria ed Emilia-Romagna: otto cataloghi, oltre mille referenze, consegna entro le 11.',
+    immagine: 'foto-prodotti/copertina-pescato.webp',
+    jsonld: [
+      briciole([
+        ['Home', `${RADICE}/`],
+        ['Catalogo prodotti', `${RADICE}/catalogo/prodotti.html`],
+      ]),
+      listaCataloghi,
+    ],
   })}
     <section class="pr-hero">
       <canvas id="pr-sfondo"></canvas>

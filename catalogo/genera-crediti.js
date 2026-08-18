@@ -65,6 +65,7 @@ const pagina = `${testa('Crediti fotografici', {
   simboli: ['wa'],
   pagina: 'crediti.html',
   descrizione: 'Le fonti e le licenze delle fotografie usate nel catalogo prodotti DelMar.',
+  immagine: 'foto-prodotti/copertina-pescato.webp',
 })}
     <main class="pr-corpo cr-pagina">
       <div class="pr-intro">

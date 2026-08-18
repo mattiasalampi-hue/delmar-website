@@ -50,11 +50,34 @@ function menu(su) {
       </nav>`;
 }
 
+/* LA DESCRIPTION HA UNA MISURA, ed e' ~155 caratteri: oltre, Google la
+   tronca a meta' frase e lo snippet si legge come trascuratezza. Si prendono
+   frasi intere finche' ci stanno; se gia' la prima sfora (la scheda scampi
+   era arrivata a 267), si taglia all'ultimo spazio utile con i puntini —
+   meglio una frase sospesa per mano nostra che mozzata da Google. */
+function descrizioneBreve(testo) {
+  const MAX = 155;
+  if (testo.length <= MAX) return testo;
+  const frasi = testo.split(/(?<=[.!?])\s+/);
+  let d = '';
+  for (const f of frasi) {
+    if (d && (d + ' ' + f).length > MAX) break;
+    d = d ? d + ' ' + f : f;
+  }
+  if (d.length <= MAX) return d;
+  return d.slice(0, d.lastIndexOf(' ', MAX - 2)) + '…';
+}
+
 /* opts.css        fogli aggiuntivi, relativi alla cartella della pagina
    opts.simboli    quali icone servono ('wa', 'arr')
    opts.su         strada per la radice del sito (default: un livello)
    opts.pagina     nome del file, per il canonical assoluto
    opts.descrizione la riga che Google mostra sotto il titolo nei risultati
+   opts.immagine   percorso (relativo alla cartella catalogo) dell'anteprima
+                   Open Graph: e' quella che WhatsApp mostra quando si
+                   condivide il link, e qui la richiesta su WhatsApp E' la
+                   conversione — un link senza foto vende meno
+   opts.jsonld     array di oggetti schema.org, serializzati in un blocco
 
    Il canonical punta SEMPRE a del-mar.it anche se la pagina gira sul mirror
    GitHub Pages: il mirror e' pubblico e senza questo Google puo' indicizzare
@@ -63,11 +86,32 @@ function testa(titolo, opts = {}) {
   const su = opts.su || '../';
   const css = opts.css || [];
   const simboli = (opts.simboli || ['wa']).map((k) => SIMBOLI[k]).join('\n      ');
-  const canonical = opts.pagina
-    ? `\n    <link rel="canonical" href="https://del-mar.it/catalogo/${opts.pagina}" />`
+  const urlAssoluto = opts.pagina ? `https://del-mar.it/catalogo/${opts.pagina}` : '';
+  const canonical = urlAssoluto
+    ? `\n    <link rel="canonical" href="${urlAssoluto}" />`
     : '';
-  const descrizione = opts.descrizione
-    ? `\n    <meta name="description" content="${opts.descrizione.replace(/"/g, '&quot;')}" />`
+  const descPulita = opts.descrizione ? descrizioneBreve(opts.descrizione).replace(/"/g, '&quot;') : '';
+  const descrizione = descPulita
+    ? `\n    <meta name="description" content="${descPulita}" />`
+    : '';
+
+  /* Open Graph solo se la pagina ha indirizzo e immagine: un blocco a meta'
+     e' peggio di nessun blocco */
+  const titoloPulito = titolo.replace(/"/g, '&quot;');
+  const og = (urlAssoluto && opts.immagine)
+    ? `
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="${urlAssoluto}" />
+    <meta property="og:title" content="${titoloPulito} — DelMar" />
+    <meta property="og:description" content="${descPulita}" />
+    <meta property="og:image" content="https://del-mar.it/catalogo/${opts.immagine}" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:site_name" content="DelMar" />
+    <meta name="twitter:card" content="summary_large_image" />`
+    : '';
+
+  const jsonld = (opts.jsonld && opts.jsonld.length)
+    ? `\n    <script type="application/ld+json">\n    ${JSON.stringify(opts.jsonld.length === 1 ? opts.jsonld[0] : opts.jsonld)}\n    </script>`
     : '';
 
   return `<!doctype html>
@@ -75,7 +119,7 @@ function testa(titolo, opts = {}) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${titolo} — DelMar</title>${descrizione}${canonical}
+    <title>${titolo} — DelMar</title>${descrizione}${canonical}${og}${jsonld}
     <link rel="stylesheet" href="${su}css/poppins.css?v=1" />
     <link rel="stylesheet" href="${su}css/style.css?v=102" />
     <!-- L'indice appeso e le righe degli argomenti sono GIA' nel sito, sulla
@@ -144,7 +188,7 @@ function altriCataloghi(corrente) {
   const dati = JSON.parse(fs.readFileSync(path.join(__dirname, 'catalogo.json'), 'utf8'));
 
   const tutti = [
-    { slug: 'd-sito', nome: 'Pescato dell\'Arcipelago Toscano' },
+    { slug: 'pescato-arcipelago-toscano', nome: 'Pescato dell\'Arcipelago Toscano' },
     ...dati.cataloghi.map((c) => ({ slug: c.slug, nome: c.nome })),
   ].filter((c) => c.slug !== corrente);
 
@@ -182,4 +226,21 @@ function primaFrase(testo) {
   return `${m[1]} <span class="solo-largo">${m[2]}</span>`;
 }
 
-module.exports = { WA, SIMBOLI, testa, piede, altriCataloghi, primaFrase };
+/* IL FILO DI BRICIOLE PER GOOGLE, dalla stessa lista che disegna quelle
+   visibili: la regola imparata con le FAQ e' che markup e pagina devono dire
+   la stessa identica cosa, altrimenti Google ignora tutto il blocco.
+   `voci` e' un array di [nome, urlAssoluto]. */
+function briciole(voci) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: voci.map(([nome, url], i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: nome,
+      item: url,
+    })),
+  };
+}
+
+module.exports = { WA, SIMBOLI, testa, piede, altriCataloghi, primaFrase, descrizioneBreve, briciole };
