@@ -415,15 +415,78 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  /* STESSO passaggio su ogni fondo: il bottone WhatsApp scurisce e la
+     scritta resta bianca. Prima sulla chiusura blu si invertiva in
+     bianco/blu mentre altrove scuriva — due comportamenti per lo stesso
+     tasto ("manteniamo la coerenza" — Mattias, 2026-08-19) */
   .pr-btn-wa:hover {
-    background: #fff;
-    border-color: #fff;
-    color: var(--ink);
+    background: var(--wa);
+    border-color: var(--wa);
+    color: #fff;
   }
 
   .pr-btn-ghost:hover {
     border-color: #fff;
     color: #fff;
+  }
+}
+
+/* ─ La coppia di bottoni in pagina ──────────
+   WhatsApp pieno + secondario scuro, su fondo chiaro: il punto di
+   contatto che si ripete lungo i cataloghi e le pagine di zona ("devi
+   poter sempre contattarci al volo" — Mattias, 19/08/2026). Nata nelle
+   pagine di zona (era .zn-cta), promossa qui quando e' servita anche ai
+   cataloghi: un componente usato da due sezioni non si copia. */
+.pr-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .9rem;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1.8rem 6% 0;
+}
+
+/* Il testo che riprende dopo la coppia di bottoni: i 4rem pieni di
+   .pr-intro qui sopra farebbero sembrare la CTA appesa al blocco prima */
+.pr-cta + .pr-intro {
+  padding-top: 2.6rem;
+}
+
+.pr-btn-scuro {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid rgba(21, 28, 100, .35);
+}
+
+.pr-btn-scuro .arr {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  transition: transform .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pr-btn-scuro:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+
+  .pr-btn-scuro:hover .arr {
+    transform: translateX(3px);
+  }
+}
+
+@media (max-width: 768px) {
+  .pr-cta {
+    padding-top: 1.4rem;
+  }
+
+  .pr-cta .pr-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 

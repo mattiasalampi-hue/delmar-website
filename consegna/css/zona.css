@@ -7,30 +7,60 @@
    Stanno PRIMA di tutto: chi atterra da un annuncio decide in cinque
    secondi, e la griglia gli mette davanti le quattro risposte che cerca
    (quanti, quando, entro che ora, come si ordina) senza farlo leggere. */
+/* LA COMPOSIZIONE E' CENTRATA, come la chiusura blu: titoli, numeri,
+   bottoni e comuni stanno sull'asse della pagina. La prima versione era
+   tutta appoggiata a sinistra e, con la finestra stretta, si leggeva
+   storta. Le strisce e le fasi invece restano asimmetriche di proposito:
+   sono i componenti della home e quella e' la loro forma.
+   (Mattias, 2026-08-18) */
+.pr-intro h2 {
+  text-align: center;
+  text-wrap: balance;
+}
+
+.pr-intro > p {
+  text-align: center;
+}
+
+.zn-lavoriamo-testa h2 {
+  text-align: center;
+}
+
 .zn-fatti {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  max-width: 76rem;
+  gap: .8rem;
+  max-width: 52rem;
   margin: 0 auto;
   padding: 3rem 6% 0;
 }
 
+/* Card col linguaggio della home: occhiello corallo maiuscolo (lo stesso
+   registro di "01 · LA SERA"), numero grande blu, descrizione sotto.
+   Il fondo morbido stacca appena dal bianco e tiene insieme la fila. */
 .zn-fatto {
   display: flex;
   flex-direction: column;
-  gap: .3rem;
-  padding: 1.2rem 1.4rem;
-  border-left: 1px solid var(--border);
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  gap: .45rem;
+  padding: 1.5rem 1rem 1.3rem;
+  background: var(--bg-soft, #f7f8fa);
+  border: 1px solid var(--border);
+  border-radius: 12px;
 }
 
-.zn-fatto:first-child {
-  border-left: none;
-  padding-left: 0;
+.zn-fatto-e {
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--wa);
 }
 
 .zn-fatto-n {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -.02em;
   line-height: 1.1;
@@ -39,11 +69,36 @@
 }
 
 .zn-fatto-v {
-  font-size: .78rem;
+  font-size: .74rem;
   font-weight: 300;
   line-height: 1.45;
   color: var(--text-mid);
+  max-width: 15ch;
 }
+
+/* ─ Le due azioni sotto i numeri ────────────
+   Il bottone corallo e' .pr-btn-wa di d.css; quello del catalogo e' la
+   variante per fondo bianco (.pr-btn-ghost e' bianco su blu e qui
+   sparirebbe) */
+/* La coppia di bottoni (.pr-cta, .pr-btn-scuro) dal 19/08/2026 vive in
+   d.css: la usano anche i cataloghi, e un componente usato da due sezioni
+   non si copia. Qui resta solo l'aggiusto dell'indice. */
+
+/* Sull'indice la CTA sta fra la mappa e il titolo delle card: sopra
+   arrivava a 2.8rem (1 della scena + 1.8 suoi), sotto ce ne sono 4 dal
+   padding di .pr-intro — la CTA sembrava appesa alla mappa. Qui si
+   pareggia: 1+3 sopra = 4 sotto */
+.mp-scena + .pr-cta {
+  padding-top: 3rem;
+}
+
+/* La freccia "sfoglia tutto il catalogo" e' .prod-link di style.css:
+   qui serve solo l'aria sopra */
+.zn-tutto {
+  display: inline-flex;
+  margin-top: 1.6rem;
+}
+
 
 /* ─ I comuni ────────────────────────────────
    Pillole come quelle degli indici, ma NON cliccabili: sono un elenco di
@@ -51,6 +106,7 @@
 .zn-comuni {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: .5rem;
   margin-top: 1.4rem;
 }
@@ -74,8 +130,487 @@
   flex-wrap: wrap;
 }
 
+/* ─ La mappa delle consegne (solo indice) ───
+   Due tele impilate (Italia sotto, archi animati sopra) e le pillole delle
+   zone posate sul mare a sinistra: collegamenti veri, non disegno. I fili
+   pillola→punto li traccia js/mappa.js leggendo la posizione reale delle
+   pillole, quindi qui possono stare dove il layout preferisce. */
+/* La scena: un alone di luce fredda dietro la cornice, lo stesso azzurro
+   delle campiture delle aperture — la mappa galleggia sulla pagina invece
+   di esserci appoggiata */
+.mp-scena {
+  position: relative;
+  /* L'aria sta sopra: sotto la mappa segue subito il titolo delle card,
+     che porta gia' il suo respiro — col vecchio 1.5/2.5 la carta stava
+     appiccicata all'hero e lontana da tutto il resto */
+  padding: 4rem 0 1rem;
+}
+
+.mp-scena::before {
+  content: '';
+  position: absolute;
+  inset: -8% 8%;
+  background: radial-gradient(55% 60% at 50% 45%, rgba(168, 204, 255, .35), rgba(168, 204, 255, 0) 70%);
+  pointer-events: none;
+}
+
+.mp-guscio {
+  position: relative;
+  max-width: 66rem;
+  margin: 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  /* Dritta e centrata: l'inclinazione prospettica "sembrava storta"
+     (Mattias, 2026-08-19). A staccare la carta dal fondo e' solo l'ombra,
+     su tre livelli: quella lunga che scappa dietro, il corpo, il contatto */
+  box-shadow:
+    0 60px 110px rgba(21, 28, 100, .40),
+    0 26px 50px rgba(21, 28, 100, .24),
+    0 6px 16px rgba(21, 28, 100, .14);
+}
+
+.mp-guscio img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Un filo meno saturo e un filo piu' contrastato: prepara il velo */
+  filter: saturate(.72) contrast(1.05);
+}
+
+/* Il velo che accorda la mappa alla tavolozza: mix-blend-mode color
+   sostituisce la tinta preservando luci e ombre, e il blu diventa il
+   nostro inchiostro */
+.mp-tinta {
+  position: absolute;
+  inset: 0;
+  background: #1a2270;
+  mix-blend-mode: color;
+  opacity: .55;
+  pointer-events: none;
+}
+
+.mp-guscio canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Le aree cliccabili sopra i pin dell'immagine: invisibili finche' non ci
+   passi sopra. Al passaggio esce la scheda della zona — nome e giorni —
+   con lo scatto delle card del sito, e mappa.js accende l'arco relativo */
+.mp-area {
+  position: absolute;
+  display: block;
+  border-radius: 8px;
+}
+
+.mp-tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + .5rem);
+  transform: translateX(-50%) translateY(6px) scale(.92);
+  transform-origin: bottom center;
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  align-items: center;
+  background: #fff;
+  color: var(--ink);
+  border-radius: 10px;
+  padding: .55rem 1rem .5rem;
+  box-shadow: 0 10px 30px rgba(10, 14, 50, .35);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s, transform .22s cubic-bezier(.3, 1.4, .5, 1);
+}
+
+.mp-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #fff;
+}
+
+.mp-tip strong {
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+.mp-tip em {
+  font-style: normal;
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--wa);
+}
+
+.mp-area:hover .mp-tip,
+.mp-area:focus-visible .mp-tip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* Vicino al bordo alto la scheda si apre verso il basso, con la
+   freccetta girata */
+.mp-area--giu .mp-tip {
+  bottom: auto;
+  top: calc(100% + .5rem);
+  transform: translateX(-50%) translateY(-6px) scale(.92);
+  transform-origin: top center;
+}
+
+.mp-area--giu .mp-tip::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #fff;
+}
+
+.mp-area--giu:hover .mp-tip,
+.mp-area--giu:focus-visible .mp-tip {
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.mp-area:focus-visible {
+  outline: 2px solid #ff6b57;
+  outline-offset: 2px;
+}
+
+/* ─ Le finestrelle sulla mappa (solo indice) ────────────
+   Ogni card e' un ritaglio della stessa carta della cornice grande, zoomato
+   sulla zona: stessa tinta, stesso pin corallo — il pattern delle map card
+   di Airbnb/Komoot, con la carta scelta da Mattias. La geometria del
+   ritaglio (posizione immagine e pin) e' calcolata da genera-zone.js e
+   viaggia inline: sono dati di posizione, come i pin della mappa. */
+.zn-carte-testa {
+  padding-bottom: .5rem;
+}
+
+.zn-zone {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.1rem;
+  max-width: 72rem;
+  margin: 1.5rem auto 3rem;
+  padding: 0 4%;
+}
+
+.zn-zona {
+  display: block;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: transform .3s, border-color .3s, box-shadow .3s, background .3s;
+}
+
+/* La finestra sulla carta sta SOPRA il testo, non sotto: coi pin vicini al
+   bordo basso dell'immagine (Firenze, Prato) qualunque scritta in
+   sovraimpressione li coprirebbe */
+.zn-zona-finestra {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* Il 4:3 e' cablato anche in genera-zone.js (FINESTRA_AR): se cambia qui,
+     va cambiato la', o i pin scivolano via dalle citta' */
+  aspect-ratio: 4 / 3;
+}
+
+.zn-zona-lente {
+  position: absolute;
+  inset: 0;
+  transition: transform 1.2s cubic-bezier(.2, .7, .3, 1);
+}
+
+.zn-zona-lente img {
+  position: absolute;
+  display: block;
+  /* Il max-width globale del sito strozzerebbe il ritaglio al 100% della
+     card: qui l'immagine DEVE essere piu' larga della cornice, e' una
+     finestra su una carta grande quattro card */
+  max-width: none;
+  height: auto;
+  filter: saturate(.72) contrast(1.05);
+}
+
+/* La stessa tinta della cornice grande: la carta prende il blu del sito */
+.zn-zona-tinta {
+  position: absolute;
+  inset: 0;
+  background: #1a2270;
+  mix-blend-mode: color;
+  opacity: .55;
+  pointer-events: none;
+}
+
+/* Il pin e il faro leggono le stesse coordinate (--px/--py, scritte da
+   genera-zone.js sulla finestra): un posto solo per la posizione della
+   citta', pin e luce non possono divergere */
+.zn-zona-pin {
+  position: absolute;
+  left: var(--px);
+  top: var(--py);
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #ff6b57;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .9);
+}
+
+/* Il velo: la stessa inquadratura, sfocata, mostrata SOLO fuori dal faro
+   (la maschera e' il negativo del cerchio di luce). Scurire non bastava:
+   i cartellini bianchi dei vicini restavano leggibili anche spenti —
+   sfocati non si leggono piu', e resta nitida solo la citta' della zona.
+   Il secondo img e' lo stesso file gia' in cache: non si scarica due volte. */
+.zn-zona-velo {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: radial-gradient(circle at var(--px) var(--py),
+    transparent 0,
+    transparent 24%,
+    #000 52%);
+  mask-image: radial-gradient(circle at var(--px) var(--py),
+    transparent 0,
+    transparent 24%,
+    #000 52%);
+}
+
+.zn-zona-velo img {
+  filter: blur(3px) saturate(.72) contrast(1.05);
+}
+
+/* Il faro: la citta' della zona resta in luce, i vicini scivolano nel blu
+   notte. In moltiplicazione, non in velatura: i cartellini delle altre
+   citta' sono BIANCHI e sotto una velatura restavano leggibili — col
+   multiply il bianco prende il colore del bordo e si fonde nella carta */
+.zn-zona-faro {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background: radial-gradient(circle at var(--px) var(--py),
+    #fff 0,
+    #fff 26%,
+    #b4b9dc 52%,
+    #4d5498 85%);
+}
+
+.zn-zona-pin::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 107, 87, .8);
+  animation: zn-eco 2.2s ease-out infinite;
+}
+
+@keyframes zn-eco {
+  0% {
+    transform: scale(.4);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.zn-zona-testo {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  padding: 1rem 1.25rem 1.3rem;
+}
+
+.zn-zona-giorni {
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--wa);
+  transition: color .3s;
+}
+
+.zn-zona h3 {
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0;
+  transition: color .3s;
+}
+
+.zn-zona h3::after {
+  content: '→';
+  margin-left: .45rem;
+  opacity: 0;
+  color: var(--wa);
+  display: inline-block;
+  transform: translateX(-4px);
+  transition: opacity .3s, transform .3s;
+}
+
+.zn-zona p {
+  font-size: .76rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--text-mid);
+  margin: 0;
+  transition: color .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* Al passaggio la card diventa del corallo del sito — lo stesso dei
+     bottoni WhatsApp — coi testi che passano in bianco: la finestra sulla
+     mappa resta com'e', si accende solo la meta' che si legge */
+  .zn-zona:hover {
+    transform: translateY(-3px);
+    background: #ff6b57;
+    border-color: #ff6b57;
+    box-shadow: 0 16px 36px rgba(201, 67, 44, .35);
+  }
+
+  .zn-zona:hover .zn-zona-giorni {
+    color: rgba(255, 255, 255, .85);
+  }
+
+  .zn-zona:hover h3 {
+    color: #fff;
+  }
+
+  .zn-zona:hover p {
+    color: rgba(255, 255, 255, .88);
+  }
+
+  /* Lo zoom e' della lente (mappa + pin insieme), cosi' il pin resta
+     incollato alla sua citta' mentre la carta si avvicina */
+  .zn-zona:hover .zn-zona-lente {
+    transform: scale(1.06);
+  }
+
+  .zn-zona:hover h3::after {
+    opacity: 1;
+    transform: translateX(0);
+    color: #fff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zn-zona-pin::after {
+    animation: none;
+  }
+
+  .zn-zona-lente {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .zn-zone {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  /* Due finestrelle per fila anche sul telefono: a colonna piena sarebbero
+     lenzuoli. Il testo si stringe con la card */
+  .zn-zone {
+    grid-template-columns: 1fr 1fr;
+    gap: .8rem;
+  }
+
+  .zn-zona-testo {
+    padding: .8rem .9rem 1rem;
+  }
+
+  .zn-zona h3 {
+    font-size: 1rem;
+  }
+
+  .zn-zona p {
+    font-size: .68rem;
+  }
+
+
+}
+
+/* ─ Le strisce della home ───────────────────
+   .prod-strip arriva intero da style.css, a tutta larghezza come nella
+   home: qui serve solo l'aria sopra e sotto */
+.zn-strisce {
+  margin: 3.5rem 0 1rem;
+}
+
+/* ─ Le fasi della home, in colonna ──────────
+   Le card sono IDENTICHE a quelle di "Come lavoriamo" nella home (stesse
+   classi, stesse foto): qui pero' stanno una sotto l'altra, perche' il
+   nastro orizzontale della home scorre con GSAP che queste pagine non
+   caricano. Gli override annullano solo le misure da nastro (100vw). */
+.zn-lavoriamo-testa {
+  padding-bottom: 0;
+}
+
+.zn-fasi {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1rem 6% 2rem;
+}
+
+.zn-fasi .fase {
+  width: auto;
+  flex-shrink: 1;
+  justify-content: flex-start;
+  padding: 2.2rem 0;
+  gap: clamp(1.6rem, 3vw, 3rem);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Nel nastro della home il tondo puo' essere largo 38vw perche' ha uno
+   schermo intero; qui va ridimensionato, ma non troppo: accanto a un
+   titolo di due righe un tondo da 13rem sembrava un francobollo. E la
+   sfumatura tiene piu' foto piena (74% contro il 56% della home): a
+   questa taglia la dissolvenza larga si mangiava mezza immagine.
+   (Mattias, 2026-08-18) */
+.zn-fasi .fase-tondo {
+  width: clamp(14rem, 50%, 21rem);
+  -webkit-mask-image: radial-gradient(circle closest-side at center, #000 74%, rgba(0, 0, 0, .55) 90%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side at center, #000 74%, rgba(0, 0, 0, .55) 90%, transparent 100%);
+}
+
+.zn-fasi .fase:last-child {
+  border-bottom: none;
+}
+
+/* Gia' sotto i 900px quattro celle in fila spezzano le etichette su tre
+   righe: si passa a due per riga ben prima del telefono */
+@media (max-width: 900px) {
+  .zn-fatti {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 768px) {
-  /* Due numeri per riga: quattro in fila su 390px diventano illeggibili */
+  /* In colonna la card e' tutta centrata: il tondo appoggiato a sinistra
+     sotto un titolo centrato si leggeva come un errore (Mattias, 18/08) */
+  .zn-fasi .fase {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  .zn-fasi .fase-testo {
+    text-align: center;
+  }
+
   .zn-fatti {
     grid-template-columns: 1fr 1fr;
     gap: 1.4rem 0;

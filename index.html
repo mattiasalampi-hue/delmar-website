@@ -92,7 +92,7 @@
          css/poppins.css. Cosi' a nessun terzo arriva l'indirizzo IP
          di chi apre la pagina, e non c'e' niente da autorizzare -->
     <link rel="stylesheet" href="css/poppins.css?v=1" />
-    <link rel="stylesheet" href="css/style.css?v=102" />
+    <link rel="stylesheet" href="css/style.css?v=103" />
     <link rel="stylesheet" href="css/consenso.css?v=1" />
   </head>
   <body>
@@ -145,7 +145,9 @@
              index.html su del-mar.it il catalogo va spostato nella sua
              cartella definitiva e questi indirizzi vanno rifatti.
              (Mattias, 2026-08-17) -->
-        <a href="catalogo/prodotti.html">Prodotti</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
+        <!-- "Consegne" subito dopo Prodotti: sono le due voci che portano
+             a sezioni vere del sito, il resto sono ancore della home -->
+        <a href="catalogo/prodotti.html">Prodotti</a> <a href="consegna/">Consegne</a> <a href="#processo">Come Lavoriamo</a> <a href="#azienda">Azienda</a>
         <a href="#gallery">Gallery</a> <a href="#marina">Marina AI</a>
         <a href="domande-frequenti.html">Domande</a> <a href="#contatti">Contatti</a>
         <a href="https://wa.me/393356654017?text=Ciao%20Marina!" target="_blank" rel="noopener noreferrer" class="nav-wa">Ordina ora</a>
@@ -156,11 +158,14 @@
     <div id="v-scroller">
       <div id="v-sticky">
         <div class="ch" id="c1">
-          <h1 class="ch-title">Un mare<br />di qualità</h1>
-          <div class="cue">
-            <span>Scroll</span>
-            <div class="cue-line"></div>
-          </div>
+          <!-- Niente piu' "Un mare di qualita'": il primo titolo dice il
+               mestiere, senza poesia — chi atterra deve capire subito
+               cosa fa l'azienda. E la prima azione non e' "scrolla" ma
+               una meta vera: le zone di consegna, che sono la domanda
+               commerciale di chi arriva ("consegnate da me?").
+               (Mattias, 2026-08-19) -->
+          <h1 class="ch-title">Grossista ittico<br />per il settore HoReCa</h1>
+          <a href="consegna/" class="ch-cta">Scopri dove consegniamo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
         <div class="ch" id="c2">
           <h2 class="ch-title">Un solo fornitore<br />Tutto il pesce che ti serve</h2>
@@ -321,6 +326,33 @@
       </div>
       <div id="fasi-barra">
         <div id="fasi-barra-fill"></div>
+      </div>
+    </section>
+    <!-- ════════════════════ I LISTINI ════════════ -->
+    <!-- Il contatto subito dopo il processo: chi ha appena letto COME si
+         ordina deve poter ordinare, senza cercare i contatti in fondo.
+         Sezione a se', FUORI da #processo: il nastro delle fasi e'
+         appuntato da GSAP e ogni contenuto in piu' li' dentro cambia i
+         conti dello scroll. ("le call to action sono fondamentali" —
+         Mattias, 2026-08-19) -->
+    <!-- sec-pad e fondo bianco: sopra "Come lavoriamo" e' gia' soft, e
+         senza il padding della variante il bottone atterrava sul bordo
+         del video del racconto -->
+    <section class="section sec-pad" id="listini">
+      <div id="listini-in">
+        <h2 class="big-title">I listini? Si chiedono su WhatsApp</h2>
+        <p class="body-text">
+          Dicci che locale hai — ristorante, pescheria, hotel o sushi bar — e ti
+          mandiamo il listino del tuo settore con le disponibilità di oggi.
+        </p>
+        <a
+          href="https://wa.me/393356654017?text=Ciao%2C%20vorrei%20il%20listino%20per%20il%20mio%20locale"
+          target="_blank" rel="noopener noreferrer"
+          class="ch-cta wa"
+        >
+          <svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#ico-wa"/></svg>
+          Contattaci su WhatsApp
+        </a>
       </div>
     </section>
     <!-- ════════════════════ IL RACCONTO ══════════ -->
@@ -749,6 +781,25 @@
           <a href="catalogo/catalogo-cucina.html">Patate, basi pizza e contorni</a>
           <a href="catalogo/catalogo-dessert.html">Dessert monoporzione</a>
         </div>
+        <!-- LE ZONE HANNO LA LORO COLONNA dal 19/08/2026: erano diventate
+             otto piu' l'indice con la mappa, e la promessa scritta qui
+             sotto ("quando le zone saranno piu' di tre, si ristruttura il
+             piede") e' scaduta. Stesso ragionamento del catalogo: il piede
+             compare su ogni pagina, ed e' da qui che Google impara che le
+             pagine di zona esistono e quanto contano — sono le pagine su
+             cui girano le campagne Ads. -->
+        <div class="footer-col">
+          <p class="footer-col-title">Dove consegniamo</p>
+          <a href="consegna/">La mappa delle zone</a>
+          <a href="consegna/fornitore-pesce-versilia.html">Consegna in Versilia</a>
+          <a href="consegna/fornitore-pesce-massa-carrara.html">Consegna a Massa e Carrara</a>
+          <a href="consegna/fornitore-pesce-la-spezia.html">Consegna alla Spezia</a>
+          <a href="consegna/fornitore-pesce-lucca.html">Consegna a Lucca</a>
+          <a href="consegna/fornitore-pesce-genova.html">Consegna a Genova</a>
+          <a href="consegna/fornitore-pesce-parma.html">Consegna a Parma</a>
+          <a href="consegna/fornitore-pesce-firenze.html">Consegna a Firenze</a>
+          <a href="consegna/fornitore-pesce-prato.html">Consegna a Prato</a>
+        </div>
         <div class="footer-col">
           <p class="footer-col-title">Naviga</p>
           <a href="catalogo/prodotti.html">Catalogo prodotti</a>
@@ -761,13 +812,6 @@
                resta fuori dall'indice anche se sta in mappa, perche' la
                mappa dice che esiste e i collegamenti dicono che conta -->
           <a href="domande-frequenti.html">Domande frequenti</a>
-          <!-- Stesso ragionamento per le pagine di zona (18/08/2026):
-               stanno qui e non in una colonna propria perche' la griglia
-               del piede ha quattro colonne e una quinta andrebbe a capo.
-               Quando le zone saranno piu' di tre, si ristruttura il piede
-               con una colonna "Dove consegniamo". -->
-          <a href="consegna/versilia.html">Consegna in Versilia</a>
-          <a href="consegna/genova.html">Consegna a Genova</a>
         </div>
         <div class="footer-col">
           <p class="footer-col-title">Contatti</p>
@@ -817,7 +861,7 @@
          prova in prove/, e un pezzo usato da due pagine non si copia. -->
     <script src="js/caustiche.js?v=1"></script>
     <script src="js/pesci.js?v=11"></script>
-    <script src="js/script.js?v=70"></script>
+    <script src="js/script.js?v=71"></script>
     <!-- Il cursore calamaro: indipendente da tutto il resto, si accende
          al primo movimento vero di un mouse -->
     <script src="js/cursore.js?v=2"></script>

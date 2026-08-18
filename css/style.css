@@ -146,6 +146,7 @@ nav {
 }
 
 nav a {
+  position: relative;
   font-size: .65rem;
   font-weight: 500;
   letter-spacing: .16em;
@@ -155,9 +156,59 @@ nav a {
   white-space: nowrap;
 }
 
+/* La sottolineatura del passaggio: parte da sinistra e si stende sotto la
+   voce, nel corallo del sito. Il bottone "Ordina ora" ha gia' il suo
+   passaggio (si riempie di corallo) e resta fuori */
+nav a:not(.nav-wa)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 2px;
+  background: var(--wa);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s;
+}
+
 @media (hover: hover) and (pointer: fine) {
-  nav a:hover {
-    color: #000;
+  nav a:not(.nav-wa):hover {
+    color: var(--wa);
+  }
+
+  nav a:not(.nav-wa):hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Con la voce "Consegne" (19/08/2026) le voci sono nove: sopra i 768px
+   l'hamburger non c'e', e fra 769 e ~1150px la fila non ci stava piu'.
+   Due strette progressive: prima si riducono spazi e crenatura, sui
+   portatili piccoli anche il corpo */
+@media (min-width: 769px) and (max-width: 1160px) {
+  #hdr {
+    padding: .8rem 1.6rem;
+  }
+
+  nav {
+    gap: .8rem;
+  }
+
+  nav a {
+    font-size: .62rem;
+    letter-spacing: .1em;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 920px) {
+  nav {
+    gap: .6rem;
+  }
+
+  nav a {
+    font-size: .58rem;
+    letter-spacing: .07em;
   }
 }
 
@@ -395,25 +446,29 @@ nav a {
   }
 }
 
-/* Il pulsante pieno non scende sotto il tondo normale: bianco su
-   verde, un tratto filiforme si impasta e diventa illeggibile */
-/* Il pulsante pieno non scende sotto il tondo normale: bianco su
-   verde, un tratto filiforme si impasta e diventa illeggibile */
+/* IL BOTTONE WHATSAPP E' UNO SOLO in tutto il sito: corallo pieno,
+   scritta bianca, al passaggio scurisce al rosso — le stesse misure di
+   .pr-btn-wa in catalogo/css/d.css (le pagine interne usano quello).
+   Erano due: qui rosso scuro che scuriva, nelle chiusure blu corallo che
+   diventava bianco/blu ("il css deve essere lo stesso per tutte quelle
+   call to action" — Mattias, 2026-08-19). Se si ritocca uno, si ritocca
+   anche l'altro. */
 .ch-cta.wa {
-  background: var(--wa);
+  background: var(--accent-bright);
+  color: #fff;
   border: none;
-  padding: 1rem 2.4rem;
-  border-radius: 3px;
-  font-size: clamp(.92rem, 1.18vw, 1.05rem);
+  padding: 1.15rem 2.6rem;
+  border-radius: 2px;
+  font-size: .8rem;
   font-weight: 400;
-  letter-spacing: .02em;
+  letter-spacing: .06em;
   text-shadow: none;
   transition: background .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .ch-cta.wa:hover {
-    background: var(--wa-hover);
+    background: var(--wa);
   }
 }
 
@@ -1675,18 +1730,20 @@ html.cur-on select {
   color: var(--ink);
 }
 
+/* Stessa ricetta di .ch-cta.wa e di .pr-btn-wa (d.css): il bottone
+   WhatsApp e' UNO in tutto il sito — corallo, scritta bianca, hover che
+   scurisce al rosso. (Mattias, 2026-08-19) */
 .wa-big {
   display: inline-flex;
   align-items: center;
-  gap: .8rem;
-  background: var(--wa);
+  gap: .7rem;
+  background: var(--accent-bright);
   color: #fff;
   font-family: var(--font);
   font-size: .8rem;
-  font-weight: 500;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  padding: 1.1rem 2.4rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  padding: 1.15rem 2.6rem;
   border-radius: 2px;
   transition: background .3s;
   margin-top: 1.5rem;
@@ -1694,7 +1751,7 @@ html.cur-on select {
 
 @media (hover: hover) and (pointer: fine) {
   .wa-big:hover {
-    background: var(--wa-hover);
+    background: var(--wa);
   }
 }
 
@@ -1830,10 +1887,33 @@ html.cur-on select {
 /* Il marchio prende più spazio delle colonne di link, che invece
    sono larghe uguali: con 1fr per tutte la colonna del claim
    andava a capo ogni due parole */
+/* ─ I listini (CTA dopo Come lavoriamo) ─────── */
+/* Riusa i pezzi della home: titolo e paragrafo delle strisce prodotto,
+   bottone WhatsApp dell'hero. Qui c'e' solo la disposizione */
+#listini-in {
+  max-width: 46rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.3rem;
+  text-align: center;
+}
+
+#listini-in .body-text {
+  max-width: 34rem;
+}
+
+#listini-in .ch-cta {
+  margin-top: .5rem;
+}
+
 .footer-top {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1.1fr;
-  gap: 4rem 3rem;
+  /* Cinque colonne dal 19/08/2026: le zone di consegna sono diventate otto
+     e hanno la loro colonna, come promesso nel commento del piede */
+  grid-template-columns: 1.4fr 1fr 1fr .9fr 1fr;
+  gap: 4rem 2.2rem;
   align-items: start;
 }
 
@@ -2163,18 +2243,18 @@ html.cur-on select {
   font-weight: 500;
 }
 
+/* Stessa ricetta del bottone WhatsApp unico del sito (vedi .wa-big) */
 .marina-cta-btn {
   display: inline-flex;
   align-items: center;
   gap: .7rem;
-  background: var(--wa);
+  background: var(--accent-bright);
   color: #fff;
   font-family: var(--font);
-  font-size: .7rem;
-  font-weight: 500;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  padding: 1rem 2rem;
+  font-size: .8rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  padding: 1.15rem 2.6rem;
   border-radius: 2px;
   transition: background .3s;
   align-self: flex-start;
@@ -2182,7 +2262,7 @@ html.cur-on select {
 
 @media (hover: hover) and (pointer: fine) {
   .marina-cta-btn:hover {
-    background: var(--wa-hover);
+    background: var(--wa);
   }
 }
 
@@ -2740,13 +2820,13 @@ html.cur-on select {
     margin-top: .4rem;
   }
 
+  /* Sul telefono cambia solo la misura, MAI il colore: il bottone
+     WhatsApp e' corallo con scritta bianca ovunque */
   .ch-cta.wa {
     width: min(320px, 88%);
+    justify-content: center;
     padding: 1.05rem 1.5rem;
-    font-size: 1rem;
-    background: var(--wa);
-    color: #fff;
-    border-radius: 6px;
+    font-size: .9rem;
   }
 
   .cue {

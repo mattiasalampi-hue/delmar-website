@@ -203,6 +203,14 @@ function initHeroScroll() {
     apply(shown);
   });
 
+  /* Lo stato iniziale NON aspetta il primo scroll: a pagina appena
+     aperta target e shown sono uguali, il ticker non chiama mai apply()
+     e il primo capitolo resta col pointer-events:none del CSS — la CTA
+     "Scopri dove consegniamo" era morta finche' non si scrollava.
+     (Mattias, 2026-08-19) */
+  shown = target;
+  apply(shown);
+
   /* Snap ai punti CTA: se lo scroll si ferma TRA due call to action,
      la pagina prosegue da sola (via lenis.scrollTo, quindi con la
      stessa inerzia del resto) fino alla CTA piena nella direzione di

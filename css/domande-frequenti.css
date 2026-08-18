@@ -802,10 +802,13 @@ html:has(.fq-pagina) {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  /* Stesso passaggio del bottone WhatsApp di tutto il sito: scurisce al
+     rosso, la scritta resta bianca — mai piu' l'inversione bianco/blu
+     (Mattias, 2026-08-19) */
   .fq-btn-wa:hover {
-    background: #fff;
-    border-color: #fff;
-    color: var(--ink);
+    background: var(--wa);
+    border-color: var(--wa);
+    color: #fff;
   }
 
   .fq-btn-ghost:hover {

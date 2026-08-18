@@ -40,8 +40,14 @@ function menu(su, cartella = 'catalogo') {
   const prodotti = cartella === 'catalogo'
     ? `<span class="nav-qui" aria-current="page">Prodotti</span>`
     : `<a href="${su}catalogo/prodotti.html">Prodotti</a>`;
+  /* "Consegne" sta subito dopo Prodotti: sono le due voci che portano a
+     sezioni vere del sito, il resto sono ancore della home */
+  const consegne = cartella === 'consegna'
+    ? `<span class="nav-qui" aria-current="page">Consegne</span>`
+    : `<a href="${su}consegna/">Consegne</a>`;
   return `      <nav id="main-nav">
         ${prodotti}
+        ${consegne}
         <a href="${su}index.html#processo">Come Lavoriamo</a>
         <a href="${su}index.html#azienda">Azienda</a>
         <a href="${su}index.html#gallery">Gallery</a>
@@ -91,7 +97,9 @@ function testa(titolo, opts = {}) {
      le pagine di zona passano 'consegna' */
   const cartella = opts.cartella || 'catalogo';
   const simboli = (opts.simboli || ['wa']).map((k) => SIMBOLI[k]).join('\n      ');
-  const urlAssoluto = opts.pagina ? `https://del-mar.it/${cartella}/${opts.pagina}` : '';
+  /* pagina '' (stringa vuota) e' legittima: e' l'indice della cartella, e il
+     suo canonical e' la cartella stessa con la barra */
+  const urlAssoluto = opts.pagina != null ? `https://del-mar.it/${cartella}/${opts.pagina}` : '';
   const canonical = urlAssoluto
     ? `\n    <link rel="canonical" href="${urlAssoluto}" />`
     : '';
@@ -126,12 +134,12 @@ function testa(titolo, opts = {}) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${titolo} — DelMar</title>${descrizione}${canonical}${og}${jsonld}
     <link rel="stylesheet" href="${su}css/poppins.css?v=1" />
-    <link rel="stylesheet" href="${su}css/style.css?v=102" />
+    <link rel="stylesheet" href="${su}css/style.css?v=103" />
     <!-- L'indice appeso e le righe degli argomenti sono GIA' nel sito, sulla
          pagina delle domande frequenti. Si carica quel foglio invece di
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
-    <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=7" />
-    <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=2" />
+    <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=8" />
+    <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=3" />
 ${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=2" />`).join('\n')}
   </head>
   <body class="pr-pagina">
@@ -168,6 +176,7 @@ function piede(script, opts = {}) {
         </p>
         <p class="pr-piede-link">
           <a href="${cat}prodotti.html">Catalogo prodotti</a>
+          <a href="${opts.cat ? './' : `${su}consegna/`}">Dove consegniamo</a>
           <a href="${su}domande-frequenti.html">Domande frequenti</a>
           <a href="${su}privacy.html">Privacy e cookie</a>
           <a href="${cat}crediti.html">Crediti fotografici</a>

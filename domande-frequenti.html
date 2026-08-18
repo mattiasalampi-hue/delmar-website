@@ -246,9 +246,9 @@
     }
     </script>
     <link rel="stylesheet" href="css/poppins.css?v=1" />
-    <link rel="stylesheet" href="css/style.css?v=102" />
+    <link rel="stylesheet" href="css/style.css?v=103" />
     <link rel="stylesheet" href="css/consenso.css?v=1" />
-    <link rel="stylesheet" href="css/domande-frequenti.css?v=7" />
+    <link rel="stylesheet" href="css/domande-frequenti.css?v=8" />
   </head>
   <body class="fq-pagina">
     <!-- SVG sprite: la freccia e l'icona WhatsApp servono anche qui -->
@@ -266,7 +266,9 @@
     <header id="hdr">
       <a href="index.html"><img src="assets/logo.png?v=2" alt="DelMar" class="logo" /></a>
       <nav id="main-nav">
-        <a href="index.html#prodotti">Prodotti</a> <a href="index.html#processo">Come Lavoriamo</a>
+        <!-- Prodotti porta al catalogo come su tutto il resto del sito:
+             puntava ancora all'ancora della home, era rimasto indietro -->
+        <a href="catalogo/prodotti.html">Prodotti</a> <a href="consegna/">Consegne</a> <a href="index.html#processo">Come Lavoriamo</a>
         <a href="index.html#azienda">Azienda</a> <a href="index.html#marina">Marina AI</a>
         <!-- La voce della pagina in cui ci si trova gia': resta nel menu
              perche' sparire fa sembrare che il menu cambi da pagina a
@@ -816,6 +818,8 @@
         </p>
         <p class="fq-piede-link">
           <a href="index.html">Torna al sito</a> ·
+          <a href="catalogo/prodotti.html">Catalogo</a> ·
+          <a href="consegna/">Dove consegniamo</a> ·
           <a href="privacy.html">Privacy</a>
         </p>
       </div>

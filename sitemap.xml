@@ -233,14 +233,56 @@
        atterraggio alle campagne. Priorita' alta: ognuna e' una home per
        il suo territorio. -->
   <url>
-    <loc>https://del-mar.it/consegna/versilia.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/consegna/</loc>
+    <lastmod>2026-08-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://del-mar.it/consegna/genova.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/consegna/fornitore-pesce-versilia.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/consegna/fornitore-pesce-massa-carrara.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/consegna/fornitore-pesce-la-spezia.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/consegna/fornitore-pesce-lucca.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/consegna/fornitore-pesce-genova.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/consegna/fornitore-pesce-parma.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/consegna/fornitore-pesce-firenze.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/consegna/fornitore-pesce-prato.html</loc>
+    <lastmod>2026-08-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

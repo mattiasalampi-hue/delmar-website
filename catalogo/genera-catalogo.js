@@ -47,6 +47,24 @@ function chiusura(occhiello, titolo, testo) {
       </section>`;
 }
 
+/* La coppia di bottoni in mezzo alla pagina (.pr-cta, condivisa con le
+   pagine di zona via d.css): il contatto non vive solo nella chiusura in
+   fondo — "devi poter sempre contattarci al volo" (Mattias, 19/08/2026).
+   WhatsApp pieno, accanto le zone di consegna: chi guarda un listino si
+   chiede subito se arriviamo da lui. */
+function ctaVeloce(msg) {
+  return `      <div class="pr-cta">
+        <a href="https://wa.me/${WA}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener noreferrer" class="pr-btn pr-btn-wa">
+          <svg aria-hidden="true"><use href="#ico-wa"/></svg>
+          Contattaci su WhatsApp
+        </a>
+        <a href="../consegna/" class="pr-btn pr-btn-scuro">
+          Dove consegniamo
+          <svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg>
+        </a>
+      </div>`;
+}
+
 /* L'ancora si ricava dal nome: "Baccalà e merluzzo" -> "baccala-e-merluzzo".
    Il filtro per codice invece della classe di caratteri: scritta coi
    diacritici veri, la classe mangiava la lettera accentata */
@@ -249,9 +267,13 @@ ${barra}
 ${c.intro.map((p) => `        <p>${primaFrase(p)}</p>`).join('\n')}
       </div>
 
+${ctaVeloce(`Ciao, vorrei il listino: ${c.nome}`)}
+
 ${scelta}
 
 ${c.famiglie.map(famiglia).join('\n\n')}
+
+${ctaVeloce(`Ciao, vorrei il listino: ${c.nome}`)}
 
 ${altriCataloghi(c.slug)}
 
@@ -381,6 +403,8 @@ function indice() {
           non un problema.</span>
         </p>
       </div>
+
+${ctaVeloce('Ciao, vorrei informazioni sui vostri prodotti')}
 
       <div class="pr-griglia pr-griglia-cat">
 ${griglia}
