@@ -2559,11 +2559,20 @@ html.cur-on select {
     transform: translateY(-7px) rotate(-45deg);
   }
 
+  /* IL MENU E' UNA STANZA DEL SITO, non un sipario preso in prestito.
+     Era quasi nero (rgba(8,8,8)) — un colore che il sito non usa da
+     nessuna parte — con voci bianche smorzate al 65%: sembrava il menu
+     di un'altra app. Il fondo giusto e' lo stesso impasto blu del
+     pannello contatti mobile, che e' la superficie scura del marchio,
+     e le voci sono Poppins con la stessa spaziatura della barra
+     desktop, solo piu' grandi. (Mattias, 2026-08-18) */
   nav {
     position: fixed;
     inset: 0;
     z-index: 99;
-    background: rgba(8,8,8,.97);
+    background:
+      radial-gradient(90% 44% at 50% 6%, rgba(168,204,255,.18), rgba(168,204,255,0) 72%),
+      linear-gradient(to bottom, rgba(26,34,112,.985), rgba(15,21,71,.985));
     backdrop-filter: blur(24px);
     flex-direction: column;
     align-items: center;
@@ -2582,10 +2591,22 @@ html.cur-on select {
   }
 
   nav a {
-    font-size: 1.15rem;
-    letter-spacing: .08em;
-    font-weight: 400;
-    color: rgba(255,255,255,.65);
+    font-size: 1.05rem;
+    letter-spacing: .14em;
+    font-weight: 500;
+    color: rgba(255,255,255,.92);
+  }
+
+  /* La voce accesa (la pagina in cui si e'): sul fondo blu il corallo
+     scuro dei fogli interni sparirebbe — qui serve la gradazione piena,
+     come per il bottone qui sotto. E si veste come le altre voci:
+     senza questa riga resterebbe alta sei decimi di rem, la misura
+     della barra desktop da cui arriva */
+  nav .nav-qui {
+    font-size: 1.05rem;
+    letter-spacing: .14em;
+    font-weight: 500;
+    color: var(--accent-bright);
   }
 
   /* Nel menu a schermo intero il fondo è quasi nero: qui serve la
@@ -3165,6 +3186,15 @@ html.cur-on select {
     display: none;
   }
 
+  /* Anche il banco di pesci: su una colonna sola nuotava sopra telefono,
+     email e indirizzo, e il gioco qui non e' giocabile — il blocco dello
+     scorrimento non si puo' mettere su una tela che copre il modulo.
+     script.js vede la tela spenta (offsetParent nullo) e non fa partire
+     niente: la soglia sta solo qui. (Mattias, 2026-08-18) */
+  #contatti-particles {
+    display: none;
+  }
+
   /* Fino ai bordi, annullando il margine della sezione con un margine
      negativo uguale e contrario.
      In vw e non in %: la percentuale si calcola sulla larghezza del
@@ -3208,24 +3238,53 @@ html.cur-on select {
 
   /* ─── Footer ─────────────────────────────── */
   #footer {
-    padding: 4rem 5% 2rem;
+    padding: 3.4rem 6% 2rem;
   }
 
   /* Due colonne, non una: in colonna singola le quattro liste
      diventavano un muro alto mezzo schermo da scorrere */
   .footer-top {
     grid-template-columns: 1fr 1fr;
-    gap: 2.6rem 1.5rem;
+    gap: 2.2rem 1.4rem;
   }
 
   /* Il marchio occupa la riga intera: il claim su mezza colonna
      andava a capo a ogni parola */
   .footer-brand {
     grid-column: 1 / -1;
+    gap: 1rem;
   }
 
   .footer-claim {
     max-width: none;
+    font-size: .8rem;
+  }
+
+  /* IN MEZZA COLONNA LE VOCI RESPIRANO MENO, non di piu'.
+     Con la misura del desktop (.88rem e .9rem d'aria) nove voci di
+     catalogo — meta' delle quali vanno a capo — diventavano una parete
+     slabbrata di testo: righe spezzate indistinguibili dalle voci
+     vicine. Corpo piu' piccolo, interlinea che tiene insieme le righe
+     della STESSA voce e un filo d'aria in meno fra voci: adesso ogni
+     collegamento si legge come un blocchetto suo.
+     (Mattias, 2026-08-18) */
+  .footer-col {
+    gap: .55rem;
+  }
+
+  .footer-col a {
+    font-size: .8rem;
+    line-height: 1.4;
+    padding: .12rem 0;
+  }
+
+  .footer-col-title {
+    margin-bottom: .4rem;
+  }
+
+  .footer-social {
+    flex-wrap: wrap;
+    gap: .8rem 1.3rem;
   }
 
   .footer-legal {

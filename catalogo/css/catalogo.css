@@ -536,4 +536,31 @@ html:has(.ct-famiglia) {
   .ct-et {
     padding-top: 0;
   }
+
+  /* LA VIA DI RITORNO SI DEVE VEDERE, ed e' l'unica azione della barra.
+     Sul telefono era una scritta grigia sotto le pillole — chi atterrava
+     su un catalogo non capiva come si tornasse all'indice, cioe' come si
+     navigasse il sito. La colonna torna dritta (domande-frequenti.css la
+     inverte per mettere la SUA ricerca sotto, ma qui non c'e' nessuna
+     ricerca) cosi' il ritorno sta in cima, e si veste da bottone col
+     corallo delle azioni: bordo, corpo pieno, peso 500.
+     (Mattias, 2026-08-18) */
+  .fq-barra-in {
+    flex-direction: column;
+  }
+
+  .ct-torna {
+    align-self: flex-start;
+    padding: .5rem 1rem .5rem .8rem;
+    border: 1px solid rgba(201,67,44,.45);
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 500;
+    color: var(--wa);
+  }
+
+  .ct-torna svg {
+    width: .9rem;
+    height: .9rem;
+  }
 }

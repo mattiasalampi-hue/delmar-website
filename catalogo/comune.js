@@ -77,13 +77,13 @@ function testa(titolo, opts = {}) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${titolo} — DelMar</title>${descrizione}${canonical}
     <link rel="stylesheet" href="${su}css/poppins.css?v=1" />
-    <link rel="stylesheet" href="${su}css/style.css?v=101" />
+    <link rel="stylesheet" href="${su}css/style.css?v=102" />
     <!-- L'indice appeso e le righe degli argomenti sono GIA' nel sito, sulla
          pagina delle domande frequenti. Si carica quel foglio invece di
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
-    <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=3" />
+    <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=7" />
     <link rel="stylesheet" href="css/d.css?v=2" />
-${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=1" />`).join('\n')}
+${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=2" />`).join('\n')}
   </head>
   <body class="pr-pagina">
     <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">

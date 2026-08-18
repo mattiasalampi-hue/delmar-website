@@ -1489,6 +1489,15 @@ window.addEventListener('load', () => {
   const tela = document.getElementById('contatti-particles');
   if (!tela) return;
 
+  /* SUL TELEFONO IL BANCO NON PARTE PROPRIO. I pesci nuotavano sopra
+     telefono, email e indirizzo rendendoli un pasticcio, e il blocco
+     dello scorrimento — che sul catalogo rende il gioco giocabile — qui
+     non si puo' usare: la tela copre il modulo da compilare. Un gioco a
+     cui non si puo' giocare e' solo rumore sopra i contatti.
+     offsetParent nullo = il foglio di stile ha spento la tela (sotto i
+     769px): la soglia vive nel CSS e basta. (Mattias, 2026-08-18) */
+  if (tela.offsetParent === null) return;
+
   const sfondo = document.getElementById('contatti-sfondo');
   /* offsetParent nullo = display:none, cioe' siamo sotto i 769px.
      Si chiede al foglio di stile invece di ricontrollare la soglia qui:

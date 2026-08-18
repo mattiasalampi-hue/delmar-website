@@ -170,15 +170,14 @@ window.DelMarPesci = function (cvs, opzioni) {
   const o = Object.assign({
     /* Pochi e grossi, non tanti e minuti: a questa taglia cinquanta
        pesci coprono il fondo e sembrano un acquario sovraffollato */
-    /* SUL TELEFONO PIU' FITTI, non meno.
-       Nove era il numero giusto quando i pesci erano decorazione: pochi,
-       per non appesantire uno schermo piccolo. Da quando col dito ci si
-       gioca il conto cambia — una sciabolata li fa scattare via tutti
-       insieme e su 390 pixel di larghezza restano due secondi di acqua
-       vuota, che e' il momento in cui si smette di giocare. Con venti il
-       banco si ricompone subito e c'e' sempre un bersaglio a tiro.
-       (Mattias, 2026-08-17) */
-    quanti:   () => (window.matchMedia('(max-width: 768px)').matches ? 40 : 20),
+    /* SUL TELEFONO POCHI. C'e' stata una stagione a quaranta, tarata sul
+       gioco della sezione contatti (una sciabolata li faceva scattare via
+       tutti e l'acqua restava vuota). Ma dai contatti su telefono i pesci
+       sono spariti del tutto, e sulle aperture del catalogo — le uniche
+       tele rimaste su schermo piccolo — quaranta pesci sopra il titolo
+       facevano sembrare la pagina un gioco e non un fornitore. Dodici
+       sono presenza, non acquario. (Mattias, 2026-08-18) */
+    quanti:   () => (window.matchMedia('(max-width: 768px)').matches ? 12 : 20),
     /* Negativo = nessuna divisione, tutti del colore chiaro */
     confine:  () => -1,
     /* DUE SPECIE, non una. Con un colore solo il banco sembrava una
