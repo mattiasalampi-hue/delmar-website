@@ -1,0 +1,61 @@
+/* LA PAGINA DEI CREDITI — una lista, non una vetrina.
+   Carica style.css e ne usa colori e caratteri: qui non c'e' apertura con le
+   campiture perche' non c'e' niente da vendere, c'e' un obbligo di licenza da
+   assolvere in modo leggibile. Il padding alto compensa l'intestazione fissa
+   che sulle altre pagine viene assorbita dall'apertura. */
+
+.cr-pagina {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 8.5rem 6% 4rem;
+}
+
+.cr-pagina .pr-intro h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+.cr-pagina .pr-intro p {
+  font-size: .84rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.cr-lista {
+  list-style: none;
+  margin-top: 2.5rem;
+  padding: 0;
+}
+
+.cr-riga {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem 1rem;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cr-prodotto {
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.cr-fonte {
+  font-size: .74rem;
+  color: var(--text-dim);
+}
+
+.cr-fonte a {
+  color: var(--text-mid);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cr-fonte a:hover {
+  color: var(--wa);
+}

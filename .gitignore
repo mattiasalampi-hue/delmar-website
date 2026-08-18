@@ -28,6 +28,6 @@ _genera-pw.php
 # Le candidate scaricate da trova-foto.js: 92 MB di provini da guardare una
 # volta e buttare. Quelle scelte finiscono ottimizzate in foto-prodotti/, che
 # invece va versionato — sono 3,6 MB e sono quello che va online.
-prove/pescato/foto-trovate/
-prove/pescato/scelta-foto.html
-prove/pescato/scelte.json
+catalogo/foto-trovate/
+catalogo/scelta-foto.html
+catalogo/scelte.json
