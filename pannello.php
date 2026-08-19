@@ -440,7 +440,7 @@ function scaricamento($s) {
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="assets/favicon.png?v=1" type="image/png" />
     <link rel="stylesheet" href="css/poppins.css?v=1" />
-    <link rel="stylesheet" href="css/pannello.css?v=4" />
+    <link rel="stylesheet" href="css/pannello.css?v=5" />
   </head>
   <body>
 <?php if (!$dentro): ?>
