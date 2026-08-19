@@ -140,6 +140,7 @@ function testa(titolo, opts = {}) {
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
     <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=8" />
     <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=3" />
+    <link rel="stylesheet" href="${su}css/consenso.css?v=1" />
 ${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=2" />`).join('\n')}
   </head>
   <body class="pr-pagina">

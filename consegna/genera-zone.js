@@ -208,7 +208,7 @@ ${z.strisce.map((s, i) => `        <div class="prod-strip${i % 2 ? ' rev' : ''}"
         <p class="pr-chiusura-tel">Rispondiamo tutti i giorni, festivi compresi</p>
       </section>
     </main>
-${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/analitica.js?v=2', '../catalogo/js/d.js?v=1', '../js/cursore.js?v=2'], { cat: '../catalogo/' })}`;
+${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=1', '../js/analitica.js?v=2', '../catalogo/js/d.js?v=1', '../js/cursore.js?v=2'], { cat: '../catalogo/' })}`;
 }
 
 /* Dove stanno i pin DENTRO l'immagine della mappa (frazioni 0-1 di
@@ -387,7 +387,7 @@ ${attive.map((z) => {
         <p class="pr-chiusura-tel">Rispondiamo tutti i giorni, festivi compresi</p>
       </section>
     </main>
-${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/analitica.js?v=2', '../catalogo/js/d.js?v=1', 'js/mappa.js?v=1', '../js/cursore.js?v=2'], { cat: '../catalogo/' })}`;
+${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=1', '../js/analitica.js?v=2', '../catalogo/js/d.js?v=1', 'js/mappa.js?v=1', '../js/cursore.js?v=2'], { cat: '../catalogo/' })}`;
 }
 
 let n = 0;
