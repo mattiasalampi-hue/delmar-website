@@ -1,6 +1,6 @@
 <?php
 /*
-  Pannello dell'analitica — la pagina che si guarda.
+  Pannello dell'analitica — la sala di controllo.
 
   PROTETTO DA PASSWORD, e la password non sta qui: sta in config.php,
   che e' escluso da git e negato dall'.htaccess. Sta come IMPRONTA e non
@@ -10,15 +10,23 @@
   di accesso su un indirizzo prevedibile e' un invito a provare le
   password a raffica.
 
-  L'ORDINE DEI BLOCCHI NON E' CASUALE. In cima le conversioni, non le
-  visite: su un ingrosso B2B "quante richieste sono arrivate e da dove"
-  e' l'unica cosa che cambia una decisione, il resto e' contorno. Le
-  visite senza le richieste sono un numero che fa sentire bene e non
-  dice niente.
+  DUE FONTI, DUE ZONE. Meta' dei numeri viene dal nostro contatore
+  (tutti i visitatori, tempo reale), meta' da Search Console (solo la
+  ricerca Google, 2-3 giorni di ritardo). Prima stavano mescolati e
+  ogni riquadro andava interpretato; adesso la pagina e' divisa in due
+  zone dichiarate e OGNI riquadro porta il bollino della sua fonte.
+  Quando i numeri delle due zone non coincidono — e non coincideranno —
+  non e' un errore: misurano cose diverse.
 
-  I CONTI STANNO IN analitica/statistiche.php. Qui dentro solo il
-  guscio: se le interrogazioni tornano in mezzo all'HTML, fra sei mesi
-  non si rileggono piu'.
+  L'ORDINE NON E' CASUALE. In cima le conversioni, non le visite: su un
+  ingrosso B2B "quante richieste sono arrivate e da dove" e' l'unica
+  cosa che cambia una decisione, il resto e' contorno.
+
+  I CONTI STANNO IN analitica/statistiche.php, i disegni (imbuto,
+  flusso, scintille) sono SVG e clip-path scritti qui: niente librerie
+  di grafici da caricare per disegnare venti rettangoli.
+
+  PHP 7.4: niente match(), niente ?->
 */
 session_start();
 require_once __DIR__ . '/analitica/statistiche.php';
@@ -84,6 +92,224 @@ function delta($d, $buono = 1) {
          . dec(abs($d), 0) . '%</span>';
 }
 
+/* Il bollino della fonte, su OGNI riquadro: e' il pezzo che evita di
+   leggere un numero di Google come se venisse dal contatore o viceversa */
+function fonte($quale) {
+    if ($quale === 'google') {
+        return '<span class="pn-fonte pn-fonte-google">Google</span>';
+    }
+    return '<span class="pn-fonte pn-fonte-sito">Sito</span>';
+}
+
+/* ── I disegni ───────────────────────────────────────────────────── */
+
+/* La scintilla: l'andamento in trenta pixel d'altezza dentro la scheda
+   del numero. Non ha assi ne' etichette apposta — dice solo la forma */
+function scintilla($valori) {
+    $q = count($valori);
+    if ($q < 2) return '';
+    $max = max(1, max($valori));
+    $punti = array();
+    foreach ($valori as $i => $v) {
+        $x = $q > 1 ? $i / ($q - 1) * 100 : 0;
+        $y = 26 - ($v / $max * 24);
+        $punti[] = round($x, 1) . ',' . round($y, 1);
+    }
+    $linea = implode(' ', $punti);
+    $area = '0,28 ' . $linea . ' 100,28';
+    return '<svg class="pn-scintilla" viewBox="0 0 100 28" preserveAspectRatio="none" aria-hidden="true">'
+         . '<polygon points="' . $area . '" class="pn-scintilla-area"></polygon>'
+         . '<polyline points="' . $linea . '" class="pn-scintilla-linea"></polyline>'
+         . '</svg>';
+}
+
+/* L'imbuto a trapezi: il restringimento E' il dato, e un trapezio lo fa
+   vedere meglio di una barra. Niente SVG: forme ritagliate col
+   clip-path, cosi' il testo resta HTML e si legge a ogni misura */
+
+/* Numero per il CSS: SEMPRE col punto decimale. dec() usa la virgola
+   italiana, e "polygon(27,7% ...)" e' CSS invalido — il ritaglio
+   sparisce in silenzio e i trapezi tornano rettangoli. Successo al
+   collaudo, non in produzione, ed e' per questo che il collaudo c'e' */
+function css_num($x) {
+    return number_format((float) $x, 1, '.', '');
+}
+
+function imbuto_html($gradini) {
+    $base = max(1, $gradini[0]['n']);
+    $fuori = '';
+    foreach ($gradini as $i => $g) {
+        $q  = $g['n'] / $base * 100;
+        $qs = max(4, $q);                                     /* visibile anche a zero */
+        $prox = isset($gradini[$i + 1]) ? max(4, $gradini[$i + 1]['n'] / $base * 100) : $qs;
+        $calo = $i > 0 && $gradini[$i - 1]['n'] > 0
+            ? 100 - ($g['n'] / $gradini[$i - 1]['n'] * 100) : null;
+
+        $lt = (100 - $qs) / 2;   $rt = 100 - $lt;
+        $lb = (100 - $prox) / 2; $rb = 100 - $lb;
+
+        /* Un gradino puo' essere PIU' grande del precedente: i passi
+           non sono sottoinsiemi rigidi (si puo' aprire il catalogo
+           senza aver letto meta' pagina). Si dice con un "+", non con
+           un doppio segno */
+        $confronto = '';
+        if ($calo !== null) {
+            $confronto = $calo >= 0
+                ? ' · −' . dec($calo, 0) . '% dal passo prima'
+                : ' · +' . dec(abs($calo), 0) . '% dal passo prima';
+        }
+
+        $fuori .= '<div class="pn-fu-passo">'
+            . '<div class="pn-fu-forma" style="clip-path: polygon('
+            . css_num($lt) . '% 0, ' . css_num($rt) . '% 0, '
+            . css_num($rb) . '% 100%, ' . css_num($lb) . '% 100%); --fu: ' . ($i + 1) . '"></div>'
+            . '<div class="pn-fu-testo">'
+            . '<span class="pn-fu-et">' . e($g['et']) . '</span>'
+            . '<span class="pn-fu-val">' . n($g['n'])
+            . '<small> · ' . dec($q, 1) . '%' . $confronto . '</small></span>'
+            . '</div>'
+            . '</div>';
+    }
+    return '<div class="pn-fu">' . $fuori . '</div>';
+}
+
+/* Il flusso a nastri: da dove entrano -> dove atterrano -> come
+   finisce. Tre colonne e nastri spessi quanto le persone che passano.
+   E' l'unico disegno in SVG vero perche' le curve non si fanno in CSS;
+   i conti arrivano fatti da st_flusso() */
+function flusso_svg($flussi) {
+    $W = 660; $H = 300; $BAR = 10; $VUOTO = 8;
+
+    $colori = array(
+        'organico' => '#4dd0b0', 'diretto' => '#8b93c9', 'social' => '#c77dff',
+        'referral' => '#f0a24c', 'campagna' => '#ff6b4d', 'non si sa' => '#5c6284'
+    );
+
+    /* Totali per colonna */
+    $sorg = array(); $sez = array(); $esiti = array('Contattano' => 0, 'Solo visita' => 0);
+    foreach ($flussi as $s => $perSez) {
+        foreach ($perSez as $z => $v) {
+            $tot = $v['si'] + $v['no'];
+            $sorg[$s] = (isset($sorg[$s]) ? $sorg[$s] : 0) + $tot;
+            $sez[$z]  = (isset($sez[$z]) ? $sez[$z] : 0) + $tot;
+            $esiti['Contattano']  += $v['si'];
+            $esiti['Solo visita'] += $v['no'];
+        }
+    }
+    $totale = array_sum($sorg);
+    if (!$totale) return '';
+    arsort($sorg);
+
+    /* Le sezioni nell'ordine fisso del sito, solo quelle attraversate */
+    $sezOrd = array();
+    foreach (st_sezioni_elenco() as $z) if (!empty($sez[$z])) $sezOrd[$z] = $sez[$z];
+
+    /* Posizioni verticali: ogni colonna somma allo stesso totale, i
+       nodi si impilano con un piccolo vuoto in mezzo */
+    $scala = function ($nodi) use ($H, $VUOTO, $totale) {
+        $utile = $H - $VUOTO * max(0, count($nodi) - 1);
+        $pos = array(); $y = 0;
+        foreach ($nodi as $k => $v) {
+            $h = $totale ? $v / $totale * $utile : 0;
+            $pos[$k] = array('y' => $y, 'h' => $h, 'pieno' => 0);
+            $y += $h + $VUOTO;
+        }
+        return $pos;
+    };
+    $pSorg = $scala($sorg);
+    $pSez  = $scala($sezOrd);
+    $pEsi  = $scala($esiti);
+
+    $x0 = 0; $x1 = ($W - $BAR) / 2; $x2 = $W - $BAR;
+    $svg = '<svg class="pn-flusso" viewBox="0 0 ' . $W . ' ' . $H
+         . '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Flusso dei visitatori">';
+
+    /* Lo spessore di un nastro va calcolato sulla stessa scala dei
+       nodi: quota del totale per l'altezza utile della colonna piu'
+       affollata delle due. Per semplicita' — e perche' le tre colonne
+       sommano allo stesso totale — si usa la scala della colonna con
+       piu' nodi, che e' la piu' stretta */
+    $spessore = function ($v, $nodi) use ($H, $VUOTO, $totale) {
+        $utile = $H - $VUOTO * max(0, count($nodi) - 1);
+        return $totale ? $v / $totale * $utile : 0;
+    };
+
+    /* Nastri sorgente -> sezione */
+    foreach ($sorg as $s => $vs) {
+        foreach ($sezOrd as $z => $vz) {
+            $v = 0;
+            if (isset($flussi[$s][$z])) $v = $flussi[$s][$z]['si'] + $flussi[$s][$z]['no'];
+            if (!$v) continue;
+            $hA = $spessore($v, $sorg);
+            $hB = $spessore($v, $sezOrd);
+            $ya = $pSorg[$s]['y'] + $pSorg[$s]['pieno'];
+            $yb = $pSez[$z]['y'] + $pSez[$z]['pieno'];
+            $pSorg[$s]['pieno'] += $hA;
+            $pSez[$z]['pieno']  += $hB;
+            $xa = $x0 + $BAR; $xb = $x1;
+            $mx = ($xa + $xb) / 2;
+            $c = isset($colori[$s]) ? $colori[$s] : '#8b93c9';
+            $svg .= '<path class="pn-fl-nastro" fill="' . $c . '" d="M ' . $xa . ' ' . round($ya, 1)
+                 . ' C ' . $mx . ' ' . round($ya, 1) . ', ' . $mx . ' ' . round($yb, 1) . ', ' . $xb . ' ' . round($yb, 1)
+                 . ' L ' . $xb . ' ' . round($yb + $hB, 1)
+                 . ' C ' . $mx . ' ' . round($yb + $hB, 1) . ', ' . $mx . ' ' . round($ya + $hA, 1) . ', ' . $xa . ' ' . round($ya + $hA, 1)
+                 . ' Z"></path>';
+        }
+    }
+
+    /* Nastri sezione -> esito. Il "pieno" delle sezioni riparte da
+       zero: i nastri in uscita si impilano per conto loro */
+    foreach ($pSez as $z => $d) $pSez[$z]['pieno'] = 0;
+    foreach ($sezOrd as $z => $vz) {
+        foreach (array('Contattano' => 'si', 'Solo visita' => 'no') as $et => $chiave) {
+            $v = 0;
+            foreach ($flussi as $s => $perSez) {
+                if (isset($perSez[$z])) $v += $perSez[$z][$chiave];
+            }
+            if (!$v) continue;
+            $hA = $spessore($v, $sezOrd);
+            $hB = $spessore($v, $esiti);
+            $ya = $pSez[$z]['y'] + $pSez[$z]['pieno'];
+            $yb = $pEsi[$et]['y'] + $pEsi[$et]['pieno'];
+            $pSez[$z]['pieno'] += $hA;
+            $pEsi[$et]['pieno'] += $hB;
+            $xa = $x1 + $BAR; $xb = $x2;
+            $mx = ($xa + $xb) / 2;
+            $c = $et === 'Contattano' ? '#ff6b4d' : '#3a4066';
+            $svg .= '<path class="pn-fl-nastro" fill="' . $c . '" d="M ' . $xa . ' ' . round($ya, 1)
+                 . ' C ' . $mx . ' ' . round($ya, 1) . ', ' . $mx . ' ' . round($yb, 1) . ', ' . $xb . ' ' . round($yb, 1)
+                 . ' L ' . $xb . ' ' . round($yb + $hB, 1)
+                 . ' C ' . $mx . ' ' . round($yb + $hB, 1) . ', ' . $mx . ' ' . round($ya + $hA, 1) . ', ' . $xa . ' ' . round($ya + $hA, 1)
+                 . ' Z"></path>';
+        }
+    }
+
+    /* I nodi sopra i nastri, con l'etichetta e il numero */
+    foreach ($pSorg as $s => $d) {
+        $c = isset($colori[$s]) ? $colori[$s] : '#8b93c9';
+        $svg .= '<rect x="' . $x0 . '" y="' . round($d['y'], 1) . '" width="' . $BAR
+             . '" height="' . max(2, round($d['h'], 1)) . '" rx="2" fill="' . $c . '"></rect>';
+        $svg .= '<text class="pn-fl-et" x="' . ($x0 + $BAR + 6) . '" y="'
+             . round($d['y'] + max(2, $d['h']) / 2 + 4, 1) . '">' . e($s) . ' · ' . n($sorg[$s]) . '</text>';
+    }
+    foreach ($pSez as $z => $d) {
+        $svg .= '<rect x="' . $x1 . '" y="' . round($d['y'], 1) . '" width="' . $BAR
+             . '" height="' . max(2, round($d['h'], 1)) . '" rx="2" fill="#aeb6e8"></rect>';
+        $svg .= '<text class="pn-fl-et pn-fl-centro" x="' . ($x1 + $BAR + 6) . '" y="'
+             . round($d['y'] + max(2, $d['h']) / 2 + 4, 1) . '">' . e($z) . ' · ' . n($sezOrd[$z]) . '</text>';
+    }
+    foreach ($pEsi as $et => $d) {
+        $c = $et === 'Contattano' ? '#ff6b4d' : '#3a4066';
+        $svg .= '<rect x="' . $x2 . '" y="' . round($d['y'], 1) . '" width="' . $BAR
+             . '" height="' . max(2, round($d['h'], 1)) . '" rx="2" fill="' . $c . '"></rect>';
+        $svg .= '<text class="pn-fl-et pn-fl-fine" x="' . ($x2 - 6) . '" y="'
+             . round($d['y'] + max(2, $d['h']) / 2 + 4, 1) . '">' . e($et) . ' · ' . n($esiti[$et]) . '</text>';
+    }
+
+    $svg .= '</svg>';
+    return $svg;
+}
+
 $giorni = isset($_GET['g']) ? (int) $_GET['g'] : 30;
 $per = st_periodo($giorni);
 $giorni = $per['giorni'];
@@ -116,6 +342,10 @@ if ($dentro) {
     $D['fonti']     = st_sorgenti($per['da'], $per['a']);
     $D['serie']     = st_serie($per['da'], $per['a']);
     $D['serie_pre'] = st_serie($per['da_prec'], $per['a_prec']);
+    $D['serie_k']   = st_serie_contatti($per['da'], $per['a']);
+    $D['mappa']     = st_mappa_sito($per['da'], $per['a']);
+    $D['flusso']    = st_flusso($per['da'], $per['a']);
+    $D['percorsi']  = st_percorsi($per['da'], $per['a']);
     $D['pagine']    = st_pagine($per['da'], $per['a']);
     $D['orari']     = st_orari($per['da'], $per['a']);
     $D['adesso']    = st_adesso();
@@ -200,18 +430,18 @@ function scaricamento($s) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Analitica — DelMar</title>
+    <title>Sala di controllo — DelMar</title>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="assets/favicon.png?v=1" type="image/png" />
     <link rel="stylesheet" href="css/poppins.css?v=1" />
-    <link rel="stylesheet" href="css/pannello.css?v=3" />
+    <link rel="stylesheet" href="css/pannello.css?v=4" />
   </head>
   <body>
 <?php if (!$dentro): ?>
     <div class="pn-porta">
       <form method="post" class="pn-accesso">
         <p class="pn-occhiello">DelMar</p>
-        <h1>Analitica</h1>
+        <h1>Sala di controllo</h1>
         <?php if ($errore): ?><p class="pn-errore"><?= e($errore) ?></p><?php endif; ?>
         <label for="pw">Password</label>
         <input type="password" name="password" id="pw" autocomplete="current-password" autofocus />
@@ -223,16 +453,27 @@ function scaricamento($s) {
     $tetto = 1;
     foreach ($D['serie'] as $r)     { if ($r[$metrica] > $tetto) $tetto = $r[$metrica]; }
     foreach ($D['serie_pre'] as $r) { if ($r[$metrica] > $tetto) $tetto = $r[$metrica]; }
-    $base = $D['imbuto'][0]['n'] ? $D['imbuto'][0]['n'] : 1;
     $tot_k = array_sum($D['fonti_k']);
     $tot_f = array_sum($D['fonti']);
     $giorniSet = array('Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom');
+    $vv = array(); foreach ($D['serie'] as $r) $vv[] = (int) $r['visitatori'];
+    $kk = array(); foreach ($D['serie_k'] as $r) $kk[] = (int) $r['n'];
+    $canaliEt = array(
+        'whatsapp'       => 'WhatsApp',
+        'telefono'       => 'Telefono',
+        'modulo-inviato' => 'Modulo',
+        'email'          => 'Email'
+    );
 ?>
     <header class="pn-testa">
-      <div>
+      <div class="pn-testa-marca">
         <p class="pn-occhiello">DelMar</p>
-        <h1>Analitica</h1>
+        <h1>Sala di controllo</h1>
       </div>
+      <p class="pn-adesso-chip" title="Persone sul sito negli ultimi 30 minuti">
+        <span class="pn-lucina" aria-hidden="true"></span>
+        <strong><?= n($D['adesso']['persone']) ?></strong>&nbsp;sul sito adesso
+      </p>
       <nav class="pn-periodo">
         <?php foreach (array(7 => '7 giorni', 30 => '30 giorni', 90 => '90 giorni', 365 => '1 anno') as $g => $et): ?>
           <a href="?g=<?= $g ?>" class="<?= $giorni == $g ? 'pn-vivo' : '' ?>"><?= $et ?></a>
@@ -249,6 +490,15 @@ function scaricamento($s) {
         (<?= e(date('d/m', strtotime($per['da_prec']))) ?>–<?= e(date('d/m', strtotime($per['a_prec']))) ?>).
       </p>
 
+      <!-- Le due fonti, dichiarate una volta per tutte -->
+      <div class="pn-legenda">
+        <p><span class="pn-fonte pn-fonte-sito">Sito</span>
+          il nostro contatore: <strong>tutti</strong> i visitatori, senza cookie, in tempo reale.</p>
+        <p><span class="pn-fonte pn-fonte-google">Google</span>
+          Search Console: cosa succede <strong>nei risultati di ricerca</strong>, con 2–3 giorni di ritardo.
+          Misurano cose diverse: quando non coincidono, non è un errore.</p>
+      </div>
+
       <!-- 1. CONVERSIONI — in cima, prima delle visite -->
       <section class="pn-numeri">
         <div class="pn-numero pn-numero-vivo">
@@ -258,6 +508,7 @@ function scaricamento($s) {
         <div class="pn-numero pn-numero-vivo">
           <span class="pn-n"><?= n($o['contatti']) ?></span>
           <span class="pn-e">hanno alzato la mano<br />(<?= n($p['contatti']) ?> prima) <?= delta($dl['contatti']) ?></span>
+          <?= scintilla($kk) ?>
         </div>
         <div class="pn-numero">
           <span class="pn-n"><?= n($o['moduli']) ?></span>
@@ -266,6 +517,7 @@ function scaricamento($s) {
         <div class="pn-numero">
           <span class="pn-n"><?= n($o['visitatori']) ?></span>
           <span class="pn-e">visitatori <?= delta($dl['visitatori']) ?></span>
+          <?= scintilla($vv) ?>
         </div>
       </section>
 
@@ -277,18 +529,15 @@ function scaricamento($s) {
           <small>su <?= n($o['misurate']) ?> di <?= n($o['viste']) ?> viste</small></span>
       </section>
 
+      <!-- ══ ZONA SITO ══════════════════════════════════════════════ -->
+      <div class="pn-zona pn-zona-sito">
+        <h2>Misurato sul sito</h2>
+        <p>Il contatore di casa: ogni visitatore, ogni clic, adesso.</p>
+      </div>
+
       <!-- 2. I CANALI — come alzano la mano, uno per uno -->
-      <?php
-        /* Etichette dei canali in chiaro. L'ordine e' quello del valore
-           per un ingrosso: WhatsApp e' il canale degli ordini, il resto segue */
-        $canaliEt = array(
-            'whatsapp'       => 'WhatsApp',
-            'telefono'       => 'Telefono',
-            'modulo-inviato' => 'Modulo',
-            'email'          => 'Email'
-        );
-      ?>
       <section class="pn-riquadro pn-importante">
+        <?= fonte('sito') ?>
         <h2>Come contattano</h2>
         <p class="pn-sotto">Persone, non clic: chi tocca due volte WhatsApp conta uno</p>
         <div class="pn-numeri pn-numeri-fitti">
@@ -306,29 +555,77 @@ function scaricamento($s) {
         </div>
       </section>
 
-      <!-- 3. IMBUTO — dove si perdono -->
-      <section class="pn-riquadro pn-importante">
-        <h2>Dove si perdono</h2>
-        <p class="pn-sotto">Quante persone arrivano fino a lì — prodotti e zone contati dal 19/08, prima la sonda lì non c'era</p>
-        <div class="pn-imbuto">
-          <?php foreach ($D['imbuto'] as $i => $g):
-              $q = $g['n'] / $base * 100;
-              $calo = $i > 0 && $D['imbuto'][$i - 1]['n'] > 0
-                  ? 100 - ($g['n'] / $D['imbuto'][$i - 1]['n'] * 100) : null; ?>
-            <div class="pn-gradino">
-              <div class="pn-gradino-barra" style="width: <?= max(1.5, round($q, 1)) ?>%"></div>
-              <span class="pn-gradino-et"><?= e($g['et']) ?></span>
-              <span class="pn-gradino-val"><?= n($g['n']) ?>
-                <small><?= dec($q, 1) ?>%<?php if ($calo !== null): ?> · −<?= dec($calo, 0) ?>% dal passo prima<?php endif; ?></small>
-              </span>
+      <div class="pn-griglia pn-griglia-larga">
+        <!-- 3. IMBUTO a trapezi -->
+        <section class="pn-riquadro pn-importante">
+          <?= fonte('sito') ?>
+          <h2>Dove si perdono</h2>
+          <p class="pn-sotto">Quante persone arrivano fino a lì — prodotti e zone contati dal 19/08, prima la sonda lì non c'era</p>
+          <?= imbuto_html($D['imbuto']) ?>
+        </section>
+
+        <!-- 4. FLUSSO a nastri -->
+        <section class="pn-riquadro pn-importante">
+          <?= fonte('sito') ?>
+          <h2>Il flusso</h2>
+          <p class="pn-sotto">Da dove entrano → dove atterrano → come finisce. Lo spessore è quante persone</p>
+          <?php $fl = flusso_svg($D['flusso']); ?>
+          <?php if ($fl): ?>
+            <div class="pn-flusso-guscio"><?= $fl ?></div>
+          <?php else: ?>
+            <p class="pn-vuoto">Ancora nessun flusso in questo periodo.</p>
+          <?php endif; ?>
+        </section>
+      </div>
+
+      <!-- 5. MAPPA DEL SITO -->
+      <section class="pn-riquadro">
+        <?= fonte('sito') ?>
+        <h2>La mappa del sito</h2>
+        <p class="pn-sotto">Dove vive il traffico, sezione per sezione — e i passaggi più battuti fra una sezione e l'altra</p>
+        <div class="pn-mappa">
+          <?php foreach ($D['mappa'] as $nome => $sz):
+              if (!$sz['visite'] && $nome === 'Altro') continue;
+              $maxPag = 1;
+              foreach ($sz['pagine'] as $pg) { if ($pg['v'] > $maxPag) $maxPag = $pg['v']; }
+          ?>
+            <div class="pn-nodo">
+              <div class="pn-nodo-testa">
+                <h3><?= e($nome) ?></h3>
+                <?php if ($sz['contatti']): ?>
+                  <span class="pn-nodo-k"><?= n($sz['contatti']) ?> contatti</span>
+                <?php endif; ?>
+              </div>
+              <p class="pn-nodo-visite"><?= n($sz['visite']) ?>
+                <small>viste · <?= n($sz['persone']) ?> pers. · <?= durata($sz['tempo']) ?></small></p>
+              <?php foreach (array_slice($sz['pagine'], 0, 3) as $pg): ?>
+                <div class="pn-riga pn-riga-mini" style="--q: <?= round($pg['v'] / $maxPag * 100) ?>%">
+                  <span class="pn-et"><?= e($pg['percorso']) ?></span>
+                  <span class="pn-val"><?= n($pg['v']) ?></span>
+                </div>
+              <?php endforeach; ?>
+              <?php if (!$sz['visite']): ?><p class="pn-vuoto">Nessuna visita.</p><?php endif; ?>
             </div>
           <?php endforeach; ?>
         </div>
+        <?php if ($D['percorsi']): ?>
+          <p class="pn-sotto pn-sotto-stacco">I passaggi fra sezioni, dentro la stessa visita:</p>
+          <div class="pn-percorsi">
+            <?php $maxP = max($D['percorsi']); ?>
+            <?php foreach ($D['percorsi'] as $et => $v): ?>
+              <div class="pn-riga" style="--q: <?= round($v / $maxP * 100) ?>%">
+                <span class="pn-et"><?= e($et) ?></span>
+                <span class="pn-val"><?= n($v) ?></span>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
       </section>
 
       <div class="pn-griglia">
-        <!-- 4. DA QUALE PAGINA contattano -->
+        <!-- 6. DA QUALE PAGINA contattano -->
         <section class="pn-riquadro pn-importante">
+          <?= fonte('sito') ?>
           <h2>Da quale pagina contattano</h2>
           <p class="pn-sotto">La pagina su cui è partito il clic o l'invio</p>
           <?php $tot_cta = 0; foreach ($D['cta_pag'] as $r) $tot_cta += (int) $r['n']; ?>
@@ -343,8 +640,9 @@ function scaricamento($s) {
           <?php endif; ?>
         </section>
 
-        <!-- 5. DA DOVE ARRIVA CHI CONTATTA — non da dove arrivano tutti -->
+        <!-- 7. DA DOVE ARRIVA CHI CONTATTA -->
         <section class="pn-riquadro pn-importante">
+          <?= fonte('sito') ?>
           <h2>Da dove arriva chi contatta</h2>
           <p class="pn-sotto">La sorgente dei soli visitatori che hanno agito</p>
           <?php foreach ($D['fonti_k'] as $et => $v): $q = $tot_k ? $v / $tot_k * 100 : 0; ?>
@@ -358,8 +656,9 @@ function scaricamento($s) {
           <?php endif; ?>
         </section>
 
-        <!-- 6. SORGENTI DI TUTTI, classificate -->
+        <!-- 8. SORGENTI DI TUTTI -->
         <section class="pn-riquadro">
+          <?= fonte('sito') ?>
           <h2>Da dove arrivano tutti</h2>
           <p class="pn-sotto">Se il traffico se lo guadagna il sito o dipende da altro</p>
           <?php foreach ($D['fonti'] as $et => $v): if (!$v) continue; $q = $tot_f ? $v / $tot_f * 100 : 0; ?>
@@ -372,22 +671,130 @@ function scaricamento($s) {
         </section>
       </div>
 
-      <!-- 4. GOOGLE — tutto quello che Search Console sa dire -->
-      <?php
-        $g = $D['g_tot']; $gp = $D['g_prec'];
-        $gTetto = 1;
-        foreach ($D['g_serie'] as $r) { if ($r['impressioni'] > $gTetto) $gTetto = $r['impressioni']; }
-      ?>
-      <section class="pn-riquadro pn-google">
-        <h2>Google</h2>
+      <!-- 9. ANDAMENTO -->
+      <section class="pn-riquadro">
+        <?= fonte('sito') ?>
+        <h2>Andamento</h2>
         <p class="pn-sotto">
+          La tacca chiara è lo stesso giorno del periodo precedente ·
+          <a href="?g=<?= $giorni ?>&amp;m=u" class="<?= $metrica === 'visitatori' ? 'pn-vivo-t' : '' ?>">visitatori</a> ·
+          <a href="?g=<?= $giorni ?>&amp;m=v" class="<?= $metrica === 'viste' ? 'pn-vivo-t' : '' ?>">pagine viste</a>
+        </p>
+        <?php if (!array_sum(array_column($D['serie'], $metrica))): ?>
+          <p class="pn-vuoto">Ancora nessun dato in questo periodo.</p>
+        <?php else: ?>
+        <div class="pn-grafico">
+          <?php foreach ($D['serie'] as $i => $r):
+              $pre = isset($D['serie_pre'][$i]) ? $D['serie_pre'][$i][$metrica] : 0; ?>
+            <div class="pn-colonna" title="<?= e(date('d/m', strtotime($r['giorno']))) ?> — <?= n($r[$metrica]) ?> (prima: <?= n($pre) ?>)">
+              <div class="pn-barra" style="height: <?= max(1, round($r[$metrica] / $tetto * 100)) ?>%"></div>
+              <?php if ($pre > 0): ?>
+                <i class="pn-eco" style="bottom: <?= round($pre / $tetto * 100, 1) ?>%"></i>
+              <?php endif; ?>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <div class="pn-asse">
+          <span><?= e(date('d/m', strtotime($D['serie'][0]['giorno']))) ?></span>
+          <span><?= e(date('d/m', strtotime($D['serie'][count($D['serie']) - 1]['giorno']))) ?></span>
+        </div>
+        <?php endif; ?>
+      </section>
+
+      <!-- 10. QUANDO guardano il sito -->
+      <section class="pn-riquadro">
+        <?= fonte('sito') ?>
+        <h2>Quando guardano il sito</h2>
+        <p class="pn-sotto">Ora italiana. Per un fornitore di ristoranti, sapere che aprono il sito a mezzanotte è operativo</p>
+        <?php if (!$D['orari']['max']): ?>
+          <p class="pn-vuoto">—</p>
+        <?php else: ?>
+        <div class="pn-orari">
+          <div class="pn-orari-testa">
+            <span></span>
+            <?php for ($h = 0; $h < 24; $h++): ?>
+              <span class="pn-ora"><?= $h % 3 === 0 ? $h : '' ?></span>
+            <?php endfor; ?>
+          </div>
+          <?php foreach ($giorniSet as $i => $et): ?>
+            <div class="pn-orari-riga">
+              <span class="pn-orari-et"><?= $et ?></span>
+              <?php for ($h = 0; $h < 24; $h++): $v = $D['orari']['griglia'][$i][$h]; ?>
+                <span class="pn-cella" style="--i: <?= $v ? round(.15 + .85 * $v / $D['orari']['max'], 2) : 0 ?>"
+                      title="<?= $et ?> <?= $h ?>:00 — <?= n($v) ?>"></span>
+              <?php endfor; ?>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+      </section>
+
+      <div class="pn-griglia">
+        <!-- 11. PAGINE -->
+        <section class="pn-riquadro">
+          <?= fonte('sito') ?>
+          <h2>Pagine</h2>
+          <?php foreach ($D['pagine'] as $r): $q = $o['viste'] ? $r['viste'] / $o['viste'] * 100 : 0; ?>
+            <div class="pn-riga" style="--q: <?= round($q) ?>%">
+              <span class="pn-et"><?= e($r['percorso']) ?>
+                <small><?= durata($r['permanenza']) ?> in media</small></span>
+              <span class="pn-val"><?= n($r['viste']) ?></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['pagine']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+        </section>
+
+        <!-- 12. AZIONI in dettaglio -->
+        <section class="pn-riquadro">
+          <?= fonte('sito') ?>
+          <h2>Azioni</h2>
+          <?php foreach ($D['azioni'] as $r): ?>
+            <div class="pn-riga pn-riga-piatta">
+              <span class="pn-et"><?= e($r['nome']) ?>
+                <?php if ($r['dettaglio']): ?><small><?= e($r['dettaglio']) ?></small><?php endif; ?></span>
+              <span class="pn-val"><?= n($r['n']) ?><small> / <?= n($r['u']) ?> pers.</small></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['azioni']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+        </section>
+
+        <!-- 13. ADESSO -->
+        <section class="pn-riquadro">
+          <?= fonte('sito') ?>
+          <h2>Adesso</h2>
+          <p class="pn-sotto"><strong><?= n($D['adesso']['persone']) ?></strong> negli ultimi 30 minuti</p>
+          <?php foreach ($D['adesso']['ultime'] as $r): ?>
+            <div class="pn-riga pn-riga-piatta">
+              <span class="pn-et"><?= e($r['percorso']) ?>
+                <?php if ($r['provenienza']): ?><small>da <?= e($r['provenienza']) ?></small><?php endif; ?></span>
+              <span class="pn-val"><small><?= e(date('d/m H:i', $r['istante'])) ?></small></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['adesso']['ultime']): ?><p class="pn-vuoto">—</p><?php endif; ?>
+        </section>
+
+        <!-- 14. DISPOSITIVI E BROWSER -->
+        <section class="pn-riquadro">
+          <?= fonte('sito') ?>
+          <h2>Dispositivi e browser</h2>
+          <?php foreach (array_merge($D['disp'], $D['browser']) as $r): $q = $o['viste'] ? $r['v'] / $o['viste'] * 100 : 0; ?>
+            <div class="pn-riga" style="--q: <?= round($q) ?>%">
+              <span class="pn-et"><?= e($r['et']) ?></span>
+              <span class="pn-val"><?= dec($q, 0) ?>%</span>
+            </div>
+          <?php endforeach; ?>
+        </section>
+      </div>
+
+      <!-- ══ ZONA GOOGLE ════════════════════════════════════════════ -->
+      <div class="pn-zona pn-zona-google">
+        <h2>Visto da Google</h2>
+        <p>
           <?php if ($D['sc_quando']): ?>
             <?php /* Le lettere di una parola dentro il formato di date() sono
-                     codici, non testo: "alle" diventa am/pm + nome del giorno
-                     due volte + fuso orario, e usciva
-                     "16/08 amSundaySundayEurope/Rome 02:22". Vanno protette
-                     una per una con la barra rovesciata. */ ?>
-            Da Search Console, scaricate il <?= e(date('d/m \a\l\l\e H:i', (int) $D['sc_quando'])) ?>
+                     codici, non testo: vanno protette una per una con la
+                     barra rovesciata, o "alle" diventa am/pm + giorno + fuso */ ?>
+            Search Console, scaricata il <?= e(date('d/m \a\l\l\e H:i', (int) $D['sc_quando'])) ?>
             · <a href="?g=<?= $giorni ?>&amp;risincronizza=1">riscarica adesso</a>
             · i dati di Google arrivano con due o tre giorni di ritardo
           <?php else: ?>
@@ -396,6 +803,16 @@ function scaricamento($s) {
             in <code>config.php</code>.
           <?php endif; ?>
         </p>
+      </div>
+
+      <?php
+        $g = $D['g_tot']; $gp = $D['g_prec'];
+        $gTetto = 1;
+        foreach ($D['g_serie'] as $r) { if ($r['impressioni'] > $gTetto) $gTetto = $r['impressioni']; }
+      ?>
+      <section class="pn-riquadro pn-google">
+        <?= fonte('google') ?>
+        <h2>La ricerca Google</h2>
 
         <?php if ($D['sc_errore']): ?>
           <p class="pn-avviso">Ultimo scarico fallito: <?= e($D['sc_errore']) ?></p>
@@ -447,7 +864,8 @@ function scaricamento($s) {
       </section>
 
       <div class="pn-griglia">
-        <section class="pn-riquadro">
+        <section class="pn-riquadro pn-google">
+          <?= fonte('google') ?>
           <h2>Ricerche che portano clic</h2>
           <?php foreach ($D['ricerche'] as $r): ?>
             <div class="pn-riga pn-riga-piatta">
@@ -458,7 +876,8 @@ function scaricamento($s) {
           <?php if (!$D['ricerche']): ?><p class="pn-vuoto">—</p><?php endif; ?>
         </section>
 
-        <section class="pn-riquadro">
+        <section class="pn-riquadro pn-google">
+          <?= fonte('google') ?>
           <h2>Occasioni</h2>
           <p class="pn-sotto">Ci vedono ma non ci cliccano: qui basta poco per guadagnare</p>
           <?php foreach ($D['occasioni'] as $r): ?>
@@ -470,7 +889,8 @@ function scaricamento($s) {
           <?php if (!$D['occasioni']): ?><p class="pn-vuoto">—</p><?php endif; ?>
         </section>
 
-        <section class="pn-riquadro">
+        <section class="pn-riquadro pn-google">
+          <?= fonte('google') ?>
           <h2>Pagine nei risultati</h2>
           <p class="pn-sotto">Tante comparse e pochi clic = il titolo non convince</p>
           <?php foreach ($D['g_pagine'] as $r):
@@ -484,7 +904,8 @@ function scaricamento($s) {
           <?php if (!$D['g_pagine']): ?><p class="pn-vuoto">—</p><?php endif; ?>
         </section>
 
-        <section class="pn-riquadro">
+        <section class="pn-riquadro pn-google">
+          <?= fonte('google') ?>
           <h2>Paesi</h2>
           <?php foreach ($D['g_paesi'] as $r): $q = $g['impressioni'] ? $r['impressioni'] / $g['impressioni'] * 100 : 0; ?>
             <div class="pn-riga" style="--q: <?= round($q) ?>%">
@@ -496,9 +917,10 @@ function scaricamento($s) {
           <?php if (!$D['g_paesi']): ?><p class="pn-vuoto">—</p><?php endif; ?>
         </section>
 
-        <section class="pn-riquadro">
+        <section class="pn-riquadro pn-google">
+          <?= fonte('google') ?>
           <h2>Da che dispositivo cercano</h2>
-          <p class="pn-sotto">Google, non il nostro contatore: qui c'è anche chi non è mai entrato</p>
+          <p class="pn-sotto">Qui c'è anche chi ci ha visti e non è mai entrato</p>
           <?php foreach ($D['g_disp'] as $r): $q = $g['impressioni'] ? $r['impressioni'] / $g['impressioni'] * 100 : 0; ?>
             <div class="pn-riga" style="--q: <?= round($q) ?>%">
               <span class="pn-et"><?= e(strtolower($r['valore']) === 'mobile' ? 'telefono'
@@ -510,9 +932,10 @@ function scaricamento($s) {
           <?php if (!$D['g_disp']): ?><p class="pn-vuoto">—</p><?php endif; ?>
         </section>
 
-        <section class="pn-riquadro">
+        <section class="pn-riquadro pn-google">
+          <?= fonte('google') ?>
           <h2>Dove ci trovano</h2>
-          <p class="pn-sotto">Search Console tiene separate le immagini dalla ricerca normale: per un ingrosso di pesce non è un dettaglio</p>
+          <p class="pn-sotto">Le immagini contano a parte: per un ingrosso di pesce non è un dettaglio</p>
           <?php
             $totCan = 0;
             foreach ($D['g_canali'] as $r) $totCan += $r['impressioni'];
@@ -528,7 +951,8 @@ function scaricamento($s) {
         </section>
 
         <?php if ($D['g_aspetto']): ?>
-        <section class="pn-riquadro">
+        <section class="pn-riquadro pn-google">
+          <?= fonte('google') ?>
           <h2>Come compariamo</h2>
           <p class="pn-sotto">Risultato normale, scheda, recensioni…</p>
           <?php foreach ($D['g_aspetto'] as $r): ?>
@@ -540,7 +964,8 @@ function scaricamento($s) {
         </section>
         <?php endif; ?>
 
-        <section class="pn-riquadro">
+        <section class="pn-riquadro pn-google">
+          <?= fonte('google') ?>
           <h2>Google ci vede?</h2>
           <p class="pn-sotto">Se una pagina non è indicizzata, nessuna statistica sulle ricerche la riguarda</p>
           <?php foreach ($D['indice'] as $r):
@@ -594,115 +1019,6 @@ function scaricamento($s) {
               l'ispezione degli indirizzi.
             </p>
           <?php endif; ?>
-        </section>
-      </div>
-
-      <!-- 5. ANDAMENTO, con il periodo prima sovrapposto -->
-      <section class="pn-riquadro">
-        <h2>Andamento</h2>
-        <p class="pn-sotto">
-          La tacca chiara è lo stesso giorno del periodo precedente ·
-          <a href="?g=<?= $giorni ?>&amp;m=u" class="<?= $metrica === 'visitatori' ? 'pn-vivo-t' : '' ?>">visitatori</a> ·
-          <a href="?g=<?= $giorni ?>&amp;m=v" class="<?= $metrica === 'viste' ? 'pn-vivo-t' : '' ?>">pagine viste</a>
-        </p>
-        <?php if (!array_sum(array_column($D['serie'], $metrica))): ?>
-          <p class="pn-vuoto">Ancora nessun dato in questo periodo.</p>
-        <?php else: ?>
-        <div class="pn-grafico">
-          <?php foreach ($D['serie'] as $i => $r):
-              $pre = isset($D['serie_pre'][$i]) ? $D['serie_pre'][$i][$metrica] : 0; ?>
-            <div class="pn-colonna" title="<?= e(date('d/m', strtotime($r['giorno']))) ?> — <?= n($r[$metrica]) ?> (prima: <?= n($pre) ?>)">
-              <div class="pn-barra" style="height: <?= max(1, round($r[$metrica] / $tetto * 100)) ?>%"></div>
-              <?php if ($pre > 0): ?>
-                <i class="pn-eco" style="bottom: <?= round($pre / $tetto * 100, 1) ?>%"></i>
-              <?php endif; ?>
-            </div>
-          <?php endforeach; ?>
-        </div>
-        <div class="pn-asse">
-          <span><?= e(date('d/m', strtotime($D['serie'][0]['giorno']))) ?></span>
-          <span><?= e(date('d/m', strtotime($D['serie'][count($D['serie']) - 1]['giorno']))) ?></span>
-        </div>
-        <?php endif; ?>
-      </section>
-
-      <!-- 8. QUANDO guardano il sito -->
-      <section class="pn-riquadro">
-        <h2>Quando guardano il sito</h2>
-        <p class="pn-sotto">Ora italiana. Per un fornitore di ristoranti, sapere che aprono il sito a mezzanotte è operativo</p>
-        <?php if (!$D['orari']['max']): ?>
-          <p class="pn-vuoto">—</p>
-        <?php else: ?>
-        <div class="pn-orari">
-          <div class="pn-orari-testa">
-            <span></span>
-            <?php for ($h = 0; $h < 24; $h++): ?>
-              <span class="pn-ora"><?= $h % 3 === 0 ? $h : '' ?></span>
-            <?php endfor; ?>
-          </div>
-          <?php foreach ($giorniSet as $i => $et): ?>
-            <div class="pn-orari-riga">
-              <span class="pn-orari-et"><?= $et ?></span>
-              <?php for ($h = 0; $h < 24; $h++): $v = $D['orari']['griglia'][$i][$h]; ?>
-                <span class="pn-cella" style="--i: <?= $v ? round(.15 + .85 * $v / $D['orari']['max'], 2) : 0 ?>"
-                      title="<?= $et ?> <?= $h ?>:00 — <?= n($v) ?>"></span>
-              <?php endfor; ?>
-            </div>
-          <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
-      </section>
-
-      <div class="pn-griglia">
-        <!-- 7. PAGINE -->
-        <section class="pn-riquadro">
-          <h2>Pagine</h2>
-          <?php foreach ($D['pagine'] as $r): $q = $o['viste'] ? $r['viste'] / $o['viste'] * 100 : 0; ?>
-            <div class="pn-riga" style="--q: <?= round($q) ?>%">
-              <span class="pn-et"><?= e($r['percorso']) ?>
-                <small><?= durata($r['permanenza']) ?> in media</small></span>
-              <span class="pn-val"><?= n($r['viste']) ?></span>
-            </div>
-          <?php endforeach; ?>
-          <?php if (!$D['pagine']): ?><p class="pn-vuoto">—</p><?php endif; ?>
-        </section>
-
-        <!-- 10. AZIONI in dettaglio -->
-        <section class="pn-riquadro">
-          <h2>Azioni</h2>
-          <?php foreach ($D['azioni'] as $r): ?>
-            <div class="pn-riga pn-riga-piatta">
-              <span class="pn-et"><?= e($r['nome']) ?>
-                <?php if ($r['dettaglio']): ?><small><?= e($r['dettaglio']) ?></small><?php endif; ?></span>
-              <span class="pn-val"><?= n($r['n']) ?><small> / <?= n($r['u']) ?> pers.</small></span>
-            </div>
-          <?php endforeach; ?>
-          <?php if (!$D['azioni']): ?><p class="pn-vuoto">—</p><?php endif; ?>
-        </section>
-
-        <!-- 9. ADESSO -->
-        <section class="pn-riquadro">
-          <h2>Adesso</h2>
-          <p class="pn-sotto"><strong><?= n($D['adesso']['persone']) ?></strong> negli ultimi 30 minuti</p>
-          <?php foreach ($D['adesso']['ultime'] as $r): ?>
-            <div class="pn-riga pn-riga-piatta">
-              <span class="pn-et"><?= e($r['percorso']) ?>
-                <?php if ($r['provenienza']): ?><small>da <?= e($r['provenienza']) ?></small><?php endif; ?></span>
-              <span class="pn-val"><small><?= e(date('d/m H:i', $r['istante'])) ?></small></span>
-            </div>
-          <?php endforeach; ?>
-          <?php if (!$D['adesso']['ultime']): ?><p class="pn-vuoto">—</p><?php endif; ?>
-        </section>
-
-        <!-- 10. DISPOSITIVI E BROWSER, compattati in fondo -->
-        <section class="pn-riquadro">
-          <h2>Dispositivi e browser</h2>
-          <?php foreach (array_merge($D['disp'], $D['browser']) as $r): $q = $o['viste'] ? $r['v'] / $o['viste'] * 100 : 0; ?>
-            <div class="pn-riga" style="--q: <?= round($q) ?>%">
-              <span class="pn-et"><?= e($r['et']) ?></span>
-              <span class="pn-val"><?= dec($q, 0) ?>%</span>
-            </div>
-          <?php endforeach; ?>
         </section>
       </div>
 

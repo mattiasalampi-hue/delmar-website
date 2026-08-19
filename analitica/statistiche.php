@@ -229,6 +229,135 @@ function st_canali_contatto($da, $a) {
     return $per;
 }
 
+/* ── La mappa del sito e i flussi ────────────────────────────────── */
+
+/* Ogni percorso appartiene a una sezione. La mappa, il flusso e i
+   percorsi ragionano per sezioni e non per singole pagine: quaranta
+   schede prodotto sono QUARANTA righe ma UNA decisione */
+function st_sezione($percorso) {
+    $p = (string) $percorso;
+    if (strpos($p, '/catalogo/') === 0) return 'Catalogo';
+    if (strpos($p, '/consegna/') === 0) return 'Consegne';
+    if (strpos($p, '/domande-frequenti') === 0) return 'Domande';
+    if ($p === '/' || strpos($p, '/index') === 0) return 'Home';
+    return 'Altro';
+}
+
+/* Le sezioni nell'ordine in cui vanno mostrate, sempre tutte: una
+   sezione a zero e' un'informazione, una sezione sparita e' un dubbio */
+function st_sezioni_elenco() {
+    return array('Home', 'Catalogo', 'Consegne', 'Domande', 'Altro');
+}
+
+/* La mappa: per ogni sezione visite, persone, permanenza, contatti
+   partiti da li', e le pagine piu' viste dentro. E' la fotografia di
+   dove vive il traffico e dove muore */
+function st_mappa_sito($da, $a) {
+    $c = st_contatti();
+    $in = implode(',', array_fill(0, count($c), '?'));
+
+    $visite = st_q(
+        'SELECT percorso, COUNT(*) v, COUNT(DISTINCT giorno || impronta) p,
+                AVG(CASE WHEN durata > 0 THEN durata END) t
+         FROM visite WHERE giorno BETWEEN ? AND ? GROUP BY percorso', array($da, $a));
+
+    $kappa = st_q(
+        'SELECT percorso, COUNT(*) n FROM eventi
+         WHERE giorno BETWEEN ? AND ? AND nome IN (' . $in . ')
+         GROUP BY percorso', array_merge(array($da, $a), $c));
+
+    $perK = array();
+    foreach ($kappa as $r) $perK[st_sezione($r['percorso'])] =
+        (isset($perK[st_sezione($r['percorso'])]) ? $perK[st_sezione($r['percorso'])] : 0) + (int) $r['n'];
+
+    $sez = array();
+    foreach (st_sezioni_elenco() as $s) {
+        $sez[$s] = array('visite' => 0, 'persone' => 0, 'tempo' => 0, 'pesate' => 0,
+                         'contatti' => isset($perK[$s]) ? $perK[$s] : 0, 'pagine' => array());
+    }
+    foreach ($visite as $r) {
+        $s = st_sezione($r['percorso']);
+        $sez[$s]['visite'] += (int) $r['v'];
+        $sez[$s]['persone'] += (int) $r['p'];
+        if ($r['t'] !== null) {
+            $sez[$s]['tempo'] += (float) $r['t'] * (int) $r['v'];
+            $sez[$s]['pesate'] += (int) $r['v'];
+        }
+        $sez[$s]['pagine'][] = array('percorso' => $r['percorso'], 'v' => (int) $r['v']);
+    }
+    foreach ($sez as $s => $d) {
+        $sez[$s]['tempo'] = $d['pesate'] ? $d['tempo'] / $d['pesate'] : 0;
+        usort($sez[$s]['pagine'], function ($x, $y) { return $y['v'] - $x['v']; });
+        $sez[$s]['pagine'] = array_slice($sez[$s]['pagine'], 0, 5);
+    }
+    return $sez;
+}
+
+/* Il flusso, persona per persona: da dove entra (classe di sorgente),
+   dove atterra (sezione della prima pagina), come finisce (contatta o
+   se ne va). Tre colonne che insieme dicono quale ingresso porta
+   clienti — che e' un'altra cosa da quale ingresso porta traffico.
+
+   Si scaricano le prime viste e l'elenco di chi ha contattato, e i
+   conti si fanno in PHP: su un sito con centinaia di visite al giorno
+   e' piu' semplice e piu' robusto di una interrogazione a tre piani */
+function st_flusso($da, $a) {
+    $c = st_contatti();
+    $in = implode(',', array_fill(0, count($c), '?'));
+
+    $prime = st_q(
+        'SELECT v.giorno, v.impronta, v.percorso, v.provenienza, v.campagna
+         FROM visite v
+         WHERE v.giorno BETWEEN ? AND ?
+           AND NOT EXISTS (SELECT 1 FROM visite p
+                           WHERE p.giorno = v.giorno AND p.impronta = v.impronta
+                             AND p.istante < v.istante)', array($da, $a));
+
+    $hanno = st_q(
+        'SELECT DISTINCT giorno, impronta FROM eventi
+         WHERE giorno BETWEEN ? AND ? AND nome IN (' . $in . ')',
+        array_merge(array($da, $a), $c));
+
+    $kSet = array();
+    foreach ($hanno as $r) $kSet[$r['giorno'] . '|' . $r['impronta']] = true;
+
+    $flussi = array();       /* sorgente -> sezione -> [contatta, va via] */
+    foreach ($prime as $r) {
+        $sor = st_classe($r['provenienza'], $r['campagna']);
+        $sez = st_sezione($r['percorso']);
+        $ha  = isset($kSet[$r['giorno'] . '|' . $r['impronta']]);
+        if (!isset($flussi[$sor])) $flussi[$sor] = array();
+        if (!isset($flussi[$sor][$sez])) $flussi[$sor][$sez] = array('si' => 0, 'no' => 0);
+        $flussi[$sor][$sez][$ha ? 'si' : 'no']++;
+    }
+    return $flussi;
+}
+
+/* I percorsi piu' battuti FRA le sezioni: dentro la stessa sessione,
+   ogni cambio di sezione conta un passaggio. Dice se il catalogo porta
+   alle consegne o se sono due isole */
+function st_percorsi($da, $a, $quanti = 8) {
+    $righe = st_q(
+        'SELECT giorno, impronta, istante, percorso FROM visite
+         WHERE giorno BETWEEN ? AND ?
+         ORDER BY giorno, impronta, istante', array($da, $a));
+
+    $salti = array();
+    $chi = ''; $dove = ''; $quando = 0;
+    foreach ($righe as $r) {
+        $k = $r['giorno'] . '|' . $r['impronta'];
+        $s = st_sezione($r['percorso']);
+        /* Stessa persona, entro mezz'ora, sezione diversa: un passaggio */
+        if ($k === $chi && $r['istante'] - $quando <= 1800 && $s !== $dove) {
+            $et = $dove . ' → ' . $s;
+            $salti[$et] = (isset($salti[$et]) ? $salti[$et] : 0) + 1;
+        }
+        $chi = $k; $dove = $s; $quando = (int) $r['istante'];
+    }
+    arsort($salti);
+    return array_slice($salti, 0, $quanti, true);
+}
+
 /* Da QUALE pagina si contatta. E' la domanda che decide dove mettere le
    prossime CTA: una pagina con tante visite e zero contatti ha un
    problema, una con poche visite e tanti contatti va spinta */
@@ -328,6 +457,28 @@ function st_serie($da, $a) {
         $serie[] = isset($per[$g])
             ? array('giorno' => $g, 'viste' => (int) $per[$g]['viste'], 'visitatori' => (int) $per[$g]['visitatori'])
             : array('giorno' => $g, 'viste' => 0, 'visitatori' => 0);
+    }
+    return $serie;
+}
+
+/* Serie giornaliera dei contatti, coi buchi a zero come st_serie:
+   serve alla scintilla dentro la scheda dei contatti, che senza i
+   giorni vuoti racconterebbe una curva mai successa */
+function st_serie_contatti($da, $a) {
+    $c = st_contatti();
+    $in = implode(',', array_fill(0, count($c), '?'));
+
+    $righe = st_q(
+        'SELECT giorno, COUNT(DISTINCT impronta) n FROM eventi
+         WHERE giorno BETWEEN ? AND ? AND nome IN (' . $in . ') GROUP BY giorno',
+        array_merge(array($da, $a), $c));
+
+    $per = array();
+    foreach ($righe as $r) $per[$r['giorno']] = (int) $r['n'];
+
+    $serie = array();
+    for ($g = $da; $g <= $a; $g = date('Y-m-d', strtotime($g . ' +1 day'))) {
+        $serie[] = array('giorno' => $g, 'n' => isset($per[$g]) ? $per[$g] : 0);
     }
     return $serie;
 }

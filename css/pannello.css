@@ -1,20 +1,34 @@
-/* Pannello dell'analitica. Foglio suo: non carica il sito, deve aprirsi
-   in un lampo anche da telefono in mezzo al mercato. */
+/* Pannello dell'analitica — la sala di controllo. Foglio suo: non
+   carica il sito, deve aprirsi in un lampo anche da telefono in mezzo
+   al mercato.
+
+   TEMA SCURO, ed e' una scelta funzionale prima che estetica: su fondo
+   scuro le barre, i nastri del flusso e le celle della griglia oraria
+   si leggono per luminosita', e i due colori delle fonti — corallo per
+   il contatore di casa, azzurro per Search Console — restano
+   distinguibili anche con la pagina piena di numeri. */
 
 :root {
-  --pn-ink: #151c64;
-  --pn-cor: #c9432c;
-  --pn-bordo: rgba(21, 28, 100, .12);
-  --pn-tenue: rgba(21, 28, 100, .5);
-  --pn-medio: rgba(21, 28, 100, .68);
+  --pn-fondo: #0b0f2a;
+  --pn-carta: #141a45;
+  --pn-carta-su: #1a2154;
+  --pn-bordo: rgba(255, 255, 255, .09);
+  --pn-testo: #e9ecf8;
+  --pn-medio: rgba(233, 236, 248, .72);
+  --pn-tenue: rgba(233, 236, 248, .5);
+  --pn-cor: #ff6b4d;
+  --pn-google: #6ea8ff;
+  --pn-verde: #46d3a2;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  background: #f6f7fa;
-  color: var(--pn-ink);
+  background: radial-gradient(1100px 500px at 50% -140px, #1b2260 0%, var(--pn-fondo) 62%) fixed var(--pn-fondo);
+  color: var(--pn-testo);
   font-family: 'Poppins', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -31,15 +45,16 @@ body {
 .pn-accesso {
   width: 100%;
   max-width: 340px;
-  background: #fff;
+  background: var(--pn-carta);
+  border: 1px solid var(--pn-bordo);
   padding: 2.2rem 1.8rem;
-  border-radius: 6px;
-  box-shadow: 0 20px 50px rgba(21, 28, 100, .1);
+  border-radius: 14px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .45);
 }
 
 .pn-accesso h1 {
   margin: 0 0 1.6rem;
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   font-weight: 300;
   letter-spacing: -.03em;
 }
@@ -57,11 +72,12 @@ body {
 .pn-accesso input {
   width: 100%;
   padding: .8rem .9rem;
+  background: rgba(255, 255, 255, .06);
   border: 1px solid var(--pn-bordo);
-  border-radius: 4px;
+  border-radius: 8px;
   font-family: inherit;
   font-size: .95rem;
-  color: var(--pn-ink);
+  color: var(--pn-testo);
 }
 
 .pn-accesso input:focus {
@@ -76,7 +92,7 @@ body {
   padding: .85rem;
   background: var(--pn-cor);
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   color: #fff;
   font-family: inherit;
   font-size: .8rem;
@@ -89,15 +105,15 @@ body {
 .pn-errore {
   margin: 0 0 1rem;
   padding: .7rem .8rem;
-  background: rgba(201, 67, 44, .08);
+  background: rgba(255, 107, 77, .12);
   border-left: 2px solid var(--pn-cor);
   font-size: .8rem;
   color: var(--pn-cor);
 }
 
-/* ── Testa ────────────────────────────────────── */
+/* ── Testa, appiccicata: i comandi restano a portata anche in fondo ── */
 .pn-occhiello {
-  margin: 0 0 .3rem;
+  margin: 0 0 .2rem;
   font-size: .56rem;
   font-weight: 600;
   letter-spacing: .4em;
@@ -106,21 +122,61 @@ body {
 }
 
 .pn-testa {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  align-items: flex-end;
+  gap: .8rem 1.4rem;
+  align-items: center;
   justify-content: space-between;
-  padding: 1.8rem 5% 1.4rem;
-  background: #fff;
+  padding: 1rem 5%;
+  background: rgba(11, 15, 42, .82);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--pn-bordo);
 }
 
 .pn-testa h1 {
   margin: 0;
-  font-size: 1.9rem;
+  font-size: 1.35rem;
   font-weight: 300;
-  letter-spacing: -.035em;
+  letter-spacing: -.03em;
+}
+
+/* Il segnale di vita: quante persone ci sono ADESSO, sempre in vista */
+.pn-adesso-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  padding: .4rem .85rem;
+  background: rgba(70, 211, 162, .1);
+  border: 1px solid rgba(70, 211, 162, .3);
+  border-radius: 999px;
+  font-size: .74rem;
+  color: var(--pn-medio);
+}
+
+.pn-lucina {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pn-verde);
+  box-shadow: 0 0 0 0 rgba(70, 211, 162, .5);
+  animation: pn-batte 2.2s infinite;
+}
+
+@keyframes pn-batte {
+  0% {
+    box-shadow: 0 0 0 0 rgba(70, 211, 162, .5);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(70, 211, 162, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(70, 211, 162, 0);
+  }
 }
 
 .pn-periodo {
@@ -130,7 +186,7 @@ body {
 }
 
 .pn-periodo a {
-  padding: .4rem .85rem;
+  padding: .38rem .85rem;
   border: 1px solid var(--pn-bordo);
   border-radius: 999px;
   font-size: .72rem;
@@ -139,8 +195,8 @@ body {
 }
 
 .pn-periodo a.pn-vivo {
-  background: var(--pn-ink);
-  border-color: var(--pn-ink);
+  background: var(--pn-cor);
+  border-color: var(--pn-cor);
   color: #fff;
 }
 
@@ -154,29 +210,113 @@ body {
 }
 
 .pn-confronto {
-  margin: 0 0 1.2rem;
+  margin: 0 0 1rem;
   font-size: .74rem;
   color: var(--pn-tenue);
 }
 
+/* ── Le due fonti, spiegate in cima ───────────── */
+.pn-legenda {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: .6rem 1.4rem;
+  margin: 0 0 1.4rem;
+  padding: .8rem 1rem;
+  background: rgba(255, 255, 255, .03);
+  border: 1px solid var(--pn-bordo);
+  border-radius: 12px;
+}
+
+.pn-legenda p {
+  margin: 0;
+  font-size: .74rem;
+  line-height: 1.6;
+  color: var(--pn-tenue);
+}
+
+.pn-legenda strong {
+  color: var(--pn-medio);
+  font-weight: 500;
+}
+
+/* Il bollino della fonte, in alto a destra di ogni riquadro */
+.pn-fonte {
+  position: absolute;
+  top: .85rem;
+  right: .9rem;
+  padding: .18rem .6rem;
+  border-radius: 999px;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.pn-legenda .pn-fonte {
+  position: static;
+  margin-right: .4rem;
+}
+
+.pn-fonte-sito {
+  background: rgba(255, 107, 77, .14);
+  color: var(--pn-cor);
+}
+
+.pn-fonte-google {
+  background: rgba(110, 168, 255, .14);
+  color: var(--pn-google);
+}
+
 /* ── Corpo ────────────────────────────────────── */
 .pn-corpo {
-  padding: 1.6rem 5% 4rem;
-  max-width: 1240px;
+  padding: 1.4rem 5% 4rem;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
+/* Le intestazioni di zona: dividono la pagina nelle due meta' */
+.pn-zona {
+  margin: 2.2rem 0 1rem;
+  padding-left: .95rem;
+  border-left: 3px solid var(--pn-cor);
+}
+
+.pn-zona h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: -.01em;
+}
+
+.pn-zona p {
+  margin: .15rem 0 0;
+  font-size: .74rem;
+  color: var(--pn-tenue);
+}
+
+.pn-zona p a {
+  color: inherit;
+}
+
+.pn-zona-google {
+  border-left-color: var(--pn-google);
+}
+
+/* ── Numeri grandi ────────────────────────────── */
 .pn-numeri {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: .8rem;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1rem;
 }
 
 .pn-numero {
-  background: #fff;
-  border-radius: 6px;
-  padding: 1.2rem 1.3rem;
+  position: relative;
+  overflow: hidden;
+  background: var(--pn-carta);
+  border: 1px solid var(--pn-bordo);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem 1.2rem;
   display: flex;
   flex-direction: column;
   gap: .3rem;
@@ -187,29 +327,55 @@ body {
   font-weight: 300;
   letter-spacing: -.04em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .pn-e {
   font-size: .68rem;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--pn-tenue);
 }
 
-/* I due riquadri delle conversioni. Sono i numeri per cui si apre
-   questa pagina: se hanno lo stesso peso visivo degli altri, l'occhio
-   parte da sinistra e legge le visite per prime — cioè il contrario */
+/* I due riquadri delle conversioni: sono i numeri per cui si apre
+   questa pagina, e l'occhio deve cadere li' per primo */
 .pn-numero-vivo {
-  background: var(--pn-ink);
-  color: #fff;
+  background: linear-gradient(145deg, #b83a22 0%, #8c2917 100%);
+  border-color: rgba(255, 130, 100, .35);
 }
 
 .pn-numero-vivo .pn-e {
-  color: rgba(255, 255, 255, .62);
+  color: rgba(255, 255, 255, .72);
 }
 
-/* ── La variazione rispetto al periodo prima ───
-   Un numero da solo non dice niente: 287 visitatori è buono o brutto
-   solo rispetto a prima */
+/* La scintilla: l'andamento dietro il numero, senza assi */
+.pn-scintilla {
+  position: absolute;
+  inset: auto 0 0 0;
+  width: 100%;
+  height: 30px;
+  pointer-events: none;
+}
+
+.pn-scintilla-linea {
+  fill: none;
+  stroke: rgba(255, 255, 255, .55);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.pn-scintilla-area {
+  fill: rgba(255, 255, 255, .1);
+}
+
+.pn-numero:not(.pn-numero-vivo) .pn-scintilla-linea {
+  stroke: rgba(255, 107, 77, .7);
+}
+
+.pn-numero:not(.pn-numero-vivo) .pn-scintilla-area {
+  fill: rgba(255, 107, 77, .12);
+}
+
+/* ── La variazione rispetto al periodo prima ─── */
 .pn-d {
   display: inline-block;
   margin-left: .3rem;
@@ -222,49 +388,47 @@ body {
 }
 
 .pn-d-su {
-  background: rgba(34, 128, 86, .14);
-  color: #1c7a52;
+  background: rgba(70, 211, 162, .16);
+  color: var(--pn-verde);
 }
 
 .pn-d-giu {
-  background: rgba(201, 67, 44, .14);
+  background: rgba(255, 107, 77, .16);
   color: var(--pn-cor);
 }
 
 .pn-d-muto {
-  background: rgba(21, 28, 100, .07);
+  background: rgba(255, 255, 255, .08);
   color: var(--pn-tenue);
 }
 
 .pn-numero-vivo .pn-d-su {
-  background: rgba(126, 232, 184, .18);
-  color: #7ee8b8;
+  background: rgba(126, 232, 184, .2);
+  color: #9df0c8;
 }
 
 .pn-numero-vivo .pn-d-giu {
-  background: rgba(255, 150, 130, .18);
-  color: #ff9682;
+  background: rgba(255, 255, 255, .16);
+  color: #ffc4b5;
 }
 
 .pn-numero-vivo .pn-d-muto {
-  background: rgba(255, 255, 255, .12);
-  color: rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, .14);
+  color: rgba(255, 255, 255, .75);
 }
 
-/* La riga dei numeri di contorno: ci sono, ma non rubano l'occhio ai
-   quattro riquadri sopra */
 .pn-secondari {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem 1.6rem;
-  margin: 0 0 1.6rem;
+  margin: 0 0 .4rem;
   font-size: .78rem;
   color: var(--pn-tenue);
 }
 
 .pn-secondari strong {
   font-weight: 500;
-  color: var(--pn-ink);
+  color: var(--pn-testo);
 }
 
 .pn-secondari small {
@@ -273,15 +437,19 @@ body {
   opacity: .8;
 }
 
+/* ── Riquadri ─────────────────────────────────── */
 .pn-riquadro {
-  background: #fff;
-  border-radius: 6px;
+  position: relative;
+  background: var(--pn-carta);
+  border: 1px solid var(--pn-bordo);
+  border-radius: 12px;
   padding: 1.2rem 1.3rem 1.4rem;
   margin-bottom: 1rem;
 }
 
 .pn-riquadro h2 {
-  margin: 0 0 .2rem;
+  margin: 0 .2rem .2rem 0;
+  padding-right: 4.5rem;
   font-size: .62rem;
   font-weight: 600;
   letter-spacing: .28em;
@@ -300,25 +468,32 @@ body {
   margin-top: .9rem;
 }
 
-/* Il riquadro delle azioni è quello che conta di più su un sito B2B:
-   le visite dicono quanti passano, le azioni quanti fanno qualcosa.
-   Ha un bordo colorato perché sia il primo dove cade l'occhio */
 .pn-importante {
   border-left: 3px solid var(--pn-cor);
+}
+
+.pn-google {
+  border-left: 3px solid var(--pn-google);
 }
 
 .pn-griglia {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
+  margin-bottom: 1rem;
   align-items: start;
 }
 
-.pn-griglia .pn-riquadro { margin-bottom: 0; }
+.pn-griglia .pn-riquadro {
+  margin-bottom: 0;
+}
 
-/* ── Righe con barra di fondo ──────────────────
-   La barra è dentro la riga come sfondo, non un elemento a parte: si
-   legge il valore E la proporzione senza aggiungere nodi */
+/* Imbuto e flusso fianco a fianco quando lo schermo lo consente */
+.pn-griglia-larga {
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+/* ── Righe con barra di fondo ─────────────────── */
 .pn-riga {
   position: relative;
   display: flex;
@@ -326,7 +501,7 @@ body {
   justify-content: space-between;
   gap: 1rem;
   padding: .5rem .55rem;
-  border-radius: 3px;
+  border-radius: 6px;
   font-size: .82rem;
   overflow: hidden;
 }
@@ -336,11 +511,17 @@ body {
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--q, 0%);
-  background: rgba(201, 67, 44, .1);
-  border-radius: 3px;
+  background: rgba(255, 107, 77, .13);
+  border-radius: 6px;
 }
 
-.pn-riga-piatta::before { display: none; }
+.pn-google .pn-riga::before {
+  background: rgba(110, 168, 255, .13);
+}
+
+.pn-riga-piatta::before {
+  display: none;
+}
 
 .pn-et,
 .pn-val {
@@ -380,68 +561,163 @@ body {
 .pn-avviso {
   margin: .8rem 0 0;
   padding: .5rem .6rem;
-  background: rgba(201, 67, 44, .07);
+  background: rgba(255, 107, 77, .1);
   border-left: 2px solid var(--pn-cor);
   font-size: .72rem;
   color: var(--pn-cor);
 }
 
-/* ── Imbuto ───────────────────────────────────
-   Barre orizzontali che si accorciano: il restringimento È il dato.
-   Un elenco di quattro numeri lo stesso calo non lo fa vedere */
-.pn-imbuto {
+/* ── Imbuto a trapezi ─────────────────────────── */
+.pn-fu {
   margin-top: .9rem;
   display: flex;
   flex-direction: column;
-  gap: .35rem;
 }
 
-.pn-gradino {
+.pn-fu-passo {
   position: relative;
+  height: 54px;
+}
+
+.pn-fu-forma {
+  position: absolute;
+  inset: 1px 0;
+  background: linear-gradient(180deg, rgba(255, 107, 77, calc(.16 + var(--fu) * .11)) 0%, rgba(255, 107, 77, calc(.2 + var(--fu) * .11)) 100%);
+}
+
+.pn-fu-testo {
+  position: relative;
+  z-index: 1;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: .6rem .6rem;
-  border-radius: 3px;
-  overflow: hidden;
+  padding: 0 .2rem;
+  font-size: .8rem;
 }
 
-.pn-gradino-barra {
-  position: absolute;
-  inset: 0 auto 0 0;
-  background: rgba(21, 28, 100, .1);
-  border-radius: 3px;
-}
-
-.pn-gradino-et,
-.pn-gradino-val {
-  position: relative;
-  z-index: 1;
-  font-size: .82rem;
-}
-
-.pn-gradino-et {
+.pn-fu-et {
   color: var(--pn-medio);
 }
 
-.pn-gradino-val {
+.pn-fu-val {
   flex: none;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
 
-.pn-gradino-val small {
+.pn-fu-val small {
   display: block;
   font-weight: 300;
   font-size: .68rem;
   color: var(--pn-tenue);
 }
 
-/* ── Grafico ──────────────────────────────────
-   Barre in CSS puro: nessuna libreria da caricare per disegnare
-   trenta rettangoli */
+/* ── Flusso a nastri ──────────────────────────── */
+.pn-flusso-guscio {
+  margin-top: .9rem;
+  overflow-x: auto;
+}
+
+.pn-flusso {
+  display: block;
+  width: 100%;
+  min-width: 460px;
+  height: auto;
+}
+
+.pn-fl-nastro {
+  opacity: .32;
+  transition: opacity .2s;
+}
+
+.pn-fl-nastro:hover {
+  opacity: .6;
+}
+
+.pn-flusso text {
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-size: 11px;
+  fill: var(--pn-testo);
+  paint-order: stroke;
+  stroke: rgba(11, 15, 42, .85);
+  stroke-width: 3px;
+}
+
+.pn-fl-fine {
+  text-anchor: end;
+}
+
+/* ── Mappa del sito ───────────────────────────── */
+.pn-mappa {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: .8rem;
+  margin-top: .9rem;
+}
+
+.pn-nodo {
+  background: var(--pn-carta-su);
+  border: 1px solid var(--pn-bordo);
+  border-radius: 10px;
+  padding: .85rem .9rem 1rem;
+}
+
+.pn-nodo-testa {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .6rem;
+}
+
+.pn-nodo h3 {
+  margin: 0;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+
+.pn-nodo-k {
+  flex: none;
+  padding: .12rem .5rem;
+  background: rgba(255, 107, 77, .16);
+  border-radius: 999px;
+  font-size: .62rem;
+  font-weight: 500;
+  color: var(--pn-cor);
+  white-space: nowrap;
+}
+
+.pn-nodo-visite {
+  margin: .35rem 0 .5rem;
+  font-size: 1.4rem;
+  font-weight: 300;
+  letter-spacing: -.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pn-nodo-visite small {
+  display: block;
+  margin-top: .3rem;
+  font-size: .64rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--pn-tenue);
+}
+
+.pn-riga-mini {
+  padding: .3rem .45rem;
+  font-size: .7rem;
+}
+
+.pn-percorsi {
+  max-width: 560px;
+}
+
+/* ── Grafico a colonne ────────────────────────── */
 .pn-grafico {
   display: flex;
   align-items: flex-end;
@@ -457,28 +733,39 @@ body {
   align-items: flex-end;
 }
 
-/* L'eco del periodo prima: una tacca all'altezza che aveva lo stesso
-   giorno del periodo precedente. Una seconda serie di barre
-   raddoppierebbe l'inchiostro per un confronto che si legge in un
-   colpo d'occhio con una riga */
 .pn-eco {
   position: absolute;
   left: 0;
   right: 0;
   height: 2px;
-  background: rgba(21, 28, 100, .3);
+  background: rgba(233, 236, 248, .35);
   pointer-events: none;
 }
 
-/* Il grafico di Google ha due misure sulla stessa colonna: quante
-   volte siamo comparsi e quanti hanno cliccato. Sovrapposte e non
-   affiancate, perché una è sempre un sottoinsieme dell'altra: così la
-   parte chiara che avanza È la quota di chi ci ha visti e tirato
-   dritto */
+.pn-barra {
+  width: 100%;
+  background: linear-gradient(180deg, #ff8a6b 0%, var(--pn-cor) 100%);
+  border-radius: 2px 2px 0 0;
+  opacity: .85;
+  transition: opacity .2s;
+}
+
+.pn-colonna:hover .pn-barra {
+  opacity: 1;
+}
+
+.pn-google .pn-barra {
+  background: linear-gradient(180deg, #8fbcff 0%, var(--pn-google) 100%);
+}
+
 .pn-barra-eco {
   position: absolute;
   inset: auto 0 0 0;
-  background: rgba(21, 28, 100, .16);
+  background: rgba(110, 168, 255, .22);
+}
+
+.pn-google .pn-barra-eco {
+  background: rgba(110, 168, 255, .22);
 }
 
 .pn-barra-clic {
@@ -486,13 +773,12 @@ body {
   z-index: 1;
 }
 
-/* ── Google ───────────────────────────────────
-   Un bordo suo perché è l'unico blocco che non viene dal nostro
-   contatore: i numeri hanno un'altra fonte, un altro ritardo e un
-   altro significato, e confonderli sarebbe il modo più facile di
-   leggere male entrambi */
-.pn-google {
-  border-left: 3px solid rgba(21, 28, 100, .35);
+.pn-asse {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .5rem;
+  font-size: .65rem;
+  color: var(--pn-tenue);
 }
 
 .pn-numeri-fitti {
@@ -500,7 +786,7 @@ body {
 }
 
 .pn-numeri-fitti .pn-numero {
-  background: rgba(21, 28, 100, .04);
+  background: rgba(255, 255, 255, .04);
   padding: .9rem 1rem;
 }
 
@@ -519,35 +805,14 @@ body {
 }
 
 .pn-stato-si {
-  color: #1c7a52;
+  color: var(--pn-verde);
 }
 
 .pn-stato-no {
   color: var(--pn-cor);
 }
 
-.pn-barra {
-  width: 100%;
-  background: var(--pn-cor);
-  border-radius: 2px 2px 0 0;
-  opacity: .82;
-  transition: opacity .2s;
-}
-
-.pn-colonna:hover .pn-barra { opacity: 1; }
-
-.pn-asse {
-  display: flex;
-  justify-content: space-between;
-  margin-top: .5rem;
-  font-size: .65rem;
-  color: var(--pn-tenue);
-}
-
-/* ── Griglia giorno × ora ──────────────────────
-   Sette righe per ventiquattro colonne, con l'intensità del colore al
-   posto del numero: serve vedere DOVE si addensa, non quanto vale la
-   singola casella */
+/* ── Griglia giorno × ora ─────────────────────── */
 .pn-orari {
   margin-top: .9rem;
   overflow-x: auto;
@@ -580,8 +845,8 @@ body {
   aspect-ratio: 1;
   min-height: 11px;
   border-radius: 2px;
-  background: rgba(201, 67, 44, var(--i, 0));
-  box-shadow: inset 0 0 0 1px rgba(21, 28, 100, .05);
+  background: rgba(255, 107, 77, var(--i, 0));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05);
 }
 
 .pn-nota {
@@ -624,8 +889,22 @@ body {
 }
 
 @media (max-width: 640px) {
-  .pn-testa { padding: 1.2rem 5% 1rem; }
-  .pn-n { font-size: 1.7rem; }
-  .pn-numeri { grid-template-columns: repeat(2, 1fr); }
-  .pn-corpo { padding: 1.2rem 4% 3rem; }
+  .pn-testa {
+    padding: .8rem 4%;
+  }
+  .pn-testa h1 {
+    font-size: 1.1rem;
+  }
+  .pn-n {
+    font-size: 1.7rem;
+  }
+  .pn-numeri {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pn-corpo {
+    padding: 1.2rem 4% 3rem;
+  }
+  .pn-fu-passo {
+    height: 60px;
+  }
 }
