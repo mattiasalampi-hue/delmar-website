@@ -343,6 +343,7 @@ if ($dentro) {
     $D['serie']     = st_serie($per['da'], $per['a']);
     $D['serie_pre'] = st_serie($per['da_prec'], $per['a_prec']);
     $D['serie_k']   = st_serie_contatti($per['da'], $per['a']);
+    $D['serie_wa']  = st_serie_contatti($per['da'], $per['a'], 'whatsapp');
     $D['mappa']     = st_mappa_sito($per['da'], $per['a']);
     $D['flusso']    = st_flusso($per['da'], $per['a']);
     $D['percorsi']  = st_percorsi($per['da'], $per['a']);
@@ -499,20 +500,29 @@ function scaricamento($s) {
           Misurano cose diverse: quando non coincidono, non è un errore.</p>
       </div>
 
-      <!-- 1. CONVERSIONI — in cima, prima delle visite -->
+      <!-- 1. CONVERSIONI — in cima, prima delle visite. WhatsApp per
+           primo: e' il canale con cui i locali ORDINANO, gli altri
+           numeri gli fanno da contorno -->
+      <?php
+        $wa   = isset($D['canali']['whatsapp']) ? $D['canali']['whatsapp'] : array('n' => 0, 'persone' => 0);
+        $waP  = isset($D['canali_p']['whatsapp']) ? $D['canali_p']['whatsapp'] : array('n' => 0, 'persone' => 0);
+        $ww = array(); foreach ($D['serie_wa'] as $r) $ww[] = (int) $r['n'];
+      ?>
       <section class="pn-numeri">
         <div class="pn-numero pn-numero-vivo">
-          <span class="pn-n"><?= dec($o['conversione'], 1) ?>%</span>
-          <span class="pn-e">contattano<br />su 100 visitatori <?= delta($dl['conversione']) ?></span>
+          <span class="pn-n"><?= n($wa['persone']) ?></span>
+          <span class="pn-e">hanno aperto WhatsApp<br /><?= n($wa['n']) ?> clic
+            (<?= n($waP['persone']) ?> prima) <?= delta(st_variazione($wa['persone'], $waP['persone'])) ?></span>
+          <?= scintilla($ww) ?>
         </div>
         <div class="pn-numero pn-numero-vivo">
           <span class="pn-n"><?= n($o['contatti']) ?></span>
-          <span class="pn-e">hanno alzato la mano<br />(<?= n($p['contatti']) ?> prima) <?= delta($dl['contatti']) ?></span>
+          <span class="pn-e">contatti in tutto<br />WhatsApp, telefono, modulo, email <?= delta($dl['contatti']) ?></span>
           <?= scintilla($kk) ?>
         </div>
         <div class="pn-numero">
-          <span class="pn-n"><?= n($o['moduli']) ?></span>
-          <span class="pn-e">moduli inviati <?= delta($dl['moduli']) ?></span>
+          <span class="pn-n"><?= dec($o['conversione'], 1) ?>%</span>
+          <span class="pn-e">contattano<br />su 100 visitatori <?= delta($dl['conversione']) ?></span>
         </div>
         <div class="pn-numero">
           <span class="pn-n"><?= n($o['visitatori']) ?></span>

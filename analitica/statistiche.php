@@ -463,9 +463,12 @@ function st_serie($da, $a) {
 
 /* Serie giornaliera dei contatti, coi buchi a zero come st_serie:
    serve alla scintilla dentro la scheda dei contatti, che senza i
-   giorni vuoti racconterebbe una curva mai successa */
-function st_serie_contatti($da, $a) {
-    $c = st_contatti();
+   giorni vuoti racconterebbe una curva mai successa.
+
+   $solo restringe a UN canale ('whatsapp'): WhatsApp e' il canale
+   d'ordine principale e ha la sua scheda in cima, con la sua curva */
+function st_serie_contatti($da, $a, $solo = null) {
+    $c = $solo !== null ? array($solo) : st_contatti();
     $in = implode(',', array_fill(0, count($c), '?'));
 
     $righe = st_q(
