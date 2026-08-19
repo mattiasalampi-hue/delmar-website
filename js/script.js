@@ -1431,7 +1431,7 @@ window.addEventListener('load', () => {
      manda messaggi asciutti. Prima li scrivevano tutti e due e il
      risultato era "Scrivici su WhatsApp o a info@del-mar.it. Scrivici su
      WhatsApp o a info@del-mar.it." */
-  const RIPIEGO = ' Scrivici su <a href="https://wa.me/393356654017" target="_blank" ' +
+  const RIPIEGO = ' Scrivici su <a href="https://wa.me/393664142330" target="_blank" ' +
     'rel="noopener noreferrer">WhatsApp</a> o a <a href="mailto:info@del-mar.it">info@del-mar.it</a>.';
 
   const errore = (testo) => {

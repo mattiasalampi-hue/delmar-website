@@ -9,7 +9,7 @@
    Qui ce n'e' una sola e la usano tutti e due.
 */
 
-const WA = '393356654017';
+const WA = '393664142330';
 
 /* Le icone del sito. Chi ne vuole una la chiede per nome invece di
    incollarsi il tracciato: le frecce erano gia' finite in tre file diversi */
