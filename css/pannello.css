@@ -567,52 +567,90 @@ body {
   color: var(--pn-cor);
 }
 
-/* ── Imbuto a trapezi ─────────────────────────── */
+/* ── Imbuto a righe ───────────────────────────
+   Un gradino = una riga con la sua barra; fra le righe, la frase che
+   dice quanti proseguono. L'ultimo gradino è WhatsApp, in verde: è il
+   punto d'arrivo dell'imbuto */
 .pn-fu {
-  margin-top: .9rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
 }
 
-.pn-fu-passo {
-  position: relative;
-  height: 54px;
-}
-
-.pn-fu-forma {
-  position: absolute;
-  inset: 1px 0;
-  background: linear-gradient(180deg, rgba(255, 107, 77, calc(.16 + var(--fu) * .11)) 0%, rgba(255, 107, 77, calc(.2 + var(--fu) * .11)) 100%);
-}
-
-.pn-fu-testo {
-  position: relative;
-  z-index: 1;
-  height: 100%;
+.pn-fu-info {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0 .2rem;
-  font-size: .8rem;
+  margin-bottom: .35rem;
 }
 
 .pn-fu-et {
+  font-size: .84rem;
   color: var(--pn-medio);
 }
 
-.pn-fu-val {
-  flex: none;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-}
-
-.pn-fu-val small {
-  display: block;
-  font-weight: 300;
+.pn-fu-et small {
+  margin-left: .3rem;
   font-size: .68rem;
   color: var(--pn-tenue);
+}
+
+.pn-fu-num {
+  flex: none;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pn-fu-num small {
+  font-size: .66rem;
+  font-weight: 300;
+  color: var(--pn-tenue);
+}
+
+.pn-fu-barra {
+  height: 16px;
+  background: rgba(255, 255, 255, .05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pn-fu-barra i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ff8a6b 0%, var(--pn-cor) 100%);
+  border-radius: 8px;
+}
+
+.pn-fu-wa .pn-fu-barra i {
+  background: linear-gradient(90deg, #43e08c 0%, #25d366 100%);
+}
+
+.pn-fu-wa .pn-fu-num {
+  color: #4be391;
+}
+
+.pn-fu-salto {
+  margin: .45rem 0;
+  padding-left: 1.1rem;
+  font-size: .7rem;
+  color: var(--pn-tenue);
+  position: relative;
+}
+
+.pn-fu-salto::before {
+  content: '↳';
+  position: absolute;
+  left: .2rem;
+  top: -.05rem;
+  font-size: .8rem;
+}
+
+.pn-fu-salto strong {
+  font-weight: 600;
+  color: var(--pn-medio);
 }
 
 /* ── Flusso a nastri ──────────────────────────── */
@@ -903,8 +941,5 @@ body {
   }
   .pn-corpo {
     padding: 1.2rem 4% 3rem;
-  }
-  .pn-fu-passo {
-    height: 60px;
   }
 }

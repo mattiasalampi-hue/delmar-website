@@ -180,9 +180,12 @@ function st_imbuto($da, $a) {
          WHERE giorno BETWEEN ? AND ? AND nome IN (' . $in . ')',
         array_merge(array($da, $a), $c))['n'];
 
-    $modulo = (int) st_uno(
+    /* L'imbuto FINISCE su WhatsApp, non sul modulo: e' il canale con
+       cui i locali ordinano davvero, ed e' il numero per cui questa
+       pagina esiste. Il modulo resta nel riquadro dei canali */
+    $wa = (int) st_uno(
         "SELECT COUNT(DISTINCT giorno || impronta) n FROM eventi
-         WHERE giorno BETWEEN ? AND ? AND nome = 'modulo-inviato'", array($da, $a))['n'];
+         WHERE giorno BETWEEN ? AND ? AND nome = 'whatsapp'", array($da, $a))['n'];
 
     /* Chi e' andato a guardare COSA vendiamo o DOVE arriviamo: e' il
        gradino fra "e' passato" e "ha alzato la mano". Prima del 19/08
@@ -196,11 +199,12 @@ function st_imbuto($da, $a) {
         array($da, $a))['n'];
 
     return array(
-        array('et' => 'Sono arrivati',                 'n' => $vis),
-        array('et' => 'Hanno letto a metà',            'n' => $letto),
-        array('et' => 'Hanno aperto prodotti o zone',  'n' => $sezioni),
-        array('et' => 'Hanno fatto qualcosa',          'n' => $agito),
-        array('et' => 'Hanno scritto',                 'n' => $modulo)
+        array('et' => 'Sono arrivati',                'n' => $vis),
+        array('et' => 'Hanno letto a metà',           'n' => $letto),
+        array('et' => 'Hanno aperto prodotti o zone', 'n' => $sezioni,
+              'nota' => 'contati dal 19/08'),
+        array('et' => 'Hanno contattato',             'n' => $agito),
+        array('et' => 'Hanno aperto WhatsApp',        'n' => $wa, 'wa' => true)
     );
 }
 

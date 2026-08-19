@@ -135,39 +135,44 @@ function css_num($x) {
     return number_format((float) $x, 1, '.', '');
 }
 
+/* Un gradino = una riga: etichetta e numero GRANDE sopra, barra sotto,
+   e fra un gradino e l'altro la frase che conta — "ne prosegue il X%".
+   Niente trapezi centrati: con un gradino a zero collassavano in una
+   clessidra, e il testo galleggiava staccato dalle forme. L'ultimo
+   gradino e' WhatsApp e si veste del suo verde: e' il punto d'arrivo
+   di tutto l'imbuto, deve essere inconfondibile */
 function imbuto_html($gradini) {
     $base = max(1, $gradini[0]['n']);
     $fuori = '';
     foreach ($gradini as $i => $g) {
-        $q  = $g['n'] / $base * 100;
-        $qs = max(4, $q);                                     /* visibile anche a zero */
-        $prox = isset($gradini[$i + 1]) ? max(4, $gradini[$i + 1]['n'] / $base * 100) : $qs;
-        $calo = $i > 0 && $gradini[$i - 1]['n'] > 0
-            ? 100 - ($g['n'] / $gradini[$i - 1]['n'] * 100) : null;
+        $q = $g['n'] / $base * 100;
 
-        $lt = (100 - $qs) / 2;   $rt = 100 - $lt;
-        $lb = (100 - $prox) / 2; $rb = 100 - $lb;
-
-        /* Un gradino puo' essere PIU' grande del precedente: i passi
-           non sono sottoinsiemi rigidi (si puo' aprire il catalogo
-           senza aver letto meta' pagina). Si dice con un "+", non con
-           un doppio segno */
-        $confronto = '';
-        if ($calo !== null) {
-            $confronto = $calo >= 0
-                ? ' · −' . dec($calo, 0) . '% dal passo prima'
-                : ' · +' . dec(abs($calo), 0) . '% dal passo prima';
+        if ($i > 0) {
+            $prev = $gradini[$i - 1]['n'];
+            $persi = $prev - $g['n'];
+            if ($prev > 0 && $g['n'] <= $prev) {
+                $frase = 'ne prosegue il <strong>' . dec($g['n'] / $prev * 100, 0) . '%</strong>'
+                       . ($persi > 0 ? ' · si fermano in ' . n($persi) : '');
+            } elseif ($prev > 0) {
+                /* I gradini non sono sottoinsiemi rigidi: si puo' aprire
+                   il catalogo senza aver letto meta' pagina. Sopra il
+                   100% la percentuale confonde, meglio dirlo in parole */
+                $frase = 'qui sono <strong>di più</strong> del passo prima (+' . n($g['n'] - $prev) . ')';
+            } else {
+                $frase = 'il passo prima è a zero';
+            }
+            $fuori .= '<div class="pn-fu-salto">' . $frase . '</div>';
         }
 
-        $fuori .= '<div class="pn-fu-passo">'
-            . '<div class="pn-fu-forma" style="clip-path: polygon('
-            . css_num($lt) . '% 0, ' . css_num($rt) . '% 0, '
-            . css_num($rb) . '% 100%, ' . css_num($lb) . '% 100%); --fu: ' . ($i + 1) . '"></div>'
-            . '<div class="pn-fu-testo">'
-            . '<span class="pn-fu-et">' . e($g['et']) . '</span>'
-            . '<span class="pn-fu-val">' . n($g['n'])
-            . '<small> · ' . dec($q, 1) . '%' . $confronto . '</small></span>'
+        $fuori .= '<div class="pn-fu-passo' . (!empty($g['wa']) ? ' pn-fu-wa' : '') . '">'
+            . '<div class="pn-fu-info">'
+            . '<span class="pn-fu-et">' . e($g['et'])
+            . (!empty($g['nota']) ? ' <small>' . e($g['nota']) . '</small>' : '')
+            . '</span>'
+            . '<span class="pn-fu-num">' . n($g['n'])
+            . '<small> · ' . dec($q, 0) . '% di chi arriva</small></span>'
             . '</div>'
+            . '<div class="pn-fu-barra"><i style="width: ' . css_num(max(1.5, $q)) . '%"></i></div>'
             . '</div>';
     }
     return '<div class="pn-fu">' . $fuori . '</div>';
