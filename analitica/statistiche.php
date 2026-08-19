@@ -184,12 +184,65 @@ function st_imbuto($da, $a) {
         "SELECT COUNT(DISTINCT giorno || impronta) n FROM eventi
          WHERE giorno BETWEEN ? AND ? AND nome = 'modulo-inviato'", array($da, $a))['n'];
 
+    /* Chi e' andato a guardare COSA vendiamo o DOVE arriviamo: e' il
+       gradino fra "e' passato" e "ha alzato la mano". Prima del 19/08
+       la sonda non girava su quelle pagine, quindi sui periodi vecchi
+       questo numero parte basso: non e' un crollo, e' che prima non si
+       misurava */
+    $sezioni = (int) st_uno(
+        "SELECT COUNT(DISTINCT giorno || impronta) n FROM visite
+         WHERE giorno BETWEEN ? AND ?
+           AND (percorso LIKE '/catalogo/%' OR percorso LIKE '/consegna/%')",
+        array($da, $a))['n'];
+
     return array(
-        array('et' => 'Sono arrivati',        'n' => $vis),
-        array('et' => 'Hanno letto a metà',   'n' => $letto),
-        array('et' => 'Hanno fatto qualcosa', 'n' => $agito),
-        array('et' => 'Hanno scritto',        'n' => $modulo)
+        array('et' => 'Sono arrivati',                 'n' => $vis),
+        array('et' => 'Hanno letto a metà',            'n' => $letto),
+        array('et' => 'Hanno aperto prodotti o zone',  'n' => $sezioni),
+        array('et' => 'Hanno fatto qualcosa',          'n' => $agito),
+        array('et' => 'Hanno scritto',                 'n' => $modulo)
     );
+}
+
+/* ── I contatti, canale per canale ───────────────────────────────── */
+
+/* WhatsApp, telefono, email e modulo separati: "23 contatti" non dice
+   su che canale rispondere ne' quale pulsante lavora. Le persone sono
+   coppie (giorno, impronta) come ovunque; i colpi sono i clic totali,
+   che su WhatsApp possono essere piu' d'uno a persona */
+function st_canali_contatto($da, $a) {
+    $c = st_contatti();
+    $in = implode(',', array_fill(0, count($c), '?'));
+
+    $righe = st_q(
+        'SELECT nome, COUNT(*) n, COUNT(DISTINCT giorno || impronta) persone
+         FROM eventi WHERE giorno BETWEEN ? AND ? AND nome IN (' . $in . ')
+         GROUP BY nome', array_merge(array($da, $a), $c));
+
+    /* Tutti i canali sempre presenti, anche a zero: un canale che
+       sparisce dal riquadro sembra rotto, uno a zero dice "nessuno" */
+    $per = array();
+    foreach ($c as $nome) $per[$nome] = array('n' => 0, 'persone' => 0);
+    foreach ($righe as $r) {
+        $per[$r['nome']] = array('n' => (int) $r['n'], 'persone' => (int) $r['persone']);
+    }
+    return $per;
+}
+
+/* Da QUALE pagina si contatta. E' la domanda che decide dove mettere le
+   prossime CTA: una pagina con tante visite e zero contatti ha un
+   problema, una con poche visite e tanti contatti va spinta */
+function st_cta_pagine($da, $a, $quante = 12) {
+    $c = st_contatti();
+    $in = implode(',', array_fill(0, count($c), '?'));
+
+    return st_q(
+        "SELECT percorso, COUNT(*) n, COUNT(DISTINCT giorno || impronta) persone
+         FROM eventi
+         WHERE giorno BETWEEN ? AND ? AND nome IN (" . $in . ")
+           AND percorso IS NOT NULL AND percorso <> ''
+         GROUP BY percorso ORDER BY n DESC LIMIT " . (int) $quante,
+        array_merge(array($da, $a), $c));
 }
 
 /* ── Classificazione delle sorgenti ──────────────────────────────── */

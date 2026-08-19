@@ -130,7 +130,7 @@ ${paragrafi}
     </main>
 
 ${nastro(s)}
-${piede(['js/d.js?v=1', 'js/nastro.js?v=1', '../js/cursore.js?v=2'])}`;
+${piede(['js/d.js?v=1', 'js/nastro.js?v=1', '../js/analitica.js?v=2', '../js/cursore.js?v=2'])}`;
 }
 
 /* La vetrina: le card diventano tutte collegamenti alle rispettive schede */

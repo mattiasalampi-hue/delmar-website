@@ -109,6 +109,9 @@ $D = array();
 if ($dentro) {
     $C = st_confronto($per);
     $D['imbuto']    = st_imbuto($per['da'], $per['a']);
+    $D['canali']    = st_canali_contatto($per['da'], $per['a']);
+    $D['canali_p']  = st_canali_contatto($per['da_prec'], $per['a_prec']);
+    $D['cta_pag']   = st_cta_pagine($per['da'], $per['a']);
     $D['fonti_k']   = st_sorgenti_contatti($per['da'], $per['a']);
     $D['fonti']     = st_sorgenti($per['da'], $per['a']);
     $D['serie']     = st_serie($per['da'], $per['a']);
@@ -274,10 +277,39 @@ function scaricamento($s) {
           <small>su <?= n($o['misurate']) ?> di <?= n($o['viste']) ?> viste</small></span>
       </section>
 
-      <!-- 2. IMBUTO — dove si perdono -->
+      <!-- 2. I CANALI — come alzano la mano, uno per uno -->
+      <?php
+        /* Etichette dei canali in chiaro. L'ordine e' quello del valore
+           per un ingrosso: WhatsApp e' il canale degli ordini, il resto segue */
+        $canaliEt = array(
+            'whatsapp'       => 'WhatsApp',
+            'telefono'       => 'Telefono',
+            'modulo-inviato' => 'Modulo',
+            'email'          => 'Email'
+        );
+      ?>
+      <section class="pn-riquadro pn-importante">
+        <h2>Come contattano</h2>
+        <p class="pn-sotto">Persone, non clic: chi tocca due volte WhatsApp conta uno</p>
+        <div class="pn-numeri pn-numeri-fitti">
+          <?php foreach ($canaliEt as $ck => $cet):
+              $cv = isset($D['canali'][$ck]) ? $D['canali'][$ck] : array('n' => 0, 'persone' => 0);
+              $cp = isset($D['canali_p'][$ck]) ? $D['canali_p'][$ck] : array('n' => 0, 'persone' => 0);
+          ?>
+            <div class="pn-numero">
+              <span class="pn-n"><?= n($cv['persone']) ?></span>
+              <span class="pn-e"><?= e($cet) ?><br />
+                <small><?= n($cv['n']) ?> <?= $ck === 'modulo-inviato' ? 'invii' : 'clic' ?></small>
+                <?= delta(st_variazione($cv['persone'], $cp['persone'])) ?></span>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </section>
+
+      <!-- 3. IMBUTO — dove si perdono -->
       <section class="pn-riquadro pn-importante">
         <h2>Dove si perdono</h2>
-        <p class="pn-sotto">Ogni gradino è un pezzo del precedente, sulle stesse persone</p>
+        <p class="pn-sotto">Quante persone arrivano fino a lì — prodotti e zone contati dal 19/08, prima la sonda lì non c'era</p>
         <div class="pn-imbuto">
           <?php foreach ($D['imbuto'] as $i => $g):
               $q = $g['n'] / $base * 100;
@@ -295,7 +327,23 @@ function scaricamento($s) {
       </section>
 
       <div class="pn-griglia">
-        <!-- 3. DA DOVE ARRIVA CHI CONTATTA — non da dove arrivano tutti -->
+        <!-- 4. DA QUALE PAGINA contattano -->
+        <section class="pn-riquadro pn-importante">
+          <h2>Da quale pagina contattano</h2>
+          <p class="pn-sotto">La pagina su cui è partito il clic o l'invio</p>
+          <?php $tot_cta = 0; foreach ($D['cta_pag'] as $r) $tot_cta += (int) $r['n']; ?>
+          <?php foreach ($D['cta_pag'] as $r): $q = $tot_cta ? $r['n'] / $tot_cta * 100 : 0; ?>
+            <div class="pn-riga" style="--q: <?= round($q) ?>%">
+              <span class="pn-et"><?= e($r['percorso']) ?></span>
+              <span class="pn-val"><?= n($r['persone']) ?><small> pers. · <?= n($r['n']) ?> azioni</small></span>
+            </div>
+          <?php endforeach; ?>
+          <?php if (!$D['cta_pag']): ?>
+            <p class="pn-vuoto">Nessun contatto in questo periodo.</p>
+          <?php endif; ?>
+        </section>
+
+        <!-- 5. DA DOVE ARRIVA CHI CONTATTA — non da dove arrivano tutti -->
         <section class="pn-riquadro pn-importante">
           <h2>Da dove arriva chi contatta</h2>
           <p class="pn-sotto">La sorgente dei soli visitatori che hanno agito</p>
