@@ -85,7 +85,7 @@ const pagina = `${testa('Crediti fotografici', {
 ${crediti.map(riga).join('\n')}
       </ul>
     </main>
-${piede(['../js/consenso.js?v=1', '../js/tag.js?v=1', '../js/analitica.js?v=2', '../js/cursore.js?v=2'])}`;
+${piede(['../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', '../js/cursore.js?v=2'])}`;
 
 fs.writeFileSync(path.join(qui, 'crediti.html'), pagina);
 console.log(`crediti.html — ${crediti.length} fotografie attribuite`);

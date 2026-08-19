@@ -26,13 +26,15 @@
      vuoti restano spenti: si puo' accendere solo Google e lasciare Meta
      per dopo, o viceversa. */
   const ID = {
-    /* Google Ads — si trova in Strumenti > Conversioni. Ha la forma
-       'AW-123456789' */
-    ads: '',
+    /* Google Ads — account DelMar 217-296-9580 (l'UNICO: profilo
+       pagamenti LE DELIZIE DEL MARE S.R.L.). Azione di conversione
+       "Contatto dal sito (WhatsApp, telefono, modulo)", creata il
+       19/08/2026 */
+    ads: 'AW-18393310440',
     /* L'etichetta della singola conversione, che Google da' insieme
-       all'identificativo: 'AW-123456789/AbCdEfGhIj'. Va incollata
-       INTERA, compreso il pezzo prima della barra */
-    adsConversione: '',
+       all'identificativo. Va incollata INTERA, compreso il pezzo
+       prima della barra */
+    adsConversione: 'AW-18393310440/7vnsCJHcs-QcEOjJzsJE',
     /* Google Analytics 4 — la proprieta' di DelMar esiste gia' ed e'
        G-1VCGM6PY73. Lasciata vuota di proposito: prima di accenderla,
        leggere la nota in fondo a questo file */
