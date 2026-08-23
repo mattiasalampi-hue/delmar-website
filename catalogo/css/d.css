@@ -301,12 +301,26 @@
 
 /* ─ Chiusura ────────────────────────────────
    Stesso impianto della chiusura delle domande frequenti */
+/* L'ARIA SOPRA LA CHIUSURA LA DECIDE LA CHIUSURA, non il blocco che le
+   capita davanti. Misurata sul telefono era 64px sull'indice catalogo, 16
+   sui cataloghi di linea, 38 sull'indice consegne e 32 sulle pagine di
+   zona: cinque pagine, quattro distanze diverse, e nessuna scelta da
+   nessuna parte — ognuna ereditava il padding di chiusura del blocco
+   precedente, che quel padding ce l'ha per i fatti suoi. Qui il blocco che
+   precede smette di aggiungerne, e la distanza e' una e scritta una volta.
+   Dove :has() non c'e' (iOS sotto la 15.4) si torna al comportamento di
+   prima: distanze diverse, non un difetto di impaginazione. */
+.pr-corpo > *:has(+ .pr-chiusura) {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 .pr-chiusura {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   max-width: 62rem;
-  margin: 0 auto 4rem;
+  margin: 3.5rem auto 4rem;
   padding: 4.5rem 8% 4.2rem;
   text-align: center;
   /* Resta il blu pieno: e' quello che si vede finche' la tela non ha

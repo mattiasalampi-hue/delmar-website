@@ -313,14 +313,28 @@ function indice() {
           <canvas id="mappa-linee"></canvas>
 ${attive.map((z) => {
     const p = PIN[z.slug];
-    /* Vicino al bordo alto della cornice la scheda si aprirebbe fuori
-       (la cornice taglia con overflow): li' esce verso il basso */
-    const giu = p.fy < 0.25 ? ' mp-area--giu' : '';
-    return `          <a class="mp-area${giu}" href="${z.slug}.html" aria-label="Zona di consegna ${z.nome}" data-fx="${p.fx}" data-fy="${p.fy}" style="left:${(p.bx * 100).toFixed(1)}%;top:${(p.by * 100).toFixed(1)}%;width:${(p.bw * 100).toFixed(1)}%;height:${(p.bh * 100).toFixed(1)}%">
+    /* La cornice taglia con overflow, quindi una scheda che si apre verso
+       un bordo esce a meta'. In alto esce verso il basso; ai lati si
+       appoggia al pin invece di stargli centrata sopra — a schermo stretto
+       la scheda e' larga quasi come mezza carta, e Genova a ponente e
+       Firenze a levante la perdevano per strada */
+    /* La soglia sta a meta' carta e non a un quarto: sul telefono la carta
+       e' alta 210px e l'intestazione appiccicata ne copre i primi 64, e una
+       scheda che si apre in su da un pin della meta' alta finisce dietro
+       l'intestazione invece che fuori dalla cornice — invisibile lo stesso,
+       ma senza che nessuna misura sulla carta lo dica */
+    const giu = p.fy < 0.45 ? ' mp-area--giu' : '';
+    const lato = p.bx < 0.15 ? ' mp-area--sx' : (p.bx + p.bw > 0.85 ? ' mp-area--dx' : '');
+    return `          <a class="mp-area${giu}${lato}" href="${z.slug}.html" aria-label="Zona di consegna ${z.nome}" data-fx="${p.fx}" data-fy="${p.fy}" data-zona="${z.slug}" style="left:${(p.bx * 100).toFixed(1)}%;top:${(p.by * 100).toFixed(1)}%;width:${(p.bw * 100).toFixed(1)}%;height:${(p.bh * 100).toFixed(1)}%">
             <span class="mp-tip"><strong>${z.nome}</strong><em>${z.giorni_brevi}</em></span>
           </a>`;
   }).join('\n')}
         </div>
+        <!-- Solo sul telefono. Sul desktop il passaggio del dito sopra un
+             pin apre gia' la sua scheda e si capisce da se' che la carta e'
+             viva; sul telefono il passaggio non esiste, e senza una riga
+             che lo dica i pin sembrano disegnati -->
+        <p class="mp-guida">Tocca una zona sulla carta, o scegli qui sotto</p>
       </div>
 
       <!-- La CTA subito dopo la mappa, non solo in fondo: chi ha appena
@@ -352,7 +366,7 @@ ${attive.map((z) => {
       <div class="zn-zone">
 ${attive.map((z) => {
     const f = finestrella(z.slug);
-    return `        <a class="zn-zona" href="${z.slug}.html">
+    return `        <a class="zn-zona" href="${z.slug}.html" data-zona="${z.slug}">
           <div class="zn-zona-finestra" style="${f.mira}">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="${f.img}" loading="lazy" />
@@ -387,7 +401,7 @@ ${attive.map((z) => {
         <p class="pr-chiusura-tel">Rispondiamo tutti i giorni, festivi compresi</p>
       </section>
     </main>
-${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', '../catalogo/js/d.js?v=1', 'js/mappa.js?v=1', '../js/cursore.js?v=2'], { cat: '../catalogo/' })}`;
+${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', '../catalogo/js/d.js?v=1', 'js/mappa.js?v=9', '../js/cursore.js?v=2'], { cat: '../catalogo/' })}`;
 }
 
 let n = 0;

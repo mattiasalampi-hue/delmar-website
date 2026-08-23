@@ -154,6 +154,12 @@
   pointer-events: none;
 }
 
+/* La riga che spiega come si tocca la carta serve solo dove non esiste il
+   passaggio del dito: sul desktop la scheda del pin esce da se' */
+.mp-guida {
+  display: none;
+}
+
 .mp-guscio {
   position: relative;
   max-width: 66rem;
@@ -251,8 +257,14 @@
   color: var(--wa);
 }
 
+/* .mp-attiva sta nello stesso gruppo del passaggio del dito e non in una
+   regola sua nel blocco del telefono: separate hanno la stessa specificita'
+   e vince l'ultima scritta, che spazzava via l'apertura di lato dei pin di
+   bordo — la scheda di Genova finiva mezza fuori dalla carta. La classe la
+   mette mappa.js solo sul telefono, e la toglie tornando al desktop. */
 .mp-area:hover .mp-tip,
-.mp-area:focus-visible .mp-tip {
+.mp-area:focus-visible .mp-tip,
+.mp-area.mp-attiva .mp-tip {
   opacity: 1;
   transform: translateX(-50%) translateY(0) scale(1);
 }
@@ -274,8 +286,49 @@
 }
 
 .mp-area--giu:hover .mp-tip,
-.mp-area--giu:focus-visible .mp-tip {
+.mp-area--giu:focus-visible .mp-tip,
+.mp-area--giu.mp-attiva .mp-tip {
   transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* Ai bordi di ponente e di levante la scheda non sta centrata sul pin ma
+   appoggiata a lui e aperta verso il centro della carta: centrata uscirebbe
+   dalla cornice, che taglia. Vale ovunque, ma si vede soprattutto sul
+   telefono, dove la scheda e' larga quasi mezza carta */
+.mp-area--sx .mp-tip {
+  left: 0;
+  transform: translateX(0) translateY(6px) scale(.92);
+  transform-origin: bottom left;
+}
+
+.mp-area--sx .mp-tip::after {
+  left: 1.1rem;
+  transform: none;
+}
+
+.mp-area--sx:hover .mp-tip,
+.mp-area--sx:focus-visible .mp-tip,
+.mp-area--sx.mp-attiva .mp-tip {
+  transform: translateX(0) translateY(0) scale(1);
+}
+
+.mp-area--dx .mp-tip {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(6px) scale(.92);
+  transform-origin: bottom right;
+}
+
+.mp-area--dx .mp-tip::after {
+  left: auto;
+  right: 1.1rem;
+  transform: none;
+}
+
+.mp-area--dx:hover .mp-tip,
+.mp-area--dx:focus-visible .mp-tip,
+.mp-area--dx.mp-attiva .mp-tip {
+  transform: translateX(0) translateY(0) scale(1);
 }
 
 .mp-area:focus-visible {
@@ -520,27 +573,149 @@
   }
 }
 
-@media (max-width: 620px) {
-  /* Due finestrelle per fila anche sul telefono: a colonna piena sarebbero
-     lenzuoli. Il testo si stringe con la card */
+/* ─ IL TELEFONO: la carta a filo schermo, le zone in colonna ─────────────
+   Sul telefono le finestrelle sulla carta, due per fila, erano francobolli
+   da 130px in cui non si leggeva un nome — e su iOS Safari nemmeno si
+   disegnavano: sedici copie della carta, filtrate e una sfocata, sforavano
+   la memoria di composizione del telefono e restava la macchia blu col pin.
+   Sono state tolte.
+   Poi si e' provato a mettere la carta IN PIEDI, zoomata sulla zona scelta.
+   Bocciata: "la mappa neanche si vede" — zoomando si leggono le etichette
+   ma sparisce quello che la carta deve dire, cioe' quanto territorio
+   copriamo; e il carosello orizzontale sotto era "difficilissimo da
+   capire". (Mattias, 2026-08-24)
+   Quindi: la carta INTERA, senza zoom, a filo schermo per prendersi ogni
+   millimetro disponibile — 390px invece di 345 sono il 13% di etichetta in
+   piu' — e le zone in COLONNA, una per riga, senza gesti da imparare. Le
+   etichette restano piccole perche' sono stampate dentro l'immagine: per
+   ingrandirle serve una esportazione della stessa inquadratura SENZA i
+   nostri pin, e i pin li disegniamo noi sopra alla misura del telefono. */
+@media (max-width: 720px) {
+  /* QUI NON SI TOCCA LA DISPOSIZIONE DEL CORPO. Per portare la coppia di
+     bottoni sotto l'elenco si era messo `display:flex` su .pr-corpo con
+     gli `order`: in un contenitore flex pero' `margin: 0 auto` spegne lo
+     stiramento, e tutti i blocchi centrati del sito — la chiusura blu,
+     .pr-intro, .zn-fatti, .zn-fasi — si sono ristretti al loro contenuto.
+     La chiusura passava da 642px a 514px, su tutte e nove le pagine
+     consegna, mentre le pagine catalogo restavano piene: e' cosi' che il
+     sito ha cominciato ad avere due misure. Le pagine di zona e quelle di
+     catalogo condividono questi componenti, e devono condividerne anche
+     l'impaginazione: qui si aggiustano solo i pezzi che esistono SOLO
+     qui — la carta e l'elenco delle zone. (Mattias, 2026-08-24) */
+  /* I 3rem sopra la coppia di bottoni servono a staccarla dalla carta
+     grande del desktop. Sul telefono la carta e' alta un quinto e quei
+     3rem diventano 48px dove tutte le altre pagine del sito ne usano 22:
+     stessa coppia di bottoni, stessa aria */
+  .mp-scena + .pr-cta {
+    padding-top: 1.4rem;
+  }
+
+  .mp-scena {
+    padding: 1.8rem 0 .5rem;
+  }
+
+  /* A filo schermo: niente margini, niente angoli tondi. Su una carta
+     geografica il bordo arrotondato la fa sembrare una figurina; a tutta
+     larghezza sembra quello che e', una carta */
+  .mp-guscio {
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+    box-shadow:
+      0 16px 34px rgba(21, 28, 100, .26),
+      0 4px 10px rgba(21, 28, 100, .14);
+  }
+
+  /* Niente filtro sull'immagine della carta: la tinta fa gia' il colore, e
+     il filtro costringe Safari a tenersi in memoria l'immagine intera
+     rasterizzata invece di disegnarla e basta */
+  .mp-guscio img {
+    filter: none;
+  }
+
+  .mp-tinta {
+    opacity: .5;
+  }
+
+  .mp-guida {
+    display: block;
+    margin: .85rem 6% 0;
+    text-align: center;
+    font-size: .62rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+  }
+
+  /* Il titolo si stringe e la riga di spiegazione sparisce: "coi giorni del
+     giro e i comuni serviti" lo si vede da se' nelle righe qui sotto, e
+     ogni riga di troppo qui e' un pezzo di carta che esce dallo schermo */
+  .zn-carte-testa {
+    padding-top: 1.6rem;
+    padding-bottom: .1rem;
+  }
+
+  .zn-carte-testa > p {
+    display: none;
+  }
+
+  /* UNA ZONA PER RIGA. Il carosello orizzontale metteva otto zone in una
+     riga sola e in cambio chiedeva di indovinare che si scorre di lato:
+     otto righe in colonna si vedono e basta */
   .zn-zone {
-    grid-template-columns: 1fr 1fr;
-    gap: .8rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    max-width: none;
+    margin: 1rem 0 2.4rem;
+    padding: 0 4%;
+  }
+
+  /* La finestrella sulla carta sparisce: la carta vera sta qui sopra, tutta
+     intera, e otto ritagli in miniatura della stessa carta non aggiungono
+     niente — erano solo il posto in cui il telefono si rompeva */
+  .zn-zona-finestra {
+    display: none;
+  }
+
+  .zn-zona {
+    border-radius: 14px;
+    /* La riga di sinistra si accende quando il pin corrispondente e' quello
+       toccato sulla carta: e' il filo fra le due cose */
+    border-left: 3px solid var(--border);
+    transition: border-left-color .35s, box-shadow .35s;
+  }
+
+  .zn-zona.zn-attiva {
+    border-left-color: #ff6b57;
+    box-shadow: 0 12px 26px rgba(21, 28, 100, .15);
   }
 
   .zn-zona-testo {
-    padding: .8rem .9rem 1rem;
+    gap: .3rem;
+    padding: .9rem 1.05rem 1rem;
+  }
+
+  .zn-zona-giorni {
+    font-size: .58rem;
   }
 
   .zn-zona h3 {
-    font-size: 1rem;
+    font-size: 1.1rem;
+  }
+
+  /* La freccia sul titolo qui sta sempre: usciva col passaggio del dito,
+     che sul telefono non c'e', e senza si legge come un titolo e non come
+     una riga che si apre */
+  .zn-zona h3::after {
+    opacity: 1;
+    transform: none;
   }
 
   .zn-zona p {
-    font-size: .68rem;
+    font-size: .76rem;
   }
-
-
 }
 
 /* ─ Le strisce della home ───────────────────

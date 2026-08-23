@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dove consegniamo — DelMar</title>
-    <meta name="description" content="Le zone di consegna DelMar: Versilia, Massa e Carrara, La Spezia, Lucca, Genova, Parma, Firenze e Prato. Ogni giorno dalla costa toscana, entro le 11." />
+    <meta name="description" content="Le zone di consegna DelMar: Versilia, Massa e Carrara, La Spezia, Lucca, Genova e Parma. Ogni giorno dalla costa toscana, entro le 11." />
     <link rel="canonical" href="https://del-mar.it/consegna/" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://del-mar.it/consegna/" />
     <meta property="og:title" content="Dove consegniamo — DelMar" />
-    <meta property="og:description" content="Le zone di consegna DelMar: Versilia, Massa e Carrara, La Spezia, Lucca, Genova, Parma, Firenze e Prato. Ogni giorno dalla costa toscana, entro le 11." />
+    <meta property="og:description" content="Le zone di consegna DelMar: Versilia, Massa e Carrara, La Spezia, Lucca, Genova e Parma. Ogni giorno dalla costa toscana, entro le 11." />
     <meta property="og:image" content="https://del-mar.it/catalogo/foto-prodotti/copertina-pescato.webp" />
     <meta property="og:locale" content="it_IT" />
     <meta property="og:site_name" content="DelMar" />
@@ -23,9 +23,9 @@
          pagina delle domande frequenti. Si carica quel foglio invece di
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
     <link rel="stylesheet" href="../css/domande-frequenti.css?v=8" />
-    <link rel="stylesheet" href="../catalogo/css/d.css?v=3" />
-    <link rel="stylesheet" href="css/zona.css?v=2" />
+    <link rel="stylesheet" href="../catalogo/css/d.css?v=4" />
     <link rel="stylesheet" href="../css/consenso.css?v=1" />
+    <link rel="stylesheet" href="css/zona.css?v=12" />
   </head>
   <body class="pr-pagina">
     <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
@@ -80,31 +80,36 @@
                tavolozza del sito senza toccare l'immagine -->
           <div class="mp-tinta" aria-hidden="true"></div>
           <canvas id="mappa-linee"></canvas>
-          <a class="mp-area" href="fornitore-pesce-versilia.html" aria-label="Zona di consegna Versilia" data-fx="0.52" data-fy="0.808" style="left:50.4%;top:77.7%;width:8.0%;height:7.0%">
+          <a class="mp-area" href="fornitore-pesce-versilia.html" aria-label="Zona di consegna Versilia" data-fx="0.52" data-fy="0.808" data-zona="fornitore-pesce-versilia" style="left:50.4%;top:77.7%;width:8.0%;height:7.0%">
             <span class="mp-tip"><strong>Versilia</strong><em>7 giorni su 7</em></span>
           </a>
-          <a class="mp-area" href="fornitore-pesce-genova.html" aria-label="Zona di consegna Genova" data-fx="0.052" data-fy="0.361" style="left:3.5%;top:33.0%;width:8.5%;height:7.0%">
+          <a class="mp-area mp-area--giu mp-area--sx" href="fornitore-pesce-genova.html" aria-label="Zona di consegna Genova" data-fx="0.052" data-fy="0.361" data-zona="fornitore-pesce-genova" style="left:3.5%;top:33.0%;width:8.5%;height:7.0%">
             <span class="mp-tip"><strong>Genova</strong><em>mar · gio · ven · sab · dom</em></span>
           </a>
-          <a class="mp-area" href="fornitore-pesce-la-spezia.html" aria-label="Zona di consegna La Spezia e Val di Magra" data-fx="0.299" data-fy="0.606" style="left:28.3%;top:57.5%;width:15.0%;height:7.0%">
+          <a class="mp-area" href="fornitore-pesce-la-spezia.html" aria-label="Zona di consegna La Spezia e Val di Magra" data-fx="0.299" data-fy="0.606" data-zona="fornitore-pesce-la-spezia" style="left:28.3%;top:57.5%;width:15.0%;height:7.0%">
             <span class="mp-tip"><strong>La Spezia e Val di Magra</strong><em>7 giorni su 7</em></span>
           </a>
-          <a class="mp-area" href="fornitore-pesce-lucca.html" aria-label="Zona di consegna Lucca e Montecatini" data-fx="0.643" data-fy="0.834" style="left:62.7%;top:80.3%;width:14.0%;height:7.0%">
+          <a class="mp-area" href="fornitore-pesce-lucca.html" aria-label="Zona di consegna Lucca e Montecatini" data-fx="0.643" data-fy="0.834" data-zona="fornitore-pesce-lucca" style="left:62.7%;top:80.3%;width:14.0%;height:7.0%">
             <span class="mp-tip"><strong>Lucca e Montecatini</strong><em>7 giorni su 7</em></span>
           </a>
-          <a class="mp-area mp-area--giu" href="fornitore-pesce-parma.html" aria-label="Zona di consegna Parma" data-fx="0.545" data-fy="0.094" style="left:52.0%;top:5.5%;width:7.5%;height:10.0%">
+          <a class="mp-area mp-area--giu" href="fornitore-pesce-parma.html" aria-label="Zona di consegna Parma" data-fx="0.545" data-fy="0.094" data-zona="fornitore-pesce-parma" style="left:52.0%;top:5.5%;width:7.5%;height:10.0%">
             <span class="mp-tip"><strong>Parma</strong><em>lun · mer · gio · ven · sab</em></span>
           </a>
-          <a class="mp-area" href="fornitore-pesce-massa-carrara.html" aria-label="Zona di consegna Massa e Carrara" data-fx="0.448" data-fy="0.654" style="left:43.2%;top:62.3%;width:12.0%;height:7.0%">
+          <a class="mp-area" href="fornitore-pesce-massa-carrara.html" aria-label="Zona di consegna Massa e Carrara" data-fx="0.448" data-fy="0.654" data-zona="fornitore-pesce-massa-carrara" style="left:43.2%;top:62.3%;width:12.0%;height:7.0%">
             <span class="mp-tip"><strong>Massa e Carrara</strong><em>7 su 7, anche il pomeriggio</em></span>
           </a>
-          <a class="mp-area" href="fornitore-pesce-firenze.html" aria-label="Zona di consegna Firenze" data-fx="0.869" data-fy="0.925" style="left:85.3%;top:89.4%;width:7.8%;height:7.0%">
+          <a class="mp-area mp-area--dx" href="fornitore-pesce-firenze.html" aria-label="Zona di consegna Firenze" data-fx="0.869" data-fy="0.925" data-zona="fornitore-pesce-firenze" style="left:85.3%;top:89.4%;width:7.8%;height:7.0%">
             <span class="mp-tip"><strong>Firenze</strong><em>7 giorni su 7</em></span>
           </a>
-          <a class="mp-area" href="fornitore-pesce-prato.html" aria-label="Zona di consegna Prato" data-fx="0.8" data-fy="0.824" style="left:78.4%;top:79.3%;width:7.0%;height:7.0%">
+          <a class="mp-area mp-area--dx" href="fornitore-pesce-prato.html" aria-label="Zona di consegna Prato" data-fx="0.8" data-fy="0.824" data-zona="fornitore-pesce-prato" style="left:78.4%;top:79.3%;width:7.0%;height:7.0%">
             <span class="mp-tip"><strong>Prato</strong><em>7 giorni su 7</em></span>
           </a>
         </div>
+        <!-- Solo sul telefono. Sul desktop il passaggio del dito sopra un
+             pin apre gia' la sua scheda e si capisce da se' che la carta e'
+             viva; sul telefono il passaggio non esiste, e senza una riga
+             che lo dica i pin sembrano disegnati -->
+        <p class="mp-guida">Tocca una zona sulla carta, o scegli qui sotto</p>
       </div>
 
       <!-- La CTA subito dopo la mappa, non solo in fondo: chi ha appena
@@ -134,7 +139,7 @@
            grafica"), lastre blu piene ("un cazzotto in un occhio"), card
            bianche con la rotta SVG ("invisibili"). (Mattias, 2026-08-19) -->
       <div class="zn-zone">
-        <a class="zn-zona" href="fornitore-pesce-versilia.html">
+        <a class="zn-zona" href="fornitore-pesce-versilia.html" data-zona="fornitore-pesce-versilia">
           <div class="zn-zona-finestra" style="--px:50.0%;--py:50.0%">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="width:459.99999999999994%;left:-189.2%;top:-228.9%" loading="lazy" />
@@ -153,7 +158,7 @@
           </div>
         </a>
 
-        <a class="zn-zona" href="fornitore-pesce-genova.html">
+        <a class="zn-zona" href="fornitore-pesce-genova.html" data-zona="fornitore-pesce-genova">
           <div class="zn-zona-finestra" style="--px:23.9%;--py:50.0%">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="width:459.99999999999994%;left:0.0%;top:-74.6%" loading="lazy" />
@@ -172,7 +177,7 @@
           </div>
         </a>
 
-        <a class="zn-zona" href="fornitore-pesce-la-spezia.html">
+        <a class="zn-zona" href="fornitore-pesce-la-spezia.html" data-zona="fornitore-pesce-la-spezia">
           <div class="zn-zona-finestra" style="--px:50.0%;--py:50.0%">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="width:459.99999999999994%;left:-87.5%;top:-159.2%" loading="lazy" />
@@ -191,7 +196,7 @@
           </div>
         </a>
 
-        <a class="zn-zona" href="fornitore-pesce-lucca.html">
+        <a class="zn-zona" href="fornitore-pesce-lucca.html" data-zona="fornitore-pesce-lucca">
           <div class="zn-zona-finestra" style="--px:50.0%;--py:50.0%">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="width:459.99999999999994%;left:-245.8%;top:-237.9%" loading="lazy" />
@@ -210,7 +215,7 @@
           </div>
         </a>
 
-        <a class="zn-zona" href="fornitore-pesce-parma.html">
+        <a class="zn-zona" href="fornitore-pesce-parma.html" data-zona="fornitore-pesce-parma">
           <div class="zn-zona-finestra" style="--px:50.0%;--py:32.4%">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="width:459.99999999999994%;left:-200.7%;top:0.0%" loading="lazy" />
@@ -229,7 +234,7 @@
           </div>
         </a>
 
-        <a class="zn-zona" href="fornitore-pesce-massa-carrara.html">
+        <a class="zn-zona" href="fornitore-pesce-massa-carrara.html" data-zona="fornitore-pesce-massa-carrara">
           <div class="zn-zona-finestra" style="--px:50.0%;--py:50.0%">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="width:459.99999999999994%;left:-156.1%;top:-175.7%" loading="lazy" />
@@ -248,7 +253,7 @@
           </div>
         </a>
 
-        <a class="zn-zona" href="fornitore-pesce-firenze.html">
+        <a class="zn-zona" href="fornitore-pesce-firenze.html" data-zona="fornitore-pesce-firenze">
           <div class="zn-zona-finestra" style="--px:50.0%;--py:74.1%">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="width:459.99999999999994%;left:-349.7%;top:-245.2%" loading="lazy" />
@@ -267,7 +272,7 @@
           </div>
         </a>
 
-        <a class="zn-zona" href="fornitore-pesce-prato.html">
+        <a class="zn-zona" href="fornitore-pesce-prato.html" data-zona="fornitore-pesce-prato">
           <div class="zn-zona-finestra" style="--px:50.0%;--py:50.0%">
             <div class="zn-zona-lente">
               <img src="../assets/mappa-consegne.webp" alt="" style="width:459.99999999999994%;left:-318.0%;top:-234.4%" loading="lazy" />
@@ -325,7 +330,7 @@
     <script src="../js/tag.js?v=2"></script>
     <script src="../js/analitica.js?v=2"></script>
     <script src="../catalogo/js/d.js?v=1"></script>
-    <script src="js/mappa.js?v=1"></script>
+    <script src="js/mappa.js?v=9"></script>
     <script src="../js/cursore.js?v=2"></script>
   </body>
 </html>
