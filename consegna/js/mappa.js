@@ -45,25 +45,61 @@
     tela.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  /* CANCELLARE LE ETICHETTE STAMPATE NELLA CARTA.
-     Non si dipinge una toppa di tinta piatta — su una carta geografica si
-     vede subito, e' un rettangolo che non c'entra niente col terreno
-     intorno. Si COPIA un pezzo di carta qui accanto e lo si incolla sopra:
-     il terreno cambia piano, quindi la giunta non si nota.
-     Il pezzo si prende sopra o sotto a seconda di dove c'e' carta libera —
-     verso il basso per le etichette in alto, verso l'alto per quelle in
-     fondo — perche' prenderlo sempre dalla stessa parte, per le zone di
-     bordo, vorrebbe dire copiare il vuoto fuori dalla carta. */
-  function toppa(ctx, img, bl, bt, bw, bh) {
-    if (!img || !img.naturalWidth || !W) return;
-    var k = img.naturalWidth / W;
-    var salto = bh * 1.7;
-    var da = (bt > H * 0.55) ? bt - salto : bt + salto;
-    if (da < 0) da = bt + salto;
-    if (da + bh > H) da = bt - salto;
-    ctx.drawImage(img,
-      bl * k, da * k, bw * k, bh * k,
-      bl, bt, bw, bh);
+  /* DOVE STA LA TARGHETTA DI OGNI ZONA.
+     Il conto sta in un posto solo perche' serve a due cose che DEVONO
+     coincidere: disegnare il nome, e mettere sotto al nome l'area che
+     riceve il tocco. Finche' le targhette erano disegnate sulla tela e
+     l'area sensibile restava al pin, si toccava il nome e non succedeva
+     niente — quello che si vede non era quello che si tocca. */
+  function targhetta(z, ctx) {
+    var testo = ctx.measureText(z.dataset.carta || '').width;
+    var x = parseFloat(z.dataset.fx) * W;
+    /* Il rettangolo dell'etichetta stampata, che la targhetta deve coprire */
+    var bl = parseFloat(z.dataset.bx) * W;
+    var br = bl + parseFloat(z.dataset.bw) * W;
+    var bt = parseFloat(z.dataset.by) * H;
+    var bh = parseFloat(z.dataset.bh) * H;
+
+    /* In verticale la targhetta si CENTRA sull'etichetta invece di
+       appendersi al pin: cosi' la copre anche dove il pin non e' al centro
+       del suo rettangolo (Parma), e resta alta uguale per tutte */
+    var alta = Math.max(18, bh + 2);
+    var py = bt + bh / 2 - alta / 2;
+
+    /* Il nome esce dal lato deciso in genera-zone.js (lc). Dal lato opposto
+       si toglie un pixel invece di aggiungerne: e' il bordo che tocca il
+       vicino — La Spezia e Massa hanno i rettangoli attaccati — e un margine
+       di cortesia li' diventa una sovrapposizione */
+    var sinistra = z.dataset.nomeLato === 'sx';
+    var px = sinistra ? Math.min(bl, x - 11 - testo - 9) : bl + 1;
+    var pr = sinistra ? br - 1 : Math.max(br, x + 11 + testo + 9);
+
+    if (pr > W - 1) { px -= pr - (W - 1); pr = W - 1; }
+    if (px < 1) px = 1;
+    if (py + alta > H - 1) py = H - 1 - alta;
+    if (py < 1) py = 1;
+    return { px: px, py: py, larga: pr - px, alta: alta, tx: sinistra ? px + 9 : x + 11 };
+  }
+
+
+
+  /* Lo stile con cui l'area nasce, cioe' il rettangolo sopra l'etichetta
+     stampata: e' quello che serve al desktop, dove la carta e' grande e la
+     scheda esce al passaggio del dito. Si conserva per rimetterlo. */
+  var stiliOriginali = aree.map(function (a) { return a.getAttribute('style'); });
+
+  function posizionaAree() {
+    var ctx = tela.getContext('2d');
+    ctx.font = '600 11px Poppins, system-ui, sans-serif';
+    aree.forEach(function (z, i) {
+      if (!piccolo.matches || !W) { z.setAttribute('style', stiliOriginali[i]); return; }
+      var t = targhetta(z, ctx);
+      z.setAttribute('style',
+        'left:' + (t.px / W * 100).toFixed(2) + '%;' +
+        'top:' + (t.py / H * 100).toFixed(2) + '%;' +
+        'width:' + (t.larga / W * 100).toFixed(2) + '%;' +
+        'height:' + (t.alta / H * 100).toFixed(2) + '%');
+    });
   }
 
   var fermo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -126,7 +162,7 @@
     }
 
 
-    /* I NOMI DELLE CITTA' SUL TELEFONO — cancellati e riscritti.
+    /* I NOMI DELLE CITTA' SUL TELEFONO — riscritti sopra quelli stampati.
 
        Nella carta pin ed etichette sono STAMPATI dentro l'immagine, a una
        misura pensata per mille pixel di larghezza. A trecentosettantacinque
@@ -134,25 +170,24 @@
        si legge e non si prende col dito. E una carta con otto nomi
        illeggibili e' peggio di una senza nomi, perche' sembra rotta.
 
-       Non basta scriverci sopra: finche' la targhetta nuova deve COPRIRE
-       quella stampata resta incollata al suo pin, e i pin stanno tutti su
-       una diagonale di due dita — i nomi si ammassano l'uno sull'altro.
+       Si e' provato a CANCELLARLI per poter poi distribuire i nomi dove c'e'
+       spazio. Non si puo', e le due strade lasciano tutte e due un segno:
+       una toppa di tinta piatta si vede come un rettangolo che col terreno
+       non c'entra niente; copiare un pezzo di carta li' accanto e incollarlo
+       sopra duplica le altre scritte della carta — usciva "Pontremoli" due
+       volte e un "Carrara" comparso dal nulla. Da un'immagine una scritta
+       non si toglie: si copre.
 
-       Quindi prima si CANCELLA. Ogni etichetta stampata viene coperta con
-       una toppa del colore della carta li' intorno, presa campionando
-       l'immagine vera: la carta e' servita dallo stesso dominio, quindi la
-       tela si puo' leggere. Cancellate quelle, i nomi si possono mettere
-       dove c'e' spazio — il mare a sud-ovest, la pianura a nord-est — e un
-       filo sottile li lega al loro punto. Le posizioni sono scelte a mano in
-       genera-zone.js (nx, ny): distribuirle a occhio e' esattamente il
-       lavoro che un algoritmo qui farebbe peggio. */
+       Quindi ogni targhetta sta ATTACCATA alla sua etichetta stampata e la
+       copre, e il nome esce a destra o a sinistra del punto a seconda di
+       chi ha per vicino (lc in genera-zone.js). Ci stanno tutte e otto senza
+       toccarsi perche' i nomi sono CORTI — "La Spezia", non "La Spezia e Val
+       di Magra": coi nomi lunghi Lucca da sola occupava centoventi pixel su
+       trecentosettantacinque. Restano vicine come sono vicine le citta'.
+
+       L'area che riceve il tocco viene spostata SOPRA la targhetta da
+       posizionaAree(): quello che si vede dev'essere quello che si tocca. */
     if (piccolo.matches) {
-      /* Le toppe per prime, sotto a tutto il resto */
-      var carta = guscio.querySelector('img');
-      aree.forEach(function (z) {
-        toppa(ctx, carta, z.offsetLeft - 1, z.offsetTop - 1, z.offsetWidth + 2, z.offsetHeight + 2);
-      });
-
       ctx.textBaseline = 'middle';
       ctx.font = '600 11px Poppins, system-ui, sans-serif';
 
@@ -162,22 +197,8 @@
         var sceltoLui = i === scelta;
         var nome = z.dataset.carta || '';
 
-        var testo = ctx.measureText(nome).width;
-        var larga = testo + 18;
-        var alta = 19;
-        var px = Math.max(1, Math.min(W - 1 - larga, parseFloat(z.dataset.nx) * W));
-        var py = Math.max(1, Math.min(H - 1 - alta, parseFloat(z.dataset.ny) * H));
-
-        /* Il filo parte dal bordo della targhetta piu' vicino al punto, non
-           dal suo centro: se no attraversa la targhetta stessa */
-        var ax = Math.max(px, Math.min(px + larga, x));
-        var ay = Math.max(py, Math.min(py + alta, y));
-        ctx.beginPath();
-        ctx.moveTo(ax, ay);
-        ctx.lineTo(x, y);
-        ctx.strokeStyle = sceltoLui ? '#ff6b57' : 'rgba(255,255,255,.85)';
-        ctx.lineWidth = sceltoLui ? 1.8 : 1.2;
-        ctx.stroke();
+        var t2 = targhetta(z, ctx);
+        var px = t2.px, py = t2.py, larga = t2.larga, alta = t2.alta;
 
         ctx.beginPath();
         if (ctx.roundRect) ctx.roundRect(px, py, larga, alta, alta / 2);
@@ -189,7 +210,7 @@
         ctx.stroke();
 
         ctx.fillStyle = sceltoLui ? '#fff' : '#1a2270';
-        ctx.fillText(nome, px + 9, py + alta / 2 + 0.5);
+        ctx.fillText(nome, t2.tx, py + alta / 2 + 0.5);
 
         /* Il punto vero della zona, dove sta la citta' */
         ctx.beginPath();
@@ -290,19 +311,29 @@
     righe.forEach(function (r) { r.classList.remove('zn-attiva'); });
   }
 
-  if (piccolo.addEventListener) piccolo.addEventListener('change', assetto);
-  else if (piccolo.addListener) piccolo.addListener(assetto);
+  function cambiaDisposizione() { assetto(); posizionaAree(); disegna(performance.now()); }
+  if (piccolo.addEventListener) piccolo.addEventListener('change', cambiaDisposizione);
+  else if (piccolo.addListener) piccolo.addListener(cambiaDisposizione);
 
   var attesa;
   window.addEventListener('resize', function () {
     clearTimeout(attesa);
-    attesa = setTimeout(function () { misura(); disegna(performance.now()); }, 120);
+    attesa = setTimeout(function () { misura(); posizionaAree(); disegna(performance.now()); }, 120);
   });
 
   var laCarta = guscio.querySelector('img');
   if (laCarta && !laCarta.complete) laCarta.addEventListener('load', function () { disegna(performance.now()); });
 
   misura();
+  posizionaAree();
   disegna(performance.now());
+
+  /* Il carattere del sito arriva dopo. Finche' non c'e', measureText misura
+     col ripiego di sistema e la targhetta risulta piu' stretta di come poi
+     viene disegnata: l'area che riceve il tocco resterebbe piu' corta del
+     nome, e le ultime lettere non si potrebbero toccare */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { posizionaAree(); disegna(performance.now()); });
+  }
   occhio.observe(guscio);
 })();

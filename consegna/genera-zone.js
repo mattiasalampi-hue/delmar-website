@@ -212,24 +212,23 @@ ${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1
 }
 
 /* `lc` e' da che parte esce il NOME sulla carta del telefono (default a
-   destra del pin). Serve solo alle tre zone che stanno strette: La Spezia e
-   Versilia perche' il vicino e' a un dito di distanza, Firenze perche' a
-   destra ha finito la carta. Il nome deve comunque restare appoggiato alla
-   sua etichetta stampata, che copre: se lo si sposta via, quella riappare.
+   destra del pin): serve alle zone che hanno il vicino a un dito, e a
+   Firenze che a destra ha finito la carta. La targhetta resta comunque
+   attaccata alla sua etichetta stampata, che deve coprire.
 
    Dove stanno i pin DENTRO l'immagine della mappa (frazioni 0-1 di
    larghezza e altezza): fx,fy e' la punta del pin (dove attraccano gli
    archi), bx,by,bw,bh e' il rettangolo cliccabile su pin + etichetta.
    Se l'immagine cambia, si rimisurano qui. */
 const PIN = {
-  'fornitore-pesce-parma':         { fx: 0.545, fy: 0.094, bx: 0.520, by: 0.055, bw: 0.075, bh: 0.100 , nx: 0.576, ny: 0.057 },
-  'fornitore-pesce-genova':        { fx: 0.052, fy: 0.361, bx: 0.035, by: 0.330, bw: 0.085, bh: 0.070 , nx: 0.021, ny: 0.246 },
-  'fornitore-pesce-la-spezia':     { fx: 0.299, fy: 0.606, bx: 0.283, by: 0.575, bw: 0.150, bh: 0.070, lc: 'sx' , nx: 0.075, ny: 0.711 },
-  'fornitore-pesce-massa-carrara': { fx: 0.448, fy: 0.654, bx: 0.432, by: 0.623, bw: 0.120, bh: 0.070 , nx: 0.549, ny: 0.616 },
-  'fornitore-pesce-versilia':      { fx: 0.520, fy: 0.808, bx: 0.504, by: 0.777, bw: 0.080, bh: 0.070, lc: 'sx' , nx: 0.256, ny: 0.863 },
-  'fornitore-pesce-lucca':         { fx: 0.643, fy: 0.834, bx: 0.627, by: 0.803, bw: 0.140, bh: 0.070, nx: 0.600, ny: 0.739 },
-  'fornitore-pesce-prato':         { fx: 0.800, fy: 0.824, bx: 0.784, by: 0.793, bw: 0.070, bh: 0.070 , nx: 0.763, ny: 0.588 },
-  'fornitore-pesce-firenze':       { fx: 0.869, fy: 0.925, bx: 0.853, by: 0.894, bw: 0.078, bh: 0.070, lc: 'sx', nx: 0.60, ny: 0.880 },
+  'fornitore-pesce-parma':         { fx: 0.545, fy: 0.094, bx: 0.520, by: 0.055, bw: 0.075, bh: 0.100},
+  'fornitore-pesce-genova':        { fx: 0.052, fy: 0.361, bx: 0.035, by: 0.330, bw: 0.085, bh: 0.070},
+  'fornitore-pesce-la-spezia':     { fx: 0.299, fy: 0.606, bx: 0.283, by: 0.575, bw: 0.150, bh: 0.070, lc: 'sx'},
+  'fornitore-pesce-massa-carrara': { fx: 0.448, fy: 0.654, bx: 0.432, by: 0.623, bw: 0.120, bh: 0.070},
+  'fornitore-pesce-versilia':      { fx: 0.520, fy: 0.808, bx: 0.504, by: 0.777, bw: 0.080, bh: 0.070, lc: 'sx'},
+  'fornitore-pesce-lucca':         { fx: 0.643, fy: 0.834, bx: 0.627, by: 0.803, bw: 0.140, bh: 0.070},
+  'fornitore-pesce-prato':         { fx: 0.800, fy: 0.824, bx: 0.784, by: 0.793, bw: 0.070, bh: 0.070},
+  'fornitore-pesce-firenze':       { fx: 0.869, fy: 0.925, bx: 0.853, by: 0.894, bw: 0.078, bh: 0.070, lc: 'sx'},
 };
 
 /* ─ La finestrella sulla mappa ────────────
@@ -331,7 +330,7 @@ ${attive.map((z) => {
        ma senza che nessuna misura sulla carta lo dica */
     const giu = p.fy < 0.45 ? ' mp-area--giu' : '';
     const lato = p.bx < 0.15 ? ' mp-area--sx' : (p.bx + p.bw > 0.85 ? ' mp-area--dx' : '');
-    return `          <a class="mp-area${giu}${lato}" href="${z.slug}.html" aria-label="Zona di consegna ${z.nome}" data-fx="${p.fx}" data-fy="${p.fy}" data-zona="${z.slug}" data-carta="${z.nome_carta || z.nome}" data-nx="${p.nx}" data-ny="${p.ny}" data-nome-lato="${p.lc || 'dx'}" style="left:${(p.bx * 100).toFixed(1)}%;top:${(p.by * 100).toFixed(1)}%;width:${(p.bw * 100).toFixed(1)}%;height:${(p.bh * 100).toFixed(1)}%">
+    return `          <a class="mp-area${giu}${lato}" href="${z.slug}.html" aria-label="Zona di consegna ${z.nome}" data-fx="${p.fx}" data-fy="${p.fy}" data-zona="${z.slug}" data-carta="${z.nome_carta || z.nome}" data-bx="${p.bx}" data-by="${p.by}" data-bw="${p.bw}" data-bh="${p.bh}" data-nome-lato="${p.lc || 'dx'}" style="left:${(p.bx * 100).toFixed(1)}%;top:${(p.by * 100).toFixed(1)}%;width:${(p.bw * 100).toFixed(1)}%;height:${(p.bh * 100).toFixed(1)}%">
             <span class="mp-tip"><strong>${z.nome}</strong><em>${z.giorni_brevi}</em></span>
           </a>`;
   }).join('\n')}
@@ -407,7 +406,7 @@ ${attive.map((z) => {
         <p class="pr-chiusura-tel">Rispondiamo tutti i giorni, festivi compresi</p>
       </section>
     </main>
-${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', '../catalogo/js/d.js?v=1', 'js/mappa.js?v=13', '../js/cursore.js?v=2'], { cat: '../catalogo/' })}`;
+${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', '../catalogo/js/d.js?v=1', 'js/mappa.js?v=18', '../js/cursore.js?v=2'], { cat: '../catalogo/' })}`;
 }
 
 let n = 0;
