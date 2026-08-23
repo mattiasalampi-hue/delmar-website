@@ -32,7 +32,23 @@
          "LocalBusiness" e' la categoria generica: ci sta dentro anche il
          parrucchiere. "WholesaleStore" dice che si vende all'ingrosso, ed
          e' la differenza fra comparire per "pescheria" e comparire per
-         "grossista di pesce" — che sono due mestieri e due clienti -->
+         "grossista di pesce" — che sono due mestieri e due clienti.
+
+         "sameAs" NON e' decorazione. Su "delmar delizie del mare" Google
+         mostra la pagina Facebook, il profilo Instagram, gli elenchi
+         camerali e due DelMar che non c'entrano, tutti come entita'
+         separate: non sa che i primi due sono nostri. sameAs e' la riga che
+         glielo dice. Finche' l'entita' resta frammentata Google non e'
+         sicuro di chi sia il brand, e senza quella sicurezza NON concede i
+         sitelink organici — che e' esattamente quello che mancava.
+         (verificato con Mattias il 24/08/2026: i due profili sono suoi)
+
+         ATTENZIONE: dentro allo script e' JSON, non HTML. Un commento in
+         stile HTML fra le graffe invalida TUTTO il blocco e Google butta
+         via l'intero markup senza dire niente. I commenti stanno solo qui
+         fuori — e nemmeno qui si scrive la sequenza di chiusura, perche'
+         chiuderebbe questo commento a meta' e riverserebbe il resto del
+         testo dentro la pagina. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -45,6 +61,10 @@
       "telephone": "+390585834572",
       "email": "info@del-mar.it",
       "vatID": "IT01081190454",
+      "sameAs": [
+        "https://www.facebook.com/MercatodelmareDelmar/",
+        "https://www.instagram.com/mercatodelmare/"
+      ],
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Via Dorsale 13",
