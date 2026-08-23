@@ -238,7 +238,8 @@
       "lat": 44.1,
       "lon": 9.82,
       "breve": "Il Golfo dei Poeti e la Val di Magra, ogni mattina.",
-      "giorni_brevi": "7 giorni su 7"
+      "giorni_brevi": "7 giorni su 7",
+      "nome_carta": "La Spezia"
     },
     {
       "slug": "fornitore-pesce-lucca",
@@ -319,7 +320,8 @@
       "lat": 43.84,
       "lon": 10.5,
       "breve": "Dalla Piana alla Valdinievole, fino a Pistoia e Pisa.",
-      "giorni_brevi": "7 giorni su 7"
+      "giorni_brevi": "7 giorni su 7",
+      "nome_carta": "Lucca"
     },
     {
       "slug": "fornitore-pesce-parma",
@@ -478,7 +480,8 @@
       "lat": 44.04,
       "lon": 10.14,
       "breve": "Casa nostra: in centro anche col giro del pomeriggio.",
-      "giorni_brevi": "7 su 7, anche il pomeriggio"
+      "giorni_brevi": "7 su 7, anche il pomeriggio",
+      "nome_carta": "Massa"
     },
     {
       "fatti": [

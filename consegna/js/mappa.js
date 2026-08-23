@@ -45,6 +45,27 @@
     tela.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
+  /* CANCELLARE LE ETICHETTE STAMPATE NELLA CARTA.
+     Non si dipinge una toppa di tinta piatta — su una carta geografica si
+     vede subito, e' un rettangolo che non c'entra niente col terreno
+     intorno. Si COPIA un pezzo di carta qui accanto e lo si incolla sopra:
+     il terreno cambia piano, quindi la giunta non si nota.
+     Il pezzo si prende sopra o sotto a seconda di dove c'e' carta libera —
+     verso il basso per le etichette in alto, verso l'alto per quelle in
+     fondo — perche' prenderlo sempre dalla stessa parte, per le zone di
+     bordo, vorrebbe dire copiare il vuoto fuori dalla carta. */
+  function toppa(ctx, img, bl, bt, bw, bh) {
+    if (!img || !img.naturalWidth || !W) return;
+    var k = img.naturalWidth / W;
+    var salto = bh * 1.7;
+    var da = (bt > H * 0.55) ? bt - salto : bt + salto;
+    if (da < 0) da = bt + salto;
+    if (da + bh > H) da = bt - salto;
+    ctx.drawImage(img,
+      bl * k, da * k, bw * k, bh * k,
+      bl, bt, bw, bh);
+  }
+
   var fermo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var partenza = performance.now();
   var raf = null;
@@ -104,27 +125,79 @@
       ctx.stroke();
     }
 
-    /* I PIN DEL TELEFONO. Quelli stampati dentro la carta sono disegnati
-       per una carta larga mille pixel: a trecentosettanta diventano
-       macchioline di dieci pixel, non si vedono e non si prendono col dito.
-       Qui gli si disegnano sopra i nostri — un bollo corallo col bordo
-       bianco, largo abbastanza da coprire quello stampato e da dire "questo
-       si tocca". Sul desktop non servono: li' quelli stampati si vedono
-       benissimo e a segnalarli c'e' il passaggio del dito. */
+
+    /* I NOMI DELLE CITTA' SUL TELEFONO — cancellati e riscritti.
+
+       Nella carta pin ed etichette sono STAMPATI dentro l'immagine, a una
+       misura pensata per mille pixel di larghezza. A trecentosettantacinque
+       diventano macchioline da dieci pixel con sotto un nome da quattro: non
+       si legge e non si prende col dito. E una carta con otto nomi
+       illeggibili e' peggio di una senza nomi, perche' sembra rotta.
+
+       Non basta scriverci sopra: finche' la targhetta nuova deve COPRIRE
+       quella stampata resta incollata al suo pin, e i pin stanno tutti su
+       una diagonale di due dita — i nomi si ammassano l'uno sull'altro.
+
+       Quindi prima si CANCELLA. Ogni etichetta stampata viene coperta con
+       una toppa del colore della carta li' intorno, presa campionando
+       l'immagine vera: la carta e' servita dallo stesso dominio, quindi la
+       tela si puo' leggere. Cancellate quelle, i nomi si possono mettere
+       dove c'e' spazio — il mare a sud-ovest, la pianura a nord-est — e un
+       filo sottile li lega al loro punto. Le posizioni sono scelte a mano in
+       genera-zone.js (nx, ny): distribuirle a occhio e' esattamente il
+       lavoro che un algoritmo qui farebbe peggio. */
     if (piccolo.matches) {
+      /* Le toppe per prime, sotto a tutto il resto */
+      var carta = guscio.querySelector('img');
+      aree.forEach(function (z) {
+        toppa(ctx, carta, z.offsetLeft - 1, z.offsetTop - 1, z.offsetWidth + 2, z.offsetHeight + 2);
+      });
+
+      ctx.textBaseline = 'middle';
+      ctx.font = '600 11px Poppins, system-ui, sans-serif';
+
       aree.forEach(function (z, i) {
         var x = parseFloat(z.dataset.fx) * W;
         var y = parseFloat(z.dataset.fy) * H;
-        /* Bianco col cerchio corallo quelli da toccare, corallo pieno quello
-           toccato: su una carta tutta blu il blu non si stacca, e otto bolli
-           corallo pieni tutti insieme sarebbero un allarme antincendio */
         var sceltoLui = i === scelta;
+        var nome = z.dataset.carta || '';
+
+        var testo = ctx.measureText(nome).width;
+        var larga = testo + 18;
+        var alta = 19;
+        var px = Math.max(1, Math.min(W - 1 - larga, parseFloat(z.dataset.nx) * W));
+        var py = Math.max(1, Math.min(H - 1 - alta, parseFloat(z.dataset.ny) * H));
+
+        /* Il filo parte dal bordo della targhetta piu' vicino al punto, non
+           dal suo centro: se no attraversa la targhetta stessa */
+        var ax = Math.max(px, Math.min(px + larga, x));
+        var ay = Math.max(py, Math.min(py + alta, y));
         ctx.beginPath();
-        ctx.arc(x, y, sceltoLui ? 8 : 6.5, 0, Math.PI * 2);
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = sceltoLui ? '#ff6b57' : 'rgba(255,255,255,.85)';
+        ctx.lineWidth = sceltoLui ? 1.8 : 1.2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(px, py, larga, alta, alta / 2);
+        else ctx.rect(px, py, larga, alta);   /* iOS vecchi: spigoli vivi, ma si legge */
+        ctx.fillStyle = sceltoLui ? '#ff6b57' : 'rgba(255,255,255,.97)';
+        ctx.fill();
+        ctx.strokeStyle = sceltoLui ? '#ff6b57' : 'rgba(21,28,100,.20)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = sceltoLui ? '#fff' : '#1a2270';
+        ctx.fillText(nome, px + 9, py + alta / 2 + 0.5);
+
+        /* Il punto vero della zona, dove sta la citta' */
+        ctx.beginPath();
+        ctx.arc(x, y, sceltoLui ? 5.5 : 4.5, 0, Math.PI * 2);
         ctx.fillStyle = sceltoLui ? '#ff6b57' : '#fff';
         ctx.fill();
         ctx.strokeStyle = sceltoLui ? '#fff' : '#ff6b57';
-        ctx.lineWidth = 2.4;
+        ctx.lineWidth = 2;
         ctx.stroke();
       });
 
@@ -225,6 +298,9 @@
     clearTimeout(attesa);
     attesa = setTimeout(function () { misura(); disegna(performance.now()); }, 120);
   });
+
+  var laCarta = guscio.querySelector('img');
+  if (laCarta && !laCarta.complete) laCarta.addEventListener('load', function () { disegna(performance.now()); });
 
   misura();
   disegna(performance.now());

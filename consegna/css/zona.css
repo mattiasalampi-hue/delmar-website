@@ -633,8 +633,23 @@
     filter: none;
   }
 
+  /* Il velo colorato si spegne sul telefono. Sta sopra l'immagine ma sotto
+     la tela, e mappa.js sulla tela ci disegna delle toppe che coprono le
+     etichette stampate nella carta: quelle toppe prendono il colore
+     dall'immagine VERA, quindi con un velo di mezzo non combacerebbero.
+     La carta di suo e' gia' blu — quello che si perde e' un'accordatura
+     fine, quello che si guadagna sono i nomi delle citta' leggibili */
   .mp-tinta {
-    opacity: .5;
+    display: none;
+  }
+
+  /* Niente scheda bianca al tocco. Serviva quando sulla carta il nome
+     della zona non si leggeva: adesso il nome e' scritto grande li' sopra e
+     diventa corallo quando lo tocchi, e i giorni del giro stanno nella riga
+     dell'elenco che si accende. La scheda si mangiava mezza carta per
+     ripetere quello che gia' si vede. */
+  .mp-tip {
+    display: none;
   }
 
   .mp-guida {
