@@ -301,17 +301,47 @@
 
 /* ─ Chiusura ────────────────────────────────
    Stesso impianto della chiusura delle domande frequenti */
-/* L'ARIA SOPRA LA CHIUSURA LA DECIDE LA CHIUSURA, non il blocco che le
-   capita davanti. Misurata sul telefono era 64px sull'indice catalogo, 16
-   sui cataloghi di linea, 38 sull'indice consegne e 32 sulle pagine di
-   zona: cinque pagine, quattro distanze diverse, e nessuna scelta da
-   nessuna parte — ognuna ereditava il padding di chiusura del blocco
-   precedente, che quel padding ce l'ha per i fatti suoi. Qui il blocco che
-   precede smette di aggiungerne, e la distanza e' una e scritta una volta.
-   Dove :has() non c'e' (iOS sotto la 15.4) si torna al comportamento di
-   prima: distanze diverse, non un difetto di impaginazione. */
-.pr-corpo > *:has(+ .pr-chiusura) {
+/* ─ IL RITMO VERTICALE DEL CORPO ────────────
+   Misurati su una pagina di zona a 390px, i salti fra un testo e il
+   successivo erano 22, 42, 98, 63, 80, 38 e 56 pixel: sette salti, sette
+   misure, nessuna scelta. Ognuno era la somma accidentale del padding di
+   coda di un blocco e di quello di testa del successivo — due numeri decisi
+   in momenti diversi, che non si sono mai guardati. Il buco da 98 stava fra
+   due .pr-intro di fila, dove le due code si sommavano.
+
+   Qui la distanza fra due sezioni la decide UNA riga: chi viene dopo mette
+   l'aria, chi viene prima non ne aggiunge. Due valori soli, perche' due
+   sono i casi: fra due sezioni indipendenti si respira, fra un titolo e il
+   blocco che introduce no — il titolo appartiene a quello che sta sotto, e
+   staccarglielo lo fa sembrare di un'altra cosa.
+
+   Il selettore parte dall'elemento main apposta: le regole dei singoli
+   blocchi stanno in fogli caricati DOPO questo (zona.css, catalogo.css) e a
+   parita' di peso vincerebbero loro.
+
+   La chiusura blu resta fuori da tutte e due: il suo padding sta DENTRO il
+   riquadro colorato, e azzerarlo o aggiungerne schiaccerebbe il testo
+   bianco contro il bordo. La sua aria sopra e' un margine suo. */
+main.pr-corpo > * + *:not(.pr-chiusura) {
+  padding-top: 4rem;
+  margin-top: 0;
+}
+
+main.pr-corpo > *:not(.pr-chiusura) {
   padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+main.pr-corpo > .zn-lavoriamo-testa + *,
+main.pr-corpo > .zn-carte-testa + * {
+  padding-top: 1.25rem;
+}
+
+/* E l'ultima riga di un blocco non aggiunge aria sotto di se'. Senza questa,
+   il margine di coda dell'ultimo paragrafo si sommava al salto di sezione:
+   fra due .pr-intro di fila faceva 82px invece di 64, ed era il buco che si
+   vedeva a occhio nudo sul telefono. */
+main.pr-corpo > * > :last-child {
   margin-bottom: 0;
 }
 
@@ -320,7 +350,7 @@
   isolation: isolate;
   overflow: hidden;
   max-width: 62rem;
-  margin: 3.5rem auto 4rem;
+  margin: 4rem auto 4rem;
   padding: 4.5rem 8% 4.2rem;
   text-align: center;
   /* Resta il blu pieno: e' quello che si vede finche' la tela non ha

@@ -139,9 +139,9 @@ function testa(titolo, opts = {}) {
          pagina delle domande frequenti. Si carica quel foglio invece di
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
     <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=8" />
-    <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=4" />
+    <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=5" />
     <link rel="stylesheet" href="${su}css/consenso.css?v=1" />
-${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=14" />`).join('\n')}
+${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=15" />`).join('\n')}
   </head>
   <body class="pr-pagina">
     <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
