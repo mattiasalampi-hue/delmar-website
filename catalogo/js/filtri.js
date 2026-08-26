@@ -1,9 +1,9 @@
 /* I FILTRI DEL CATALOGO.
 
-   Le otto dimensioni che prima stavano nel menu — stato, lavorazione, uso in
-   cucina, gamma, provenienza, pezzatura, glassatura, formato — girano qui,
-   nel browser, sui `data-` che genera-catalogo.js appiccica a ogni
-   `.ct-voce`. Nessuna copia dei dati: quello che si filtra e' esattamente
+   Le tre domande che prima stavano nel menu — stato, lavorazione, uso in
+   cucina — girano qui, nel browser, sui `data-` che genera-catalogo.js
+   appiccica a ogni `.ct-voce`. Quali siano lo decide `filtri` dentro
+   catalogo.json: questo file non ne conosce i nomi, li legge dalle pillole. Nessuna copia dei dati: quello che si filtra e' esattamente
    quello che si legge in pagina, e le due cose non possono andare fuori
    sincrono.
 
@@ -11,8 +11,8 @@
    Chi accende Fresco e Congelato vuole tutti e due, non l'intersezione vuota;
    chi accende Fresco e "Adatto al crudo" vuole il pesce fresco che si serve
    crudo. E' l'unica combinazione che si comporta come uno se l'aspetta, ed e'
-   la ragione per cui questi otto criteri funzionano da filtro e funzionavano
-   male da rami del menu: un ramo non si combina con un altro ramo.
+   la ragione per cui questi criteri funzionano da filtro e funzionavano male
+   da rami del menu: un ramo non si combina con un altro ramo.
 
    Senza JavaScript la pagina resta il catalogo completo: la barra dei filtri
    non fa niente e non toglie niente. */
@@ -30,12 +30,22 @@
   var voci = [].slice.call(document.querySelectorAll('.ct-voce'));
   var famiglie = [].slice.call(document.querySelectorAll('.ct-famiglia'));
   var scelte = [].slice.call(document.querySelectorAll('.fq-arg'));
+  var gruppiVoci = [].slice.call(document.querySelectorAll('.ct-voci'));
   var pillole = [].slice.call(document.querySelectorAll('.fq-indice a'));
 
-  /* Gli attributi si leggono una volta sola, all'avvio: sono un centinaio di
-     voci per otto campi, e rifare getAttribute a ogni clic significa toccare
-     il DOM ottocento volte per una cosa che non cambia mai. */
-  var CAMPI = ['stato', 'lavorazione', 'uso', 'gamma', 'provenienze', 'pezzature', 'glassatura', 'formati'];
+  /* I CAMPI SI RICAVANO DALLE PILLOLE, non da un elenco scritto qui.
+     Erano otto nomi a mano mentre il server li deriva da `filtri` dentro
+     catalogo.json, che oggi ne ha tre. Due liste senza una sorgente comune
+     divergono al primo cambio: se qualcuno aggiunge un filtro al JSON, il
+     generatore stampa le pillole del campo nuovo, qui `scheda.valori[campo]`
+     resta undefined e il primo conteggio muore con "Cannot read properties
+     of undefined" — cioe' i filtri smettono di funzionare del tutto, al
+     caricamento, senza che nessuno abbia toccato questo file. */
+  var CAMPI = [];
+  for (var k0 = 0; k0 < chip.length; k0++) {
+    var c0 = chip[k0].getAttribute('data-campo');
+    if (c0 && CAMPI.indexOf(c0) === -1) CAMPI.push(c0);
+  }
 
   var schede = voci.map(function (el) {
     var valori = {};
@@ -68,7 +78,9 @@
       if (campo === salta) continue;
       var voluti = acceso[campo];
       if (!voluti || !voluti.length) continue;
-      var suoi = scheda.valori[campo];
+      /* `|| []` e non `scheda.valori[campo]` secco: una voce puo' non avere
+         quel campo compilato, e un undefined qui fermerebbe tutta la pagina */
+      var suoi = scheda.valori[campo] || [];
       var trovato = false;
       for (var i = 0; i < voluti.length && !trovato; i++) {
         if (suoi.indexOf(voluti[i]) > -1) trovato = true;
@@ -81,7 +93,8 @@
   function conta(campo, valore) {
     var n = 0;
     for (var i = 0; i < schede.length; i++) {
-      if (schede[i].valori[campo].indexOf(valore) > -1 && passa(schede[i], campo)) n++;
+      var suoi = schede[i].valori[campo] || [];
+      if (suoi.indexOf(valore) > -1 && passa(schede[i], campo)) n++;
     }
     return n;
   }
@@ -94,13 +107,30 @@
     var visibili = 0;
     var perFamiglia = {};
 
+    /* PRIMA E ULTIMA SI SEGNANO A MANO, e non e' un capriccio.
+       Il foglio di stile toglie il filo sotto l'ultima voce e l'aria sopra
+       la prima con `:last-child` e `:first-child`, che pero' contano i figli
+       nel documento e se ne infischiano di `hidden`. Filtrando via l'ultimo
+       prodotto di una famiglia restava un filo appeso sotto la riga che
+       adesso e' l'ultima. */
+    var primaDi = {};
+    var ultimaDi = {};
+
     for (var i = 0; i < schede.length; i++) {
       var ok = passa(schede[i], null);
       schede[i].el.hidden = !ok;
+      schede[i].el.classList.remove('ct-voce-prima', 'ct-voce-ultima');
       if (!ok) continue;
       visibili++;
       var id = schede[i].famiglia ? schede[i].famiglia.id : '';
       perFamiglia[id] = (perFamiglia[id] || 0) + 1;
+      if (!primaDi[id]) primaDi[id] = schede[i].el;
+      ultimaDi[id] = schede[i].el;
+    }
+
+    for (var idf in primaDi) {
+      primaDi[idf].classList.add('ct-voce-prima');
+      ultimaDi[idf].classList.add('ct-voce-ultima');
     }
 
     /* Una famiglia senza piu' niente dentro sparisce con la sua intestazione:
@@ -144,6 +174,23 @@
     }
 
     var quanti = attivi();
+
+    /* Il segno che dice al foglio di stile "stiamo filtrando": da li' in poi
+       comandano ct-voce-prima e ct-voce-ultima invece di :first-child e
+       :last-child. Senza filtri attivi si torna alle regole del documento,
+       cosi' con JavaScript spento la pagina resta giusta com'e' sempre stata. */
+    for (var g = 0; g < gruppiVoci.length; g++) {
+      gruppiVoci[g].classList.toggle('ct-filtrato', quanti > 0);
+    }
+
+    /* IL PANNELLO CAMBIA L'ALTEZZA DELLA PAGINA, e chi disegna la barra
+       appesa non lo sa: catalogo.js ricalcola solo su scroll e resize.
+       Senza questo avviso il filo dell'avanzamento resta alla percentuale di
+       prima — e la pagina puo' essersi accorciata di due terzi — e la
+       pillola accesa resta accesa anche quando questa funzione l'ha appena
+       nascosta, cioe' si illumina una sezione che non c'e' piu'. */
+    window.dispatchEvent(new CustomEvent('catalogo:filtrato'));
+
     if (azzera) azzera.hidden = quanti === 0;
     if (esito) {
       esito.hidden = quanti === 0;

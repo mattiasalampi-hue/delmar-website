@@ -141,7 +141,7 @@ function testa(titolo, opts = {}) {
     <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=8" />
     <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=11" />
     <link rel="stylesheet" href="${su}css/consenso.css?v=1" />
-${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=23" />`).join('\n')}
+${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=24" />`).join('\n')}
   </head>
   <body class="pr-pagina">
     <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">

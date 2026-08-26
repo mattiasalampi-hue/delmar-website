@@ -82,5 +82,15 @@
 
   window.addEventListener('scroll', chiedi, { passive: true });
   window.addEventListener('resize', chiedi, { passive: true });
+
+  /* I FILTRI CAMBIANO L'ALTEZZA DELLA PAGINA SENZA CHE NESSUNO SCORRA.
+     js/filtri.js nasconde voci e famiglie intere: il documento puo'
+     accorciarsi di due terzi, e senza questo avviso il filo dell'avanzamento
+     resta alla percentuale di prima e la pillola accesa continua a indicare
+     una sezione che filtri.js ha appena nascosto. Un evento nostro invece di
+     un `resize` finto: quello farebbe ridisegnare anche le tele animate
+     dell'apertura a ogni clic su una pillola. */
+  window.addEventListener('catalogo:filtrato', chiedi);
+
   aggiorna();
 })();

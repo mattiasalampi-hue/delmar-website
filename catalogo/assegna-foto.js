@@ -159,9 +159,29 @@ function creditoDi(slug, file) {
     fatte++;
   }
 
+/* L'ALBERATURA E' CAMBIATA (26/08/2026): catalogo.json non ha piu' `cataloghi`
+   con dentro `famiglie`, ma `mondi` con dentro `cluster` con dentro
+   `sottocluster`. Questi due script leggevano la forma vecchia e morivano con
+   "Cannot read properties of undefined": il rifornimento delle fotografie era
+   fermo e non lo diceva nessuno.
+   Qui si appiattisce una volta sola, cosi' il resto dello script resta com'era. */
+function cataloghiPiatti(dati) {
+  if (dati.cataloghi) return dati.cataloghi;            // vecchio formato, per sicurezza
+  /* Si restituisce il cluster VERO, non una copia: assegna-foto.js scrive
+     `c.foto`, e con uno spread finirebbe su un oggetto usa-e-getta — la
+     copertina non arriverebbe mai dentro catalogo.json. L'alias `famiglie`
+     e' non enumerabile, cosi' non si duplica nel file quando si riserializza. */
+  return dati.mondi.flatMap((m) => m.cluster.map((c) => {
+    if (!c.famiglie) {
+      Object.defineProperty(c, 'famiglie', { value: c.sottocluster, enumerable: false });
+    }
+    return c;
+  }));
+}
+
   // Attacca le foto alle voci E alle copertine di categoria
   let attaccate = 0;
-  dati.cataloghi.forEach((c) => {
+  cataloghiPiatti(dati).forEach((c) => {
     const sc = 'copertina-' + c.slug.replace(/^catalogo-/, '');
     if (scelte[sc]) {
       c.foto = `foto-prodotti/${sc}.webp`;

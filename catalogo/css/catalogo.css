@@ -1018,3 +1018,26 @@ html:has(.ct-famiglia) {
   padding-left: .9rem;
   border-left: 1px solid var(--border);
 }
+
+/* ─ Il filo appeso sotto l'ultima voce filtrata ─
+   `:first-child` e `:last-child` contano i figli nel documento e se ne
+   infischiano di `hidden`: filtrando via l'ultimo prodotto di una famiglia
+   restava un filo sotto la riga che era diventata l'ultima, e l'aria in cima
+   spariva dalla riga che era diventata la prima.
+   Mentre un filtro e' acceso comandano le due classi che mette js/filtri.js.
+   Con JavaScript spento la classe non arriva mai e valgono le regole del
+   documento, che senza filtri sono giuste. */
+.ct-voci.ct-filtrato .ct-voce {
+  padding-top: 1.8rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.ct-voci.ct-filtrato .ct-voce-prima {
+  padding-top: 0;
+}
+
+.ct-voci.ct-filtrato .ct-voce-ultima {
+  padding-bottom: 0;
+  border-bottom: 0;
+}

@@ -157,9 +157,29 @@ const slugDi = (n) => senzaAccenti(n.toLowerCase())
    reggere il confronto con le altre quarantasette, e non c'e' ragione di
    trattarle come un caso a parte. Il prefisso "copertina-" le tiene separate
    nelle cartelle senza bisogno di un secondo indice. */
+/* L'ALBERATURA E' CAMBIATA (26/08/2026): catalogo.json non ha piu' `cataloghi`
+   con dentro `famiglie`, ma `mondi` con dentro `cluster` con dentro
+   `sottocluster`. Questi due script leggevano la forma vecchia e morivano con
+   "Cannot read properties of undefined": il rifornimento delle fotografie era
+   fermo e non lo diceva nessuno.
+   Qui si appiattisce una volta sola, cosi' il resto dello script resta com'era. */
+function cataloghiPiatti(dati) {
+  if (dati.cataloghi) return dati.cataloghi;            // vecchio formato, per sicurezza
+  /* Si restituisce il cluster VERO, non una copia: assegna-foto.js scrive
+     `c.foto`, e con uno spread finirebbe su un oggetto usa-e-getta — la
+     copertina non arriverebbe mai dentro catalogo.json. L'alias `famiglie`
+     e' non enumerabile, cosi' non si duplica nel file quando si riserializza. */
+  return dati.mondi.flatMap((m) => m.cluster.map((c) => {
+    if (!c.famiglie) {
+      Object.defineProperty(c, 'famiglie', { value: c.sottocluster, enumerable: false });
+    }
+    return c;
+  }));
+}
+
 const voci = [];
 
-dati.cataloghi.forEach((c) => {
+cataloghiPiatti(dati).forEach((c) => {
   voci.push({
     copertina: true,
     catalogo: c.nome,

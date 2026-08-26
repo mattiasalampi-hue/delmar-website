@@ -84,17 +84,24 @@ const idFam = (n) => senzaAccenti(n.toLowerCase())
   .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 /* GLI ATTRIBUTI FINISCONO SULL'ARTICOLO, non in un indice a parte.
-   Il filtro gira nel browser su questi `data-`: la voce porta addosso le sue
-   otto dimensioni, e js/filtri.js non deve tenere in piedi una copia dei dati
+   Il filtro gira nel browser su questi `data-`: la voce porta addosso i suoi
+   attributi, e js/filtri.js non deve tenere in piedi una copia dei dati
    che puo' andare fuori sincrono con quello che si legge in pagina.
    Il separatore e' la barra verticale perche' e' l'unico carattere che non
    compare dentro un valore — le pezzature hanno virgole, gli slash e i
    trattini ("600/800", "L2 (20/30 pz/kg)"). */
+/* Le virgolette si scappano QUI come nelle pillole del filtro, e non e'
+   pignoleria: lo stesso valore lo scrivono due punti diversi del file, e
+   finche' uno dei due non lo fa il primo prodotto con un apice nel nome
+   della lavorazione tronca l'attributo e sfonda il tag <article>. Il guasto
+   non si legge come "escaping sbagliato": si legge come "un prodotto e'
+   sparito dalla pagina", che e' molto piu' difficile da ricondurre a qui. */
 function attributi(v) {
   return dati.filtri.map((f) => {
     const g = v[f.campo];
     const valori = g == null ? [] : (Array.isArray(g) ? g : [g]);
-    return valori.length ? ` data-${f.campo}="${valori.join('|')}"` : '';
+    if (!valori.length) return '';
+    return ` data-${f.campo}="${valori.join('|').replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"`;
   }).join('');
 }
 
@@ -275,6 +282,15 @@ ${valori}${coda}
         </div>`;
   }).filter(Boolean);
 
+  /* SE NON RESTA NESSUN GRUPPO, NON SI STAMPA LA SCATOLA.
+     Un gruppo sparisce quando ha meno di due valori distinti — dentro un
+     catalogo tutto congelato "Congelato" non taglia niente. Sui Panificati
+     capitava a tutti e tre: usciva un riquadro con scritto "Filtra 4
+     prodotti" e sotto il vuoto, e js/filtri.js non lo nasconde perche' esce
+     subito quando non trova pillole. Un pannello di filtri senza filtri e'
+     peggio di nessun pannello. */
+  if (!gruppi.length) return '';
+
   /* I TRE GRUPPI STANNO IN FILA, non incolonnati.
      In tre righe da una pillola e mezza il pannello lasciava due terzi di
      larghezza vuota a destra e si mangiava tre righe d'altezza: fianco a
@@ -427,7 +443,7 @@ ${chiusura(
     'Ti mandiamo il listino del tuo settore e ti diciamo cosa c\'è in cella adesso. Si ordina fino alle 2 di notte, si consegna entro le 11.'
   )}
     </main>
-${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', 'js/d.js?v=1', 'js/catalogo.js?v=2', 'js/filtri.js?v=1', '../js/cursore.js?v=2'])}`;
+${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', 'js/d.js?v=1', 'js/catalogo.js?v=3', 'js/filtri.js?v=2', '../js/cursore.js?v=2'])}`;
 }
 
 /* ─ L'indice ────────────────────────────────
