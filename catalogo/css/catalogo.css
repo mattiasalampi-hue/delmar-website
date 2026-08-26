@@ -564,3 +564,457 @@ html:has(.ct-famiglia) {
     height: .9rem;
   }
 }
+
+/* [hidden] NON BASTA, e qui e' una trappola vera.
+   L'attributo hidden vale `display:none` solo perche' lo dice il foglio
+   predefinito del browser, che e' l'ultimo in classifica: qualunque regola
+   nostra con un selettore di classe lo batte. `.ct-voce{display:grid}` e
+   `.ct-fchip{display:inline-flex}` vincono, e il risultato e' che i filtri
+   girano, mettono hidden su tutto quello che devono togliere, e in pagina
+   non sparisce niente.
+   Queste righe sono quelle che fanno funzionare il filtro. */
+.ct-fchip[hidden],
+.ct-fchip-piu[hidden],
+.ct-voce[hidden],
+.ct-famiglia[hidden],
+.fq-arg[hidden],
+.fq-indice a[hidden],
+.ct-filtri-esito[hidden],
+.ct-filtri-azzera[hidden] {
+  display: none;
+}
+
+/* ─ I FILTRI ────────────────────────────────
+   Tre domande, in fila.
+
+   COM'E' ARRIVATO QUI. Prima erano otto criteri sempre aperti con tutte le
+   pezzature stampate: sei schermate di pillole prima del primo pesce. Poi
+   tre criteri ma incolonnati, ognuno su una riga sua — e con due o tre
+   pillole per gruppo restavano due terzi di larghezza vuota a destra, che e'
+   il modo piu' veloce di far sembrare trascurata una pagina.
+
+   Adesso i tre gruppi stanno affiancati e riempiono la riga. Il pannello e'
+   una barra di comando: si legge in un colpo d'occhio, occupa un terzo dello
+   spazio di prima, e il primo prodotto resta sopra la piega.
+
+   Sta SOPRA le famiglie e sotto il selettore numerato: prima si vede cosa
+   c'e' dentro il catalogo, poi come tagliarlo. */
+.ct-filtri {
+  max-width: 76rem;
+  margin: 0 auto 2.2rem;
+  padding: 0 6%;
+}
+
+.ct-filtri-in {
+  border: 1px solid var(--border);
+  border-radius: .8rem;
+  background: var(--bg-soft);
+  overflow: hidden;
+}
+
+.ct-filtri-testa {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .9rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.ct-filtri-testa h2 {
+  margin: 0;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+
+.ct-filtri-testa h2 strong {
+  color: var(--ink);
+}
+
+.ct-filtri-azzera {
+  padding: .25rem .8rem;
+  border: 1px solid var(--wa);
+  border-radius: 2rem;
+  background: transparent;
+  color: var(--wa);
+  font-family: var(--font);
+  font-size: .7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+
+.ct-filtri-azzera:hover {
+  background: var(--wa);
+  color: var(--white);
+}
+
+/* Tre colonne che si spezzano da sole quando non ci stanno. Il filo
+   verticale fra una e l'altra fa il lavoro che in colonna facevano i bordi
+   orizzontali: separa senza aggiungere aria */
+.ct-filtri-gruppi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.ct-filtro {
+  padding: 1rem 1.4rem 1.15rem;
+  border-left: 1px solid var(--border);
+}
+
+.ct-filtro:first-child {
+  border-left: 0;
+}
+
+.ct-filtro-et {
+  display: block;
+  margin-bottom: .6rem;
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.ct-filtro-valori {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+/* PIENE, NON VUOTE. Con il bordo sottile su fondo chiaro sembravano
+   disegnate a matita e non si capiva che si potessero premere. Fondo bianco
+   pieno e bordo netto: adesso hanno un peso, e quella accesa e' blu marchio
+   senza possibilita' di equivoco. */
+.ct-fchip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .38rem;
+  padding: .34rem .75rem;
+  border: 1px solid rgba(21, 28, 100, .18);
+  border-radius: 2rem;
+  background: var(--bg);
+  color: var(--text-hi);
+  font-family: var(--font);
+  font-size: .76rem;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: nowrap;
+  max-width: 100%;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s, box-shadow .2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ct-fchip:hover:not(:disabled) {
+    border-color: var(--ink);
+    box-shadow: 0 1px 4px rgba(21, 28, 100, .1);
+  }
+}
+
+.ct-fchip.attivo {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* Spenta, non tolta: una pillola che sparisce sposta tutte le altre e chi
+   stava per cliccarne una si ritrova sotto il dito un'altra cosa */
+.ct-fchip:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+.ct-fchip-n {
+  font-size: .66rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+.ct-fchip.attivo .ct-fchip-n {
+  color: rgba(255, 255, 255, .65);
+}
+
+/* Il bottone della coda non e' una pillola: e' un comando, e deve leggersi
+   come tale o si finisce per cliccarlo credendo di filtrare */
+.ct-fchip-piu {
+  padding: .34rem .3rem;
+  border: 0;
+  background: transparent;
+  color: var(--wa);
+  font-family: var(--font);
+  font-size: .74rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-underline-offset: .18em;
+  cursor: pointer;
+}
+
+.ct-filtri-esito {
+  margin: 0;
+  padding: .75rem 1.4rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  font-size: .8rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* ─ I BADGE ─────────────────────────────────
+   "Adatto al crudo" e "Gamma premium" erano rami del menu e adesso sono due
+   etichette sulla scheda. Stanno sotto il nome e sopra la descrizione: sono
+   una qualifica della specie, non un dettaglio da cercare in fondo. */
+.ct-badge-riga {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin: .35rem 0 .1rem;
+}
+
+.ct-badge {
+  padding: .18rem .55rem;
+  border-radius: 2rem;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ct-badge-crudo {
+  background: rgba(21, 28, 100, .08);
+  color: var(--ink);
+}
+
+.ct-badge-premium {
+  background: var(--wa);
+  color: var(--white);
+}
+
+.ct-badge-delmar {
+  background: transparent;
+  border: 1px solid var(--wa);
+  color: var(--wa);
+}
+
+/* ─ La glassatura ───────────────────────────
+   E' l'unico numero di questo catalogo che vale dei soldi veri: dichiararlo
+   accanto a cosa vuol dire in chili e' la promessa, non la percentuale da
+   sola. Per questo non e' una pillola come le pezzature ma una riga di testo
+   che si legge. */
+.ct-glassa {
+  margin: 0;
+  padding-top: .3rem;
+  font-size: .78rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--text-mid);
+}
+
+.ct-glassa strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ─ I DUE MONDI, sull'indice ────────────────
+   Dieci riquadri in fila non dicono che cinque sono il mestiere e cinque
+   sono il servizio. Due intestazioni bastano: i cluster restano tutti
+   visibili, nessuno finisce dentro un menu da aprire. */
+.pr-mondo {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2.4rem 0 0;
+}
+
+.pr-mondo-testa {
+  padding: 0 6%;
+  margin-bottom: 1.4rem;
+}
+
+.pr-mondo-testa h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--ink);
+}
+
+.pr-mondo-sotto {
+  margin: .4rem 0 0;
+  max-width: 42rem;
+  font-size: .92rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.pr-mondo-conta {
+  margin: .55rem 0 0;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* La riga che divide i due mondi anche in fondo alle pagine di catalogo */
+.ct-altri-mondo {
+  margin: 1.4rem 0 .7rem;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.ct-altri-mondo:first-of-type {
+  margin-top: 0;
+}
+
+/* ─ Telefono ────────────────────────────────*/
+@media (max-width: 768px) {
+  /* Otto etichette in colonna a sinistra si mangiano meta' larghezza: sul
+     telefono l'etichetta va sopra le sue pillole */
+  .ct-filtro {
+    grid-template-columns: 1fr;
+    gap: .35rem;
+  }
+
+  .ct-filtro-et {
+    padding-top: 0;
+  }
+
+  .pr-mondo-testa h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* ─ LA NAVIGAZIONE DELLE FAMIGLIE ───────────
+   La barra appesa sotto l'intestazione e' l'unica navigazione dentro un
+   catalogo, e non si vedeva: pillole da 0,66rem in grigio medio con un bordo
+   al dodici per cento di opacita', su fondo bianco. Sulla pagina delle
+   domande frequenti convivono con altro e possono starsene in disparte; qui
+   sono la mappa, e devono chiedere di essere premute.
+
+   Piu' grandi, con un fondo pieno e un bordo che si vede, piu' l'etichetta
+   che dice cosa sono. Restano le stesse pillole di domande-frequenti.css —
+   non se ne inventa un secondo tipo — ma dentro `.fq-barra` pesano di piu'. */
+.fq-barra .fq-indice {
+  gap: .45rem;
+}
+
+.fq-barra .fq-indice a {
+  padding: .48rem 1.05rem;
+  border-color: rgba(21, 28, 100, .2);
+  background: var(--bg-soft);
+  font-size: .76rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-barra .fq-indice a:hover {
+    background: var(--white);
+    border-color: var(--wa);
+    color: var(--wa);
+  }
+}
+
+.fq-barra .fq-indice a.attivo {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+/* L'etichetta davanti alle pillole: senza, tre parole in fila sotto
+   l'intestazione si leggono come un menu del sito, non come le sezioni di
+   questa pagina. Sparisce sul telefono, dove ogni pixel di larghezza serve
+   alle pillole */
+.ct-famiglie-et {
+  flex: 0 0 auto;
+  margin: 0 .2rem 0 0;
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* La via di ritorno era grigia quanto lo sfondo: e' il modo per uscire da
+   qui, e deve leggersi */
+.fq-barra .ct-torna {
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--text-mid);
+}
+
+@media (max-width: 900px) {
+  .ct-famiglie-et {
+    display: none;
+  }
+
+  .fq-barra .fq-indice a {
+    font-size: .72rem;
+    padding: .42rem .85rem;
+  }
+}
+
+/* ─ Filtri sul telefono ─────────────────────*/
+@media (max-width: 620px) {
+  /* Sotto i 620 px le tre colonne diventano una: il filo verticale non ha
+     piu' senso, e al suo posto torna quello orizzontale */
+  .ct-filtro {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .ct-filtro:first-child {
+    border-top: 0;
+  }
+}
+
+/* ─ La freccia di ritorno ai cataloghi ──────
+   Al passaggio cambiava solo colore e la freccia si spostava di due pixel:
+   su una barra appesa, dove le pillole accanto si accendono di blu pieno,
+   quel cenno non si vedeva. Adesso prende la sua pastiglia — stessa forma
+   delle pillole, cosi' si capisce che e' un bersaglio della stessa famiglia
+   — e la freccia fa quattro pixel invece di due. (Mattias, 26/08/2026) */
+.fq-barra .ct-torna {
+  padding: .48rem 1rem .48rem .8rem;
+  margin-right: .3rem;
+  border: 1px solid transparent;
+  border-radius: 2rem;
+  transition: color .25s, background .25s, border-color .25s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fq-barra .ct-torna:hover {
+    background: var(--wa);
+    border-color: var(--wa);
+    color: var(--white);
+  }
+
+  .fq-barra .ct-torna:hover svg {
+    transform: translateX(-4px);
+  }
+}
+
+/* Il filo che separava la freccia dalle pillole era sul bordo destro: con la
+   pastiglia diventerebbe una riga dentro il colore. Si sposta sull'etichetta
+   che viene dopo. */
+.fq-barra .ct-torna {
+  border-right: 1px solid transparent;
+  padding-right: 1rem;
+}
+
+.ct-famiglie-et {
+  padding-left: .9rem;
+  border-left: 1px solid var(--border);
+}

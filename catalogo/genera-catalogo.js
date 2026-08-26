@@ -10,7 +10,12 @@ const path = require('path');
 
 const qui = __dirname;
 const dati = JSON.parse(fs.readFileSync(path.join(qui, 'catalogo.json'), 'utf8'));
-const cataloghi = dati.cataloghi;
+
+/* I due mondi raggruppano, non nascondono: i dieci cluster restano tutti
+   visibili. Per generare le pagine serve la lista piatta, con il mondo
+   attaccato addosso a ognuna — sull'indice torna a servire per dividere le
+   due sezioni, e nelle briciole per dire dove si e'. */
+const cataloghi = dati.mondi.flatMap((m) => m.cluster.map((c) => ({ ...c, mondo: m })));
 
 const { WA, testa, piede, altriCataloghi, primaFrase, briciole } = require('./comune');
 
@@ -22,7 +27,7 @@ const RADICE = 'https://del-mar.it';
 const PESCATO = {
   slug: 'pescato-arcipelago-toscano',
   nome: 'Pescato dell\'Arcipelago Toscano',
-  riga: 'Cambia ogni notte · aggiornato dopo le 20',
+  riga: 'Le specie locali · listino del giorno a parte',
   foto: 'foto-prodotti/copertina-pescato.webp',
   sotto: 'Quello che le barche hanno preso stanotte, fotografato al banco. Quando è finito, è finito.',
 };
@@ -78,6 +83,34 @@ function senzaAccenti(s) {
 const idFam = (n) => senzaAccenti(n.toLowerCase())
   .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+/* GLI ATTRIBUTI FINISCONO SULL'ARTICOLO, non in un indice a parte.
+   Il filtro gira nel browser su questi `data-`: la voce porta addosso le sue
+   otto dimensioni, e js/filtri.js non deve tenere in piedi una copia dei dati
+   che puo' andare fuori sincrono con quello che si legge in pagina.
+   Il separatore e' la barra verticale perche' e' l'unico carattere che non
+   compare dentro un valore — le pezzature hanno virgole, gli slash e i
+   trattini ("600/800", "L2 (20/30 pz/kg)"). */
+function attributi(v) {
+  return dati.filtri.map((f) => {
+    const g = v[f.campo];
+    const valori = g == null ? [] : (Array.isArray(g) ? g : [g]);
+    return valori.length ? ` data-${f.campo}="${valori.join('|')}"` : '';
+  }).join('');
+}
+
+/* I due badge che il documento toglie dal menu.
+   "Prodotti per crudi di pesce" era un cluster che rubava ventidue referenze
+   agli altri; i gamberi rossi stavano per diventare un ramo per il 15,7% dei
+   chili che il 99,4% dei clienti non apre. Qui sono due etichette sulla
+   scheda: tengono insieme le referenze senza sottrarle a casa loro. */
+function badge(v) {
+  const b = [];
+  if ((v.uso || []).includes('Adatto al crudo')) b.push('<span class="ct-badge ct-badge-crudo">Adatto al crudo</span>');
+  if (v.gamma === 'Premium') b.push('<span class="ct-badge ct-badge-premium">Gamma premium</span>');
+  if (v.gamma === 'Linea DelMar') b.push('<span class="ct-badge ct-badge-delmar">Linea DelMar</span>');
+  return b.length ? `              <p class="ct-badge-riga">${b.join('')}</p>\n` : '';
+}
+
 function voce(v) {
   const righe = [];
 
@@ -91,6 +124,25 @@ function voce(v) {
     righe.push(`            <div class="ct-riga">
               <span class="ct-et">Provenienza</span>
               <div class="ct-valori">${v.provenienze.map((p) => `<span class="ct-chip ct-chip-prov">${p}</span>`).join('')}</div>
+            </div>`);
+  }
+  /* LA GLASSATURA STA IN CHIARO, e sta prima del formato.
+     E' il filtro piu' differenziante del settore e quasi nessun concorrente
+     lo dichiara: su un calamaro al 30% il prezzo reale cambia di un terzo.
+     Dichiararlo qui e' una promessa, non un dettaglio tecnico — per questo
+     accanto alla percentuale c'e' scritto cosa vuol dire. */
+  if (v.glassatura && v.glassatura.length) {
+    /* Un valore solo o una forcella: certe referenze si comprano in due
+       glassature diverse, e dire "dal 10 al 30%" e' l'informazione vera —
+       mediarle sarebbe inventare un terzo numero che non esiste. */
+    const kg = (p) => ((100 - parseInt(p, 10)) / 10).toFixed(1).replace('.', ',');
+    const g = v.glassatura;
+    const resa = g.length > 1
+      ? `da ${kg(g[0])} a ${kg(g[g.length - 1])} kg di prodotto`
+      : `${kg(g[0])} kg di prodotto`;
+    righe.push(`            <div class="ct-riga">
+              <span class="ct-et">Glassatura</span>
+              <p class="ct-glassa"><strong>${g.join(' · ')}</strong> — su 10 kg lordi, ${resa}</p>
             </div>`);
   }
   if (v.formato) {
@@ -126,10 +178,10 @@ function voce(v) {
               <span class="ct-foto-segno-n">${v.nome}</span>
             </div>\n`;
 
-  return `          <article class="ct-voce">
+  return `          <article class="ct-voce"${attributi(v)}>
 ${foto}            <div class="ct-voce-testo">
               <h3>${v.nome}</h3>
-              <p class="ct-voce-sotto">${primaFrase(v.sotto)}</p>
+${badge(v)}              <p class="ct-voce-sotto">${primaFrase(v.sotto)}</p>
 ${righe.join('\n')}
               <a class="ct-chiedi" href="https://wa.me/${WA}?text=${msg}" target="_blank" rel="noopener noreferrer">
                 <svg aria-hidden="true"><use href="#ico-wa"/></svg>
@@ -154,6 +206,90 @@ function famiglia(f, i) {
 
         <div class="ct-voci">
 ${f.voci.map(voce).join('\n\n')}
+        </div>
+      </section>`;
+}
+
+/* ─ La barra dei filtri ──────────────────────────────────────────────────
+   Le otto dimensioni che prima inquinavano il menu. "Adatto al crudo" come
+   ramo rubava ventidue referenze agli altri cluster; come filtro le tiene
+   insieme senza toglierle da casa loro — ed e' l'unica forma in cui si puo'
+   combinare con "fresco" e con "gambero", che e' quello che uno cerca
+   davvero.
+
+   I VALORI SI RICAVANO DALLE VOCI, non da un elenco fisso. Un filtro che
+   offre "Panato" dentro il catalogo dei cefalopodi e poi non torna niente
+   insegna al cliente che i filtri non funzionano, e non li tocca piu'. Qui
+   ogni cluster mostra solo quello che ha davvero in pagina, col numero
+   accanto.
+
+   Lo stato sta per primo e non e' un caso: e' il primo taglio che fa un
+   ristoratore, e deve stare prima dello scroll. */
+function filtri(c) {
+  const voci = c.sottocluster.flatMap((s) => s.voci);
+
+  const gruppi = dati.filtri.map((f) => {
+    const conta = new Map();
+    for (const v of voci) {
+      const g = v[f.campo];
+      if (g == null) continue;
+      for (const valore of Array.isArray(g) ? g : [g]) {
+        conta.set(valore, (conta.get(valore) || 0) + 1);
+      }
+    }
+    /* Un valore che ce l'hanno tutte non e' un filtro, e' un'informazione:
+       "Congelato" dentro un catalogo tutto congelato non toglie niente e
+       occupa una riga. Sotto le due voci distinte il gruppo non si stampa. */
+    if (conta.size < 2) return '';
+
+    /* LA CODA LUNGA STA DIETRO UN BOTTONE, e non e' un dettaglio di stile.
+       Le pezzature sono testo scritto a mano, non fasce normalizzate: sul
+       catalogo del pesce sono 106 valori diversi, 91 dei quali appartengono
+       a un prodotto solo — "obeso", "baffa", "grado AA". Stampati tutti
+       facevano sei schermate di pillole prima del primo pesce, e un filtro
+       piu' lungo del catalogo che filtra non e' un filtro.
+
+       Ordinati per quanti prodotti tengono insieme, i primi otto sono
+       quelli che servono davvero; gli altri restano raggiungibili, ma
+       chiusi. Il numero sul bottone dice quanti sono, cosi' non si spaccia
+       per completo un elenco che e' tagliato. (Finche' l'anagrafica non
+       normalizza pezzatura e formato in fasce — punto 04 del documento —
+       questa e' la forma onesta.) */
+    const CAPPIO = 8;
+    const ordinati = [...conta.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'it'));
+
+    const valori = ordinati
+      .map(([valore, n], i) => `            <button type="button" class="ct-fchip${i >= CAPPIO ? ' ct-fchip-coda' : ''}" data-campo="${f.campo}" data-valore="${valore.replace(/"/g, '&quot;')}" aria-pressed="false"${i >= CAPPIO ? ' hidden' : ''}>${valore}<span class="ct-fchip-n">${n}</span></button>`)
+      .join('\n');
+
+    const coda = ordinati.length > CAPPIO
+      ? `\n            <button type="button" class="ct-fchip-piu" data-piu="${f.campo}" aria-expanded="false">+${ordinati.length - CAPPIO} altre</button>`
+      : '';
+
+    return `        <div class="ct-filtro">
+          <span class="ct-filtro-et">${f.nome}</span>
+          <div class="ct-filtro-valori">
+${valori}${coda}
+          </div>
+        </div>`;
+  }).filter(Boolean);
+
+  /* I TRE GRUPPI STANNO IN FILA, non incolonnati.
+     In tre righe da una pillola e mezza il pannello lasciava due terzi di
+     larghezza vuota a destra e si mangiava tre righe d'altezza: fianco a
+     fianco riempie lo spazio che c'e' e si legge come una barra di comando
+     invece che come un modulo da compilare. */
+  return `      <section class="ct-filtri" id="ct-filtri" aria-label="Filtra i prodotti">
+        <div class="ct-filtri-in">
+          <div class="ct-filtri-testa">
+            <h2>Filtra <strong>${voci.length}</strong> prodotti</h2>
+            <button type="button" class="ct-filtri-azzera" id="ct-azzera" hidden>Azzera i filtri</button>
+          </div>
+          <div class="ct-filtri-gruppi">
+${gruppi.join('\n')}
+          </div>
+          <p class="ct-filtri-esito" id="ct-esito" role="status" hidden></p>
         </div>
       </section>`;
 }
@@ -187,8 +323,9 @@ function catalogo(c) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Cataloghi
         </a>
+        <p class="ct-famiglie-et">${c.sottocluster.length} famiglie</p>
         <div class="fq-indice" role="navigation" aria-label="Famiglie del catalogo">
-${c.famiglie.map((f) => `          <a href="#${idFam(f.nome)}">${f.nome}</a>`).join('\n')}
+${c.sottocluster.map((f) => `          <a href="#${idFam(f.nome)}">${f.nome}</a>`).join('\n')}
         </div>
       </div>
     </div>`;
@@ -199,10 +336,10 @@ ${c.famiglie.map((f) => `          <a href="#${idFam(f.nome)}">${f.nome}</a>`).j
      La descrizione NON e' scritta a mano — sono i primi nomi di prodotto
      della famiglia, che e' l'unica cosa che un ristoratore voglia leggere li'
      dentro, e che non puo' andare fuori sincrono col catalogo. */
-  const vetrina = c.famiglie.reduce((s, f) => s + f.voci.length, 0);
+  const vetrina = c.sottocluster.reduce((s, f) => s + f.voci.length, 0);
 
   const scelta = `      <div class="fq-argomenti">
-${c.famiglie.map((f, i) => {
+${c.sottocluster.map((f, i) => {
     /* Due nomi sul telefono, quattro sul largo: in una colonna da 390 px
        quattro nomi di prodotto sono tre righe per ognuna delle sei famiglie,
        e il selettore smette di essere un colpo d'occhio */
@@ -244,9 +381,14 @@ ${c.famiglie.map((f, i) => {
     /* I filetti non hanno ancora una copertina propria: piuttosto che un
        link WhatsApp senza foto, l'anteprima di riserva del marchio */
     immagine: c.foto || 'foto-prodotti/copertina-pescato.webp',
+    /* Il mondo sta nelle briciole ma non e' una pagina: e' la sezione
+       dell'indice. Puntarlo con l'ancora dice a Google che i dieci cluster
+       stanno in due famiglie, senza inventare due pagine intermedie che
+       nessuno vorrebbe visitare. */
     jsonld: [briciole([
       ['Home', `${RADICE}/`],
       ['Catalogo prodotti', `${RADICE}/catalogo/prodotti.html`],
+      [c.mondo.nome, `${RADICE}/catalogo/prodotti.html#${c.mondo.slug}`],
       [c.nome, `${RADICE}/catalogo/${c.slug}.html`],
     ])],
   })}
@@ -271,7 +413,9 @@ ${ctaVeloce(`Ciao, vorrei il listino: ${c.nome}`)}
 
 ${scelta}
 
-${c.famiglie.map(famiglia).join('\n\n')}
+${filtri(c)}
+
+${c.sottocluster.map(famiglia).join('\n\n')}
 
 ${ctaVeloce(`Ciao, vorrei il listino: ${c.nome}`)}
 
@@ -283,12 +427,13 @@ ${chiusura(
     'Ti mandiamo il listino del tuo settore e ti diciamo cosa c\'è in cella adesso. Si ordina fino alle 2 di notte, si consegna entro le 11.'
   )}
     </main>
-${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', 'js/d.js?v=1', 'js/catalogo.js?v=1', '../js/cursore.js?v=2'])}`;
+${piede(['../js/caustiche.js?v=1', '../js/pesci.js?v=11', '../js/consenso.js?v=1', '../js/tag.js?v=2', '../js/analitica.js?v=2', 'js/d.js?v=1', 'js/catalogo.js?v=2', 'js/filtri.js?v=1', '../js/cursore.js?v=2'])}`;
 }
 
 /* ─ L'indice ────────────────────────────────
-   La porta d'ingresso: quattro cataloghi, e il pescato per primo perche' e'
-   l'unico che cambia e l'unico che nessun altro grossista puo' copiare */
+   La porta d'ingresso: due mondi, dieci cataloghi, e il pescato per primo
+   perche' e' l'unico che cambia e l'unico che nessun altro grossista puo'
+   copiare */
 function indice() {
   /* LA CARD E' QUELLA DEL PESCATO, non una terza.
      L'indice aveva un disegno suo — foto larga, occhiello corallo, paragrafo —
@@ -298,26 +443,28 @@ function indice() {
      siti. Qui si usa `.pr-card` dentro `.pr-griglia`, cioe' esattamente la
      vetrina del pescato: stessa cornice, stesso ingrandimento al passaggio,
      stessa freccia. Quattro in fila, nessun buco. (Mattias, 2026-08-17) */
+  const carta = (c) => ({
+    href: `${c.slug}.html`,
+    /* Sulla card va il nome CORTO, non il titolo della pagina: in quindici
+       rem "Pesce fresco all'ingrosso" va su due righe e "all'ingrosso" non
+       aggiunge niente a chi sta scegliendo fra dieci riquadri */
+    nome: c.nome,
+    foto: c.foto,
+    /* La riga sotto il titolo dice COSA C'E' DENTRO con i nomi veri dei
+       prodotti, non un aggettivo: e' la stessa scelta delle righe numerate
+       dentro i cataloghi, e non puo' andare fuori sincrono */
+    riga: c.sottocluster.flatMap((f) => f.voci.map((v) => v.nome)).slice(0, 4).join(', '),
+  });
+
   const carte = [
     { ...PESCATO, href: 'pescato-arcipelago-toscano.html' },
-    ...cataloghi.map((c) => ({
-      href: `${c.slug}.html`,
-      /* Sulla card va il nome CORTO, non il titolo della pagina: in quindici
-         rem "Pesce fresco all'ingrosso" va su due righe e "all'ingrosso" non
-         aggiunge niente a chi sta scegliendo fra otto riquadri */
-      nome: c.nome,
-      foto: c.foto,
-      /* La riga sotto il titolo dice COSA C'E' DENTRO con i nomi veri dei
-         prodotti, non un aggettivo: e' la stessa scelta delle righe numerate
-         dentro i cataloghi, e non puo' andare fuori sincrono */
-      riga: c.famiglie.flatMap((f) => f.voci.map((v) => v.nome)).slice(0, 4).join(', '),
-    })),
+    ...cataloghi.map(carta),
   ];
 
   /* Stesso segnaposto delle schede: una categoria appena aggiunta non ha
      ancora la sua copertina, e senza questo il riquadro chiamerebbe una foto
      che non esiste — cioe' l'icona di immagine rotta, in cima all'indice. */
-  const griglia = carte.map((c) => `        <a class="pr-card" href="${c.href}">
+  const riquadro = (c) => `        <a class="pr-card" href="${c.href}">
           <div class="pr-foto">${c.foto
     ? `<img src="${c.foto}" alt="${c.nome}" loading="lazy" />`
     : `<span class="ct-foto-segno pr-foto-segno" aria-hidden="true"><svg class="ct-foto-segno-i"><use href="#ico-pesce"/></svg><span class="ct-foto-segno-n">${c.nome}</span></span>`}</div>
@@ -325,10 +472,37 @@ function indice() {
             <h2>${c.nome}</h2>
             <p class="pr-taglia">${c.riga}</p>
           </div>
-        </a>`).join('\n\n');
+        </a>`;
+
+  /* ─ I DUE MONDI RAGGRUPPANO, NON NASCONDONO.
+     Dieci riquadri tutti uguali in fila non dicono che cinque sono il
+     mestiere e cinque sono il servizio: chi cerca un fornitore ittico e
+     vede le basi pizza accanto al calamaro legge "cash and carry", non
+     "grossista di pesce". Due intestazioni bastano a separarli — i cluster
+     restano tutti visibili, nessuno finisce dentro un menu da aprire.
+
+     "Dal mare" apre per primo e si prende il pescato: e' il 74% dei chili e
+     tutto il mestiere. */
+  const mondi = dati.mondi.map((m, i) => {
+    const dentro = i === 0
+      ? [{ ...PESCATO, href: 'pescato-arcipelago-toscano.html' }, ...m.cluster.map(carta)]
+      : m.cluster.map(carta);
+    const quota = m.cluster.reduce((s, c) => s + c.sottocluster.reduce((t, f) => t + f.voci.length, 0), 0);
+
+    return `      <section class="pr-mondo" id="${m.slug}">
+        <div class="pr-mondo-testa">
+          <h2>${m.nome}</h2>
+          <p class="pr-mondo-sotto">${m.sotto}</p>
+          <p class="pr-mondo-conta">${m.cluster.length} cataloghi · ${quota} prodotti in pagina</p>
+        </div>
+        <div class="pr-griglia pr-griglia-cat">
+${dentro.map(riquadro).join('\n\n')}
+        </div>
+      </section>`;
+  }).join('\n\n');
 
   /* L'ItemList dice a Google che questa pagina E' un elenco, e di cosa:
-     gli stessi nove cataloghi delle card, nello stesso ordine — markup e
+     gli stessi undici riquadri delle card, nello stesso ordine — markup e
      pagina devono dire la stessa cosa */
   const listaCataloghi = {
     '@context': 'https://schema.org',
@@ -346,7 +520,7 @@ function indice() {
     css: ['catalogo.css'],
     simboli: ['wa', 'arr', 'pesce'],
     pagina: 'prodotti.html',
-    descrizione: 'Ingrosso di pesce per ristoranti, pescherie e sushi bar in Toscana, Liguria ed Emilia-Romagna: otto cataloghi, oltre mille referenze, consegna entro le 11.',
+    descrizione: 'Ingrosso di pesce per ristoranti, pescherie e sushi bar in Toscana, Liguria ed Emilia-Romagna: dieci cataloghi in due mondi, oltre mille referenze, consegna entro le 11.',
     immagine: 'foto-prodotti/copertina-pescato.webp',
     jsonld: [
       briciole([
@@ -370,7 +544,7 @@ function indice() {
              che non diceva nessuna delle due cose. (Mattias, 2026-08-17) -->
         <h1 class="pr-titolo">Catalogo prodotti<br /><em>pesce fresco, congelato e crudo per la ristorazione</em></h1>
         <p class="pr-sotto">
-          Otto cataloghi e più di mille referenze in cella stamattina. Qui le più
+          Dieci cataloghi e più di mille referenze in cella stamattina. Qui le più
           richieste: il resto si ordina e arriva con lo stesso furgone.
         </p>
       </div>
@@ -406,9 +580,7 @@ function indice() {
 
 ${ctaVeloce('Ciao, vorrei informazioni sui vostri prodotti')}
 
-      <div class="pr-griglia pr-griglia-cat">
-${griglia}
-      </div>
+${mondi}
 
 ${chiusura(
     'Dicci che locale hai',
@@ -423,8 +595,8 @@ let n = 0;
 cataloghi.forEach((c) => {
   fs.writeFileSync(path.join(qui, `${c.slug}.html`), catalogo(c));
   n++;
-  const voci = c.famiglie.reduce((s, f) => s + f.voci.length, 0);
-  console.log(`  ${c.slug}.html — ${c.famiglie.length} famiglie, ${voci} voci`);
+  const voci = c.sottocluster.reduce((s, f) => s + f.voci.length, 0);
+  console.log(`  ${c.slug}.html — ${c.sottocluster.length} famiglie, ${voci} voci`);
 });
 
 fs.writeFileSync(path.join(qui, 'prodotti.html'), indice());

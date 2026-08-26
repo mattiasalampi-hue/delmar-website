@@ -55,50 +55,62 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://del-mar.it/catalogo/catalogo-fresco.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/catalogo/catalogo-cefalopodi.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://del-mar.it/catalogo/catalogo-crostacei.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://del-mar.it/catalogo/catalogo-cefalopodi.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/catalogo/catalogo-pesce.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://del-mar.it/catalogo/catalogo-crudo.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/catalogo/catalogo-molluschi.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://del-mar.it/catalogo/catalogo-filetti.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/catalogo/catalogo-gastronomia-di-mare.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://del-mar.it/catalogo/catalogo-affumicati.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/catalogo/catalogo-patate-e-fritti.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://del-mar.it/catalogo/catalogo-cucina.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/catalogo/catalogo-panificati.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://del-mar.it/catalogo/catalogo-dessert.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <loc>https://del-mar.it/catalogo/catalogo-verdure-e-contorni.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/catalogo-pasta-e-primi.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/catalogo-dolci-e-pasticceria.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -220,6 +232,150 @@
   </url>
 
   <!-- I crediti delle fotografie: deve esistere, non deve posizionarsi -->
+  <url>
+    <loc>https://del-mar.it/catalogo/tonno-alalunga.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/totano.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/seppia.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/pescatrice.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/moscardino.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/mazzancolle.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/suro-e-sugarelli.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/gambero-viola.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/ricciola.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/tonno-rosso.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/triglia-di-scoglio.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/tonno-alletterato.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/polpo.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/lanzardo.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/mostella.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/cernia.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/occhione-e-pezzogna.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/sogliola.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/dentice.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/orata.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/aragosta.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/barracuda.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/nasello.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://del-mar.it/catalogo/ombrina.html</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <url>
     <loc>https://del-mar.it/catalogo/crediti.html</loc>
     <lastmod>2026-08-18</lastmod>

@@ -8,7 +8,7 @@
 */
 const fs = require('fs');
 const path = require('path');
-const { WA, testa, piede, altriCataloghi, briciole } = require('./comune');
+const { WA, testa, piede, altriCataloghi, briciole, primaFrase } = require('./comune');
 
 const RADICE = 'https://del-mar.it';
 
@@ -18,6 +18,15 @@ const RADICE = 'https://del-mar.it';
    sharp. Se una specie non le ha, l'attributo semplicemente non esce. */
 function dimensioni(s) {
   return s.larghezza ? ` width="${s.larghezza}" height="${s.altezza}"` : '';
+}
+
+/* Non tutte le voci sono una specie: la frittura e la zuppa sono casse
+   miste, e nel campo `scientifico` hanno una frase ("Mista di specie
+   locali") invece di un binomio. In vetrina, accanto alla pezzatura, quella
+   frase diventava "Mista, del giorno · Mista di specie locali" — la stessa
+   cosa detta due volte. Il binomio si riconosce dalla forma: Genere specie. */
+function binomio(s) {
+  return /^[A-Z][a-z]+ [a-z]+$/.test(String(s || '').trim());
 }
 
 const qui = __dirname;
@@ -147,12 +156,33 @@ function cornice(s) {
     : `<div class="pr-foto pr-foto-vuota"><span>${s.nome}</span></div>`;
 }
 
+/* LA VETRINA NON HA PIU' LE FOTOGRAFIE (Mattias, 26/08/2026).
+
+   Erano scatti fatti col telefono mentre si smistavano le casse, e
+   promettevano una cosa che non erano: sembravano il pesce di stanotte,
+   ma sono ferme da giorni — la pagina e' statica e le foto invecchiano
+   con lei. Un ritaglio di polistirolo spacciato per il pescato di oggi
+   fa piu' danno di nessuna foto.
+
+   La disponibilita' vera sta nel listino PAT dell'Operations Hub, che il
+   buyer aggiorna ogni sera. Qui restano i nomi e le pezzature — che sono
+   le due cose che un ristoratore legge davvero — e il collegamento al
+   listino per il resto. */
+/* OGNI SPECIE DICE QUALCOSA DI SE', e non e' un vezzo.
+   Per un giro la vetrina e' stata quarantatre nomi e una pezzatura di due
+   parole: "Cicale · Pannocchie fresche". Chi non e' del mestiere non impara
+   niente, e chi lo e' non ha motivo di aprire la scheda. Le descrizioni ci
+   sono — una per specie, scritte a mano — e stavano tutte nascoste un clic
+   piu' in la'.
+   Qui va la prima frase, che e' il fatto che identifica il pesce: le schede
+   sono scritte apposta cosi', fatto principale e poi elaborazione. E' la
+   stessa regola dei cataloghi di linea, e usa la stessa funzione. */
 function vetrinaCards() {
-  return specie.map((s) => `        <a class="pr-card" href="${s.slug}.html">
-          ${cornice(s)}
+  return specie.map((s) => `        <a class="pr-card pr-card-nuda" href="${s.slug}.html">
           <div class="pr-testo">
             <h2>${s.nome}</h2>
-            <p class="pr-taglia">${s.taglia}</p>
+            <p class="pr-taglia">${s.taglia}${binomio(s.scientifico) ? ` · ${s.scientifico}` : ''}</p>
+            <p class="pr-riga">${primaFrase(s.descrizione[0])}</p>
           </div>
         </a>`).join('\n\n');
 }

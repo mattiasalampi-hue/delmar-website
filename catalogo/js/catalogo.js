@@ -61,6 +61,10 @@
     var trovato = -1;
 
     for (var i = 0; i < sezioni.length; i++) {
+      /* Una sezione nascosta dai filtri misura zero, e zero e' sempre sopra
+         la riga: senza questo salto l'indice si accendeva sull'ultima
+         famiglia filtrata via, cioe' su una pillola che non si vede piu'. */
+      if (sezioni[i].hidden || sezioni[i].offsetParent === null) continue;
       if (sezioni[i].getBoundingClientRect().top <= linea) trovato = i;
     }
     segna(trovato);
