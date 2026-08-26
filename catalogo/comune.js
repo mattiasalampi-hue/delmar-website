@@ -134,14 +134,14 @@ function testa(titolo, opts = {}) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${titolo} — DelMar</title>${descrizione}${canonical}${og}${jsonld}
     <link rel="stylesheet" href="${su}css/poppins.css?v=1" />
-    <link rel="stylesheet" href="${su}css/style.css?v=103" />
+    <link rel="stylesheet" href="${su}css/style.css?v=106" />
     <!-- L'indice appeso e le righe degli argomenti sono GIA' nel sito, sulla
          pagina delle domande frequenti. Si carica quel foglio invece di
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
     <link rel="stylesheet" href="${su}css/domande-frequenti.css?v=8" />
-    <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=5" />
+    <link rel="stylesheet" href="${cartella === 'catalogo' ? '' : '../catalogo/'}css/d.css?v=11" />
     <link rel="stylesheet" href="${su}css/consenso.css?v=1" />
-${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=15" />`).join('\n')}
+${css.map((f) => `    <link rel="stylesheet" href="css/${f}?v=24" />`).join('\n')}
   </head>
   <body class="pr-pagina">
     <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
@@ -205,16 +205,28 @@ function altriCataloghi(corrente) {
   const path = require('path');
   const dati = JSON.parse(fs.readFileSync(path.join(__dirname, 'catalogo.json'), 'utf8'));
 
-  const tutti = [
-    { slug: 'pescato-arcipelago-toscano', nome: 'Pescato dell\'Arcipelago Toscano' },
-    ...dati.cataloghi.map((c) => ({ slug: c.slug, nome: c.nome })),
-  ].filter((c) => c.slug !== corrente);
+  /* Con dieci cataloghi le pillole in fila diventano un muro: dal calamaro
+     alle torte senza una cesura, e chi guarda non capisce piu' se sta
+     leggendo un grossista di pesce o un cash and carry. I due mondi
+     rimettono la cesura — sono gli stessi dell'indice, e qui costano due
+     righe di titolino.
+
+     Il pescato sta in cima a "Dal mare" e non fuori da tutto: e' pesce, ed
+     e' la pagina che porta piu' gente. */
+  const gruppi = dati.mondi.map((m, i) => ({
+    nome: m.nome,
+    voci: [
+      ...(i === 0 ? [{ slug: 'pescato-arcipelago-toscano', nome: 'Pescato dell\'Arcipelago Toscano' }] : []),
+      ...m.cluster.map((c) => ({ slug: c.slug, nome: c.nome })),
+    ].filter((c) => c.slug !== corrente),
+  })).filter((g) => g.voci.length);
 
   return `    <section class="ct-altri">
       <h2>Gli altri cataloghi</h2>
-      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="Gli altri cataloghi">
-${tutti.map((c) => `        <a href="${c.slug}.html">${c.nome}</a>`).join('\n')}
-      </div>
+${gruppi.map((g) => `      <p class="ct-altri-mondo">${g.nome}</p>
+      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="${g.nome}">
+${g.voci.map((c) => `        <a href="${c.slug}.html">${c.nome}</a>`).join('\n')}
+      </div>`).join('\n')}
     </section>`;
 }
 

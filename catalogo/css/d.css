@@ -631,3 +631,181 @@ main.pr-corpo > * > :last-child {
     justify-content: center;
   }
 }
+
+
+/* ─ LA COLONNA E' UNA SOLA ──────────────────
+   Questa pagina aveva due colonne centrate diverse: il testo dentro 46rem,
+   la griglia e i riquadri dentro 76rem. Con le schede fotografiche la
+   differenza si leggeva come "galleria contro testo"; tolte le foto, sono
+   diventate due blocchi che non combaciano di duecentoquaranta pixel per
+   parte, e la pagina sembra montata da due persone diverse.
+   Da qui in giu' tutto sta nella colonna del testo. */
+
+.pr-listino-guscio {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.4rem 6%;
+}
+
+/* ─ Il richiamo al listino del giorno ───────
+   Non e' un bottone in mezzo agli altri: e' l'unica strada di questa pagina
+   che porta a un prezzo. Fondo blu marchio e bottone corallo dentro — le
+   stesse tre cose della chiusura, ma in cima, dove uno sta ancora decidendo
+   se restare. */
+.pr-listino-blocco {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  flex-wrap: wrap;
+  padding: 1.8rem;
+  background: var(--ink);
+  border-radius: 10px;
+  color: var(--white);
+}
+
+.pr-listino-testo {
+  flex: 1 1 17rem;
+}
+
+.pr-listino-occhiello {
+  margin: 0 0 .45rem;
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.pr-listino-blocco h2 {
+  margin: 0 0 .5rem;
+  font-size: 1.3rem;
+  font-weight: 300;
+  letter-spacing: -.02em;
+  line-height: 1.25;
+  color: var(--white);
+}
+
+.pr-listino-blocco p {
+  margin: 0;
+  font-size: .85rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, .78);
+}
+
+.pr-btn-listino {
+  flex: 0 0 auto;
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  /* Scritta bianca come tutti i bottoni corallo del sito: il blu scuro
+     su corallo era un terzo colore che non esiste da nessun altra parte
+     (Mattias, 26/08/2026) */
+  color: var(--white);
+  font-weight: 600;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pr-btn-listino:hover {
+    background: var(--wa);
+    border-color: var(--wa);
+  }
+}
+
+/* ─ La vetrina senza fotografie ─────────────
+   Tolte le foto (26/08/2026), la vetrina e' un elenco. Una colonna sola
+   nella misura del testo, e ogni riga dice il nome, la pezzatura col nome
+   scientifico e la prima frase della scheda: quarantatre nomi nudi non
+   insegnano niente a chi non e' del mestiere, e non danno motivo di aprire
+   la scheda a chi lo e'. */
+.pr-griglia:has(.pr-card-nuda) {
+  max-width: 46rem;
+  padding: 1.4rem 6% 3rem;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.pr-card-nuda {
+  gap: 0;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pr-card-nuda:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.pr-card-nuda .pr-testo h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+/* Pezzatura e nome scientifico sulla stessa riga, in maiuscoletto: sono la
+   carta d'identita' del pesce, non la sua descrizione */
+.pr-card-nuda .pr-taglia {
+  margin: .2rem 0 0;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pr-riga {
+  margin: .45rem 0 0;
+  font-size: .88rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text-mid);
+}
+
+/* ─ I collegamenti dentro il testo ──────────
+   Nel paragrafo di apertura ci sono due rimandi al listino, ed erano dello
+   stesso colore del testo, senza sottolineatura: nessuno li avrebbe
+   cliccati, e sono l'unico punto della pagina dove sta il prezzo. */
+.pr-intro a {
+  color: var(--wa);
+  border-bottom: 1px solid rgba(201, 67, 44, .35);
+  transition: border-color .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pr-intro a:hover {
+    border-bottom-color: var(--wa);
+  }
+}
+
+/* Il collegamento al listino nella barra appesa, al posto della data
+   scritta a mano: e' l'unica cosa cliccabile della barra */
+.pr-listino {
+  color: var(--wa);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity .3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pr-listino:hover {
+    opacity: .7;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Sul telefono il bottone va sotto e largo quanto la colonna: di lato
+     resterebbe una striscia da due centimetri accanto a un titolo su
+     quattro righe */
+  .pr-listino-blocco {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.1rem;
+  }
+
+  .pr-listino-blocco h2 {
+    font-size: 1.15rem;
+  }
+
+  .pr-btn-listino {
+    justify-content: center;
+  }
+}

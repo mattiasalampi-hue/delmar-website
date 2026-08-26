@@ -61,6 +61,10 @@
     var trovato = -1;
 
     for (var i = 0; i < sezioni.length; i++) {
+      /* Una sezione nascosta dai filtri misura zero, e zero e' sempre sopra
+         la riga: senza questo salto l'indice si accendeva sull'ultima
+         famiglia filtrata via, cioe' su una pillola che non si vede piu'. */
+      if (sezioni[i].hidden || sezioni[i].offsetParent === null) continue;
       if (sezioni[i].getBoundingClientRect().top <= linea) trovato = i;
     }
     segna(trovato);
@@ -78,5 +82,15 @@
 
   window.addEventListener('scroll', chiedi, { passive: true });
   window.addEventListener('resize', chiedi, { passive: true });
+
+  /* I FILTRI CAMBIANO L'ALTEZZA DELLA PAGINA SENZA CHE NESSUNO SCORRA.
+     js/filtri.js nasconde voci e famiglie intere: il documento puo'
+     accorciarsi di due terzi, e senza questo avviso il filo dell'avanzamento
+     resta alla percentuale di prima e la pillola accesa continua a indicare
+     una sezione che filtri.js ha appena nascosto. Un evento nostro invece di
+     un `resize` finto: quello farebbe ridisegnare anche le tele animate
+     dell'apertura a ogni clic su una pillola. */
+  window.addEventListener('catalogo:filtrato', chiedi);
+
   aggiorna();
 })();

@@ -59,3 +59,38 @@
   ExpiresByType font/woff2              "access plus 1 year"
   ExpiresByType text/html               "access plus 0 seconds"
 </IfModule>
+
+# Le sei pagine di catalogo che l'alberatura nuova non ha piu'.
+#
+# Erano indirizzi indicizzati, alcuni da mesi, e "Filetti congelati" e
+# "Prodotti per crudi di pesce" erano fra le pagine con piu' visite del
+# catalogo. Senza queste righe diventano sei 404: Google le toglie
+# dall'indice e chi le aveva salvate fra i preferiti sbatte contro un
+# muro. Con il 301 l'autorita' accumulata passa alla pagina che ha preso
+# il loro posto.
+#
+# RedirectMatch e non Redirect: Redirect confronta il PREFISSO, quindi
+# /catalogo/catalogo-fresco.html.bak verrebbe rediretto anche lui con la
+# coda appiccicata in fondo. Le ancore ^...$ chiudono la porta.
+#
+# E dentro IfModule come tutto il resto di questo file: un Redirect senza
+# guardia, se mod_alias e' spento, non e' una riga ignorata ma un errore
+# fatale di configurazione — Apache risponde 500 su TUTTO il sito, non
+# solo su questi sei indirizzi.
+<IfModule mod_alias.c>
+  # Cinque vanno al cluster dove i prodotti sono finiti davvero: chi cercava
+  # un filetto di merluzzo deve trovarsi davanti il merluzzo, non un elenco
+  # di dieci cataloghi da cui ricominciare.
+  RedirectMatch 301 "^/catalogo/catalogo-fresco\.html$"     /catalogo/catalogo-pesce.html
+  RedirectMatch 301 "^/catalogo/catalogo-filetti\.html$"    /catalogo/catalogo-pesce.html
+  RedirectMatch 301 "^/catalogo/catalogo-affumicati\.html$" /catalogo/catalogo-pesce.html
+  RedirectMatch 301 "^/catalogo/catalogo-crudo\.html$"      /catalogo/catalogo-pesce.html
+  RedirectMatch 301 "^/catalogo/catalogo-dessert\.html$"    /catalogo/catalogo-dolci-e-pasticceria.html
+
+  # "Patate, basi pizza e contorni" e' l'eccezione, e va detto: le sue voci
+  # si sono sparpagliate su cinque cluster — patate 2, panificati 3, pasta 3,
+  # verdure 1, gastronomia 1. Mandare tutti su "Patate e fritti" vuol dire
+  # accogliere con 2 prodotti su 10 chi arrivava cercando le basi pizza o il
+  # minestrone. La sezione dell'indice li contiene tutti e cinque.
+  RedirectMatch 301 "^/catalogo/catalogo-cucina\.html$"      /catalogo/prodotti.html#per-la-cucina
+</IfModule>

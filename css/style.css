@@ -23,8 +23,16 @@
   --wa-hover: #a8351f;
   --accent-bright: #ff6b57;
   --border: rgba(21,28,100,.12);
-  --text-dim: rgba(21,28,100,.45);
-  --text-mid: rgba(21,28,100,.62);
+  /* I TRE GRIGI HANNO UNA SOGLIA, e non e' il gusto: 4,5:1 sul bianco.
+     --text-dim stava a .45, cioe' 2,78:1 — sotto meta' del minimo leggibile —
+     e lo usano 57 punti del sito, quasi tutti etichette piccole: le righe
+     sotto le schede del catalogo, i conteggi, le diciture in maiuscoletto.
+     Su un buon monitor in penombra passano; su un portatile al banco, con la
+     luce di taglio, spariscono. A .62 fa 4,58:1 ed e' dentro la norma;
+     --text-mid sale con lui a .74 per non appiattire i tre livelli.
+     La gerarchia la fanno misura, peso e maiuscoletto, non la trasparenza. */
+  --text-dim: rgba(21,28,100,.62);
+  --text-mid: rgba(21,28,100,.74);
   --text-hi: rgba(21,28,100,.9);
   /* Geometrico largo come il marchio DelMar, su tutto il sito */
   --font: 'Poppins', sans-serif;
@@ -51,9 +59,21 @@ body {
   overflow-x: hidden;
 }
 
+/* `height: auto` NON e' decorazione: senza, ogni foto con gli attributi
+   width/height nel markup si deforma.
+   Gli attributi servono a riservare lo spazio e non far saltare la pagina
+   mentre le immagini arrivano, ma il browser li applica anche come altezza.
+   Se poi il CSS stringe la larghezza — `width:100%` dentro una colonna da
+   11rem — la larghezza diventa 176 px e l'altezza resta quella scritta nel
+   markup: 1400. La foto diventa una fessura, e `object-fit: cover` ne
+   ritaglia una striscia verticale presa a caso, che e' come il nastro del
+   pescato mostrava lastre di polistirolo invece di pesce.
+   Con `height:auto` comanda la proporzione — quella vera o quella dichiarata
+   con `aspect-ratio` — e lo spazio resta riservato lo stesso. */
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -1950,6 +1970,12 @@ html.cur-on select {
   text-transform: uppercase;
   color: var(--text-dim);
   margin-bottom: .3rem;
+}
+
+/* Il secondo titolino della colonna catalogo: separa "Dal mare" da "Per
+   la cucina" senza aprire una sesta colonna nella griglia del piede */
+.footer-col-poi {
+  margin-top: 1.1rem;
 }
 
 .footer-col a {

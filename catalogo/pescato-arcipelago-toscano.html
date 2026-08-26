@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pescato dell'Arcipelago Toscano del giorno — DelMar</title>
-    <meta name="description" content="Il pescato dell'Arcipelago Toscano sbarcato stanotte: specie, taglie e zone di pesca, aggiornato ogni sera dopo le 20. Per ristoranti e pescherie." />
+    <meta name="description" content="Le specie dell'Arcipelago Toscano che sbarchiamo di solito, con taglie e zone di pesca. Disponibilita' e prezzi di oggi nel listino, rifatto ogni sera." />
     <link rel="canonical" href="https://del-mar.it/catalogo/pescato-arcipelago-toscano.html" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://del-mar.it/catalogo/pescato-arcipelago-toscano.html" />
     <meta property="og:title" content="Pescato dell'Arcipelago Toscano del giorno — DelMar" />
-    <meta property="og:description" content="Il pescato sbarcato stanotte: specie, taglie e zone di pesca, aggiornato ogni sera dopo le 20. Per ristoranti e pescherie." />
+    <meta property="og:description" content="Le specie dell'Arcipelago Toscano che sbarchiamo di solito. Disponibilita' e prezzi di oggi nel listino, rifatto ogni sera." />
     <meta property="og:image" content="https://del-mar.it/catalogo/foto-prodotti/copertina-pescato.webp" />
     <meta property="og:locale" content="it_IT" />
     <meta property="og:site_name" content="DelMar" />
@@ -18,16 +18,16 @@
     {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://del-mar.it/"},{"@type":"ListItem","position":2,"name":"Catalogo prodotti","item":"https://del-mar.it/catalogo/prodotti.html"},{"@type":"ListItem","position":3,"name":"Pescato dell'Arcipelago Toscano","item":"https://del-mar.it/catalogo/pescato-arcipelago-toscano.html"}]}
     </script>
     <link rel="stylesheet" href="../css/poppins.css?v=1" />
-    <link rel="stylesheet" href="../css/style.css?v=103" />
+    <link rel="stylesheet" href="../css/style.css?v=106" />
     <link rel="stylesheet" href="../css/consenso.css?v=1" />
     <!-- Serve alle pillole degli altri cataloghi in fondo alla pagina:
          .fq-indice sta li' dentro, ed e' lo stesso componente della barra
          appesa della pagina domande -->
     <link rel="stylesheet" href="../css/domande-frequenti.css?v=8" />
-    <link rel="stylesheet" href="css/d.css?v=5" />
+    <link rel="stylesheet" href="css/d.css?v=11" />
     <!-- Solo per la via di ritorno ai cataloghi nella barra della giornata:
          e' lo stesso componente delle pagine di listino, non se ne riscrive uno -->
-    <link rel="stylesheet" href="css/catalogo.css?v=15" />
+    <link rel="stylesheet" href="css/catalogo.css?v=24" />
     <link rel="stylesheet" href="../css/consenso.css?v=1" />
   </head>
   <body class="pr-pagina">
@@ -81,8 +81,17 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Cataloghi
         </a>
-        <p class="pr-giorno"><strong>Lunedì 17 agosto</strong> · diciannove specie sbarcate</p>
-        <p class="pr-agg">Aggiornato ieri alle 20:40</p>
+        <!-- QUI C'ERA UNA DATA SCRITTA A MANO, ed e' stata il difetto peggiore
+             della pagina: "Lunedi' 17 agosto · Aggiornato ieri alle 20:40".
+             Il 26 agosto diceva ancora la stessa cosa. Una pagina senza data
+             e' incompleta; una pagina con la data sbagliata mente, e su un
+             prodotto che si vende dicendo "sbarcato stanotte" e' la bugia che
+             costa di piu'.
+             La data vera ce l'ha il listino dell'Operations Hub, che il buyer
+             rifa' ogni sera: qui si dice quello che non cambia — le specie che
+             sbarchiamo di solito — e per il resto si manda li'. -->
+        <p class="pr-giorno"><strong>Quarantatre specie</strong> · quelle che sbarchiamo di solito</p>
+        <a class="pr-agg pr-listino" href="https://listini.del-mar.it/listini/pescato-arcipelago-toscano-ristoranti" target="_blank" rel="noopener noreferrer">Disponibilità e prezzi di oggi →</a>
       </div>
     </div>
 
@@ -97,9 +106,10 @@
           nostri mari: triglie, cicale, gamberi rossi e rosa, razza, scorfano,
           calamari e la frittura del giorno, sbarcati dalle barche fra Livorno,
           l'Elba e la costa apuana. È pesca di piccola taglia e di giornata,
-          quindi le quantità sono limitate e le specie cambiano continuamente —
-          per questo la pagina si aggiorna ogni sera con quello che ci sarà
-          davvero al banco domani mattina.
+          quindi le quantità sono limitate e le specie cambiano continuamente:
+          quello che c'è <strong>stanotte</strong>, con pezzature e prezzi, sta
+          nel <a href="https://listini.del-mar.it/listini/pescato-arcipelago-toscano-ristoranti" target="_blank" rel="noopener noreferrer">listino del giorno</a>,
+          che rifacciamo ogni sera dopo l'asta.
         </p>
         <!-- Sul telefono resta fuori: e' l'elaborazione, e le stesse cose
              sono ripetute nella chiusura in fondo alla pagina -->
@@ -113,6 +123,36 @@
 
       <!-- La coppia di bottoni di d.css (.pr-cta), la stessa dei cataloghi
            generati: il contatto non vive solo nella chiusura in fondo -->
+      <!-- IL LISTINO E' LA COSA PIU' IMPORTANTE DI QUESTA PAGINA, e per un
+           giro era un collegamentino grigio nella barra in alto. Questa
+           vetrina dice quali specie sbarchiamo di solito; l'unico posto dove
+           c'e' scritto cosa c'e' STANOTTE, con le pezzature e i prezzi, e' il
+           listino dell'Operations Hub. Se il riquadro che ci porta non e' la
+           prima cosa che si vede dopo il testo, la pagina non fa il suo
+           mestiere. (Mattias, 26/08/2026) -->
+      <!-- IL GUSCIO SERVE ALL'ALLINEAMENTO, non e' un div di troppo.
+           I margini laterali di questa pagina sono in percentuale e si
+           calcolano sul contenitore, non sull'elemento: per far combaciare il
+           bordo del riquadro blu con il bordo del testo, il riquadro deve
+           stare DENTRO una scatola con la stessa larghezza e lo stesso
+           margine del testo. Senza, il blu sbordava di ottantacinque pixel
+           per parte e la pagina sembrava montata da due persone diverse. -->
+      <div class="pr-listino-guscio">
+        <section class="pr-listino-blocco">
+          <div class="pr-listino-testo">
+            <p class="pr-listino-occhiello">Listino del giorno</p>
+            <h2>Cosa c'è stanotte, con pezzature e prezzi</h2>
+            <p>Lo rifacciamo ogni sera dopo l'asta. È l'unico posto dove la lista è
+            quella vera: qui sotto ci sono le specie che sbarchiamo di solito, lì
+            c'è quello che è arrivato.</p>
+          </div>
+          <a class="pr-btn pr-btn-listino" href="https://listini.del-mar.it/listini/pescato-arcipelago-toscano-ristoranti" target="_blank" rel="noopener noreferrer">
+            Apri il listino di oggi
+            <svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg>
+          </a>
+        </section>
+      </div>
+
       <div class="pr-cta">
         <a href="https://wa.me/393664142330?text=Ciao%2C%20vorrei%20sapere%20cosa%20c%27%C3%A8%20di%20pescato%20oggi" target="_blank" rel="noopener noreferrer" class="pr-btn pr-btn-wa">
           <svg aria-hidden="true"><use href="#ico-wa"/></svg>
@@ -130,164 +170,365 @@
              centinaia di referenze, qui sono lo sbarcato di stanotte per
              intero. Vale la pena dirlo, perche' e' il contrario di quello
              che un visitatore si aspetta da una vetrina. -->
+        <!-- QUESTO PARAGRAFO DICEVA "questo e' tutto quello che le barche hanno
+             portato stanotte". Su una pagina statica non era vero, e prometteva
+             la cosa piu' facile da smentire: bastava chiamare e sentirsi dire
+             che meta' di quelle specie oggi non c'era. Adesso dice cosa e':
+             l'elenco di quello che sbarchiamo abitualmente. Lo sbarcato di
+             stanotte sta nel listino, che e' l'unico posto dove quel numero e'
+             vero. -->
         <p>
-          A differenza degli altri cataloghi, qui non c'è nessuna selezione:
-          <strong>questo è tutto quello che le barche hanno portato stanotte</strong>.
-          Le specie che non vedete non ci sono, e domani la lista sarà diversa.
+          Questo è <strong>l'elenco delle specie che sbarchiamo abitualmente</strong>,
+          non quello di stanotte: è pesca di giornata, e cosa c'è davvero cambia
+          ogni notte con l'asta. Per la lista di oggi, con le pezzature e i prezzi,
+          <a href="https://listini.del-mar.it/listini/pescato-arcipelago-toscano-ristoranti" target="_blank" rel="noopener noreferrer">apri il listino del giorno</a>
+          — lo rifacciamo ogni sera.
         </p>
       </div>
 
       <!-- GRIGLIA:INIZIO — le schede le scrive genera.js da specie.json -->
       <div class="pr-griglia">
-        <a class="pr-card" href="triglia-di-fango.html">
-          <div class="pr-foto"><img src="foto/foto-4.webp" alt="Triglia di fango" loading="lazy" width="1050" height="1400" /></div>
-          <div class="pr-testo">
-            <h2>Triglia di fango</h2>
-            <p class="pr-taglia">Pezzatura grande</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="cicale-di-mare.html">
-          <div class="pr-foto"><img src="foto/foto-3.webp" alt="Cicale" loading="lazy" width="1050" height="1400" /></div>
-          <div class="pr-testo">
-            <h2>Cicale</h2>
-            <p class="pr-taglia">Pannocchie fresche</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="gambero-rosso.html">
-          <div class="pr-foto"><img src="foto/foto-12.webp" alt="Gambero rosso" loading="lazy" width="1050" height="1400" /></div>
-          <div class="pr-testo">
-            <h2>Gambero rosso</h2>
-            <p class="pr-taglia">Seconda pezzatura</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="gambero-rosa.html">
-          <div class="pr-foto"><img src="foto/foto-5.webp" alt="Gambero rosa" loading="lazy" width="1050" height="1400" /></div>
-          <div class="pr-testo">
-            <h2>Gambero rosa</h2>
-            <p class="pr-taglia">Seconda pezzatura</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="razza-clavata.html">
-          <div class="pr-foto"><img src="foto/foto-7.webp" alt="Razza clavata" loading="lazy" width="1050" height="1400" /></div>
-          <div class="pr-testo">
-            <h2>Razza clavata</h2>
-            <p class="pr-taglia">Fresca, intera</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="scorfano.html">
-          <div class="pr-foto"><img src="foto/foto-11.webp" alt="Scorfano" loading="lazy" width="1050" height="1400" /></div>
-          <div class="pr-testo">
-            <h2>Scorfano</h2>
-            <p class="pr-taglia">Fresco</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="spigola-di-mare.html">
-          <div class="pr-foto"><img src="foto/foto-10.webp" alt="Spigola" loading="lazy" width="1050" height="1400" /></div>
-          <div class="pr-testo">
-            <h2>Spigola</h2>
-            <p class="pr-taglia">Pezzatura grande</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="calamaro.html">
-          <div class="pr-foto"><img src="foto/foto-2.webp" alt="Calamaro" loading="lazy" width="1050" height="1400" /></div>
-          <div class="pr-testo">
-            <h2>Calamaro</h2>
-            <p class="pr-taglia">Pezzatura media</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="frittura-del-giorno.html">
-          <div class="pr-foto"><img src="foto/foto-6.webp" alt="Frittura" loading="lazy" width="1400" height="1050" /></div>
+        <a class="pr-card pr-card-nuda" href="frittura-del-giorno.html">
           <div class="pr-testo">
             <h2>Frittura</h2>
             <p class="pr-taglia">Mista, del giorno</p>
+            <p class="pr-riga">La frittura è quello che il mare ha dato in taglia piccola: triglie, merluzzetti, calamaretti, gamberi, a seconda della battuta. <span class="solo-largo">Non è una selezione fatta a tavolino ma la composizione vera della pesca, e cambia ogni notte — per questo si ordina sapendo cosa aspettarsi, non scegliendo specie per specie.</span></p>
           </div>
         </a>
 
-        <a class="pr-card" href="cefalo.html">
-          <div class="pr-foto"><img src="foto/foto-9.webp" alt="Cefalo" loading="lazy" width="1050" height="1400" /></div>
+        <a class="pr-card pr-card-nuda" href="gambero-rosa.html">
           <div class="pr-testo">
-            <h2>Cefalo</h2>
-            <p class="pr-taglia">Fresco</p>
+            <h2>Gambero rosa</h2>
+            <p class="pr-taglia">Seconda pezzatura · Parapenaeus longirostris</p>
+            <p class="pr-riga">Il gambero rosa è il più versatile dei nostri crostacei: pezzatura media, guscio sottile, polpa dolce e soda. <span class="solo-largo">Si pesca su fondali meno profondi del rosso e arriva in quantità più costanti, il che lo rende il gambero su cui un menù può contare tutto l'anno.</span></p>
           </div>
         </a>
 
-        <a class="pr-card" href="pesce-prete.html">
-          <div class="pr-foto"><img src="foto/foto-8.webp" alt="Pesce prete" loading="lazy" width="1050" height="1400" /></div>
+        <a class="pr-card pr-card-nuda" href="triglia-di-fango.html">
           <div class="pr-testo">
-            <h2>Pesce prete</h2>
-            <p class="pr-taglia">Fresco</p>
+            <h2>Triglia di fango</h2>
+            <p class="pr-taglia">Pezzatura grande · Mullus barbatus</p>
+            <p class="pr-riga">La triglia di fango è il pesce che racconta meglio il fondale dell'Alto Tirreno: vive sui fondali sabbiosi e fangosi fra i 50 e i 150 metri, e la si riconosce dalla livrea rosata attraversata da una banda dorata che sbiadisce appena il pesce esce dall'acqua — motivo per cui il colore acceso, in cassa, è la prima prova di freschezza.</p>
           </div>
         </a>
 
-        <a class="pr-card" href="gambero-bianco.html">
-          <div class="pr-foto"><img src="foto/foto-1.webp" alt="Gambero bianco" loading="lazy" width="1050" height="1400" /></div>
+        <a class="pr-card pr-card-nuda" href="cicale-di-mare.html">
           <div class="pr-testo">
-            <h2>Gambero bianco</h2>
-            <p class="pr-taglia">Fresco</p>
+            <h2>Cicale</h2>
+            <p class="pr-taglia">Pannocchie fresche · Squilla mantis</p>
+            <p class="pr-riga">Le cicale — pannocchie, canocchie, a seconda di dove le si chiama — sono uno dei crostacei più identitari dell'Alto Tirreno. <span class="solo-largo">Vivono infossate nei fondali fangosi e si pescano soprattutto nei mesi freddi, quando la polpa è piena e dolce. I due occhi scuri sul telson, quelli che sembrano dipinti, sono il modo più rapido di riconoscerle.</span></p>
           </div>
         </a>
 
-        <a class="pr-card" href="scampi.html">
-          <div class="pr-foto pr-foto-vuota"><span>Scampi</span></div>
-          <div class="pr-testo">
-            <h2>Scampi</h2>
-            <p class="pr-taglia">Prima e seconda</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="astice-blu.html">
-          <div class="pr-foto pr-foto-vuota"><span>Astice blu</span></div>
-          <div class="pr-testo">
-            <h2>Astice blu</h2>
-            <p class="pr-taglia">Vivo, a pezzo</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="san-pietro.html">
-          <div class="pr-foto pr-foto-vuota"><span>San Pietro</span></div>
-          <div class="pr-testo">
-            <h2>San Pietro</h2>
-            <p class="pr-taglia">Pezzatura piccola</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="gobetto.html">
-          <div class="pr-foto pr-foto-vuota"><span>Gobetto</span></div>
-          <div class="pr-testo">
-            <h2>Gobetto</h2>
-            <p class="pr-taglia">Fresco, sfuso</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="sovaci.html">
-          <div class="pr-foto pr-foto-vuota"><span>Sovaci e passere</span></div>
-          <div class="pr-testo">
-            <h2>Sovaci e passere</h2>
-            <p class="pr-taglia">Fresche, intere</p>
-          </div>
-        </a>
-
-        <a class="pr-card" href="zuppa-di-pesce.html">
-          <div class="pr-foto pr-foto-vuota"><span>Zuppa di pesce</span></div>
+        <a class="pr-card pr-card-nuda" href="zuppa-di-pesce.html">
           <div class="pr-testo">
             <h2>Zuppa di pesce</h2>
             <p class="pr-taglia">Mista, del giorno</p>
+            <p class="pr-riga">Il misto per la zuppa: scorfanetti, cappone, tracine, pesci di scoglio di piccola taglia che da soli non fanno porzione ma insieme fanno il fondo migliore che esista.</p>
           </div>
         </a>
 
-        <a class="pr-card" href="pesce-spada.html">
-          <div class="pr-foto pr-foto-vuota"><span>Pesce spada</span></div>
+        <a class="pr-card pr-card-nuda" href="razza-clavata.html">
+          <div class="pr-testo">
+            <h2>Razza clavata</h2>
+            <p class="pr-taglia">Fresca, intera · Raja clavata</p>
+            <p class="pr-riga">La razza clavata si riconosce dalle spine ricurve sul dorso — le clave che le danno il nome — e dalla pelle ruvida a macchie scure. <span class="solo-largo">È un pesce di fondale che arriva intero e si lavora in casa: le ali sono la parte che finisce in cucina, il resto serve per i fondi.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="tonno-alalunga.html">
+          <div class="pr-testo">
+            <h2>Tonno alalunga</h2>
+            <p class="pr-taglia">Fresco, intero · Thunnus alalunga</p>
+            <p class="pr-riga">È il tonno del Tirreno, quello che arriva d'estate e non tutto l'anno: mezza tonnellata in sei mesi, concentrata in tredici giornate. <span class="solo-largo">Quando c'è ne arriva molto insieme, e quando finisce la stagione sparisce.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="gambero-bianco.html">
+          <div class="pr-testo">
+            <h2>Gambero bianco</h2>
+            <p class="pr-taglia">Fresco · Parapenaeus longirostris</p>
+            <p class="pr-riga">Il gambero bianco è il più delicato dei tre gamberi che entrano dal nostro mare: guscio chiaro e sottile, polpa dolcissima, pezzatura contenuta. <span class="solo-largo">Arriva in quantità piccole e irregolari, quindi è un prodotto da proporre quando c'è, non da mettere fisso in carta.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="totano.html">
+          <div class="pr-testo">
+            <h2>Totano</h2>
+            <p class="pr-taglia">Fresco · Todarodes sagittatus</p>
+            <p class="pr-riga">Si confonde col calamaro e non è la stessa cosa: la carne è più soda e più saporita, e chiede una cottura o molto breve o molto lunga — in mezzo diventa gomma. <span class="solo-largo">Quattro quintali in sei mesi, su settantasette giornate: è merce che c'è quasi sempre.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="seppia.html">
+          <div class="pr-testo">
+            <h2>Seppia</h2>
+            <p class="pr-taglia">Fresca, con il suo nero · Sepia officinalis</p>
+            <p class="pr-riga">La seppia nera fresca arriva col suo sacco intatto, ed è la ragione per cui si compra fresca invece che pulita: il nero è un ingrediente, e quello delle bustine non è la stessa cosa. <span class="solo-largo">Quattro quintali in sei mesi.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="scampi.html">
+          <div class="pr-testo">
+            <h2>Scampi</h2>
+            <p class="pr-taglia">Prima e seconda · Nephrops norvegicus</p>
+            <p class="pr-riga">Gli scampi del Tirreno arrivano in quattro selezioni, dalla prima alla quarta, e la differenza non è solo la taglia: la prima ha il guscio più duro e regge la cottura intera, la terza e la quarta rendono meglio sgusciate perché la polpa è la stessa a metà del prezzo.</p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="pesce-spada.html">
           <div class="pr-testo">
             <h2>Pesce spada</h2>
-            <p class="pr-taglia">A trance</p>
+            <p class="pr-taglia">A trance · Xiphias gladius</p>
+            <p class="pr-riga">Lo spada fresco del Tirreno, già tagliato a trance. <span class="solo-largo">Non entra spesso — è pesca stagionale e non tutte le barche lo prendono — ma quando arriva è una voce che si vende da sola.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="pescatrice.html">
+          <div class="pr-testo">
+            <h2>Pescatrice</h2>
+            <p class="pr-taglia">Fresca, intera o in coda · Lophius piscatorius</p>
+            <p class="pr-riga">Tre quintali in sei mesi, quasi tutti di pezzatura grande. <span class="solo-largo">È il pesce che si compra a resa: la testa è metà del peso e non si serve, quindi il prezzo al chilo dell'intero e quello della coda pulita sono due numeri che non si confrontano.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="gambero-rosso.html">
+          <div class="pr-testo">
+            <h2>Gambero rosso</h2>
+            <p class="pr-taglia">Seconda pezzatura · Aristaeomorpha foliacea</p>
+            <p class="pr-riga">Il gambero rosso è il crostaceo più pregiato che entra dal nostro mare: vive in profondità, oltre i 400 metri, e arriva a bordo solo con le battute lunghe. <span class="solo-largo">Il colore intenso e la testa piena sono ciò che il ristoratore guarda per primo — e sono anche le due cose che si perdono più in fretta se la catena del freddo si interrompe.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="moscardino.html">
+          <div class="pr-testo">
+            <h2>Moscardino</h2>
+            <p class="pr-taglia">Fresco, intero · Eledone cirrhosa</p>
+            <p class="pr-riga">È il polpo che non chiede due ore di bollitura: due quintali in sei mesi su ottantuno giornate, cioè una delle voci più costanti del banco. <span class="solo-largo">Una fila di ventose invece di due — da qui il nome dialettale — e una carne che resta tenera senza trattamenti.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="mazzancolle.html">
+          <div class="pr-testo">
+            <h2>Mazzancolle</h2>
+            <p class="pr-taglia">Fresche, intere · Penaeus kerathurus</p>
+            <p class="pr-riga">La mazzancolla mediterranea è un gambero diverso da quello tropicale che porta lo stesso nome sul menù: guscio più sottile, carne più dolce, e un colore che in cottura vira al rosa acceso invece che al rosso. <span class="solo-largo">Due quintali in sei mesi.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="suro-e-sugarelli.html">
+          <div class="pr-testo">
+            <h2>Suro e sugarelli</h2>
+            <p class="pr-taglia">Freschi, interi · Trachurus trachurus</p>
+            <p class="pr-riga">Un quintale e tre quarti in sei mesi, su trentasei giornate: è pesce azzurro di costa, quello che le barche prendono quando prendono. <span class="solo-largo">Costa poco e vale molto — margine alto e un sapore che regge da solo.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="gambero-viola.html">
+          <div class="pr-testo">
+            <h2>Gambero viola</h2>
+            <p class="pr-taglia">Fresco, intero · Aristeus antennatus</p>
+            <p class="pr-riga">Il viola si pesca fondo, sotto i quattrocento metri, e arriva in quantità piccole: un quintale e mezzo in sei mesi su ventuno giornate. <span class="solo-largo">È il gambero che sta accanto al rosso in una carta di crudi, con un sapore più dolce e meno iodato.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="ricciola.html">
+          <div class="pr-testo">
+            <h2>Ricciola di fondale</h2>
+            <p class="pr-taglia">Fresca, intera · Seriola dumerili</p>
+            <p class="pr-riga">La ricciola di fondale è il pesce da crudo del nostro mare: un quintale e mezzo in sei mesi, in sette pezzature diverse dalla 1/3 alla 20/25. <span class="solo-largo">La pezzatura non è un dettaglio — sotto i tre chili è un secondo, sopra i dieci è una carta di sashimi.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="tonno-rosso.html">
+          <div class="pr-testo">
+            <h2>Tonno rosso</h2>
+            <p class="pr-taglia">Fresco, intero 20/30 kg · Thunnus thynnus</p>
+            <p class="pr-riga">Il rosso del Mediterraneo si pesca a quota: arriva quando la quota lo consente e non quando serve. <span class="solo-largo">Un quintale e quattro in sei mesi, su cinque giornate soltanto — è merce che si prenota, non che si ordina.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="cefalo.html">
+          <div class="pr-testo">
+            <h2>Cefalo</h2>
+            <p class="pr-taglia">Fresco · Mugil cephalus</p>
+            <p class="pr-riga">Il cefalo è un pesce sottovalutato che sta tornando nelle cucine di ricerca: vive sotto costa e nelle acque salmastre, ha carne saporita e grassa il giusto, e costa una frazione dei pesci più blasonati. <span class="solo-largo">Quello di mare aperto, come questo, ha un sapore molto più pulito di quello di laguna.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="scorfano.html">
+          <div class="pr-testo">
+            <h2>Scorfano</h2>
+            <p class="pr-taglia">Fresco · Scorpaena scrofa</p>
+            <p class="pr-riga">Lo scorfano è brutto e prezioso: testa grande, spine velenose sul dorso, colore rosso mattone. <span class="solo-largo">Vive sui fondali rocciosi e si pesca in quantità sempre modeste, il che lo rende un pesce da carta corta più che da servizio continuo.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="triglia-di-scoglio.html">
+          <div class="pr-testo">
+            <h2>Triglia di scoglio</h2>
+            <p class="pr-taglia">Fresca, intera · Mullus surmuletus</p>
+            <p class="pr-riga">Non è la triglia di fango con un altro nome: vive sulla roccia, ha il muso più corto, le righe gialle sui fianchi e una carne più soda. <span class="solo-largo">Costa di più e vale di più — un quintale e un decimo in sei mesi, contro i nove della triglia di fango.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="tonno-alletterato.html">
+          <div class="pr-testo">
+            <h2>Tonno alletterato</h2>
+            <p class="pr-taglia">Fresco, intero · Euthynnus alletteratus</p>
+            <p class="pr-riga">È il tonno che i pescatori tengono per sé: carne scura, sapore forte, prezzo di un terzo rispetto al rosso. <span class="solo-largo">Novantuno chili in sei mesi su otto giornate — è un pesce di stagione corta, non una referenza di listino.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="polpo.html">
+          <div class="pr-testo">
+            <h2>Polpo di scoglio</h2>
+            <p class="pr-taglia">Fresco, intero · Octopus vulgaris</p>
+            <p class="pr-riga">Il polpo di scoglio ha due file di ventose e una carne che il moscardino non ha: è il polpo da insalata e da griglia, quello che si compra quando il piatto ha il polpo nel nome. <span class="solo-largo">Sessantasei chili in sei mesi — poco, perché è pesca di nassa e la nassa dà quello che dà.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="san-pietro.html">
+          <div class="pr-testo">
+            <h2>San Pietro</h2>
+            <p class="pr-taglia">Pezzatura piccola · Zeus faber</p>
+            <p class="pr-riga">Il pesce con la macchia nera sul fianco — l'impronta del dito di San Pietro, dice la storia. <span class="solo-largo">È brutto da guardare e ha una testa enorme, quindi la resa è bassa: da un chilo intero escono poco più di trecento grammi di filetto.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="lanzardo.html">
+          <div class="pr-testo">
+            <h2>Lanzardo</h2>
+            <p class="pr-taglia">Fresco, intero · Scomber colias</p>
+            <p class="pr-riga">È il cugino dello sgombro, con l'occhio più grande e le carni un po' più chiare. <span class="solo-largo">Sessantaquattro chili in sei mesi, su sette giornate: arriva a banchi, e quando arriva se ne prende quanto se ne vende in giornata.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="calamaro.html">
+          <div class="pr-testo">
+            <h2>Calamaro</h2>
+            <p class="pr-taglia">Pezzatura media · Loligo vulgaris</p>
+            <p class="pr-riga">Il calamaro nostrano è un altro prodotto rispetto a quello d'importazione: il mantello è più sottile, la carne più dolce e le pinne arrivano intatte. <span class="solo-largo">Si pesca sotto costa e in quantità che cambiano molto da una notte all'altra.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="mostella.html">
+          <div class="pr-testo">
+            <h2>Mostella</h2>
+            <p class="pr-taglia">Fresca, intera · Phycis blennoides</p>
+            <p class="pr-riga">La musdea è un pesce che quasi nessuno mette in carta col suo nome, e che chi lo conosce compra tutte le volte che c'è: carne bianca, dolce, che si sfalda a scaglie larghe come il merluzzo ma con più sapore. <span class="solo-largo">Quarantasei chili in sei mesi, su cinque giornate.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="cernia.html">
+          <div class="pr-testo">
+            <h2>Cernia</h2>
+            <p class="pr-taglia">Fresca, intera · Epinephelus marginatus</p>
+            <p class="pr-riga">Quarantadue chili in sei mesi su nove giornate: è il pesce da carta importante del nostro mare, e arriva a pezzi singoli, non a casse. Chi la vuole la prenota.</p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="gobetto.html">
+          <div class="pr-testo">
+            <h2>Gobetto</h2>
+            <p class="pr-taglia">Fresco, sfuso · Plesionika narval</p>
+            <p class="pr-riga">Il gambero della gobba, piccolo e con il rostro lungo e ricurvo. <span class="solo-largo">È un prodotto quasi solo locale: si pesca a profondità medie davanti all'Elba e non arriva mai in quantità.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="occhione-e-pezzogna.html">
+          <div class="pr-testo">
+            <h2>Occhione e pezzogna</h2>
+            <p class="pr-taglia">Fresco, intero 200/300 · Pagellus bogaraveo</p>
+            <p class="pr-riga">L'occhio grande da cui prende il nome dice da dove viene: è un pesce di profondità, e la carne se ne accorge — bianca, fine, con un grasso che al forno diventa il fondo del piatto. <span class="solo-largo">Ventitré chili in sei mesi.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="sogliola.html">
+          <div class="pr-testo">
+            <h2>Sogliola</h2>
+            <p class="pr-taglia">Fresca, intera · Solea solea</p>
+            <p class="pr-riga">Ventidue chili in sei mesi: è la voce piccola che però non manca mai dalle carte di chi lavora sul classico. <span class="solo-largo">La sogliola di rete è un altro prodotto rispetto a quella di allevamento — più sottile, più saporita, e con una pelle che si stacca in un colpo solo.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="dentice.html">
+          <div class="pr-testo">
+            <h2>Dentice</h2>
+            <p class="pr-taglia">Fresco, intero · Dentex dentex</p>
+            <p class="pr-riga">Il dentice di palangaro è uno dei pochi pesci che sta bene sia crudo sia al forno, e questo lo rende la voce più flessibile di una carta di pesce. <span class="solo-largo">Venti chili in sei mesi su otto giornate: arriva a esemplari, non a casse.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="orata.html">
+          <div class="pr-testo">
+            <h2>Orata di mare</h2>
+            <p class="pr-taglia">Fresca, di pesca · Sparus aurata</p>
+            <p class="pr-riga">Questa è orata di pesca, non di allevamento: le due cose portano lo stesso nome e sono due prodotti diversi, per carne, prezzo e disponibilità. <span class="solo-largo">Diciannove chili in sei mesi — l'orata selvatica arriva quando arriva.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="pesce-prete.html">
+          <div class="pr-testo">
+            <h2>Pesce prete</h2>
+            <p class="pr-taglia">Fresco · Uranoscopus scaber</p>
+            <p class="pr-riga">Il pesce prete passa la vita mezzo sepolto nella sabbia con gli occhi rivolti al cielo, ed è da lì che gli viene il nome. <span class="solo-largo">Ha una testa grossa e un corpo corto: la resa in filetto non è altissima, ma quello che dà è una carne bianca, soda e senza spine fastidiose.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="aragosta.html">
+          <div class="pr-testo">
+            <h2>Aragosta</h2>
+            <p class="pr-taglia">Fresca, viva · Palinurus elephas</p>
+            <p class="pr-riga">Diciotto chili in sei mesi su otto giornate: l'aragosta dell'Arcipelago è pesca di nassa e ha un fermo che va rispettato, quindi non è un prodotto di listino — è un prodotto di stagione, e si prenota.</p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="barracuda.html">
+          <div class="pr-testo">
+            <h2>Barracuda</h2>
+            <p class="pr-taglia">Fresco, intero · Sphyraena viridensis</p>
+            <p class="pr-riga">Fino a vent'anni fa nel Tirreno non c'era, e adesso arriva tutte le estati: è uno dei pesci che il mare che si scalda ha portato qui. <span class="solo-largo">Quattordici chili in sei mesi, su tre giornate.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="nasello.html">
+          <div class="pr-testo">
+            <h2>Nasello</h2>
+            <p class="pr-taglia">Fresco, intero · Merluccius merluccius</p>
+            <p class="pr-riga">Il nasello di pesca è un pesce delicatissimo: dodici chili in sei mesi ma su undici giornate diverse, cioè poche casse per volta e spesso. <span class="solo-largo">Va trattato con cura perché la carne cede in fretta — è il pesce che si giudica dalla freschezza più di ogni altro.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="ombrina.html">
+          <div class="pr-testo">
+            <h2>Ombrina</h2>
+            <p class="pr-taglia">Fresca, di pesca · Umbrina cirrosa</p>
+            <p class="pr-riga">L'ombrina di pesca è rara: undici chili in sei mesi, su tre giornate. <span class="solo-largo">È un pesce di fondale sabbioso vicino a riva, e da queste parti arriva a esemplari singoli.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="spigola-di-mare.html">
+          <div class="pr-testo">
+            <h2>Spigola</h2>
+            <p class="pr-taglia">Pezzatura grande · Dicentrarchus labrax</p>
+            <p class="pr-riga">Questa è spigola di mare, pescata: un'altra cosa rispetto a quella di allevamento, e si vede dalla forma affusolata, dalla pinna dorsale integra e dalla carne più soda. <span class="solo-largo">Vive sotto costa e nelle acque salmastre, e arriva in quantità limitate perché dipende dalla singola battuta.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="astice-blu.html">
+          <div class="pr-testo">
+            <h2>Astice blu</h2>
+            <p class="pr-taglia">Vivo, a pezzo · Homarus gammarus</p>
+            <p class="pr-riga">L'astice blu del Mediterraneo è raro e arriva a pezzi singoli, non a cassette. <span class="solo-largo">Si distingue dal canadese per il colore — blu scuro screziato invece che marrone — e per le chele più corte e più tozze.</span></p>
+          </div>
+        </a>
+
+        <a class="pr-card pr-card-nuda" href="sovaci.html">
+          <div class="pr-testo">
+            <h2>Sovaci e passere</h2>
+            <p class="pr-taglia">Fresche, intere · Platichthys flesus</p>
+            <p class="pr-riga">Le passere di mare, che qui si chiamano sovaci. <span class="solo-largo">Pesci piatti di piccola taglia, con la carne bianca e dolce e una lisca centrale che si toglie in un colpo dopo la cottura.</span></p>
           </div>
         </a>
       </div>
@@ -301,15 +542,21 @@
       <!-- ALTRI:INIZIO -->
     <section class="ct-altri">
       <h2>Gli altri cataloghi</h2>
-      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="Gli altri cataloghi">
-        <a href="catalogo-fresco.html">Pesce fresco</a>
-        <a href="catalogo-crostacei.html">Crostacei e molluschi</a>
-        <a href="catalogo-cefalopodi.html">Calamaro, polpo e seppia</a>
-        <a href="catalogo-crudo.html">Prodotti per crudi di pesce</a>
-        <a href="catalogo-filetti.html">Filetti congelati</a>
-        <a href="catalogo-affumicati.html">Affumicati</a>
-        <a href="catalogo-cucina.html">Patate, basi pizza e contorni</a>
-        <a href="catalogo-dessert.html">Dessert monoporzione</a>
+      <p class="ct-altri-mondo">Dal mare</p>
+      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="Dal mare">
+        <a href="catalogo-cefalopodi.html">Cefalopodi</a>
+        <a href="catalogo-crostacei.html">Crostacei</a>
+        <a href="catalogo-pesce.html">Pesce</a>
+        <a href="catalogo-molluschi.html">Molluschi e frutti di mare</a>
+        <a href="catalogo-gastronomia-di-mare.html">Preparati e gastronomia di mare</a>
+      </div>
+      <p class="ct-altri-mondo">Per la cucina</p>
+      <div class="fq-indice ct-altri-pillole" role="navigation" aria-label="Per la cucina">
+        <a href="catalogo-patate-e-fritti.html">Patate e fritti</a>
+        <a href="catalogo-panificati.html">Panificati</a>
+        <a href="catalogo-verdure-e-contorni.html">Verdure e contorni</a>
+        <a href="catalogo-pasta-e-primi.html">Pasta e primi</a>
+        <a href="catalogo-dolci-e-pasticceria.html">Dolci e pasticceria</a>
       </div>
     </section>
       <!-- ALTRI:FINE -->
