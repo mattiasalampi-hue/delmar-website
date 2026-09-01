@@ -50,24 +50,24 @@
         {
           "foto": "alici-cassa.jpg",
           "alt": "Alici appena selezionate in una cassa DelMar",
-          "titolo": "La qualità si sceglie<br />di notte, cassa per cassa.",
-          "testo": "Il pesce lo compriamo guardandolo: ogni notte i nostri buyer scelgono al banco il Pescato dell'Arcipelago Toscano, il meglio dei mercati del Mediterraneo e, via aerea, dei mari del mondo. In cella entra solo quello che passa la selezione — e all'alba è già sul furgone della Versilia.",
+          "titolo": "La trabaccolara è nata<br />da una cassa invenduta.",
+          "testo": "Negli anni Venti i pescatori di San Benedetto del Tronto scesero a Viareggio col trabaccolo, e in Darsena li chiamarono trabaccolari. Il loro sugo nasceva dal pesce che al mercato non trovava compratore. Noi prendiamo il problema dal capo opposto: ogni notte i buyer scelgono al banco solo quello che passa la selezione, e all’alba è sul furgone della Versilia.",
           "href": "../catalogo/pescato-arcipelago-toscano.html",
           "cta": "Guarda il pescato di stanotte"
         },
         {
           "foto": "../catalogo/foto-prodotti/copertina-cefalopodi.webp",
           "alt": "Calamari al banco DelMar",
-          "titolo": "Il calamaro<br />lo lavoriamo noi.",
-          "testo": "È il nostro prodotto di punta, e il laboratorio interno è il motivo: pulito, aperto e inciso per la griglia, o tagliato ad anelli e ciuffi per la frittura, nella pezzatura che chiede la tua cucina. E con lui seppie, polpi e totani.",
+          "titolo": "Nel cacciucco viareggino<br />i cefalopodi sono un terzo.",
+          "testo": "Artusi nel 1891 mise a libro due cacciucchi: quello livornese, di scoglio, e quello viareggino, di sabbia. In entrambi polpi, moscardini, seppie e totani pesano da un quarto a un terzo del totale — non sono un contorno, sono mezzo piatto. Il calamaro è il nostro prodotto di punta e lo lavoriamo noi: aperto e inciso per la griglia, o ad anelli e ciuffi per la frittura.",
           "href": "../catalogo/catalogo-cefalopodi.html",
           "cta": "Vedi calamaro, polpo e seppia"
         },
         {
           "foto": "lavorazione-salmone.jpg",
           "alt": "Sfilettatura nel laboratorio DelMar",
-          "titolo": "Le lavorazioni?<br />Le facciamo noi, gratis.",
-          "testo": "Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, sul pescato come sull'allevato. Perfino le alici te le sfilettiamo noi — chiedi in cucina quanto vale un'ora di alici in meno. Il pesce arriva pronto per il servizio, non da preparare.",
+          "titolo": "A Pietrasanta l'artista porta il modello.<br />L'esecuzione la fa la bottega.",
+          "testo": "Cinquantacinque laboratori artistici, più di Roma e di Firenze: Botero e Mitoraj hanno scelto la Versilia per far realizzare le loro opere, e il Museo dei Bozzetti conserva i modelli di oltre trecentocinquanta artisti. Qui l’idea e l’esecuzione sono due mestieri distinti. Tu pensi al piatto, il pesce lo prepariamo noi: squamato, sfilettato, porzionato, tutto compreso.",
           "href": "../catalogo/prodotti.html",
           "cta": "Sfoglia tutto il catalogo"
         }
@@ -126,26 +126,26 @@
         {
           "foto": "alici-cassa.jpg",
           "alt": "Alici appena selezionate in una cassa DelMar",
-          "titolo": "La qualità si sceglie<br />di notte, cassa per cassa.",
-          "testo": "Il pesce lo compriamo guardandolo: ogni notte i nostri buyer scelgono al banco il Pescato dell'Arcipelago Toscano, il meglio dei mercati del Mediterraneo e, via aerea, dei mari del mondo. In cella entra solo quello che passa la selezione — e parte verso Genova col primo giro utile.",
+          "titolo": "A Noli l'acciuga si sceglieva<br />già negli statuti medievali.",
+          "testo": "Gli statuti di Noli parlano di pisce salsa da secoli, e fino agli anni Settanta quel borgo era la capitale della pesca artigianale ligure: barche piccole, lampare, acciughe scelte una cassa alla volta. È lo stesso metodo con cui compriamo noi — guardando, ogni notte, al banco. Poi il furgone parte verso il Ponente col primo giro utile.",
           "href": "../catalogo/pescato-arcipelago-toscano.html",
-          "cta": "Guarda il pescato di stanotte"
+          "cta": "Guarda il pescato dell'Arcipelago"
         },
         {
           "foto": "../catalogo/foto-prodotti/copertina-cefalopodi.webp",
           "alt": "Calamari al banco DelMar",
-          "titolo": "Il calamaro<br />lo lavoriamo noi.",
-          "testo": "È il nostro prodotto di punta, e il laboratorio interno è il motivo: pulito, aperto e inciso per la griglia, o tagliato ad anelli e ciuffi per la frittura, nella pezzatura che chiede la tua cucina. E con lui seppie, polpi e totani.",
+          "titolo": "Totani e patate:<br />mare e terra nella stessa pentola.",
+          "testo": "È il piatto ligure che tiene insieme l'orto e il largo, e riesce solo se il totano è pulito come si deve. Il calamaro è il nostro prodotto di punta e il laboratorio interno è il motivo: aperto e inciso per la griglia, oppure ad anelli e ciuffi per la frittura, nella pezzatura che chiedi. Con lui seppie, polpi e totani.",
           "href": "../catalogo/catalogo-cefalopodi.html",
-          "cta": "Vedi calamaro, polpo e seppia"
+          "cta": "Guarda i cefalopodi"
         },
         {
           "foto": "lavorazione-salmone.jpg",
           "alt": "Sfilettatura nel laboratorio DelMar",
-          "titolo": "Le lavorazioni?<br />Le facciamo noi, gratis.",
-          "testo": "Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, sul pescato come sull'allevato. Perfino le alici te le sfilettiamo noi — chiedi in cucina quanto vale un'ora di alici in meno. Il pesce arriva pronto per il servizio, non da preparare.",
+          "titolo": "A Genova c'è un campionato del mondo<br />per il lavoro fatto a mano.",
+          "testo": "Dal 2007 a Palazzo Ducale si assegna il titolo mondiale del pesto al mortaio, e fra i cinque criteri di giudizio il primo è la manualità: mortaio di marmo, pestello di legno, nessuna scorciatoia. Sul pesce la pensiamo uguale. Squamato, eviscerato, sfilettato, porzionato: nessuna di queste voci finisce in fattura. Acciughe comprese.",
           "href": "../catalogo/prodotti.html",
-          "cta": "Sfoglia tutto il catalogo"
+          "cta": "Sfoglia il catalogo"
         }
       ],
       "wa_testo": "Ciao, ho un locale a Genova e vorrei una consulenza sulla fornitura",
@@ -209,24 +209,24 @@
         {
           "foto": "alici-cassa.jpg",
           "alt": "Alici appena selezionate in una cassa DelMar",
-          "titolo": "La qualità si sceglie<br />di notte, cassa per cassa.",
-          "testo": "Il pesce lo compriamo guardandolo: ogni notte i nostri buyer scelgono al banco il Pescato dell'Arcipelago Toscano, il meglio dei mercati del Mediterraneo e, via aerea, dei mari del mondo. In cella entra solo quello che passa la selezione — e all'alba è già sul furgone che scende verso il golfo.",
+          "titolo": "Qui si chiamano muscoli.<br />Chiamarle cozze è un errore.",
+          "testo": "Nel Golfo si allevano in vivaio dal 1887, e già nel 1882 il malacologo Arturo Issel scriveva che da queste parti vengono particolarmente buoni. Un fornitore che arriva da fuori e sbaglia il nome è un fornitore che non ha capito dove sta lavorando. Noi il pesce lo compriamo guardandolo, ogni notte al banco, e all’alba scende verso il golfo.",
           "href": "../catalogo/pescato-arcipelago-toscano.html",
-          "cta": "Guarda il pescato di stanotte"
+          "cta": "Vedi cosa è entrato stanotte"
         },
         {
           "foto": "../catalogo/foto-prodotti/copertina-cefalopodi.webp",
           "alt": "Calamari al banco DelMar",
-          "titolo": "Il calamaro<br />lo lavoriamo noi.",
-          "testo": "È il nostro prodotto di punta, e il laboratorio interno è il motivo: pulito, aperto e inciso per la griglia, o tagliato ad anelli e ciuffi per la frittura, nella pezzatura che chiede la tua cucina. E con lui seppie, polpi e totani.",
+          "titolo": "Il totano ripieno<br />si chiude con ago e filo.",
+          "testo": "È il più economico dei cefalopodi e il più laborioso da preparare: tentacoli tritati, pane nel latte, e poi cucito uno per uno. Se arriva già pulito ti resta solo la parte che vale. Il calamaro è il nostro prodotto di punta e lo lavoriamo nel laboratorio interno — aperto per la griglia o ad anelli e ciuffi per la frittura, nella pezzatura che chiedi.",
           "href": "../catalogo/catalogo-cefalopodi.html",
           "cta": "Vedi calamaro, polpo e seppia"
         },
         {
           "foto": "lavorazione-salmone.jpg",
           "alt": "Sfilettatura nel laboratorio DelMar",
-          "titolo": "Le lavorazioni?<br />Le facciamo noi, gratis.",
-          "testo": "Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, sul pescato come sull'allevato. Perfino le alici te le sfilettiamo noi — chiedi in cucina quanto vale un'ora di alici in meno. Il pesce arriva pronto per il servizio, non da preparare.",
+          "titolo": "I muscolai li chiamano<br />i contadini del mare.",
+          "testo": "Ottantasei soci di cooperativa che si passano il mestiere di padre in figlio, con metodi antichi: nel Golfo il lavoro paziente sull’acqua è una cosa che si rispetta. Noi facciamo la nostra parte a terra — squamato, eviscerato, sfilettato, porzionato, tutto compreso nel prezzo. Le alici le sfilettiamo noi, una per una.",
           "href": "../catalogo/prodotti.html",
           "cta": "Sfoglia tutto il catalogo"
         }
@@ -291,26 +291,26 @@
         {
           "foto": "alici-cassa.jpg",
           "alt": "Alici appena selezionate in una cassa DelMar",
-          "titolo": "La qualità si sceglie<br />di notte, cassa per cassa.",
-          "testo": "Il pesce lo compriamo guardandolo: ogni notte i nostri buyer scelgono al banco il Pescato dell'Arcipelago Toscano, il meglio dei mercati del Mediterraneo e, via aerea, dei mari del mondo. In cella entra solo quello che passa la selezione — e all'alba è già sul furgone che sale verso Lucca.",
+          "titolo": "Il baccalà coi porri<br />racconta com’era prima.",
+          "testo": "A Lucca il pesce di mare si cucina da secoli, e il baccalà in umido con i porri lo racconta meglio di qualsiasi insegna: qui il mare si aspettava, e quando arrivava doveva valerne la pena. Oggi ci mette una notte. I nostri buyer lo scelgono al banco mentre tu chiudi il servizio, e all’alba sale verso la Piana.",
           "href": "../catalogo/pescato-arcipelago-toscano.html",
           "cta": "Guarda il pescato di stanotte"
         },
         {
           "foto": "../catalogo/foto-prodotti/copertina-cefalopodi.webp",
           "alt": "Calamari al banco DelMar",
-          "titolo": "Il calamaro<br />lo lavoriamo noi.",
-          "testo": "È il nostro prodotto di punta, e il laboratorio interno è il motivo: pulito, aperto e inciso per la griglia, o tagliato ad anelli e ciuffi per la frittura, nella pezzatura che chiede la tua cucina. E con lui seppie, polpi e totani.",
+          "titolo": "Viareggio è provincia di Lucca.<br />Il mare è roba vostra.",
+          "testo": "La trabaccolara si mangia nelle trattorie di tutta la provincia e al mercato di Piazza Cavour: da queste parti il pesce non è esotico, è di casa. Il calamaro è il nostro prodotto di punta e lo lavoriamo noi, nel laboratorio interno: aperto e inciso per la griglia, oppure anelli e ciuffi per la frittura, nella pezzatura che chiedi. Seppie, polpi e totani allo stesso modo.",
           "href": "../catalogo/catalogo-cefalopodi.html",
           "cta": "Vedi calamaro, polpo e seppia"
         },
         {
           "foto": "lavorazione-salmone.jpg",
           "alt": "Sfilettatura nel laboratorio DelMar",
-          "titolo": "Le lavorazioni?<br />Le facciamo noi, gratis.",
-          "testo": "Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, sul pescato come sull'allevato. Perfino le alici te le sfilettiamo noi — chiedi in cucina quanto vale un'ora di alici in meno. Il pesce arriva pronto per il servizio, non da preparare.",
+          "titolo": "Lucca è stata la capitale<br />europea della seta.",
+          "testo": "Già nel Duecento i tessuti lucchesi si vendevano alle fiere della Champagne: una città che ha fatto la sua fortuna trasformando un filo in qualcosa che valeva dieci volte tanto. Il principio non è cambiato. Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, alici comprese. Il pesce arriva pronto per il servizio.",
           "href": "../catalogo/prodotti.html",
-          "cta": "Sfoglia tutto il catalogo"
+          "cta": "Sfoglia il catalogo"
         }
       ],
       "chisiamo_zona": "E il tonno da sashimi a marchio DelMar è già di casa nelle cucine fra Lucca e Montecatini.",
@@ -372,24 +372,24 @@
         {
           "foto": "alici-cassa.jpg",
           "alt": "Alici appena selezionate in una cassa DelMar",
-          "titolo": "La qualità si sceglie<br />di notte, cassa per cassa.",
-          "testo": "Il pesce lo compriamo guardandolo: ogni notte i nostri buyer scelgono al banco il Pescato dell'Arcipelago Toscano, il meglio dei mercati del Mediterraneo e, via aerea, dei mari del mondo. In cella entra solo quello che passa la selezione — e all'alba è già sul furgone che sale la Cisa.",
+          "titolo": "Il tuo pesce fa<br />la strada del sale.",
+          "testo": "Il Passo della Cisa collega la Lunigiana all’Emilia da secoli, e su quella strada saliva il sale che conservava il pesce quando le celle non esistevano. Il nostro furgone valica lo stesso passo, di notte, sulla statale 62. Cambia una cosa: adesso il pesce arriva fresco, scelto al banco poche ore prima e non conservato per reggere il viaggio.",
           "href": "../catalogo/pescato-arcipelago-toscano.html",
-          "cta": "Guarda il pescato di stanotte"
+          "cta": "Vedi il pescato della costa"
         },
         {
           "foto": "../catalogo/foto-prodotti/copertina-cefalopodi.webp",
           "alt": "Calamari al banco DelMar",
-          "titolo": "Il calamaro<br />lo lavoriamo noi.",
-          "testo": "È il nostro prodotto di punta, e il laboratorio interno è il motivo: pulito, aperto e inciso per la griglia, o tagliato ad anelli e ciuffi per la frittura, nella pezzatura che chiede la tua cucina. E con lui seppie, polpi e totani.",
+          "titolo": "Da voi un prodotto o rispetta<br />la specifica o cambia nome.",
+          "testo": "Il culatello si fa a mano da disciplinare, e solo da ottobre a febbraio: a Parma la precisione non è pignoleria, è il motivo per cui vi conoscono ovunque. Sul calamaro ragioniamo uguale — la pezzatura che chiedi tu, non quella che capita. È il nostro prodotto di punta, lavorato nel laboratorio interno: aperto per la griglia o ad anelli e ciuffi per la frittura.",
           "href": "../catalogo/catalogo-cefalopodi.html",
-          "cta": "Vedi calamaro, polpo e seppia"
+          "cta": "Guarda i cefalopodi"
         },
         {
           "foto": "lavorazione-salmone.jpg",
           "alt": "Sfilettatura nel laboratorio DelMar",
-          "titolo": "Le lavorazioni?<br />Le facciamo noi, gratis.",
-          "testo": "Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, sul pescato come sull'allevato. Perfino le alici te le sfilettiamo noi — chiedi in cucina quanto vale un'ora di alici in meno. Il pesce arriva pronto per il servizio, non da preparare.",
+          "titolo": "Da voi il maestro salatore<br />è un mestiere con un nome suo.",
+          "testo": "Chi sala i prosciutti a Parma ha un titolo, perché quella competenza da sola vale un lavoro. Anche pulire e sfilettare il pesce è un mestiere, e qualcuno deve farlo: lo facciamo noi e non te lo addebitiamo. Squamato, eviscerato, sfilettato, porzionato, sul pescato come sull’allevato. Perfino le alici.",
           "href": "../catalogo/prodotti.html",
           "cta": "Sfoglia tutto il catalogo"
         }
@@ -451,24 +451,24 @@
         {
           "foto": "alici-cassa.jpg",
           "alt": "Alici appena selezionate in una cassa DelMar",
-          "titolo": "La qualità si sceglie<br />di notte, cassa per cassa.",
-          "testo": "Il pesce lo compriamo guardandolo: ogni notte i nostri buyer scelgono al banco il Pescato dell'Arcipelago Toscano, il meglio dei mercati del Mediterraneo e, via aerea, dei mari del mondo. In cella entra solo quello che passa la selezione — e all'alba è già sui furgoni di Massa e Carrara.",
+          "titolo": "Da Portus Lunae<br />qui il mare è un mestiere.",
+          "testo": "Da questa costa partivano le naves lapidariae cariche di marmo per Roma, e su quelle navi si sono formate generazioni di equipaggi carraresi. Oggi i pescherecci di qui rientrano con gamberi e scampi, e noi siamo al banco a sceglierli — ogni notte, cassa per cassa. Se vuoi vedere come si fa, il magazzino è in via Dorsale.",
           "href": "../catalogo/pescato-arcipelago-toscano.html",
           "cta": "Guarda il pescato di stanotte"
         },
         {
           "foto": "../catalogo/foto-prodotti/copertina-cefalopodi.webp",
           "alt": "Calamari al banco DelMar",
-          "titolo": "Il calamaro<br />lo lavoriamo noi.",
-          "testo": "È il nostro prodotto di punta, e il laboratorio interno è il motivo: pulito, aperto e inciso per la griglia, o tagliato ad anelli e ciuffi per la frittura, nella pezzatura che chiede la tua cucina. E con lui seppie, polpi e totani.",
+          "titolo": "Il laboratorio è qui.<br />Puoi venire a guardare.",
+          "testo": "Il calamaro è il nostro prodotto di punta e lo lavoriamo nello stesso stabilimento da cui parte il tuo giro: aperto e inciso per la griglia, o ad anelli e ciuffi per la frittura, nella pezzatura che chiedi. È il vantaggio di avere il fornitore in paese — se ti serve un taglio particolare si dice al banco e si fa. Con lui seppie, polpi e totani.",
           "href": "../catalogo/catalogo-cefalopodi.html",
-          "cta": "Vedi calamaro, polpo e seppia"
+          "cta": "Guarda i cefalopodi"
         },
         {
           "foto": "lavorazione-salmone.jpg",
           "alt": "Sfilettatura nel laboratorio DelMar",
-          "titolo": "Le lavorazioni?<br />Le facciamo noi, gratis.",
-          "testo": "Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, sul pescato come sull'allevato. Perfino le alici te le sfilettiamo noi — chiedi in cucina quanto vale un'ora di alici in meno. Il pesce arriva pronto per il servizio, non da preparare.",
+          "titolo": "A Colonnata hanno scelto un marmo<br />apposta per stagionare.",
+          "testo": "Si chiama vetrino: poroso, a grana fine, resistente — l’unico adatto alle conche del lardo, e la tecnica non è cambiata da secoli. Da queste parti la lavorazione non si improvvisa, e si vede. Da noi vale lo stesso: squamato, eviscerato, sfilettato, porzionato, tutto compreso nel prezzo. E il laboratorio è a due passi, se vuoi controllare.",
           "href": "../catalogo/prodotti.html",
           "cta": "Sfoglia tutto il catalogo"
         }
@@ -510,26 +510,26 @@
         {
           "foto": "alici-cassa.jpg",
           "alt": "Alici appena selezionate in una cassa DelMar",
-          "titolo": "La qualità si sceglie<br />di notte, cassa per cassa.",
-          "testo": "Il pesce lo compriamo guardandolo: ogni notte i nostri buyer scelgono al banco il Pescato dell'Arcipelago Toscano, il meglio dei mercati del Mediterraneo e, via aerea, dei mari del mondo. In cella entra solo quello che passa la selezione — e all'alba è già sul furgone che sale verso Firenze.",
+          "titolo": "Nel 1568 Cosimo I fece costruire<br />una loggia solo per il pesce.",
+          "testo": "Il mercato del pesce stava sotto Ponte Vecchio, ma lì doveva passare il Corridoio Vasariano e l’odore non si addiceva: Cosimo I incaricò il Vasari di costruire la Loggia del Pesce al Mercato Vecchio. Firenze il pesce di mare lo compra da allora, e da prima ancora. Quello che saliva per l’Arno oggi sale per strada: scelto al banco sulla costa, in città prima dell’alba.",
           "href": "../catalogo/pescato-arcipelago-toscano.html",
-          "cta": "Guarda il pescato di stanotte"
+          "cta": "Guarda cosa è entrato stanotte"
         },
         {
           "foto": "../catalogo/foto-prodotti/copertina-cefalopodi.webp",
           "alt": "Calamari al banco DelMar",
-          "titolo": "Il calamaro<br />lo lavoriamo noi.",
-          "testo": "È il nostro prodotto di punta, e il laboratorio interno è il motivo: pulito, aperto e inciso per la griglia, o tagliato ad anelli e ciuffi per la frittura, nella pezzatura che chiede la tua cucina. E con lui seppie, polpi e totani.",
+          "titolo": "Le seppie in zimino, a Firenze,<br />si fanno con gli spinaci.",
+          "testo": "È una ricetta rinascimentale, e la versione fiorentina si riconosce proprio lì: spinaci al posto delle bietole. Una seppia pulita male però la senti, con qualsiasi verdura. Il calamaro è il nostro prodotto di punta e il laboratorio interno è il motivo: pulito e inciso per la griglia, o ad anelli e ciuffi per la frittura, nella pezzatura che ci dici. E con lui seppie, polpi e totani.",
           "href": "../catalogo/catalogo-cefalopodi.html",
-          "cta": "Vedi calamaro, polpo e seppia"
+          "cta": "Guarda i cefalopodi"
         },
         {
           "foto": "lavorazione-salmone.jpg",
           "alt": "Sfilettatura nel laboratorio DelMar",
-          "titolo": "Le lavorazioni?<br />Le facciamo noi, gratis.",
-          "testo": "Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, sul pescato come sull'allevato. Perfino le alici te le sfilettiamo noi — chiedi in cucina quanto vale un'ora di alici in meno. Il pesce arriva pronto per il servizio, non da preparare.",
+          "titolo": "In via delle Sette Botteghe<br />i friggitori chiamavano a gran voce.",
+          "testo": "Si cenava con frittelle, carciofi, baccalà e pesce d’Arno, comprati già pronti da chi li sapeva fare: Firenze si fa preparare il pesce da qualcun altro da secoli. Noi continuiamo il servizio. Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, e in una cucina di città il personale è la voce che pesa di più.",
           "href": "../catalogo/prodotti.html",
-          "cta": "Sfoglia tutto il catalogo"
+          "cta": "Sfoglia il catalogo"
         }
       ],
       "slug": "fornitore-pesce-firenze",
@@ -539,7 +539,7 @@
       "occhiello": "Firenze · Scandicci · Campi Bisenzio · Calenzano",
       "titolo": "Pesce all'ingrosso a Firenze",
       "sottotitolo": "consegna ogni mattina entro le 11, domenica compresa",
-      "sotto": "Il nostro furgone sale ogni notte dalla costa: pesce fresco, crudo e congelato per ristoranti, gastronomie e sushi bar di Firenze e della piana.",
+      "sotto": "Il nostro furgone sale ogni notte dalla costa e prima dell'alba è in città: pesce fresco, crudo e congelato per ristoranti, gastronomie e sushi bar fra Firenze, Scandicci, Campi Bisenzio e Calenzano.",
       "descrizione": "Pesce fresco, crudo e congelato all'ingrosso per ristoranti e sushi bar di Firenze: consegna ogni mattina entro le 11, domenica compresa.",
       "comuni": [
         "Firenze",
@@ -547,15 +547,15 @@
         "Campi Bisenzio",
         "Calenzano"
       ],
-      "giorni_testo": "Il giro parte dal nostro magazzino sulla costa ogni notte, tutti i giorni della settimana, domenica compresa: all'alba attraversa la piana e arriva in città. Ordini entro le 2 di notte su WhatsApp (o entro le 18 al telefono) e la merce è al tuo banco entro le 11.",
-      "furgone_testo": "Il giro di Firenze sale dalla costa ogni notte, sette giorni su sette.",
+      "giorni_testo": "Il giro parte dal nostro magazzino di Massa ogni notte, tutti i giorni della settimana, domenica e festivi compresi: attraversa la piana e prima dell'alba è dentro Firenze, poi Scandicci, Campi Bisenzio e Calenzano. Ordini entro le 2 di notte su WhatsApp (o entro le 18 al telefono) e la merce è al tuo banco entro le 11.",
+      "furgone_testo": "Il giro di Firenze sale da Massa ogni notte, sette giorni su sette.",
       "chisiamo_zona": "A Firenze stiamo crescendo: se il tuo fornitore ti dà per scontato, è il momento giusto per metterci alla prova.",
       "wa_testo": "Ciao, ho un locale a Firenze e vorrei una consulenza sulla fornitura",
       "chiusura_titolo": "Dicci dov'è il tuo locale<br />e ti mandiamo il listino della zona",
-      "chiusura_testo": "Ristorante, gastronomia o sushi bar a Firenze: scrivici su WhatsApp, ti diciamo cosa c'è in cella e ti prepariamo il primo ordine come si deve.",
+      "chiusura_testo": "Ristorante, gastronomia o sushi bar in città o nella piana: scrivici su WhatsApp, ti diciamo cosa c'è in cella stanotte e ti prepariamo il primo ordine come si deve.",
       "lat": 43.77,
       "lon": 11.25,
-      "breve": "La città e la piana, ogni notte dalla costa.",
+      "breve": "In città prima dell'alba, sette giorni su sette.",
       "giorni_brevi": "7 giorni su 7"
     },
     {
@@ -585,26 +585,26 @@
         {
           "foto": "alici-cassa.jpg",
           "alt": "Alici appena selezionate in una cassa DelMar",
-          "titolo": "La qualità si sceglie<br />di notte, cassa per cassa.",
-          "testo": "Il pesce lo compriamo guardandolo: ogni notte i nostri buyer scelgono al banco il Pescato dell'Arcipelago Toscano, il meglio dei mercati del Mediterraneo e, via aerea, dei mari del mondo. In cella entra solo quello che passa la selezione — e all'alba è già sul furgone che sale verso Prato.",
+          "titolo": "Da Prato si comprava<br />in tutto il Mediterraneo.",
+          "testo": "Fra Trecento e Quattrocento Francesco Datini governava da qui una rete di filiali che toccava Genova, Valencia, Barcellona e Maiorca: centocinquantamila lettere all’Archivio di Stato lo documentano ancora. Prato ha sempre saputo farsi arrivare le cose buone da lontano. Noi ci fermiamo alla costa, ma la scelta la facciamo al banco, ogni notte, cassa per cassa.",
           "href": "../catalogo/pescato-arcipelago-toscano.html",
-          "cta": "Guarda il pescato di stanotte"
+          "cta": "Vedi il pescato dell'Arcipelago"
         },
         {
           "foto": "../catalogo/foto-prodotti/copertina-cefalopodi.webp",
           "alt": "Calamari al banco DelMar",
-          "titolo": "Il calamaro<br />lo lavoriamo noi.",
-          "testo": "È il nostro prodotto di punta, e il laboratorio interno è il motivo: pulito, aperto e inciso per la griglia, o tagliato ad anelli e ciuffi per la frittura, nella pezzatura che chiede la tua cucina. E con lui seppie, polpi e totani.",
+          "titolo": "Il pronto moda ha insegnato<br />quanto vale il tempo.",
+          "testo": "Prato ha costruito un distretto sulla velocità: quello che altrove chiede settimane, qui esce in giorni. Sul calamaro il tempo è esattamente quello che ti facciamo risparmiare — è il nostro prodotto di punta e arriva già lavorato dal laboratorio interno: aperto e inciso per la griglia, o ad anelli e ciuffi per la frittura, nella pezzatura che serve al tuo menù.",
           "href": "../catalogo/catalogo-cefalopodi.html",
           "cta": "Vedi calamaro, polpo e seppia"
         },
         {
           "foto": "lavorazione-salmone.jpg",
           "alt": "Sfilettatura nel laboratorio DelMar",
-          "titolo": "Le lavorazioni?<br />Le facciamo noi, gratis.",
-          "testo": "Squamato, eviscerato, sfilettato, porzionato: ogni lavorazione è compresa nel prezzo, sul pescato come sull'allevato. Perfino le alici te le sfilettiamo noi — chiedi in cucina quanto vale un'ora di alici in meno. Il pesce arriva pronto per il servizio, non da preparare.",
+          "titolo": "Il cenciaiolo riconosce<br />la fibra al tatto.",
+          "testo": "A Prato il cernitore che distingue la lana pura toccandola è sempre stato un mestiere ricercato e pagato bene, perché quella mano lì non si improvvisa. Anche il pesce lo lavora una mano esperta — squamato, eviscerato, sfilettato, porzionato — solo che la nostra è compresa nel prezzo. Alici incluse: quelle le sfilettiamo noi.",
           "href": "../catalogo/prodotti.html",
-          "cta": "Sfoglia tutto il catalogo"
+          "cta": "Sfoglia il catalogo"
         }
       ],
       "slug": "fornitore-pesce-prato",
@@ -614,22 +614,22 @@
       "occhiello": "Prato · Montemurlo · Agliana",
       "titolo": "Pesce all'ingrosso a Prato",
       "sottotitolo": "consegna ogni mattina entro le 11, domenica compresa",
-      "sotto": "Il nostro furgone sale ogni notte dalla costa: pesce fresco, crudo e congelato per ristoranti, gastronomie e sushi bar di Prato e dintorni.",
+      "sotto": "Attraversiamo la piana ogni notte, festivi compresi: pesce fresco, crudo e congelato per ristoranti, gastronomie e sushi bar fra Prato, Montemurlo e Agliana.",
       "descrizione": "Pesce fresco, crudo e congelato all'ingrosso per ristoranti e sushi bar di Prato: consegna ogni mattina entro le 11, domenica compresa.",
       "comuni": [
         "Prato",
         "Montemurlo",
         "Agliana"
       ],
-      "giorni_testo": "Il giro parte dal nostro magazzino sulla costa ogni notte, tutti i giorni della settimana, domenica compresa, e all'alba è a Prato. Ordini entro le 2 di notte su WhatsApp (o entro le 18 al telefono) e la merce è al tuo banco entro le 11.",
-      "furgone_testo": "Il giro di Prato sale dalla costa ogni notte, sette giorni su sette.",
+      "giorni_testo": "Il giro esce dal magazzino di Massa ogni notte, domenica e festivi compresi, e risale la piana fino a Prato, Montemurlo e Agliana. Ordini entro le 2 di notte su WhatsApp (o entro le 18 al telefono) e la merce è al tuo banco entro le 11.",
+      "furgone_testo": "Il giro di Prato attraversa la piana ogni notte, sette giorni su sette.",
       "chisiamo_zona": "A Prato stiamo crescendo: se il tuo fornitore ti dà per scontato, è il momento giusto per metterci alla prova.",
       "wa_testo": "Ciao, ho un locale a Prato e vorrei una consulenza sulla fornitura",
       "chiusura_titolo": "Dicci dov'è il tuo locale<br />e ti mandiamo il listino della zona",
-      "chiusura_testo": "Ristorante, gastronomia o sushi bar a Prato: scrivici su WhatsApp, ti diciamo cosa c'è in cella e ti prepariamo il primo ordine come si deve.",
+      "chiusura_testo": "Hai un locale fra Prato, Montemurlo e Agliana? Scrivici su WhatsApp: ti diciamo cosa c'è in cella e quando passa il furgone da te.",
       "lat": 43.88,
       "lon": 11.1,
-      "breve": "Prato e i suoi dintorni, ogni notte dalla costa.",
+      "breve": "Attraversa la piana ogni notte, festivi compresi.",
       "giorni_brevi": "7 giorni su 7"
     }
   ]
