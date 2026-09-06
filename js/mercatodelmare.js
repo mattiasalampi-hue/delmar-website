@@ -354,3 +354,21 @@ revealEls.forEach(el => revealObserver.observe(el));
 
 /* Il form di prenotazione non vive più qui: il flusso è
    carrello.html → checkout.html (vedi js/mdm-shop.js) */
+
+/* ── Il banco di pesciolini sui contatti ───────── */
+/* Stesso pezzo del B2B (js/pesci.js), montato senza caustiche: qui la
+   sezione non e' divisa in due campiture, quindi non c'e' un confine
+   dove far virare la livrea e si passa -1 = tutti chiari.
+   offsetParent nullo vuol dire che il foglio di stile ha spento la tela
+   (sotto i 769px): la soglia sta nel CSS e basta chiedergliela. */
+(function(){
+  const tela = document.getElementById('contatti-particles');
+  if (!tela) return;
+  if (tela.offsetParent === null) return;
+  if (!window.DelMarPesci) return;
+
+  window.DelMarPesci(tela, {
+    confine: () => -1,
+    stile: 4
+  });
+})();

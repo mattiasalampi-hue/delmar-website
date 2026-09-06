@@ -1237,6 +1237,14 @@ a {
 }
 
 @media (max-width: 768px) {
+  /* I pesci non partono sul telefono: su una colonna sola nuoterebbero
+     sopra telefono, email e indirizzo. La soglia vive SOLO qui, il JS la
+     legge con offsetParent — una soglia scritta in due posti prima o poi
+     diventa due soglie */
+  #contatti-particles {
+    display: none;
+  }
+
   #mdm-hdr {
     padding: 1.1rem 1.4rem;
   }
@@ -2198,4 +2206,23 @@ body.shop-page #mdm-hdr {
   .cue-line {
     height: 26px;
   }
+}
+
+/* ── Il banco di pesciolini sui contatti ─────────
+   La tela copre tutta la sezione e non intercetta i clic: i recapiti
+   sotto restano selezionabili e i link cliccabili. Il contenuto viene
+   alzato di un livello, se no i pesci ci nuoterebbero sopra */
+#contatti-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#contatti > .book-intro,
+#contatti > .visit-grid {
+  position: relative;
+  z-index: 1;
 }

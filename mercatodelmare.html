@@ -151,6 +151,38 @@
           <p>Meno mani fra il mare e la tua cucina vuol dire pesce più fresco e il prezzo di chi compra all'origine. Quello che c'è oggi te lo diciamo al banco.</p>
         </div>
       </div>
+      <!-- La catena che il testo racconta, in fotografia: sono scatti
+           gia' in casa che nessuna pagina stava usando -->
+      <div class="mdm-grid">
+        <div class="mdm-card reveal-el">
+          <img src="assets/selezionato-mercato.jpg" alt="Selezione del pescato al mercato ittico" loading="lazy" />
+          <div class="mdm-card-overlay">
+            <h3>Al mercato, di notte</h3>
+            <p>Mentre il negozio è chiuso, i buyer stanno scegliendo.</p>
+          </div>
+        </div>
+        <div class="mdm-card reveal-el">
+          <img src="assets/alici-cassa.jpg" alt="Alici appena selezionate in una cassa DelMar" loading="lazy" />
+          <div class="mdm-card-overlay">
+            <h3>Cassa per cassa</h3>
+            <p>Si compra guardando. Quello che non convince resta lì.</p>
+          </div>
+        </div>
+        <div class="mdm-card reveal-el">
+          <img src="assets/processing-1.jpg" alt="Il laboratorio di lavorazione del pesce" loading="lazy" />
+          <div class="mdm-card-overlay">
+            <h3>Il laboratorio</h3>
+            <p>Lo stesso che prepara le forniture dei ristoranti.</p>
+          </div>
+        </div>
+        <div class="mdm-card reveal-el">
+          <img src="assets/shop-2.jpg" alt="Il banco del Mercato del Mare a Massa" loading="lazy" />
+          <div class="mdm-card-overlay">
+            <h3>Al banco</h3>
+            <p>In Via Dorsale, la mattina dopo. Senza passaggi in mezzo.</p>
+          </div>
+        </div>
+      </div>
     </section>
     <!-- Chi siamo -->
     <section class="mdm-section" id="negozio">
@@ -240,24 +272,24 @@
           <a href="#prodotti" class="btn-secondary">Cosa trovi al banco →</a>
         </div>
       </div>
-      <div class="mdm-map reveal-el">
-          <!-- La mappa la carica GOOGLE, e questo e' l'unico punto di
-               tutto il sito che chiama un terzo e mette cookie. Non
-               parte finche' non c'e' il consenso: al suo posto c'e' un
-               riquadro che spiega cosa succede e un pulsante. Bloccare
-               PRIMA e' il punto — caricarla e "disattivarla dopo" non
-               vale niente, la richiesta e' gia' partita -->
-          <div
-            data-consenso="marketing"
-            data-incorpora="https://maps.google.com/maps?q=Via+Dorsale+13+54100+Massa+MS&amp;output=embed"
-            data-etichetta="La mappa di Google"
-          ></div>
+      <!-- Qui c'era la mappa di Google incorporata, dietro a un consenso.
+           Era l'unica chiamata a un terzo di tutta la pagina, e per una
+           vetrina di negozio il permesso da dare prima di vedere dove sei
+           e' attrito che non paga: chi vuole le indicazioni usa "Portami
+           qui" qui sopra, che apre Maps in un'altra scheda. Al suo posto
+           l'interno, che dice piu' di una piantina. (06/09/2026) -->
+      <div class="mdm-facade reveal-el">
+        <img src="assets/shop-1.jpg" alt="L'interno del Mercato del Mare, il banco del pesce" loading="lazy" />
       </div>
     </section>
     <!-- Contatti: non c'e' prenotazione online. carrello.html e checkout.html
          esistono nel repo ma NON sono pubblicati e il pagamento non e' mai
          stato collegato: si torna qui quando si vendera' davvero online -->
     <section class="mdm-section mdm-section-dark" id="contatti">
+      <!-- Il banco di pesciolini, lo stesso del B2B. Su fondo scuro la
+           livrea chiara si vede bene, quindi qui non serve il taglio fra
+           due campiture: ai pesci si passa un confine negativo -->
+      <canvas id="contatti-particles"></canvas>
       <div class="reveal-el book-intro">
         <p class="label">Contatti</p>
         <h2 class="big-title">Domande sul pescato?</h2>
@@ -313,6 +345,10 @@
          sapremmo mai se il negozio online porta gente al banco -->
     <script src="js/tag.js?v=2"></script>
     <script src="js/analitica.js?v=2" defer></script>
+    <!-- I pesciolini della sezione contatti e il cursore calamaro: file
+         separati perche' li usa anche il banco di prova in prove/ -->
+    <script src="js/pesci.js?v=11"></script>
+    <script src="js/cursore.js?v=2"></script>
     <script src="js/mercatodelmare.js?v=8"></script>
   </body>
 </html>
