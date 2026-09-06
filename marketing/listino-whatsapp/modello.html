@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{titoloPagina}}</title>
+    <link rel="stylesheet" href="carta.css" />
+  </head>
+  <body class="{{formato}} {{fuoco}}">
+    <div class="carta">
+      <img class="carta-foto" src="../../assets/{{foto}}" alt="" />
+      <div class="carta-dentro">
+        <div class="carta-cima">
+          <img class="carta-logo" src="../../assets/logo.png" alt="DelMar" />
+          <span class="carta-data">{{data}}</span>
+        </div>
+        <div>
+          <div class="carta-testo">
+            <p class="carta-occhiello">{{occhiello}}</p>
+            <h1 class="carta-titolo">{{titolo}}</h1>
+            <p class="carta-sotto">{{sotto}}</p>
+          </div>
+          <div class="carta-fondo">
+            <span class="carta-azione">
+              {{azione}}
+              <svg viewBox="0 0 21 8" aria-hidden="true"><path d="M0 4h20M16 0l4 4-4 4" /></svg>
+            </span>
+            <span class="carta-sito">del-mar.it</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

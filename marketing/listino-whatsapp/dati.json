@@ -1,0 +1,25 @@
+{
+  "data": "Venerdì 21 agosto",
+  "carte": [
+    {
+      "nome": "pat",
+      "titoloPagina": "Listino pescato PAT — anteprima carosello",
+      "foto": "barche-pesca.jpg",
+      "fuoco": "fuoco-barche",
+      "occhiello": "Listino pescato PAT",
+      "titolo": "Arcipelago<br />Toscano",
+      "sotto": "Sbarcato stanotte, pesato stamattina.",
+      "azione": "Apri il listino di domani"
+    },
+    {
+      "nome": "fresco",
+      "titoloPagina": "Listino fresco del giorno — anteprima carosello",
+      "foto": "alici-cassa.jpg",
+      "fuoco": "fuoco-cassa",
+      "occhiello": "Listino del fresco",
+      "titolo": "Il fresco<br />del giorno",
+      "sotto": "Prezzi e disponibilità aggiornati oggi.",
+      "azione": "Apri il listino di domani"
+    }
+  ]
+}

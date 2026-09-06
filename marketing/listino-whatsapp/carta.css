@@ -1,0 +1,266 @@
+/* ════════════════════════════════════════
+   DelMar — Anteprime delle carte del carosello WhatsApp
+   Non fa parte del sito: e' il foglio con cui si disegnano le immagini
+   di anteprima, che poi vengono fotografate da Chrome e mandate in PNG.
+   Ripete i colori e il carattere del sito invece di importare style.css
+   perche' li' dentro c'e' un sito intero — qui serve solo il marchio.
+   ════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 300;
+  font-style: normal;
+  font-display: block;
+  src: url('../../assets/font/poppins-300-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  src: url('../../assets/font/poppins-400-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  src: url('../../assets/font/poppins-500-latin.woff2') format('woff2');
+}
+
+:root {
+  --ink: #151c64;
+  --wa: #c9432c;
+  --accent-bright: #ff6b57;
+  --font: 'Poppins', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* La pagina E' l'immagine: nessun margine, nessuna barra. La misura
+   arriva da --larga/--alta cosi' lo stesso foglio serve sia il taglio
+   1.91:1 delle carte sia il quadrato, senza duplicare regole */
+html, body {
+  width: var(--larga);
+  height: var(--alta);
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.carta {
+  position: relative;
+  width: var(--larga);
+  height: var(--alta);
+  font-family: var(--font);
+  color: #fff;
+  overflow: hidden;
+}
+
+.carta-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--fuoco, center center);
+  /* Sotto il velo blu la fotografia si appiattisce e il pesce diventa una
+     macchia grigia: un filo di contrasto le ridà il volume che il velo le
+     toglie, senza virare i colori */
+  filter: saturate(1.08) contrast(1.07);
+}
+
+/* Due veli sovrapposti invece di uno solo: quello diagonale scava il
+   posto al testo a sinistra lasciando respirare la foto a destra,
+   quello verticale tiene insieme la riga in alto e quella in basso.
+   Con un velo unico il titolo bianco cadeva sopra il cielo chiaro
+   dell'alba e spariva */
+.carta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(103deg,
+      rgba(21, 28, 100, .93) 0%,
+      rgba(21, 28, 100, .82) 34%,
+      rgba(21, 28, 100, .34) 68%,
+      rgba(21, 28, 100, .12) 100%),
+    linear-gradient(180deg,
+      rgba(8, 12, 46, .55) 0%,
+      rgba(8, 12, 46, 0) 30%,
+      rgba(8, 12, 46, 0) 62%,
+      rgba(8, 12, 46, .5) 100%);
+}
+
+.carta-dentro {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--bordo) var(--bordo) calc(var(--bordo) * .92);
+}
+
+/* ─ Riga in alto: marchio e data ─────────────── */
+.carta-cima {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Il logo del sito e' grigio e blu su fondo chiaro: qui il fondo e'
+   scuro, quindi va spento e riacceso tutto bianco. Il file e' uno
+   solo — non serve una seconda versione da tenere aggiornata */
+.carta-logo {
+  display: block;
+  width: var(--logo);
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+.carta-data {
+  font-size: var(--minuscolo);
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, .96);
+  border: 1px solid rgba(255, 255, 255, .38);
+  border-radius: 999px;
+  padding: calc(var(--minuscolo) * .62) calc(var(--minuscolo) * 1.35);
+  backdrop-filter: blur(4px);
+}
+
+/* ─ Blocco in basso: occhiello, titolo, richiamo ─ */
+.carta-testo {
+  max-width: var(--colonna);
+}
+
+.carta-occhiello {
+  display: flex;
+  align-items: center;
+  gap: .75em;
+  font-size: var(--minuscolo);
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: calc(var(--titolo) * .36);
+}
+
+/* Il trattino davanti all'occhiello e' lo stesso segno che sul sito
+   sta sotto i richiami: e' quello che fa riconoscere il marchio a
+   colpo d'occhio nella lista delle chat */
+.carta-occhiello::before {
+  content: '';
+  width: calc(var(--minuscolo) * 2.6);
+  height: 2px;
+  background: var(--accent-bright);
+  flex: none;
+}
+
+.carta-titolo {
+  font-size: var(--titolo);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+}
+
+.carta-titolo strong {
+  font-weight: 500;
+}
+
+.carta-sotto {
+  margin-top: calc(var(--titolo) * .28);
+  font-size: var(--piccolo);
+  font-weight: 300;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, .82);
+}
+
+/* ─ Riga di chiusura ────────────────────────── */
+.carta-fondo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: calc(var(--titolo) * .48);
+  padding-top: calc(var(--titolo) * .30);
+  border-top: 1px solid rgba(255, 255, 255, .22);
+}
+
+.carta-azione {
+  display: flex;
+  align-items: center;
+  gap: .6em;
+  font-size: var(--piccolo);
+  font-weight: 400;
+  color: #fff;
+}
+
+.carta-azione svg {
+  width: 1.5em;
+  height: .8em;
+  overflow: visible;
+}
+
+.carta-azione path {
+  stroke: var(--accent-bright);
+  stroke-width: 1.6;
+  fill: none;
+}
+
+.carta-sito {
+  font-size: var(--minuscolo);
+  font-weight: 300;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .8);
+}
+
+/* ─ I formati ───────────────────────────────────
+   WhatsApp taglia l'immagine di testata delle carte a 1.91:1: qualsiasi
+   altra proporzione viene ritagliata dal telefono, ed e' esattamente
+   quello che rovinava le anteprime di prima (logo mangiato a meta').
+   Il quadrato serve solo se la stessa grafica va riusata come post. */
+.formato-largo {
+  --larga: 1200px;
+  --alta: 628px;
+  --bordo: 60px;
+  --logo: 190px;
+  --minuscolo: 21px;
+  --piccolo: 30px;
+  --titolo: 92px;
+  --colonna: 720px;
+}
+
+.formato-quadro {
+  --larga: 1080px;
+  --alta: 1080px;
+  --bordo: 76px;
+  --logo: 230px;
+  --minuscolo: 23px;
+  --piccolo: 33px;
+  --titolo: 116px;
+  --colonna: 900px;
+}
+
+/* ─ Il punto di fuoco delle foto ────────────────
+   Ogni scatto ha il soggetto in un punto diverso, e il taglio 1.91:1
+   toglie meta' altezza: senza questi valori il peschereccio finisce
+   fuori dall'inquadratura e resta solo cielo */
+.fuoco-barche {
+  --fuoco: center 46%;
+}
+
+.fuoco-cassa {
+  --fuoco: center 62%;
+}
