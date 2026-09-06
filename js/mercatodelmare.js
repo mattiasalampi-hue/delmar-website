@@ -411,43 +411,11 @@ const revealObserver = new IntersectionObserver(entries => {
 }, { threshold: .15 });
 revealEls.forEach(el => revealObserver.observe(el));
 
-/* ── Box: taglie 4/6/8 e carrello ─────────────── */
-/* Unica fonte dei prezzi: i data-attribute delle card (data-p4/p6/p8).
-   "Prenota questo box" mette l'articolo nel carrello (localStorage,
-   con l'intero listino della card) e porta alla pagina dedicata */
-(function () {
-  /* Selettore persone sulla card: aggiorna il prezzo mostrato */
-  document.querySelectorAll('.mdm-box-card').forEach(card => {
-    const priceEl = card.querySelector('.box-price');
-    card.querySelectorAll('.box-size').forEach(btn => {
-      btn.addEventListener('click', () => {
-        card.querySelectorAll('.box-size').forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        priceEl.textContent = '€' + card.dataset['p' + btn.dataset.size];
-      });
-    });
-  });
-
-  document.querySelectorAll('.box-book').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card = btn.closest('.mdm-box-card');
-      const size = +card.querySelector('.box-size.is-active').dataset.size;
-      const item = {
-        box: card.dataset.box,
-        nome: card.dataset.nome,
-        img: card.querySelector('.box-photo img').getAttribute('src'),
-        prezzi: { p4: +card.dataset.p4, p6: +card.dataset.p6, p8: +card.dataset.p8 },
-        size: size,
-        qty: 1
-      };
-      const cart = JSON.parse(localStorage.getItem('mdm_cart') || '[]');
-      const ex = cart.find(i => i.box === item.box && i.size === item.size);
-      if (ex) ex.qty += 1; else cart.push(item);
-      localStorage.setItem('mdm_cart', JSON.stringify(cart));
-      location.href = 'carrello.html';
-    });
-  });
-})();
+/* I box non esistono piu' in pagina (06/09/2026): i prezzi erano
+   segnaposto, il bottone portava a carrello.html che sul server e' 404 e
+   il checkout non ha mai avuto un pagamento collegato. La pagina adesso
+   racconta il negozio fisico. Il codice del carrello resta in
+   js/mdm-shop.js per quando si vendera' davvero online. */
 
 /* ── CTA sticky mobile ────────────────────────── */
 /* Visibile (via CSS <768px) dopo l'hero e fuori dalla sezione form */
