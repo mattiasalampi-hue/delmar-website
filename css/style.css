@@ -179,7 +179,7 @@ nav a {
 /* La sottolineatura del passaggio: parte da sinistra e si stende sotto la
    voce, nel corallo del sito. Il bottone "Ordina ora" ha gia' il suo
    passaggio (si riempie di corallo) e resta fuori */
-nav a:not(.nav-wa)::after {
+nav a:not(.nav-wa):not(.nav-b2c)::after {
   content: '';
   position: absolute;
   left: 0;
@@ -206,7 +206,15 @@ nav a:not(.nav-wa)::after {
    l'hamburger non c'e', e fra 769 e ~1150px la fila non ci stava piu'.
    Due strette progressive: prima si riducono spazi e crenatura, sui
    portatili piccoli anche il corpo */
-@media (min-width: 769px) and (max-width: 1160px) {
+@media (min-width: 951px) and (max-width: 1160px) {
+  /* Con la decima voce (la pastiglia della pescheria, 06/09/2026) anche
+     lei entra nelle strette, se no e' l'unica che non cede spazio */
+  .nav-b2c {
+    padding: .45rem .7rem;
+    font-size: .56rem;
+    letter-spacing: .05em;
+  }
+
   #hdr {
     padding: .8rem 1.6rem;
   }
@@ -221,17 +229,58 @@ nav a:not(.nav-wa)::after {
   }
 }
 
-@media (min-width: 769px) and (max-width: 920px) {
+/* La seconda stretta, sotto la prima nel foglio cosi vince nel suo tratto.
+   Misurata col banco a iframe il 06/09/2026, con dieci voci: la stretta
+   moderata da sola sborda di 142px a 901, 98 a 950, 52 a 1000 e 7 a 1050;
+   ci sta da 1100 in su. Questa copre 951-1100 e li fa stare tutti. La soglia del menu grande e' 950 e non 900 perche' a 901 restavano fuori 27px: la barra del browser si mangia ~15px di larghezza, quindi la media query dice 901 ma per impaginare ce ne sono 886.
+   Il CORPO delle voci resta .58rem, la misura piu piccola che il resto del
+   foglio gia usava: cedono la crenatura, lo spazio fra le voci e il fianco
+   dell'header, non la leggibilita. Le combinazioni che scendevano a .52rem
+   (8,3px) sono state scartate per questo. */
+@media (min-width: 951px) and (max-width: 1100px) {
+  #hdr {
+    padding: .8rem 1.2rem;
+  }
+
   nav {
-    gap: .6rem;
+    gap: .45rem;
   }
 
   nav a {
     font-size: .58rem;
-    letter-spacing: .07em;
+    letter-spacing: .04em;
+  }
+
+  .nav-b2c {
+    padding: .35rem .5rem;
+    font-size: .52rem;
+    letter-spacing: .02em;
   }
 }
 
+
+/* La porta verso la pescheria. Stesso disegno di "Ordina ora" ma piu
+   stretta e un filo piu piccola: le due pastiglie devono leggersi come
+   una coppia — una per ordinare, una per venire al banco — senza che
+   questa rubi il posto alla chiamata principale del sito B2B.
+   Il corallo NON si usa qui: e il colore dell azione, e su due
+   pastiglie affiancate vincerebbe sempre quella colorata. */
+.nav-b2c {
+  border: 1px solid rgba(0,0,0,.22);
+  padding: .5rem 1rem;
+  border-radius: 2px;
+  font-size: .6rem;
+  font-weight: 400;
+  letter-spacing: .1em;
+  color: rgba(0,0,0,.55) !important;
+  transition: background .3s, border-color .3s, color .3s !important;
+}
+
+.nav-b2c:hover {
+  background: rgba(0,0,0,.045);
+  border-color: rgba(0,0,0,.45);
+  color: rgba(0,0,0,.8) !important;
+}
 .nav-wa {
   border: 1px solid rgba(0,0,0,.35);
   padding: .55rem 1.3rem;
@@ -2621,115 +2670,6 @@ html.cur-on select {
     height: 100svh;
   }
 
-  /* ─── Navigation ─────────────────────────── */
-  #hdr {
-    padding: 1.1rem 1.4rem;
-  }
-
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5.5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 101;
-    position: relative;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    flex-shrink: 0;
-  }
-
-  .hamburger span {
-    display: block;
-    width: 22px;
-    height: 1.5px;
-    background: #111;
-    transition: transform .3s ease, opacity .25s ease, background .3s ease;
-    transform-origin: center;
-  }
-
-  /* Menu aperto: la X sta sopra l'overlay scuro → bianca */
-  .hamburger.open span {
-    background: #fff;
-  }
-
-  .hamburger.open span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
-  }
-
-  .hamburger.open span:nth-child(2) {
-    opacity: 0;
-    transform: scaleX(0);
-  }
-
-  .hamburger.open span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
-  }
-
-  /* IL MENU E' UNA STANZA DEL SITO, non un sipario preso in prestito.
-     Era quasi nero (rgba(8,8,8)) — un colore che il sito non usa da
-     nessuna parte — con voci bianche smorzate al 65%: sembrava il menu
-     di un'altra app. Il fondo giusto e' lo stesso impasto blu del
-     pannello contatti mobile, che e' la superficie scura del marchio,
-     e le voci sono Poppins con la stessa spaziatura della barra
-     desktop, solo piu' grandi. (Mattias, 2026-08-18) */
-  nav {
-    position: fixed;
-    inset: 0;
-    z-index: 99;
-    background:
-      radial-gradient(90% 44% at 50% 6%, rgba(168,204,255,.18), rgba(168,204,255,0) 72%),
-      linear-gradient(to bottom, rgba(26,34,112,.985), rgba(15,21,71,.985));
-    backdrop-filter: blur(24px);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2.8rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s ease;
-  }
-
-  /* Niente touch-action:none qui: su alcuni WebKit sopprime i tap
-     sui link. La pagina dietro può scrollare ma l'overlay è opaco */
-  nav.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  nav a {
-    font-size: 1.05rem;
-    letter-spacing: .14em;
-    font-weight: 500;
-    color: rgba(255,255,255,.92);
-  }
-
-  /* La voce accesa (la pagina in cui si e'): sul fondo blu il corallo
-     scuro dei fogli interni sparirebbe — qui serve la gradazione piena,
-     come per il bottone qui sotto. E si veste come le altre voci:
-     senza questa riga resterebbe alta sei decimi di rem, la misura
-     della barra desktop da cui arriva */
-  nav .nav-qui {
-    font-size: 1.05rem;
-    letter-spacing: .14em;
-    font-weight: 500;
-    color: var(--accent-bright);
-  }
-
-  /* Nel menu a schermo intero il fondo è quasi nero: qui serve la
-     gradazione piena, quella scura ci si perderebbe dentro */
-  .nav-wa {
-    display: inline-flex !important;
-    border-radius: 2px !important;
-    background: rgba(255,107,87,.1) !important;
-    border: 1px solid rgba(255,107,87,.4) !important;
-    color: var(--accent-bright) !important;
-    padding: .8rem 2.4rem !important;
-  }
-
   /* ─── Beam Transition (mobile: beam verticale) ── */
   #mb-pin {
     height: 180vh;
@@ -3401,6 +3341,166 @@ html.cur-on select {
     margin-top: 2.6rem;
     text-align: center;
     line-height: 1.9;
+  }
+}
+
+/* ═══════════ IL MENU A SCHERMO INTERO — fino a 950px ═══════════
+   Queste regole stavano dentro il blocco dei 768 insieme a tutto il
+   resto del telefono. Sono state spostate qui il 06/09/2026, quando la
+   voce "Sei un privato?" ha portato le voci a dieci: misurando, sotto
+   gli 860px la fila sborda (95px a 769), e le combinazioni che la
+   facevano stare scendevano a 8,3px di corpo. Fra una riga che ci sta e
+   una che si legge, vince la seconda.
+
+   Sotto i 768 non cambia niente — questo blocco copre anche quella
+   fascia. Fra 769 e 950 il menu diventa quello a schermo intero, che su
+   un tablet in verticale (820px l'iPad) e' anche l'esperienza giusta,
+   ed e' la stessa larghezza a cui il piede passa a tre colonne.
+
+   ATTENZIONE: la soglia sta anche in js/script.js (NAV_DESKTOP_MQ), che
+   serve a chiudere il menu quando si torna alla barra larga. Se si
+   cambia qui, va cambiata anche li'. */
+@media (max-width: 950px) {
+  /* ─── Navigation ─────────────────────────── */
+  #hdr {
+    padding: 1.1rem 1.4rem;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5.5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 101;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: #111;
+    transition: transform .3s ease, opacity .25s ease, background .3s ease;
+    transform-origin: center;
+  }
+
+  /* Menu aperto: la X sta sopra l'overlay scuro → bianca */
+  .hamburger.open span {
+    background: #fff;
+  }
+
+  .hamburger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .hamburger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* IL MENU E' UNA STANZA DEL SITO, non un sipario preso in prestito.
+     Era quasi nero (rgba(8,8,8)) — un colore che il sito non usa da
+     nessuna parte — con voci bianche smorzate al 65%: sembrava il menu
+     di un'altra app. Il fondo giusto e' lo stesso impasto blu del
+     pannello contatti mobile, che e' la superficie scura del marchio,
+     e le voci sono Poppins con la stessa spaziatura della barra
+     desktop, solo piu' grandi. (Mattias, 2026-08-18) */
+  nav {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background:
+      radial-gradient(90% 44% at 50% 6%, rgba(168,204,255,.18), rgba(168,204,255,0) 72%),
+      linear-gradient(to bottom, rgba(26,34,112,.985), rgba(15,21,71,.985));
+    backdrop-filter: blur(24px);
+    flex-direction: column;
+    align-items: center;
+    /* DIECI VOCI NON CI STANNO IN ALTEZZA su ogni schermo: con la voce
+       "Sei un privato?" (06/09/2026) la colonna arriva a 588px, e su un
+       iPhone SE (667) o un telefono in orizzontale (390) sfora.
+       justify-content: center PIU' overflow e' la trappola classica: quando
+       il contenuto sfora, la meta' che esce DA SOPRA resta irraggiungibile,
+       perche' non si scorre all'indietro oltre l'inizio del contenitore.
+       Con flex-start piu' i margini automatici sul primo e sull'ultimo figlio
+       (qui sotto) si ottengono tutt'e due le cose: se c'e' spazio i margini si
+       allargano e centrano, se non ce n'e' si azzerano e la colonna scorre
+       partendo dalla prima voce. */
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding: 4.5rem 1.2rem;
+    gap: 2.1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+
+  /* Niente touch-action:none qui: su alcuni WebKit sopprime i tap
+     sui link. La pagina dietro può scrollare ma l'overlay è opaco */
+  /* I due margini che fanno il lavoro descritto sopra */
+  nav > *:first-child {
+    margin-top: auto;
+  }
+
+  nav > *:last-child {
+    margin-bottom: auto;
+  }
+
+  nav.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  nav a {
+    font-size: 1.05rem;
+    letter-spacing: .14em;
+    font-weight: 500;
+    color: rgba(255,255,255,.92);
+  }
+
+  /* La voce accesa (la pagina in cui si e'): sul fondo blu il corallo
+     scuro dei fogli interni sparirebbe — qui serve la gradazione piena,
+     come per il bottone qui sotto. E si veste come le altre voci:
+     senza questa riga resterebbe alta sei decimi di rem, la misura
+     della barra desktop da cui arriva */
+  nav .nav-qui {
+    font-size: 1.05rem;
+    letter-spacing: .14em;
+    font-weight: 500;
+    color: var(--accent-bright);
+  }
+
+  /* Nel menu a schermo intero il fondo è quasi nero: qui serve la
+     gradazione piena, quella scura ci si perderebbe dentro */
+  /* Nel menu a schermo intero il fondo e blu scuro: il bordo nero della
+     barra desktop ci sparirebbe dentro. Chiara e non corallo — il corallo
+     resta di "Ordina ora", che li sotto e la voce colorata */
+  .nav-b2c {
+    display: inline-flex !important;
+    border: 1px solid rgba(255,255,255,.35) !important;
+    color: rgba(255,255,255,.92) !important;
+    font-size: .78rem !important;
+    letter-spacing: .12em !important;
+    padding: .7rem 1.6rem !important;
+  }
+
+  .nav-wa {
+    display: inline-flex !important;
+    border-radius: 2px !important;
+    background: rgba(255,107,87,.1) !important;
+    border: 1px solid rgba(255,107,87,.4) !important;
+    color: var(--accent-bright) !important;
+    padding: .8rem 2.4rem !important;
   }
 }
 

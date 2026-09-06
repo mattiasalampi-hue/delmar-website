@@ -29,6 +29,14 @@ document.addEventListener('click', (e) => {
 const mm = gsap.matchMedia();
 const MOBILE_MQ  = '(max-width: 768px)';
 const DESKTOP_MQ = '(min-width: 769px)';
+/* La soglia del MENU e' un'altra cosa dalla soglia delle ANIMAZIONI, e
+   dal 06/09/2026 non coincidono piu': con dieci voci la barra larga non
+   ci sta sotto i 950px, quindi il menu a schermo intero arriva fin li'.
+   Le animazioni restano tarate sui 769. Usare questa, e non DESKTOP_MQ,
+   per tutto quello che riguarda la barra: con DESKTOP_MQ il menu si
+   chiuderebbe da solo a 770px mentre il foglio di stile lo sta ancora
+   mostrando a schermo intero. Sta anche in css/style.css. */
+const NAV_DESKTOP_MQ = '(min-width: 951px)';
 const isMobile   = () => window.matchMedia(MOBILE_MQ).matches;
 
 function debounce(fn, ms) {
@@ -1409,7 +1417,7 @@ window.addEventListener('load', () => {
     }
   });
 
-  window.matchMedia(DESKTOP_MQ).addEventListener('change', e => {
+  window.matchMedia(NAV_DESKTOP_MQ).addEventListener('change', e => {
     if (e.matches && nav.classList.contains('open')) close(false);
   });
 })();
