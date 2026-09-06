@@ -1114,11 +1114,13 @@ a {
 /* ─ Footer ──────────────────────────────────── */
 #mdm-footer {
   position: relative;
-  padding: 5vh 6% 3vh;
+  /* Era 5vh di padding con 2rem fra cinque blocchi in colonna: su
+     schermo grande diventava piu' alto di una sezione vera */
+  padding: 3.5vh 6% 2.5vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.1rem;
   text-align: center;
 }
 
