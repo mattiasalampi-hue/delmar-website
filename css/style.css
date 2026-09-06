@@ -1930,9 +1930,13 @@ html.cur-on select {
 
 .footer-top {
   display: grid;
-  /* Cinque colonne dal 19/08/2026: le zone di consegna sono diventate otto
-     e hanno la loro colonna, come promesso nel commento del piede */
-  grid-template-columns: 1.4fr 1fr 1fr .9fr 1fr;
+  /* Sei colonne dal 06/09/2026: si e' aggiunta "Al banco", la strada verso
+     la pescheria aperta al pubblico. Erano cinque da quando le zone di
+     consegna hanno preso la loro (19/08/2026).
+     Il marchio tiene 1.3fr e non 1.4 perche' con sei colonne il residuo
+     non bastava piu': "Consegna a Massa e Carrara" andava a capo su tre
+     righe e la colonna delle zone diventava il doppio delle altre */
+  grid-template-columns: 1.3fr .95fr 1fr .8fr .85fr .9fr;
   gap: 4rem 2.2rem;
   align-items: start;
 }
@@ -3568,5 +3572,94 @@ html.cur-on select {
 
   .info-block .info-val {
     font-size: .92rem;
+  }
+}
+
+/* ── §4-bis Al banco: la strada verso il B2C ─────
+   Foto a sinistra e testo a destra, non il blocco centrato dei listini:
+   le due sezioni sono attaccate e parlano a due persone diverse, e due
+   riquadri identici di fila si leggono come un solo invito ripetuto. */
+#privati-in {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.privati-foto {
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.privati-foto img {
+  display: block;
+  width: 100%;
+  /* Ritaglio: shop-1 e' quasi quadrata, e a proporzione naturale
+     lascerebbe il testo accanto sospeso in mezzo al bianco */
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* .titolo-sezione porta 6vh di margine sotto, tarato per le sezioni intere.
+   Qui la spaziatura la fa il gap del flex, e il margine ereditato apriva un
+   vuoto di 70px fra la domanda e la risposta che le faceva sembrare due
+   cose separate invece di una frase sola */
+.privati-testo .titolo-sezione {
+  margin-bottom: 0;
+}
+
+.privati-testo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+
+.privati-titolo {
+  font-weight: 300;
+  /* Piu' piccolo di .big-title: questa e' una deviazione dal discorso
+     principale, e con il corpo delle sezioni vere sembrerebbe che il
+     sito abbia cambiato argomento */
+  font-size: clamp(1.7rem, 3.2vw, 3rem);
+  letter-spacing: -.04em;
+  line-height: 1.1;
+}
+
+.privati-cta {
+  margin-top: .6rem;
+}
+
+@media (max-width: 900px) {
+  /* Due colonne sotto i 900 diventano due strisce: si impilano, e la
+     foto resta sopra perche' e' lei a dire che si parla di un negozio */
+  #privati-in {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .privati-foto img {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* Fra i 769 e i 1100 il piede si stringe a tre colonne.
+   Sopra i 768 vale la regola a sei colonne, sotto quella a due: in mezzo
+   c'e' il tablet in verticale (820px di iPad), dove sei colonne fanno
+   110px l'una e "Preparati e gastronomia di mare" va a capo cinque volte.
+   Il problema esisteva gia' con cinque colonne; con la sesta ("Al banco",
+   06/09/2026) diventava evidente. Vincolata anche in basso con min-width
+   per non sovrapporsi al blocco dei 768px, che nel file viene prima:
+   senza quel vincolo questa regola, essendo piu' in basso, vincerebbe
+   anche sul telefono e rimetterebbe tre colonne dove ne servono due. */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .footer-top {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2.8rem 2rem;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
   }
 }

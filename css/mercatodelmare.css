@@ -188,7 +188,10 @@ a {
 }
 
 /* ─ Hero tunnel (stessa macchina del B2B) ───── */
-#lottie-bg {
+/* Sfondo hero: un video in loop, come il B2B. Prima qui c'era un
+   Lottie renderizzato su canvas piu' un secondo mp4 in dissolvenza
+   con maschera SVG: 19 MB per aprire la pagina di un negozio. */
+#hero-bg {
   position: fixed;
   top: 0;
   left: 0;
@@ -196,83 +199,32 @@ a {
   height: 100vh;
   z-index: 1;
   overflow: hidden;
-  background: #080808;
+  background: #04121c;
+  /* L'ombra e' invisibile finche' il video occupa tutto lo schermo, e
+     compare da sola quando si ritira nel riquadro */
+  box-shadow: 0 40px 90px rgba(4,18,28,.35);
+  will-change: transform;
 }
 
-#lottie-bg canvas {
-  display: block;
+#hero-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.3) 0%,
+    rgba(0,0,0,0) 24%,
+    rgba(0,0,0,0) 74%,
+    rgba(0,0,0,.32) 100%
+  );
+}
+
+#hero-video {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  display: block;
 }
-
-/* Alone di luce sulla giuntura tra tunnel e video finale */
-#hero-white {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: #fff;
-  opacity: 0;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='4'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='none' stroke='white' stroke-width='3.5' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='4'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='none' stroke='white' stroke-width='3.5' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
-}
-
-/* Fondale nero mascherato a porta: riempie il varco dietro la banda */
-#hero-black {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: #000;
-  opacity: 0;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
-}
-
-/* Video finale: banda 8:3 full width, rivelata dalla maschera-porta */
-#hero-video {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 100vw;
-  aspect-ratio: 8 / 3;
-  height: auto;
-  z-index: 3;
-  opacity: 0;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
-}
-
-/* Velo nero iniziale: pieno a p=0, dissolto nel primo tratto di scroll */
-#hero-fade {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1;
-  background: #000;
-  pointer-events: none;
-}
-
 #vig {
   position: fixed;
   top: 0;
@@ -1162,12 +1114,13 @@ a {
 /* ─ Footer ──────────────────────────────────── */
 #mdm-footer {
   position: relative;
-  padding: 5vh 6% 3vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  text-align: center;
+  /* Prima era max-width: none e partiva dal bordo dello schermo, mentre
+     le sezioni stanno a 1280 centrate: il piede sfondava di 145px per
+     lato e il contenuto restava un filo stretto in mezzo al bianco */
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3.5rem 6% 2rem;
+  border-top: 1px solid rgba(21,28,100,.1);
 }
 
 .mdm-footer-links {
@@ -1222,10 +1175,12 @@ a {
 }
 
 .mdm-footer-copy {
-  text-align: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: left;
   font-size: .62rem;
   color: rgba(21,28,100,.35);
-  padding: 0 6% 3vh;
+  padding: 1.2rem 6% 3vh;
 }
 
 /* ─ CTA sticky mobile ───────────────────────── */
@@ -1285,6 +1240,20 @@ a {
 }
 
 @media (max-width: 768px) {
+  /* Tre colonne su un telefono diventano tre strisce: si impilano */
+  .mdm-footer-top {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* I pesci non partono sul telefono: su una colonna sola nuoterebbero
+     sopra telefono, email e indirizzo. La soglia vive SOLO qui, il JS la
+     legge con offsetParent — una soglia scritta in due posti prima o poi
+     diventa due soglie */
+  #contatti-particles {
+    display: none;
+  }
+
   #mdm-hdr {
     padding: 1.1rem 1.4rem;
   }
@@ -1418,10 +1387,10 @@ a {
     height: 760vh;
   }
 
-  #lottie-bg {
-    clip-path: inset(0 0 0 0);
-    max-width: 100vw;
-  }
+  #hero-bg {
+      clip-path: inset(0 0 0 0 round 26px);
+      max-width: 100vw;
+    }
 
   #c1, #c2, #c3, #c4 {
     width: 92%;
@@ -2246,4 +2215,102 @@ body.shop-page #mdm-hdr {
   .cue-line {
     height: 26px;
   }
+}
+
+/* ── Il banco di pesciolini sui contatti ─────────
+   La tela copre tutta la sezione e non intercetta i clic: i recapiti
+   sotto restano selezionabili e i link cliccabili. Il contenuto viene
+   alzato di un livello, se no i pesci ci nuoterebbero sopra */
+#contatti-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#contatti > .book-intro,
+#contatti > .visit-grid {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Il piede, sulla struttura di quello del B2B ──
+   Tre colonne e non cinque: qui le destinazioni sono poche, e cinque
+   colonne per otto link diventano strisce da otto caratteri */
+.mdm-footer-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.1fr;
+  gap: 2.4rem;
+  align-items: start;
+}
+
+.mdm-footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.mdm-footer-claim {
+  font-size: .76rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(21,28,100,.55);
+  max-width: 30ch;
+}
+
+.mdm-footer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .6rem;
+  font-size: .76rem;
+  font-weight: 300;
+  color: rgba(21,28,100,.6);
+}
+
+.mdm-footer-col-title {
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(21,28,100,.85);
+  margin-bottom: .3rem;
+}
+
+.mdm-footer-orari {
+  color: rgba(21,28,100,.45);
+}
+
+/* ── Il cursore calamaro ─────────────────────────
+   js/cursore.js crea <canvas id="cur-cvs"> e lo appende al body. Le sue
+   regole vivevano SOLO in css/style.css, il foglio del B2B: qui la tela
+   restava senza stile, quindi nel flusso e grande quanto il viewport —
+   una fascia vuota alta uno schermo appiccicata in fondo alla pagina,
+   che continuava a scorrere dopo il piede. Non si vedeva provando in un
+   browser automatizzato perche' il cursore si costruisce solo al primo
+   movimento vero del mouse, che li' non arriva mai. (06/09/2026)
+   Se un giorno si aggiunge qualcosa di fisso in cima alla pila, deve
+   stare SOTTO z-index 10050: questa tela E' il puntatore, e qualunque
+   cosa le passi sopra lo fa sparire. */
+html.cur-on,
+html.cur-on * {
+  cursor: none !important;
+}
+
+html.cur-on input,
+html.cur-on textarea,
+html.cur-on select {
+  cursor: auto !important;
+}
+
+#cur-cvs {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .25s;
 }
