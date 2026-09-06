@@ -31,3 +31,6 @@ _genera-pw.php
 catalogo/foto-trovate/
 catalogo/scelta-foto.html
 catalogo/scelte.json
+
+# Il profilo usa-e-getta che Chrome crea quando fotografa le anteprime
+marketing/**/.chrome/
