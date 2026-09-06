@@ -1114,14 +1114,13 @@ a {
 /* ─ Footer ──────────────────────────────────── */
 #mdm-footer {
   position: relative;
-  /* Era 5vh di padding con 2rem fra cinque blocchi in colonna: su
-     schermo grande diventava piu' alto di una sezione vera */
-  padding: 3.5vh 6% 2.5vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.1rem;
-  text-align: center;
+  /* Prima era max-width: none e partiva dal bordo dello schermo, mentre
+     le sezioni stanno a 1280 centrate: il piede sfondava di 145px per
+     lato e il contenuto restava un filo stretto in mezzo al bianco */
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3.5rem 6% 2rem;
+  border-top: 1px solid rgba(21,28,100,.1);
 }
 
 .mdm-footer-links {
@@ -1176,10 +1175,12 @@ a {
 }
 
 .mdm-footer-copy {
-  text-align: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: left;
   font-size: .62rem;
   color: rgba(21,28,100,.35);
-  padding: 0 6% 3vh;
+  padding: 1.2rem 6% 3vh;
 }
 
 /* ─ CTA sticky mobile ───────────────────────── */
@@ -1239,6 +1240,12 @@ a {
 }
 
 @media (max-width: 768px) {
+  /* Tre colonne su un telefono diventano tre strisce: si impilano */
+  .mdm-footer-top {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
   /* I pesci non partono sul telefono: su una colonna sola nuoterebbero
      sopra telefono, email e indirizzo. La soglia vive SOLO qui, il JS la
      legge con offsetParent — una soglia scritta in due posti prima o poi
@@ -2227,4 +2234,52 @@ body.shop-page #mdm-hdr {
 #contatti > .visit-grid {
   position: relative;
   z-index: 1;
+}
+
+/* ── Il piede, sulla struttura di quello del B2B ──
+   Tre colonne e non cinque: qui le destinazioni sono poche, e cinque
+   colonne per otto link diventano strisce da otto caratteri */
+.mdm-footer-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.1fr;
+  gap: 2.4rem;
+  align-items: start;
+}
+
+.mdm-footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.mdm-footer-claim {
+  font-size: .76rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(21,28,100,.55);
+  max-width: 30ch;
+}
+
+.mdm-footer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .6rem;
+  font-size: .76rem;
+  font-weight: 300;
+  color: rgba(21,28,100,.6);
+}
+
+.mdm-footer-col-title {
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(21,28,100,.85);
+  margin-bottom: .3rem;
+}
+
+.mdm-footer-orari {
+  color: rgba(21,28,100,.45);
 }

@@ -313,15 +313,34 @@ function initHeroScroll() {
 
 /* ── Reveal on scroll ──────────────────────────── */
 const revealEls = document.querySelectorAll('.reveal-el');
+
+/* RETE DI SICUREZZA. Gli elementi partono a opacity:0 e la classe gliela
+   mette l'osservatore: se per qualunque motivo l'osservatore non scatta,
+   quel contenuto resta invisibile PER SEMPRE e la sezione sembra vuota.
+   Non e' teorico: un IntersectionObserver non consegna niente finche' la
+   scheda e' in secondo piano, quindi basta aprire il link in una scheda
+   di sfondo e leggerla dopo. Due reti: chi e' gia' a schermo al caricamento
+   si mostra subito, e dopo tre secondi si mostra tutto comunque.
+   Meglio l'animazione persa che mezza pagina bianca. (06/09/2026) */
+function mostra(el) { el.classList.add('is-visible'); }
+
 const revealObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.classList.add('is-visible');
+      mostra(entry.target);
       revealObserver.unobserve(entry.target);
     }
   });
 }, { threshold: .15 });
-revealEls.forEach(el => revealObserver.observe(el));
+
+revealEls.forEach(el => {
+  /* Gia' nel riquadro al caricamento: non si aspetta l'osservatore */
+  const r = el.getBoundingClientRect();
+  if (r.top < window.innerHeight && r.bottom > 0) mostra(el);
+  else revealObserver.observe(el);
+});
+
+setTimeout(() => revealEls.forEach(mostra), 3000);
 
 /* I box non esistono piu' in pagina (06/09/2026): i prezzi erano
    segnaposto, il bottone portava a carrello.html che sul server e' 404 e
