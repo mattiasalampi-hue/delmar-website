@@ -15,7 +15,12 @@
   --text-dim: rgba(21,28,100,.45);
   --text-mid: rgba(21,28,100,.62);
   --text-hi: rgba(21,28,100,.9);
-  --font: 'Outfit', sans-serif;
+  /* POPPINS, come tutto il resto del sito. Diceva Outfit dal 16/07/2026,
+     ma un file di Outfit non e' mai stato servito da nessuna parte: la
+     pagina ripiegava sul sans-serif di sistema, e per questo il negozio
+     aveva un carattere diverso dalla home. Non era una scelta, era un
+     font dichiarato e mai caricato. (Mattias, 2026-09-07) */
+  --font: 'Poppins', sans-serif;
 }
 
 *, *::before, *::after {

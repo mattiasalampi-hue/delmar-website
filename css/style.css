@@ -207,14 +207,6 @@ nav a:not(.nav-wa):not(.nav-b2c)::after {
    Due strette progressive: prima si riducono spazi e crenatura, sui
    portatili piccoli anche il corpo */
 @media (min-width: 951px) and (max-width: 1160px) {
-  /* Con la decima voce (la pastiglia della pescheria, 06/09/2026) anche
-     lei entra nelle strette, se no e' l'unica che non cede spazio */
-  .nav-b2c {
-    padding: .45rem .7rem;
-    font-size: .56rem;
-    letter-spacing: .05em;
-  }
-
   #hdr {
     padding: .8rem 1.6rem;
   }
@@ -250,36 +242,31 @@ nav a:not(.nav-wa):not(.nav-b2c)::after {
     font-size: .58rem;
     letter-spacing: .04em;
   }
-
-  .nav-b2c {
-    padding: .35rem .5rem;
-    font-size: .52rem;
-    letter-spacing: .02em;
-  }
 }
 
 
-/* La porta verso la pescheria. Stesso disegno di "Ordina ora" ma piu
-   stretta e un filo piu piccola: le due pastiglie devono leggersi come
-   una coppia — una per ordinare, una per venire al banco — senza che
-   questa rubi il posto alla chiamata principale del sito B2B.
-   Il corallo NON si usa qui: e il colore dell azione, e su due
-   pastiglie affiancate vincerebbe sempre quella colorata. */
+/* IDENTICA a .nav-wa qui sotto, e non e' pigrizia: le due pastiglie stanno
+   appaiate nella stessa barra, e due bordi o due corpi diversi a pochi
+   centimetri l'uno dall'altro si vedono. Prima ne avevo fatta una versione
+   piu' leggera (bordo .22, corpo .6rem, crenatura .1em) per non rubare il
+   posto alla chiamata principale: era una decisione mia, non una regola del
+   sito — e il sito una regola per le pastiglie ce l'ha gia'.
+   Niente letter-spacing: come .nav-wa eredita .16em da nav a.
+   (Mattias, 2026-09-07: "deve essere esattamente lo stesso stile") */
 .nav-b2c {
-  border: 1px solid rgba(0,0,0,.22);
-  padding: .5rem 1rem;
+  border: 1px solid rgba(0,0,0,.35);
+  padding: .55rem 1.3rem;
   border-radius: 2px;
-  font-size: .6rem;
+  font-family: var(--font);
+  font-size: .64rem;
   font-weight: 400;
-  letter-spacing: .1em;
-  color: rgba(0,0,0,.55) !important;
-  transition: background .3s, border-color .3s, color .3s !important;
+  color: rgba(0,0,0,.78) !important;
+  transition: background .3s, border-color .3s !important;
 }
 
 .nav-b2c:hover {
-  background: rgba(0,0,0,.045);
-  border-color: rgba(0,0,0,.45);
-  color: rgba(0,0,0,.8) !important;
+  background: rgba(0,0,0,.06);
+  border-color: rgba(0,0,0,.6);
 }
 .nav-wa {
   border: 1px solid rgba(0,0,0,.35);
@@ -3482,16 +3469,14 @@ html.cur-on select {
 
   /* Nel menu a schermo intero il fondo è quasi nero: qui serve la
      gradazione piena, quella scura ci si perderebbe dentro */
-  /* Nel menu a schermo intero il fondo e blu scuro: il bordo nero della
-     barra desktop ci sparirebbe dentro. Chiara e non corallo — il corallo
-     resta di "Ordina ora", che li sotto e la voce colorata */
+  /* Le stesse due dichiarazioni che il B2C usa per la sua gemella
+     (#mdm-nav .nav-b2b): sul fondo blu il bordo nero della barra
+     sparirebbe. Corpo, crenatura e spaziatura NON si toccano — se le
+     tocco questa voce si veste diversamente dalle altre nove */
   .nav-b2c {
     display: inline-flex !important;
-    border: 1px solid rgba(255,255,255,.35) !important;
-    color: rgba(255,255,255,.92) !important;
-    font-size: .78rem !important;
-    letter-spacing: .12em !important;
-    padding: .7rem 1.6rem !important;
+    border-color: rgba(255,255,255,.4) !important;
+    color: rgba(255,255,255,.85) !important;
   }
 
   .nav-wa {
