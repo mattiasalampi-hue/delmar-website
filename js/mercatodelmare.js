@@ -37,18 +37,41 @@ window.addEventListener('scroll', () => {
   mdmHdr.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-/* ── Tunnel bg: solo nell'hero ────────────────── */
-/* Layer fixed dietro tutto: uscendo dall'hero si dissolve nel nero
-   (scrub), così non spunta mai tra le sezioni */
-gsap.to('#lottie-bg, #vig', {
+/* ── Chiusura dell'hero ───────────────────────── */
+/* Il riquadro si stacca dai bordi e diventa un oggetto appoggiato
+   sulla pagina, invece di sparire. Identico al B2B */
+const CHIUSURA = {
+  trigger: '#v-scroller',
+  start: 'bottom 190%',
+  end: 'bottom bottom',
+  scrub: true
+};
+
+gsap.fromTo('#hero-bg',
+  { scale: 1, borderRadius: '0px' },
+  { scale: 0.74, borderRadius: '26px', ease: 'none', scrollTrigger: CHIUSURA }
+);
+
+/* I capitoli stanno in un contenitore separato dal video: senza questo
+   l'alone dietro le scritte sborderebbe ai lati del riquadro */
+gsap.fromTo('#v-sticky',
+  { scale: 1 },
+  { scale: 0.74, ease: 'none', scrollTrigger: CHIUSURA }
+);
+
+gsap.to('#vig', {
   autoAlpha: 0,
   ease: 'none',
-  scrollTrigger: {
-    trigger: '#v-scroller',
-    start: 'bottom 98%',
-    end: 'bottom 45%',
-    scrub: true
-  }
+  scrollTrigger: { trigger: '#v-scroller', start: 'bottom 190%', end: 'bottom 150%', scrub: true }
+});
+
+/* Coperto del tutto, sparisce davvero: un video fixed che continua a
+   decodificare dietro la pagina costa paint e batteria per niente */
+ScrollTrigger.create({
+  trigger: '#v-scroller',
+  start: 'bottom top',
+  onEnter:     () => gsap.set('#hero-bg, #vig', { visibility: 'hidden' }),
+  onLeaveBack: () => gsap.set('#hero-bg, #vig', { visibility: 'visible' })
 });
 
 /* ── Hero bg ──────────────────────────────────── */
@@ -74,7 +97,7 @@ gsap.set('#c4', { xPercent: -50, yPercent: -50 });
 
 /* Scrub dell'hero: identico al B2B — lo scroll (ammorbidito da Lenis)
    pilota i frame del tunnel, i capitoli e la transizione finale */
-function initHeroScroll(renderFrame, total) {
+function initHeroScroll() {
   const CHS = [
     {el:'#c1',s:0.00,fi:0.00,fo:0.14,e:0.20},
     {el:'#c2',s:0.22,fi:0.28,fo:0.38,e:0.44},
@@ -83,16 +106,7 @@ function initHeroScroll(renderFrame, total) {
   ];
   const els = CHS.map(c => document.querySelector(c.el));
 
-  /* Velo nero iniziale: pieno a p=0, dissolto entro il 10% di scroll */
-  const fadeEl   = document.getElementById('hero-fade');
-  const FADE_END = 0.10;
 
-  /* Transizione finale video-su-video (porta mascherata) */
-  const whiteEl  = document.getElementById('hero-white');
-  const blackEl  = document.getElementById('hero-black');
-  const videoEl  = document.getElementById('hero-video');
-  const V_START  = 0.80;
-  let vLoaded = false;
 
   function op(p,s,fi,fo,e){ if(p>=e)return 0; if(p<=s)return s===0?1:0; if(p<fi)return(p-s)/(fi-s||.001); if(p>fo)return 1-(p-fo)/(e-fo||.001); return 1; }
   function sc(p,s,fi,fo,e){ if(p<=s)return s===0?1:.82; if(p<fi)return .82+.18*((p-s)/(fi-s||.001)); if(p>fo)return 1+.15*((p-fo)/(e-fo||.001)); return 1; }
@@ -101,60 +115,10 @@ function initHeroScroll(renderFrame, total) {
   /* Su mobile niente blur sui capitoli (paint caro) e scritture di
      stile solo quando il valore cambia davvero — come il B2B */
   const isMob    = isMobile();
-  let   lastFade = -1;
-  let   lastVp   = -1;
   const lastChO  = els.map(() => -1);
 
-  /* Mobile: variante leggera del mp4 e download avviato SUBITO */
-  if (isMob) {
-    videoEl.src = 'assets/video/hero-final-m.mp4?v=1';
-    videoEl.preload = 'auto';
-    videoEl.load();
-    vLoaded = true;
-    /* iOS in risparmio energetico rifiuta anche l'autoplay muto e il
-       ticker smette di ritentare quando lo scroll si ferma: il primo
-       tocco riprova il play se la porta è aperta e il video è fermo */
-    window.addEventListener('touchend', () => {
-      if (videoEl.paused && lastVp > 0.02) videoEl.play().catch(() => {});
-    }, { passive: true });
-  }
 
   function apply(p) {
-    renderFrame(p * (total - 1));
-    const fade = Math.max(0, 1 - p / FADE_END);
-    if (fade !== lastFade) {
-      gsap.set(fadeEl, { opacity: fade });
-      lastFade = fade;
-    }
-    if (!vLoaded && p > 0.5) { vLoaded = true; videoEl.preload = 'auto'; videoEl.load(); }
-    const vp = Math.min(1, Math.max(0, (p - V_START) / (1 - V_START)));
-    if (vp > 0 || lastVp !== 0) {
-      const sz = (Math.pow(vp, 1.2) * 260).toFixed(1) + 'vmax';
-      const cz = Math.max(1, window.innerHeight / (window.innerWidth * 3 / 8));
-      const sh = Math.min(1, Math.max(0, (vp - 0.5) / 0.5));
-      const ease = sh * sh * (3 - 2 * sh);
-      gsap.set(videoEl, {
-        opacity: Math.min(1, vp * 3),
-        scale: cz + (1 - cz) * ease,
-        webkitMaskSize: `${sz} ${sz}`,
-        maskSize: `${sz} ${sz}`
-      });
-      if (vp > 0.02 && videoEl.paused) videoEl.play().catch(() => {});
-      else if (vp <= 0.01 && !videoEl.paused) { videoEl.pause(); videoEl.currentTime = 0; }
-
-      gsap.set(whiteEl, {
-        opacity: Math.min(1, vp * 3) * 0.55,
-        webkitMaskSize: `${sz} ${sz}`,
-        maskSize: `${sz} ${sz}`
-      });
-
-      gsap.set(blackEl, {
-        opacity: Math.min(1, Math.max(0, (vp - 0.4) / 0.15)),
-        webkitMaskSize: `${sz} ${sz}`,
-        maskSize: `${sz} ${sz}`
-      });
-    }
-    lastVp = vp;
     CHS.forEach((c,i) => {
       const o = op(p,c.s,c.fi,c.fo,c.e);
       if (o === 0 && lastChO[i] === 0) return;
@@ -185,9 +149,9 @@ function initHeroScroll(renderFrame, total) {
     apply(shown);
   });
 
-  /* Snap ai punti CTA (desktop, via rotella) — 0.885 = sosta
-     "televisione" con la porta aperta a mezzo schermo */
-  const POINTS = CHS.map(c => c.s === 0 ? 0 : (c.fi + c.fo) / 2).concat(0.885, 1);
+  /* Snap ai punti CTA (desktop, via rotella): la rotella si ferma sul
+     capitolo piu' vicino invece che a meta' fra due */
+  const POINTS = CHS.map(c => c.s === 0 ? 0 : (c.fi + c.fo) / 2).concat(1);
   const scrollerEl = document.getElementById('v-scroller');
   const heroMax    = () => scrollerEl.offsetHeight - window.innerHeight;
   const SNAP_EPS   = 0.012;
@@ -223,146 +187,94 @@ function initHeroScroll(renderFrame, total) {
   }, { passive: true });
 }
 
-/* Tunnel su canvas con crossfade tra frame — identico al B2B:
-   su mobile file dedicato già sfoltito + ImageBitmap pre-scalate */
-(async () => {
-  try {
-    let res = isMobile()
-      ? await fetch('assets/lottie-hero-m.json?v=1').catch(() => null)
-      : null;
-    let thinned = !!(res && res.ok);
-    if (!thinned) res = await fetch('assets/lottie-hero.json?v=3');
-    const data = await res.json();
-    bar.style.width = '40%';
+/* ── Avvio del video di sfondo ────────────────── */
+/* Preso pari pari dal B2B (js/script.js): sorgente scelta fra
+   orizzontale e verticale, barra che segue il caricamento vero, e
+   tanti tentativi di play perche' su iOS il permesso lo sblocca il
+   primo gesto e non si sa in anticipo quale sara'. */
+(function(){
+  const videoEl = document.getElementById('hero-video');
+  if (!videoEl) return;
 
-    const byId = {};
-    (data.assets || []).forEach(a => { byId[a.id] = a; });
-    const srcs = (data.layers || [])
-      .filter(l => l.ty === 2)
-      .sort((a, b) => a.ip - b.ip)
-      .map(l => byId[l.refId] && byId[l.refId].p)
-      .filter(Boolean);
-    if (!srcs.length) throw new Error('nessun frame nella sequenza');
+  /* Muto e in loop da subito, prima ancora che il file arrivi: senza
+     muted il browser rifiuta la riproduzione automatica, e il rifiuto
+     e' silenzioso — resta un fotogramma fermo e nessun errore */
+  videoEl.muted = true;
+  videoEl.loop  = true;
 
-    const a0 = (data.assets || []).find(a => a.w && a.h) || {};
-    const iw = a0.w || 1280;
-    const ih = a0.h || 720;
+  let avviato = false;
 
-    const box = document.getElementById('lottie-bg');
-    const cv  = document.createElement('canvas');
-    const ctx = cv.getContext('2d');
-    box.appendChild(cv);
+  /* initHeroScroll registra uno ScrollTrigger che pilota opacita', scala
+     e blur dei capitoli: chiamarlo due volte ne lascia due che scrivono
+     le stesse proprieta' sugli stessi elementi a ogni frame */
+  let scrollPronto = false;
+  function avviaScroll() {
+    if (scrollPronto) return;
+    scrollPronto = true;
+    initHeroScroll();
+  }
 
-    let seq   = null;
-    let seqW  = iw;
-    let seqH  = ih;
-    let lastF = 0;
-
-    function draw(f) {
-      lastF = f;
-      if (!seq) return;
-      const i = Math.max(0, Math.min(Math.floor(f), seq.length - 1));
-      const j = Math.min(i + 1, seq.length - 1);
-      const t = f - i;
-      /* cover: con le bitmap mobile pre-scalate s=1, dx=dy=0 = blit */
-      const s  = Math.max(cv.width / seqW, cv.height / seqH);
-      const dw = seqW * s, dh = seqH * s;
-      const dx = (cv.width - dw) / 2, dy = (cv.height - dh) / 2;
-      ctx.globalAlpha = 1;
-      ctx.drawImage(seq[i], dx, dy, dw, dh);
-      if (j !== i && t > 0.01) {
-        ctx.globalAlpha = t;
-        ctx.drawImage(seq[j], dx, dy, dw, dh);
-      }
-    }
-
-    function sizeCanvas() {
-      /* DPR limitato: oltre non c'è dettaglio da guadagnare; su
-         mobile DPR 1 (bitmap in memoria) */
-      const dpr = Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 1.5);
-      cv.width  = Math.round(box.clientWidth  * dpr);
-      cv.height = Math.round(box.clientHeight * dpr);
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-    }
-
-    const MOBILE_STEP = thinned ? 1 : 2;
-    let bitmapsMode = false;
-
-    async function buildBitmaps() {
-      const picks = [];
-      for (let k = 0; k < srcs.length; k += MOBILE_STEP) picks.push(srcs[k]);
-      const s  = Math.max(cv.width / iw, cv.height / ih);
-      const sw = Math.min(iw, Math.round(cv.width  / s));
-      const sh = Math.min(ih, Math.round(cv.height / s));
-      const sx = Math.round((iw - sw) / 2);
-      const sy = Math.round((ih - sh) / 2);
-      const opts = { resizeWidth: cv.width, resizeHeight: cv.height, resizeQuality: 'high' };
-      let scaled = true;
-      let done   = 0;
-      const mk = async (src) => {
-        const blob = await (await fetch(src)).blob();
-        let bm;
-        if (scaled) {
-          try { bm = await createImageBitmap(blob, sx, sy, sw, sh, opts); }
-          catch (e) { scaled = false; }
-        }
-        if (!bm) bm = await createImageBitmap(blob);
-        done++;
-        bar.style.width = (40 + 55 * done / picks.length) + '%';
-        return bm;
-      };
-      /* il primo da solo stabilisce il supporto alle opzioni */
-      const first = await mk(picks[0]);
-      const rest  = await Promise.all(picks.slice(1).map(mk));
-      const old   = seq;
-      seq  = [first, ...rest];
-      seqW = scaled ? cv.width  : iw;
-      seqH = scaled ? cv.height : ih;
-      bitmapsMode = true;
-      if (old) old.forEach(b => b.close && b.close());
-    }
-
-    function resize() {
-      sizeCanvas();
-      if (bitmapsMode &&
-          (Math.abs(cv.width  - seqW) / seqW > 0.15 ||
-           Math.abs(cv.height - seqH) / seqH > 0.15)) {
-        buildBitmaps().then(() => draw(lastF));
-      }
-      draw(lastF);
-    }
-    window.addEventListener('resize', debounce(resize, 150));
-    sizeCanvas();
-
-    if (isMobile()) {
-      try { await buildBitmaps(); }
-      catch (e) { /* si ripiega sulle Image */ }
-    }
-    if (!seq) {
-      /* Desktop (o fallback): warm-up decode con tetto 5s, poi si
-         parte comunque (i frame si decodificano al primo draw) */
-      const frames = srcs.map(src => { const img = new Image(); img.src = src; return img; });
-      let decoded = 0;
-      await Promise.race([
-        Promise.all(frames.map(img =>
-          img.decode().catch(() => {}).then(() => {
-            decoded++;
-            bar.style.width = (40 + 55 * decoded / frames.length) + '%';
-          })
-        )),
-        new Promise(r => setTimeout(r, 5000))
-      ]);
-      seq = frames;
-    }
-
+  function parti() {
+    if (avviato) return;
+    avviato = true;
     bar.style.width = '100%';
     setTimeout(hideLoader, 300);
-    draw(lastF);
-    initHeroScroll(draw, seq.length);
-  } catch (err) {
-    loader.querySelector('p').textContent = 'Errore';
+    videoEl.play().catch(() => {});
+    avviaScroll();
   }
+
+  /* Il play automatico puo' essere negato per motivi che non dipendono
+     dalla pagina: risparmio energetico su iOS, impostazione del browser,
+     scheda aperta in secondo piano. Un solo tentativo non basta, quindi
+     si riprova a ogni occasione utile — quando arrivano altri dati e al
+     primo gesto qualunque esso sia, perche' su iOS e' il gesto a
+     sbloccare il permesso e non si sa in anticipo quale sara' */
+  const riprova = () => { if (videoEl.paused) videoEl.play().catch(() => {}); };
+  videoEl.addEventListener('canplay', riprova);
+  videoEl.addEventListener('loadeddata', riprova);
+  ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll'].forEach(ev => {
+    window.addEventListener(ev, riprova, { passive: true });
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) riprova(); });
+
+  /* Avanzamento vero del caricamento, non una percentuale inventata */
+  bar.style.width = '10%';
+  videoEl.addEventListener('progress', () => {
+    if (!videoEl.buffered.length || !videoEl.duration) return;
+    const p = videoEl.buffered.end(videoEl.buffered.length - 1) / videoEl.duration;
+    bar.style.width = (10 + 85 * Math.min(1, p)) + '%';
+  });
+
+  /* Un caricamento fallito non deve restare tale per sempre: la sorgente
+     viene ricaricata una volta. Cinque secondi e non meno, perche' sotto
+     rete mobile un'attesa breve interromperebbe uno scaricamento che sta
+     andando bene */
+  const ATTESA_METADATI = 5000;
+
+  function avviaCon(url, ripiego) {
+    videoEl.src = url;
+    videoEl.load();
+    if (videoEl.readyState >= 1) { parti(); return; }
+    videoEl.addEventListener('loadedmetadata', parti, { once: true });
+    if (ripiego) {
+      setTimeout(() => {
+        if (!avviato && !videoEl.duration) avviaCon(ripiego, null);
+      }, ATTESA_METADATI);
+    }
+  }
+
+  /* Rete lenta, codec rifiutato: i capitoli partono comunque, al peggio
+     senza sfondo. Non si deve mai restare bloccati sul loader. Non tocca
+     'avviato', cosi' se il file arriva in ritardo il video parte lo
+     stesso — semplicemente i capitoli erano gia' in moto */
+  setTimeout(() => {
+    if (!avviato) { hideLoader(); avviaScroll(); }
+  }, 9000);
+
+  /* Su telefono un file dedicato, verticale: quello orizzontale, a
+     riempimento per copertura, perdeva quasi tutta la larghezza */
+  const sorgente = isMobile() ? videoEl.dataset.srcM : videoEl.dataset.src;
+  avviaCon(sorgente, sorgente);
 })();
 
 /* ── Hamburger mobile ─────────────────────────── */

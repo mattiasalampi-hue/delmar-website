@@ -188,7 +188,10 @@ a {
 }
 
 /* ─ Hero tunnel (stessa macchina del B2B) ───── */
-#lottie-bg {
+/* Sfondo hero: un video in loop, come il B2B. Prima qui c'era un
+   Lottie renderizzato su canvas piu' un secondo mp4 in dissolvenza
+   con maschera SVG: 19 MB per aprire la pagina di un negozio. */
+#hero-bg {
   position: fixed;
   top: 0;
   left: 0;
@@ -196,83 +199,32 @@ a {
   height: 100vh;
   z-index: 1;
   overflow: hidden;
-  background: #080808;
+  background: #04121c;
+  /* L'ombra e' invisibile finche' il video occupa tutto lo schermo, e
+     compare da sola quando si ritira nel riquadro */
+  box-shadow: 0 40px 90px rgba(4,18,28,.35);
+  will-change: transform;
 }
 
-#lottie-bg canvas {
-  display: block;
+#hero-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.3) 0%,
+    rgba(0,0,0,0) 24%,
+    rgba(0,0,0,0) 74%,
+    rgba(0,0,0,.32) 100%
+  );
+}
+
+#hero-video {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  display: block;
 }
-
-/* Alone di luce sulla giuntura tra tunnel e video finale */
-#hero-white {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: #fff;
-  opacity: 0;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='4'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='none' stroke='white' stroke-width='3.5' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='4'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='none' stroke='white' stroke-width='3.5' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
-}
-
-/* Fondale nero mascherato a porta: riempie il varco dietro la banda */
-#hero-black {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: #000;
-  opacity: 0;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
-}
-
-/* Video finale: banda 8:3 full width, rivelata dalla maschera-porta */
-#hero-video {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 100vw;
-  aspect-ratio: 8 / 3;
-  height: auto;
-  z-index: 3;
-  opacity: 0;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='b' x='-40%25' y='-40%25' width='180%25' height='180%25'><feGaussianBlur stdDeviation='3.5'/></filter></defs><path d='M14 88 L14 52 A36 36 0 0 1 86 52 L86 88 Z' fill='white' filter='url(%23b)'/></svg>");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0.1px 0.1px;
-  mask-size: 0.1px 0.1px;
-}
-
-/* Velo nero iniziale: pieno a p=0, dissolto nel primo tratto di scroll */
-#hero-fade {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1;
-  background: #000;
-  pointer-events: none;
-}
-
 #vig {
   position: fixed;
   top: 0;
@@ -1418,10 +1370,10 @@ a {
     height: 760vh;
   }
 
-  #lottie-bg {
-    clip-path: inset(0 0 0 0);
-    max-width: 100vw;
-  }
+  #hero-bg {
+      clip-path: inset(0 0 0 0 round 26px);
+      max-width: 100vw;
+    }
 
   #c1, #c2, #c3, #c4 {
     width: 92%;
