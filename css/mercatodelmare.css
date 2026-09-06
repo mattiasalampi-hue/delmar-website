@@ -2283,3 +2283,34 @@ body.shop-page #mdm-hdr {
 .mdm-footer-orari {
   color: rgba(21,28,100,.45);
 }
+
+/* ── Il cursore calamaro ─────────────────────────
+   js/cursore.js crea <canvas id="cur-cvs"> e lo appende al body. Le sue
+   regole vivevano SOLO in css/style.css, il foglio del B2B: qui la tela
+   restava senza stile, quindi nel flusso e grande quanto il viewport —
+   una fascia vuota alta uno schermo appiccicata in fondo alla pagina,
+   che continuava a scorrere dopo il piede. Non si vedeva provando in un
+   browser automatizzato perche' il cursore si costruisce solo al primo
+   movimento vero del mouse, che li' non arriva mai. (06/09/2026)
+   Se un giorno si aggiunge qualcosa di fisso in cima alla pila, deve
+   stare SOTTO z-index 10050: questa tela E' il puntatore, e qualunque
+   cosa le passi sopra lo fa sparire. */
+html.cur-on,
+html.cur-on * {
+  cursor: none !important;
+}
+
+html.cur-on input,
+html.cur-on textarea,
+html.cur-on select {
+  cursor: auto !important;
+}
+
+#cur-cvs {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .25s;
+}
