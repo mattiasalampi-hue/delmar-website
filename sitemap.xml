@@ -2,11 +2,10 @@
 <!--
   Mappa del sito di del-mar.it.
 
-  Ci stanno SOLO le pagine davvero pubblicate. mercatodelmare.html non
-  c'e' perche' sul server non e' stata caricata: dichiarare in mappa un
+  Ci stanno SOLO le pagine davvero pubblicate: dichiarare in mappa un
   indirizzo che risponde 404 e' il modo piu' rapido di farsi diffidare
-  da un motore di ricerca. Quando il Mercato del Mare andra' online, va
-  aggiunta qui.
+  da un motore di ricerca. mercatodelmare.html e' entrata il 06/09/2026,
+  il giorno in cui e' stata caricata sul server.
 
   Le date sono quelle dell'ultima modifica vera del contenuto, non di
   oggi: un sito che dichiara tutto "aggiornato oggi" a ogni scansione
@@ -30,6 +29,15 @@
     <!-- Alta come la home meno un soffio: e' la seconda pagina vera del
          sito, e risponde alle domande che il cliente scrive nel motore
          di ricerca parola per parola -->
+    <priority>0.8</priority>
+  </url>
+  <!-- Il banco al pubblico. Priorita' alta come le pagine di zona: e'
+       l'unica pagina del sito che parla ai privati, e deve uscire per
+       "pescheria Massa" e "pesce fresco Massa Carrara" -->
+  <url>
+    <loc>https://del-mar.it/mercatodelmare.html</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
