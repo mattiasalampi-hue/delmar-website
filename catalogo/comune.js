@@ -46,6 +46,10 @@ function menu(su, cartella = 'catalogo') {
     ? `<span class="nav-qui" aria-current="page">Consegne</span>`
     : `<a href="${su}consegna/">Consegne</a>`;
   return `      <nav id="main-nav">
+        <!-- La porta verso la pescheria: gemella di "Sei un ristoratore?"
+             che il B2C ha verso qui. In testa e non in coda, dove c'e' gia
+             "Ordina ora" -->
+        <a href="${su}mercatodelmare.html" class="nav-b2c">Sei un privato? →</a>
         ${prodotti}
         ${consegne}
         <a href="${su}index.html#processo">Come Lavoriamo</a>
@@ -134,7 +138,7 @@ function testa(titolo, opts = {}) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${titolo} — DelMar</title>${descrizione}${canonical}${og}${jsonld}
     <link rel="stylesheet" href="${su}css/poppins.css?v=1" />
-    <link rel="stylesheet" href="${su}css/style.css?v=106" />
+    <link rel="stylesheet" href="${su}css/style.css?v=109" />
     <!-- L'indice appeso e le righe degli argomenti sono GIA' nel sito, sulla
          pagina delle domande frequenti. Si carica quel foglio invece di
          ridisegnarli: due copie della stessa cosa divergono al primo ritocco -->
