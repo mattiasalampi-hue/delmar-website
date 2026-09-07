@@ -65,9 +65,11 @@ a {
 }
 
 .big-title {
-  font-weight: 700;
-  font-size: clamp(2rem, 4.5vw, 4.2rem);
-  letter-spacing: -.025em;
+  /* Come .big-title del B2B: peso 300, crenatura -.045, e la misura
+     grande arriva a 4.8rem invece che a 4.2 */
+  font-weight: 300;
+  font-size: clamp(2rem, 4.5vw, 4.8rem);
+  letter-spacing: -.045em;
   line-height: 1.08;
   margin-bottom: 1.4rem;
 }
@@ -295,9 +297,11 @@ a {
 }
 
 .ch-label {
+  /* .label e' gia' identica nei due fogli: qui si usa la sua
+     crenatura (.42em) invece di una terza misura inventata */
   font-size: .58rem;
   font-weight: 500;
-  letter-spacing: .4em;
+  letter-spacing: .42em;
   text-transform: uppercase;
   color: rgba(255,255,255,.58);
   margin-bottom: 1rem;
@@ -305,18 +309,18 @@ a {
 }
 
 .ch-title {
-  font-weight: 700;
-  letter-spacing: -.02em;
-  line-height: 1.05;
-  font-size: clamp(2.4rem, 5vw, 5.5rem);
-  margin-bottom: 1rem;
+  /* Copiata da .ch-title di css/style.css, valore per valore. Era
+     peso 700 a 5,5rem con crenatura -.02: accanto al 300 a 2,85 del
+     B2B sembrava un altro carattere, ed era la differenza piu'
+     visibile fra i due siti. (Mattias, 2026-09-07) */
+  font-weight: 300;
+  text-transform: none;
+  letter-spacing: -.04em;
+  line-height: 1.18;
+  font-size: clamp(1.8rem, 3vw, 2.85rem);
+  margin-bottom: 1.8rem;
   text-shadow: 0 2px 24px rgba(0,0,0,.85), 0 0 80px rgba(0,0,0,.55);
-}
-
-#c1 .ch-title {
-  font-size: clamp(2.8rem, 6vw, 6.5rem);
-}
-
+}
 .ch-sub {
   font-size: clamp(.83rem, 1.3vw, .98rem);
   font-weight: 300;
@@ -327,15 +331,21 @@ a {
 }
 
 .ch-cta {
+  /* Come .ch-cta del B2B: testo in cassa naturale e non maiuscoletto,
+     peso 300, e il filo corallo di due pixel invece del bianco di uno.
+     Sopra un video che cambia a ogni fotogramma un tratto filiforme
+     bianco si perde; il corallo pieno no */
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(255,255,255,.35);
-  padding-bottom: 4px;
+  gap: .55rem;
+  font-family: var(--font);
+  font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+  font-weight: 300;
+  letter-spacing: .015em;
+  text-transform: none;
+  border-bottom: 2px solid rgba(255,107,87,.85);
+  padding-bottom: 6px;
+  text-shadow: 0 1px 14px rgba(0,0,0,.75);
   transition: border-color .3s, gap .3s;
   pointer-events: auto;
 }
@@ -440,17 +450,21 @@ a {
 }
 
 .btn-secondary {
+  /* Il gemello di .ch-cta su fondo chiaro: stessa cassa naturale,
+     stesso peso, stesso filo corallo. Era .7rem in maiuscoletto a
+     peso 600, cioe' una terza lingua rispetto ai due hero */
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
+  gap: .55rem;
+  font-family: var(--font);
+  font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+  font-weight: 300;
+  letter-spacing: .015em;
+  text-transform: none;
   color: var(--ink);
-  border-bottom: 1px solid rgba(0,0,0,.35);
-  padding-bottom: 4px;
-  transition: border-color .3s;
+  border-bottom: 2px solid rgba(201,67,44,.85);
+  padding-bottom: 6px;
+  transition: border-color .3s, gap .3s;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -692,7 +706,7 @@ a {
 
 .mdm-banner-title {
   font-size: clamp(1.15rem, 2.2vw, 1.7rem);
-  font-weight: 700;
+  font-weight: 300;
   letter-spacing: -.015em;
   margin-bottom: .6rem;
 }
@@ -727,7 +741,7 @@ a {
   top: .9rem;
   right: 1.3rem;
   font-size: 5rem;
-  font-weight: 800;
+  font-weight: 300;
   line-height: 1;
   letter-spacing: -.04em;
   color: rgba(21,28,100,.06);
@@ -738,7 +752,7 @@ a {
 .mdm-step h3 {
   position: relative;
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: -.01em;
   margin-bottom: .7rem;
 }
@@ -1201,7 +1215,7 @@ a {
   background: var(--ink);
   color: #fff;
   font-size: .72rem;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: .16em;
   text-transform: uppercase;
   text-align: center;
@@ -1409,14 +1423,11 @@ a {
   }
 
   .ch-title {
-    font-size: clamp(2.3rem, 10vw, 3.1rem) !important;
+    /* Identica al B2B: era clamp(2.3rem, 10vw, 3.1rem), cioe' quasi il
+       doppio su un telefono */
+    font-size: clamp(1.55rem, 6.4vw, 2.1rem) !important;
     margin-bottom: 1.2rem;
-  }
-
-  #c1 .ch-title {
-    font-size: clamp(2.6rem, 11.5vw, 3.4rem) !important;
-  }
-
+  }
   .ch-sub {
     font-size: 1rem;
     line-height: 1.6;
@@ -1442,18 +1453,24 @@ a {
     display: none;
   }
 
+  /* CTA: da link testuale sottolineato a bottone pieno.
+     Stessi valori del B2B: era .82rem in peso 700 con crenatura .12em,
+     cioe' un bottone grassetto in maiuscoletto dove il B2B ha una frase
+     leggera. Il colore del testo resta il blu del marchio, che qui e' il
+     nero del B2C */
   .ch-cta {
     justify-content: center;
     width: min(320px, 88%);
     padding: 1.05rem 1.5rem;
-    font-size: .82rem;
-    font-weight: 700;
-    letter-spacing: .12em;
+    font-size: 1.02rem;
+    font-weight: 400;
+    letter-spacing: .015em;
     background: #fff;
     color: #151c64;
     border-bottom: none;
     border-radius: 6px;
     box-shadow: 0 12px 34px rgba(0,0,0,.5);
+    text-shadow: none;
     margin-top: .4rem;
   }
 
@@ -2183,23 +2200,17 @@ body.shop-page #mdm-hdr {
     top: calc(50% + 1.6rem) !important;
   }
 
-  .ch-title {
-    font-size: clamp(1.5rem, 9vh, 2.8rem) !important;
+  .ch-label {
     margin-bottom: .6rem;
   }
 
-  #c1 .ch-title {
-    font-size: clamp(1.7rem, 10.5vh, 3.2rem) !important;
-  }
-
+  /* Il sottotitolo si stringe: su uno schermo basso e' lui a rubare le
+     righe. Il TITOLO invece non si tocca piu' — ora parte dalla misura
+     del B2B invece che dal doppio, e ci sta senza aiuti */
   .ch-sub {
     font-size: clamp(.7rem, 3.4vh, .95rem);
     line-height: 1.5;
     margin-bottom: .9rem;
-  }
-
-  .ch-label {
-    margin-bottom: .6rem;
   }
 
   .ch-cta {
