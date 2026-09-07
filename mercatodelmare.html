@@ -44,10 +44,18 @@
          css/poppins.css. Cosi' a nessun terzo arriva l'indirizzo IP
          di chi apre la pagina, e non c'e' niente da autorizzare -->
     <link rel="stylesheet" href="css/poppins.css?v=1" />
-    <link rel="stylesheet" href="css/mercatodelmare.css?v=14" />
+    <link rel="stylesheet" href="css/mercatodelmare.css?v=16" />
     <link rel="stylesheet" href="css/consenso.css?v=1" />
   </head>
   <body>
+    <!-- Sprite delle icone, lo stesso del B2B. La freccia e' disegnata e
+         non una → di testo: un glifo di sistema ha spessore e proporzioni
+         diverse dal testo accanto, mentre questo eredita colore e peso -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+      <symbol id="ico-arr" viewBox="0 0 24 24">
+        <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+    </svg>
     <!-- Loading -->
     <div id="loading">
       <p>Il Mercato del Mare</p>
@@ -82,37 +90,29 @@
     <!-- ════════════════════ HERO TUNNEL ══════════ -->
     <div id="v-scroller">
       <div id="v-sticky">
+        <!-- QUATTRO CAPITOLI COME QUELLI DEL B2B: titolo e invito, basta.
+             Prima erano occhiello + titolo + sottotitolo + invito, coi
+             sottotitoli da 84-115 caratteri che sul B2B non esistono. Quello
+             che dicevano e' entrato nel titolo su due righe, che e' la forma
+             dei titoli della home ("Ordina fino alle 2 di notte / Ricevi
+             entro le 11 di mattina"): due righe, ognuna una cosa.
+             Il testo dell'h1 resta il nome del marchio e non e' stato
+             riscritto: si decide insieme al nome nuovo. (Mattias, 2026-09-07) -->
         <div class="ch" id="c1">
           <h1 class="ch-title">Il Mercato<br />del Mare.</h1>
-          <p class="ch-sub">
-            Dal mare a casa tua, senza passaggi:<br />qui il pesce lo compri direttamente alla fonte.
-          </p>
-          <div class="cue">
-            <span>Scroll</span>
-            <div class="cue-line"></div>
-          </div>
+          <a href="#alla-fonte" class="ch-cta">Perché conviene<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
         <div class="ch" id="c2">
-          <p class="ch-label">Perché alla fonte</p>
-          <h2 class="ch-title">Qui il grossista<br />è la pescheria.</h2>
-          <p class="ch-sub">
-            Compri dalla stessa cella da cui parte il pesce per i ristoranti: un passaggio in meno fra il mare e la tua cucina.
-          </p>
-          <a href="#alla-fonte" class="ch-cta">Perché conviene →</a>
+          <h2 class="ch-title">Compri dove comprano<br />ristoranti e pescherie</h2>
+          <a href="#negozio" class="ch-cta">Chi siamo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
         <div class="ch" id="c3">
-          <p class="ch-label">Al banco ogni mattina</p>
-          <h2 class="ch-title">Fresco e vivo,<br />ogni mattina.</h2>
-          <p class="ch-sub">
-            Pescato scelto all'origine ogni mattina e vasche con crostacei vivi: la freschezza di chi compra alla fonte.
-          </p>
-          <a href="#prodotti" class="ch-cta">Cosa trovi al banco →</a>
+          <h2 class="ch-title">Scelto al mercato di notte<br />al banco la mattina dopo</h2>
+          <a href="#prodotti" class="ch-cta">Cosa trovi al banco<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
         <div class="ch" id="c4">
-          <p class="ch-label">Il banco è a Massa</p>
-          <h2 class="ch-title">Ti aspettiamo<br />in Via Dorsale.</h2>
-          <p class="ch-sub">Parcheggio davanti e il banco che vedi rifornire ogni mattina. Quello che c'è oggi te lo diciamo di persona.</p>
-          <a href="#dove-siamo" class="ch-cta">Dove siamo →</a>
+          <h2 class="ch-title">Ti aspettiamo<br />in Via Dorsale a Massa</h2>
+          <a href="#dove-siamo" class="ch-cta">Dove siamo<svg class="arr" aria-hidden="true"><use href="#ico-arr"/></svg></a>
         </div>
       </div>
     </div>
