@@ -877,13 +877,6 @@ mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
   lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
 })();
 
-/* ── Team photo parallax ─────────────────────── */
-document.querySelectorAll('.team-photo-wrap img').forEach(img => {
-  gsap.to(img, { scale:1, ease:'none',
-    scrollTrigger: { trigger: img.closest('.team-photo-wrap'), start:'top bottom', end:'bottom top', scrub:1.5 }
-  });
-});
-
 /* ── Marina AI — pinned scrub timeline ───────── */
 if (document.getElementById('marina-pin')) {
   const MT_OFFSET = 0.03;

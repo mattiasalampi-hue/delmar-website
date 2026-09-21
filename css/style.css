@@ -1322,10 +1322,9 @@ html.cur-on select {
 
 .team-photo-wrap img {
   width: 100%;
-  aspect-ratio: 3/4;
-  object-fit: cover;
-  transform: scale(1.06);
-  will-change: transform;
+  height: auto;
+  aspect-ratio: 1025/1366;
+  display: block;
 }
 
 .team-copy {
@@ -3153,10 +3152,6 @@ html.cur-on select {
     grid-template-columns: 1fr;
     gap: 4vh;
     margin-top: 4vh;
-  }
-
-  .team-photo-wrap img {
-    aspect-ratio: 4/3;
   }
 
   .team-copy {
