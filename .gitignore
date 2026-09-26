@@ -34,3 +34,7 @@ catalogo/scelte.json
 
 # Il profilo usa-e-getta che Chrome crea quando fotografa le anteprime
 marketing/**/.chrome/
+
+# Le proposte di genera-foto.js: si guardano, se ne sceglie una, il
+# resto si butta. Quella scelta finisce in foto-prodotti/.
+catalogo/foto-prova/
